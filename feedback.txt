@@ -1,0 +1,34 @@
+I really like your jtwitter library	Kevin Penrose	kevin.penrose@gmail.com
+I have recently started using JTwitter and am enjoying the experience.	Jonathan Ferguson	jono@spiralarm.com
+I thought I would email to let you know that I love your JTwitter API and have been using it to create a simplified desktop application to make using twitter a breeze for those who would prefer not to use there browser all the time.	Gurparit Chand	gurparit@live.co.uk
+Thanks a ton for  making my life simple by writing this Library.	Balaji Kumara	balajikumara@gmail.com 
+mega-thanks for the great work on the JTwitter wrapper	Jesse O'Brien	destroyer661@gmail.com
+great java implementation of the Twitter API	Mats Ingelborn	mats@solutionplanet.com
+I've used your JTwitter API to create a Twitter plugin for Grails. Thanks for providing this - it's a pretty slick library.	Burt Beckwith	burt@burtbeckwith.com
+I just found your jtwitter library - it's great, thanks!	Jeff Kusnitz	jkusnitz@comcast.net
+thanx again for contributing this nice API.	Sanal Dev	sanaldevmv@gmail.com
+Thanks for making jtwitter! I've been having fun with it	Steve Jensen	stevej@gmail.com
+Really Appreciate the great Java API that you developed.	Jeff Lui
+very well implemented and effortless to adapt from.	Jeff Lui
+Firstly I wish to thank you for doing an amazing job with the jTwitter project, it’s very helpful.	Tamer Zaky	
+I just wanted to let you know I am using your library in another library I am creating to generate realtime 'peeks' into the world around us. Thanks for providing such a great resource	Dave Shanley
+Winterwell's Java Twitter library jtwitter is cool.	tedwen
+Your twitter API is amazing. The other ones make it unnecessarily difficult to do anything by being incredibly verbose, with no real gains in robustness. Your API is simple and took me 5 seconds to figure out. Thanks a bunch, great work.	Paul Gibler
+
+Thanks for making an awesome, small, and pretty little Twitter library
+that is perfect for us Android developers! Eric Mill
+
+I love your code so much! It's exactly what I need for my android app! Caleb Fultz <calebfultz@gmail.com>
+
+Thanks for the great work you did with jtwitter...
+Many thanks for the prompt response. Ellon Yardeni <eyardeni@gmail.com>
+
+## Usage
+
+http://www.socialpeek.com/
+
+The New York State Senate
+
+iwTweet is developed by ImaginaWorks using jTwitter
+
+
