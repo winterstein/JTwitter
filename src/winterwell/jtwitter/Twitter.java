@@ -2020,6 +2020,9 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @return Login name of the authenticating user, or null if not set.
+	 * If null but oauth is set, then use 
+	 * <code>new TwitterAccount(jtwitter).verifyCredentials()</code> to 
+	 * fetch user details.
 	 */
 	public String getScreenName() {
 		return name;

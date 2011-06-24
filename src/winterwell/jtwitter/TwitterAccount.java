@@ -82,7 +82,7 @@ public class TwitterAccount {
 	}
 
 	/**
-	 * Test the login credentials, and get some user info.
+	 * Test the login credentials -- and get some user info.
 	 * @return a representation of the requesting user if authentication 
 	 * was successful
 	 * @throws TwitterException.E401 thrown if the authorisation credentials fail.
