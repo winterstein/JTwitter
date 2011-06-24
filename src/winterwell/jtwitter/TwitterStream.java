@@ -13,11 +13,6 @@ import java.util.Map;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.IORException;
-import winterwell.utils.StringUtils;
-import winterwell.utils.TodoException;
-import winterwell.utils.WrappedException;
-import winterwell.utils.io.FileUtils;
 
 /**
  * Connect to the streaming API.
@@ -94,7 +89,7 @@ public class TwitterStream {
 		for (String json : jsons) {
 			
 		}
-		throw new TodoException();
+		throw new RuntimeException("TODO");
 	}
 	
 }
@@ -136,7 +131,7 @@ final class StreamGobbler extends Thread {
 	 */
 	public String[] popJsons() {
 		synchronized (jsons) {
-			String[] arr = jsons.toArray(StringUtils.ARRAY);
+			String[] arr = jsons.toArray(new String[jsons.size()]);
 			jsons.clear();
 			return arr;
 		}		
