@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import winterwell.utils.Printer;
-
 public class TwitterStreamTest {
 
 	@Test
@@ -14,7 +12,7 @@ public class TwitterStreamTest {
 		TwitterStream ts = new TwitterStream(jtwit.getHttpClient());
 		ts.connect();
 		Thread.sleep(5000);
-		Printer.out(ts.readThread.popJsons());
+		System.out.println(ts.readThread.popJsons());
 		ts.close();
 	}
 

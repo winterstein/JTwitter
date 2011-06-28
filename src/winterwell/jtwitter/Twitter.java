@@ -1347,7 +1347,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.1.3";
+	public final static String version = "2.1.4";
 
 	static final Comparator<Status> NEWEST_FIRST = new Comparator<Status>() {
 		@Override

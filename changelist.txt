@@ -1,7 +1,10 @@
-# JTwitter Change list
+# JTwitter Change list 
 
 2.1.4
  - Added check for zero-byte chars in tweets (which occur very rarely, but can cause problems with other software).
+ - Added TwitterAccount.getAccessLevel() and TwitterAccount.KAccessLevel to
+ support inspection of the powers conferred by an oauth token.
+ - Cleaned up test dependencies. 
 
 2.1.3
  - Updated TwitterList methods to use the new preferred endpoints.

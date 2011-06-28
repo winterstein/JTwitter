@@ -5,6 +5,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.User;
 
 /**
@@ -24,6 +25,7 @@ import winterwell.jtwitter.Twitter.User;
 public class TwitterAccount {
 
 	final Twitter jtwit;
+	private KAccessLevel accessLevel;
 	
 	public TwitterAccount(Twitter jtwit) {
 		assert jtwit.getHttpClient().canAuthenticate();
@@ -91,8 +93,35 @@ public class TwitterAccount {
 	 */
 	public User verifyCredentials() throws TwitterException.E401 {
 		String url = jtwit.TWITTER_URL+"/account/verify_credentials.json";
-		String json = jtwit.getHttpClient().getPage(url, null, true); 
+		String json = jtwit.getHttpClient().getPage(url, null, true);
+		// store the access level info
+		IHttpClient client = jtwit.getHttpClient();
+		String al = client.getHeader("X-Access-Level");
+		if (al!=null) {
+			if ("read".equals(al)) accessLevel = KAccessLevel.READ_ONLY;
+			if ("read-write".equals(al)) accessLevel = KAccessLevel.READ_WRITE;
+			if ("read-write-directmessages".equals(al)) accessLevel = KAccessLevel.READ_WRITE_DM;
+		}
 		return user(json);
+	}
+	
+	public static enum KAccessLevel {
+		/** Read public messages */
+		READ_ONLY, 
+		/** Read, write of public messages (but not DMs) */
+		READ_WRITE, 
+		/** Read, write of public and private messages */
+		READ_WRITE_DM
+	}
+	
+	/**
+	 * @return What access level does this login have?
+	 */
+	public KAccessLevel getAccessLevel() {
+		if (accessLevel==null) {
+			verifyCredentials();
+		}
+		return accessLevel;
 	}
 	
 }

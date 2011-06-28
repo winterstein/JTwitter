@@ -28,9 +28,6 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.utils.Printer;
-import winterwell.utils.Utils;
-import winterwell.utils.io.XStreamBinaryConverter;
 
 /**
  * Unit tests for JTwitter.
@@ -112,7 +109,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<Status> tweets = tw.getUserTimeline("winterstein");
 		Collections.sort(tweets, Twitter.NEWEST_FIRST);
 		Date prev=null;
-		Printer.out(tweets);
+		System.out.println(tweets);
 		for (Status status : tweets) {
 			assert prev==null || status.getCreatedAt().before(prev) : prev+" vs "+status.getCreatedAt();
 			prev = status.getCreatedAt();
@@ -379,19 +376,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		tw.setStatus(s);
 	}
 
-	public void testSerialisation() throws IOException {
-		Twitter tt = newTestTwitter();
-		IHttpClient client = tt.getHttpClient();
-		XStreamBinaryConverter conv = new XStreamBinaryConverter();
-		{// serialise
-			String s = conv.toString(client);
-			IHttpClient c2 = (IHttpClient) conv.fromString(s);
-		}
-		{// serialise
-			String s = conv.toString(tt);
-			Twitter tt2 = (Twitter) conv.fromString(s);
-		}
-	}
 
 	/**
 	 *  NONDETERMINISTIC! Had to increase sleep time to make it more reliable.
@@ -867,7 +851,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert ! sf.isFollowingYou();
 		List<User> followers = tw.getFollowers();
 		List<User> fBy = tw.getFriends();
-		Printer.out(fBy);
+		System.out.println(fBy);
 	}
 
 	public void testRetweet() {
@@ -952,7 +936,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testTrends() {
 		Twitter tw = newTestTwitter();
 		List<String> trends = tw.getTrends();
-		Printer.out(trends);
+		System.out.println(trends);
 		assert trends.size() > 0;
 	}
 
@@ -1192,7 +1176,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testIdentica() {
 		Twitter twitter = new Twitter(TEST_USER, TEST_PASSWORD);
 		twitter.setAPIRootUrl("http://identi.ca/api");
-		String salt = Utils.getRandomString(4);
+		String salt = "" + new Random().nextInt(10000);
 		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php "+salt);
 		List<Status> timeline = twitter.getFriendsTimeline();
 	}
@@ -1203,7 +1187,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testMarakana() {
 		Twitter twitter = new Twitter("student", "password");
 		twitter.setAPIRootUrl("http://yamba.marakana.com/api");
-		String salt = Utils.getRandomString(4);
+		String salt = "" + new Random().nextInt(10000);
 		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php"+salt);
 		List<Status> timeline = twitter.getFriendsTimeline();
 	}

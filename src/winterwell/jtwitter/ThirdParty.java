@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.User;
-import winterwell.utils.containers.ArrayMap;
 
 /**
  * Status: experimental!
@@ -44,10 +43,9 @@ public class ThirdParty {
 	 */
 	public double getInfochimpTrustRank(User user, String apiKey) {
 		String json = client.getPage("http://api.infochimps.com/soc/net/tw/trstrank.json", 
-				new ArrayMap<String, String>(
+				(Map) Twitter.asMap(
 				"screen_name", user.screenName,
-				"apikey",apiKey
-		), false);
+				"apikey",apiKey), false);
 		try {
 			JSONObject results = new JSONObject(json);
 			Double score = results.getDouble("trstrank");
