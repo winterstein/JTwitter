@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
@@ -1347,7 +1348,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.1.4";
+	public final static String version = "2.1.5";
 
 	static final Comparator<Status> NEWEST_FIRST = new Comparator<Status>() {
 		@Override
@@ -2611,7 +2612,8 @@ public class Twitter implements Serializable {
 		if (!http.canAuthenticate())
 			return false;
 		try {
-			getDirectMessages();
+			TwitterAccount ta = new TwitterAccount(this);
+			User u = ta.verifyCredentials();
 			return true;
 		} catch (TwitterException.E403 e) {
 			return false;
