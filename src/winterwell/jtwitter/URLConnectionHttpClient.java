@@ -420,6 +420,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				throw new TwitterException.Repetition(errorPage + "\n" + url);
 			if (errorPage.contains("unable to follow more people"))
 				throw new TwitterException.FollowerLimit(name + " " + errorPage);
+			if (errorPage.contains("application is not allowed to access")) {
+				throw new TwitterException.AccessLevel(name+" "+errorPage);
+			}
 		}
 		throw new TwitterException.E403(error + "\n" + url + " (" + getName()
 				+ ")");

@@ -5,6 +5,8 @@ import java.text.ParseException;
 
 import org.json.JSONException;
 
+import winterwell.jtwitter.TwitterAccount.KAccessLevel;
+
 
 
 
@@ -103,6 +105,18 @@ public class TwitterException extends RuntimeException {
 	public static class FollowerLimit extends E403 {
 		private static final long serialVersionUID = 1L;
 		public FollowerLimit(String msg) {
+			super(msg);
+		}
+	}
+	
+	/**
+	 * Subclass of 403 thrown when you breach the access level of the
+	 * app / oauth-token.
+	 * @see TwitterAccount#getAccessLevel()
+	 */
+	public static class AccessLevel extends E403 {
+		private static final long serialVersionUID = 1L;
+		public AccessLevel(String msg) {
 			super(msg);
 		}
 	}
