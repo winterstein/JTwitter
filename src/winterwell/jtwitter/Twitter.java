@@ -1792,7 +1792,8 @@ public class Twitter implements Serializable {
 	public void follow(User user) {
 		follow(user.screenName);
 	}
-
+	
+	
 	/**
 	 * Returns a list of the direct messages sent to the authenticating user.
 	 * <p>

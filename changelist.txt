@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.1.6 (pending)
+ - Removed SimpleRSSReader (no longer used since the introduction of the
+ include_rts flag) 
+ 
 2.1.5
 - Twitter.isValidLogin now uses TwitterAccount (fixes a bug with the change
  in access levels).

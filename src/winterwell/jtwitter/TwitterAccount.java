@@ -9,15 +9,11 @@ import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.User;
 
 /**
- * <p><b>Status: sketch!</b></p>
- * 
  * Access the account methods: e.g. change your profile colours.
  * 
  * <p>
- * These methods are here, rather than in Twitter, at least for now, because:<br>
- * (a) the Twitter class is getting crowded,<br>
- * (b) I'm undecided on how best to support them, so keeping them
- * in a separate "subject to change" class.
+ * NB: These methods are here, rather than in the Twitter class, because
+ * the Twitter class is getting crowded.
  * 
  * @author Daniel Winterstein
  *
