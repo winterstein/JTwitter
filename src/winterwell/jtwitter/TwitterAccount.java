@@ -102,6 +102,8 @@ public class TwitterAccount {
 	}
 	
 	public static enum KAccessLevel {
+		/** no login or invalid login */
+		NONE,
 		/** Read public messages */
 		READ_ONLY, 
 		/** Read, write of public messages (but not DMs) */
@@ -112,12 +114,16 @@ public class TwitterAccount {
 	
 	/**
 	 * @return What access level does this login have?
+	 * If the login is bogus, this will return {@link KAccessLevel#NONE}.
 	 */
 	public KAccessLevel getAccessLevel() {
-		if (accessLevel==null) {
+		if (accessLevel!=null) return accessLevel;
+		try {
 			verifyCredentials();
-		}
-		return accessLevel;
+			return accessLevel;
+		} catch (TwitterException.E401 e) {
+			return KAccessLevel.NONE;
+		}		
 	}
 	
 }
