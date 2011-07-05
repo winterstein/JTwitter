@@ -27,6 +27,7 @@ import lgpl.haustein.Base64Encoder;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.KRequestType;
+import winterwell.jtwitter.TwitterException.Timeout;
 
 /**
  * A simple http client that uses the built in URLConnection class.
@@ -135,7 +136,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	private boolean retryingFlag;
 
 	/**
-	 * If true, will wait 1 second and make a 2nd request when presented with a
+	 * If true, will wait 1/2 second and make a 2nd request when presented with a
 	 * server error.
 	 */
 	private boolean retryOnError;
@@ -243,25 +244,40 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			// Done
 			return page;
 		} catch (SocketTimeoutException e) {
-			throw new TwitterException.Timeout(url);
+			Timeout ex = new TwitterException.Timeout(url);
+			return getPage2_retry(url, vars, authenticate, ex);
 		} catch (IOException e) {
 			throw new TwitterException.IO(e);
 		} catch (TwitterException.E50X e) {
-			if (!retryOnError || retryingFlag)
-				throw e;
-			try {
-				retryingFlag = true;
-				// wait a second before retrying
-				Thread.sleep(1000);
-				return getPage(url, vars, authenticate);
-			} catch (InterruptedException ex) {
-				// ignore the interruption & just throw the original error
-				throw e;
-			} finally {
-				retryingFlag = false;
-			}
+			return getPage2_retry(url, vars, authenticate, e);
 		} finally {
 			disconnect(connection);
+		}
+	}
+
+	/**
+	 * Should we retry? 
+	 * @param url
+	 * @param vars
+	 * @param authenticate
+	 * @param originalException
+	 * @return page if successful
+	 * @throws originalException
+	 */
+	private String getPage2_retry(String url, Map<String, String> vars,
+			boolean authenticate, TwitterException.E50X originalException) 
+	{
+		if ( ! retryOnError || retryingFlag) throw originalException;
+		try {
+			retryingFlag = true;
+			// wait half a second before retrying
+			Thread.sleep(500);
+			return getPage(url, vars, authenticate);
+		} catch (InterruptedException ex) {
+			// ignore the interruption & just throw the original error
+			throw originalException;
+		} finally {
+			retryingFlag = false;
 		}
 	}
 
@@ -500,7 +516,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	/**
 	 * False by default. Setting this to true switches on a robustness
 	 * workaround: when presented with a 50X server error, the system will wait
-	 * 1 second and make a second attempt.
+	 * 1/2 a second and make a second attempt.
 	 */
 	public void setRetryOnError(boolean retryOnError) {
 		this.retryOnError = retryOnError;

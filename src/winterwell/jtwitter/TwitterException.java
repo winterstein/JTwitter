@@ -114,7 +114,7 @@ public class TwitterException extends RuntimeException {
 	 * app / oauth-token.
 	 * @see TwitterAccount#getAccessLevel()
 	 */
-	public static class AccessLevel extends E403 {
+	public static class AccessLevel extends E401 {
 		private static final long serialVersionUID = 1L;
 		public AccessLevel(String msg) {
 			super(msg);
@@ -134,7 +134,7 @@ public class TwitterException extends RuntimeException {
 	/**
 	 * A timeout exception - probably caused by Twitter being overloaded.
 	 */
-	public static class Timeout extends TwitterException {
+	public static class Timeout extends TwitterException.E50X {
 		public Timeout(String string) {
 			super(string);
 		}
@@ -145,6 +145,7 @@ public class TwitterException extends RuntimeException {
 	 * An IO exception, eg. a network issue.
 	 * Call {@link #getCause()} to get the original IOException
 	 */
+	// ?? Should this extend E50X?
 	public static class IO extends TwitterException {
 		public IO(IOException e) {
 			super(e);
@@ -199,6 +200,9 @@ public class TwitterException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 	}
 
+	/**
+	 * Legacy exception thrown when trying to use basic auth instead of oauth.
+	 */
 	public static class UpdateToOAuth extends E401 {
 		private static final long serialVersionUID = 1L;
 		public UpdateToOAuth() {
