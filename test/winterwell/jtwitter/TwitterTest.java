@@ -21,13 +21,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
+import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.Message;
 import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.Printer;
 
 /**
  * Unit tests for JTwitter.
@@ -804,13 +807,14 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testTweetEntities() {
 		Twitter tw = newTestTwitter();
 		tw.setIncludeTweetEntities(true);
+		Status s = null;
 		try {
-			Status s = tw.setStatus("@jtwit423gg see http://bit.ly/cldEfd #cool :)");
+			s = tw.setStatus("@jtwit423gg see http://bit.ly/cldEfd #cool :)");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		List<Status> statuses = tw.getUserTimeline();
-
+		System.out.println(statuses);
 	}
 
 	public void testGetUserTimelineWithRetweets() {
@@ -874,7 +878,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	}
 
-	public void testSearch() {
+	public void testSearch() {		
 		{
 			Twitter tw = newTestTwitter();
 			List<Status> javaTweets = tw.search("java");

@@ -750,10 +750,9 @@ public class Twitter implements Serializable {
 					location = latLong.get(0)+","+latLong.get(1);
 				}
 				retweetCount = object.optInt("retweet_count", -1);
-				// ignore this as it can be misleading: true is reliable, false
-				// isn't
+				// ignore this as it can be misleading: true is reliable, false isn't
 				// retweeted = object.optBoolean("retweeted");
-				// Entities
+				// Entities (switched on by Twitter.setIncludeTweetEntities(true))
 				JSONObject jsonEntities = object.optJSONObject("entities");
 				if (jsonEntities!=null) {
 					// Note: Twitter filters out dud @names
@@ -835,10 +834,13 @@ public class Twitter implements Serializable {
 		}
 
 		/**
-		 * <i>Experimental</i>: Twitter have announced they plan to wrap all urls
-		 * with their own url-shortener (as a defence against malicious tweets).
+		 * Twitter are wrapping some urls with their own url-shortener (as a defence against malicious tweets).
 		 * You are recommended to direct people to the Twitter-url, but use the
 		 * original url for display.
+		 * <p>
+		 * Entity support is off by default. Request entity support by setting
+		 * {@link Twitter#setIncludeTweetEntities(boolean)}.
+		 * Twitter do NOT support entities for search :(
 		 *
 		 * @param type urls, user_mentions, or hashtags
 		 * @return the text entities in this tweet
@@ -2513,6 +2515,10 @@ public class Twitter implements Serializable {
 		show(screenName);
 	}
 
+	/**
+	 * Note: does NOT work for search() methods (not supported by Twitter).
+	 * @param tweetEntities Set to true to enable {@link Status#getTweetEntities(KEntityType)}.
+	 */
 	public void setIncludeTweetEntities(boolean tweetEntities) {
 		this.tweetEntities = tweetEntities;
 	}
