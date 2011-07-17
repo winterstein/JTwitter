@@ -8,6 +8,7 @@ import java.util.Random;
 import junit.framework.TestCase;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.Twitter.User;
+import winterwell.jtwitter.TwitterException.E404;
 
 /**
  * Partial unit tests for TwitterList
@@ -87,6 +88,23 @@ extends TestCase // Comment out to remove the JUnit dependency
 //			new TwitterList(TwitterTest.TEST_USER, "testlist", jtwit); // access existing		
 		list.add(new User("winterstein"));
 		assert list.size() > 0;
+	}
+	
+	public void testAdd() {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		String sn = jtwit.getScreenName();
+		assert sn != null;
+		TwitterList twitterList;
+		try {
+			twitterList = TwitterList.get(sn, "just-added", jtwit);
+		} catch (E404 e) {
+			twitterList = new TwitterList("just-added", jtwit, true, "list test");
+		}
+		twitterList.add(new User("apigee"));
+		twitterList.add(new User("docusign"));
+		// fetch
+		TwitterList list2 = TwitterList.get(sn, "just-added", jtwit);
+		assert list2.size() > 0;
 	}
 	
 	public void testSubscribers() {

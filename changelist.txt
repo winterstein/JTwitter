@@ -7,6 +7,10 @@
  - TwitterException.Timeout extends E50X to reflect that its a server issue
  - URLConnectionHttpClient.setRetryOnError() delay cut to 1/2 a second, and 
  retry now applies to all E50X cases
+ - TwitterList calls init in the lazy-loading constructor. This is so an E404
+ exception is thrown early if needed.
+ - TwitterList lazy-loading constructor deprecated in favour of static TwitterList.get()
+ method.
  
 2.1.5
 - Twitter.isValidLogin now uses TwitterAccount (fixes a bug with the change

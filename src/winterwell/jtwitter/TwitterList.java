@@ -145,6 +145,27 @@ public class TwitterList extends AbstractList<Twitter.User> {
 	 * A lazy-loading list viewer. This will fetch details
 	 * from Twitter when you call it's methods. This is for access to an
 	 * existing list - it does NOT create a new list on Twitter.
+	 * @param ownerScreenName 
+	 * 
+	 * @param owner.screenName
+	 *            The Twitter screen-name for the list's owner.
+	 * @param slug
+	 *            The list's name. Technically the slug and the name needn't be
+	 *            the same, but they usually are.
+	 * @param jtwit
+	 *            a JTwitter object (this must be able to authenticate).
+	 * @throws Twitter.Exception.E404 if the list does not exist
+	 */
+	public static TwitterList get(String ownerScreenName, String slug, Twitter jtwit) {
+		return new TwitterList(ownerScreenName, slug, jtwit);
+	}
+	
+	/**
+	 * A lazy-loading list viewer. This will fetch some details
+	 * here, but the list of members will be loaded from Twitter on demand
+	 * (to minimise the API calls).
+	 * <b>This is for access to an
+	 * existing list - it does NOT create a new list on Twitter.</b>
 	 * 
 	 * @see #TwitterList(String, Twitter, boolean, String) which creates new lists.
 	 * 
@@ -156,6 +177,8 @@ public class TwitterList extends AbstractList<Twitter.User> {
 	 * @param jtwit
 	 *            a JTwitter object (this must be able to authenticate).
 	 * @throws Twitter.Exception.E404 if the list does not exist
+	 * @deprecated Due to the potential for confusion with {@link #TwitterList(String, Twitter, boolean, String)}
+	 * Use {@link #get(String, String, Twitter)} instead.
 	 */
 	public TwitterList(String ownerScreenName, String slug, Twitter jtwit) {
 		assert ownerScreenName != null && slug != null && jtwit != null;
@@ -164,10 +187,11 @@ public class TwitterList extends AbstractList<Twitter.User> {
 		this.name = slug;
 		this.slug = slug;
 		this.http = jtwit.getHttpClient();
+		init();
 	}
 
 	/**
-	 * CREATE a brand new Twitter list. 
+	 * <b>CREATE</b> a brand new Twitter list. 
 	 * Accounts are limited to 20 lists.
 	 * @see #TwitterList(String, String, Twitter) which views existing lists.
 	 * 
