@@ -233,7 +233,7 @@ implements IHttpClient, Serializable {
 	 * This is a convenience method -- you will probably want to build your own
 	 * UI around this.
 	 * <p>
-	 * <i>This method requires Swing. It will not work on all devices.</i>
+	 * <i>This method requires Swing. It will not work on Android devices!</i>
 	 * @param question e.g. "Please enter the authorisation code from Twitter"
 	 * @return
 	 */
