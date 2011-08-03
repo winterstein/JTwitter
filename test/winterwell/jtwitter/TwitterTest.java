@@ -20,12 +20,9 @@ import junit.framework.TestCase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.Message;
 import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
