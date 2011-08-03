@@ -1,6 +1,7 @@
 # JTwitter Change list 
 
-2.1.6 (pending)
+2.1.6
+ - Workaround for a bug in the Twitter search API re location and OR
  - Removed SimpleRSSReader (no longer used since the introduction of the
  include_rts flag) 
  - Added TwitterException.AccessLevel

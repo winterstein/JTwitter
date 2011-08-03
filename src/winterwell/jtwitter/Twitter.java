@@ -113,8 +113,8 @@ import winterwell.jtwitter.TwitterException.SuspendedUser;
  * @author Daniel Winterstein
  */
 public class Twitter implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 1L;	
+	
 	/**
 	 * Matches latitude, longitude, including with the UberTwitter UT: prefix
 	 * Group 2 = latitude, Group 3 = longitude
@@ -1350,7 +1350,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.1.5";
+	public final static String version = "2.1.6";
 
 	static final Comparator<Status> NEWEST_FIRST = new Comparator<Status>() {
 		@Override
@@ -2714,6 +2714,7 @@ public class Twitter implements Serializable {
 	 *         positive, or rpp if maxResults is negative.
 	 */
 	public List<Status> search(String searchTerm, ICallback callback, int rpp) {
+		searchTerm = search2_bugHack(searchTerm);
 		Map<String, String> vars;
 		if (maxResults < 100 && maxResults > 0) {
 			// Default: 1 page
@@ -2752,6 +2753,22 @@ public class Twitter implements Serializable {
 		return allResults;
 	}
 
+
+	/**
+	 * This fixes a bug in Twitter's search API:
+	 * Searches using OR and a location return gibberish,
+	 * unless they also include a -term. Strangely that seems to fix things. 
+	 * So we just add one if needed.
+	 * 
+	 * It should be tested periodically whether we need this.
+	 * @param searchTerm
+	 * @return e.g. "apples OR pears" (near Edinburgh) goes to "apples OR pears -kfz" (near Edinburgh) 
+	 */
+	private String search2_bugHack(String searchTerm) {
+		if (geocode==null) return searchTerm;
+		if ( ! searchTerm.contains(" OR ") || searchTerm.contains("-")) return searchTerm;
+		return searchTerm+" -kfz"; // add a -gibberish term
+	}
 
 	/**
 	 * What is the current rate limit status? Do we need to throttle back our

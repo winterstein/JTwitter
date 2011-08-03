@@ -42,6 +42,26 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {
 	
+	/**
+	 * Location + OR = Twitter API fail.
+	 * But Location + OR + -term = success.
+	 * Strange.
+	 */
+	public void testSearchBug() {
+		Twitter ts = new Twitter();
+		// London
+		ts.setSearchLocation(51.506321, 0, "50km");
+		
+		// this will contain gibberish if we don't have Twitter.search2_bugHack enabled
+		List<Status> tweets = ts.search("apple OR pear");
+		
+		List<Status> tweets2 = ts.search("apple OR pear -kxq -http");
+		for (Status status : tweets2) {
+			String text = status.getText().toLowerCase();
+			assert text.contains("apple") || text.contains("pear");
+		}
+	}
+	
 	public void testGetListsContaining() {
 		Twitter jtwit = newTestTwitter();
 		List<TwitterList> lists = jtwit.getListsContaining("patrickharvie", false);
