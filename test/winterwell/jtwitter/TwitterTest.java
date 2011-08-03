@@ -30,7 +30,6 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.utils.Printer;
 
 /**
  * Unit tests for JTwitter.
@@ -42,7 +41,7 @@ import winterwell.utils.Printer;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {
-
+	
 	public void testGetListsContaining() {
 		Twitter jtwit = newTestTwitter();
 		List<TwitterList> lists = jtwit.getListsContaining("patrickharvie", false);
