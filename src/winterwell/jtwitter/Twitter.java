@@ -434,7 +434,7 @@ public class Twitter implements Serializable {
 			String _text = obj.getString("text");
 			text = unencode(_text);
 			String c = jsonGet("created_at", obj);
-			createdAt = new Date(c);
+			createdAt = Twitter.parseDate(c);
 			sender = new User(obj.getJSONObject("sender"), null);
 			// recipient - for messages you sent
 			if (obj.has("recipient")) {
@@ -656,12 +656,6 @@ public class Twitter implements Serializable {
 		private static final String FAKE = "fake";
 
 		/**
-		 * The date format used by Marko from Marakana.
-		 * This is needed for *some* installs of Status.Net, though not for Identi.ca.
-		 */
-		static final DateFormat dfMarko = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
-
-		/**
 		 * @param object
 		 * @param user
 		 *            Set when parsing the json returned for a User. null when
@@ -677,17 +671,7 @@ public class Twitter implements Serializable {
 				text = unencode(_text);
 				// date
 				String c = jsonGet("created_at", object);
-				Date _createdAt;
-				try {
-					_createdAt = new Date(c);
-				} catch (Exception e) { // Bug reported by Marakana with *some* Status.Net sites
-					try {
-						_createdAt = dfMarko.parse(c);
-					} catch (ParseException e1) {
-						throw new TwitterException.Parsing(c, e1);
-					}
-				}
-				createdAt = _createdAt;
+				createdAt = Twitter.parseDate(c);
 				// source - sometimes encoded (search), sometimes not
 				// (timelines)!
 				String src = jsonGet("source", object);
@@ -1049,17 +1033,7 @@ public class Twitter implements Serializable {
 				friendsCount = obj.getInt("friends_count");
 				// date
 				String c = jsonGet("created_at", obj);
-				Date _createdAt;
-				try { // simple new Date() fails for *some* Status.Net sites - c.f. Markana emails
-					_createdAt = new Date(c);
-				} catch (Exception e) {
-					try {
-						_createdAt = Status.dfMarko.parse(c);
-					} catch (ParseException e1) {
-						throw new TwitterException.Parsing(c, e1);
-					}
-				}
-				createdAt = _createdAt;
+				createdAt = parseDate(c);
 				favoritesCount = obj.getInt("favourites_count");
 				String utcOffSet = jsonGet("utc_offset", obj);
 				timezoneOffSet = utcOffSet == null ? 0 : Double
@@ -1373,6 +1347,20 @@ public class Twitter implements Serializable {
 			m.put(keyValuePairs[i], v);
 		}
 		return m;
+	}
+
+	static Date parseDate(String c) {
+		try {
+			Date _createdAt = new Date(c);
+			return _createdAt;
+		} catch (Exception e) { // Bug reported by Marakana with *some* Status.Net sites
+			try {
+				Date _createdAt = dfMarko.parse(c);
+				return _createdAt;
+			} catch (ParseException e1) {
+				throw new TwitterException.Parsing(c, e1);
+			}
+		}
 	}
 
 	/**
@@ -3675,5 +3663,12 @@ public class Twitter implements Serializable {
 		// nope - you're over the limit
 		return true;
 	}
+	
+	/**
+	 * The date format used by Marko from Marakana.
+	 * This is needed for *some* installs of Status.Net, though not for Identi.ca.
+	 */
+	static final DateFormat dfMarko = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+
 
 }

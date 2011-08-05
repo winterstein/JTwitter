@@ -1,11 +1,16 @@
 package winterwell.jtwitter;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
+import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.User;
 
 /**
@@ -125,5 +130,91 @@ public class TwitterAccount {
 			return KAccessLevel.NONE;
 		}		
 	}
+	
+	/**
+	 * Delete one of the user's saved searches! 
+	 * @param id The id for this search
+	 * @return the deleted search
+	 */
+	public ITweet destroySavedSearch(Long id) {
+		String url = jtwit.TWITTER_URL+"saved_searches/destroy/"+id+".json";
+		String json = jtwit.getHttpClient().post(url, null, true);
+		try {
+			return makeSearch(new JSONObject(json));
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+	
+	/**
+	 * Create a new saved search. 
+	 * @param query The search query
+	 * @return the new search
+	 */
+	public ITweet createSavedSearch(String query) {
+		String url = jtwit.TWITTER_URL+"saved_searches/create.json";
+		Map vars = Twitter.asMap("query", query);
+		String json = jtwit.getHttpClient().post(url, vars, true);
+		try {
+			return makeSearch(new JSONObject(json));
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+
+	
+	/**
+	 * @return The current user's saved searches on Twitter.
+	 * Use {@link ITweet#getText()} to retrieve the search query.
+	 */
+	public List<Twitter.ITweet> getSavedSearches() {
+		String url = jtwit.TWITTER_URL+"saved_searches.json";
+		String json = jtwit.getHttpClient().getPage(url, null, true);
+		try {
+			JSONArray ja = new JSONArray(json);
+			List<ITweet> searches = new ArrayList();
+			for (int i=0; i<ja.length(); i++) {
+				final JSONObject jo = ja.getJSONObject(i);
+				ITweet search = makeSearch(jo);
+				searches.add(search);
+			}
+			return searches;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+
+	/**
+	 * Reuse the ITweet interface. This is a bit dodgy (it's not a message),
+	 * but it has exactly the methods we want.
+	 * @param jo
+	 * @return a search in ITweet format.
+	 * @throws JSONException
+	 */
+	private ITweet makeSearch(JSONObject jo) throws JSONException {
+		final Date createdAt = Twitter.parseDate(jo.getString("created_at"));
+		final Long id = jo.getLong("id");
+		final String query = jo.getString("query");
+		ITweet search = new Twitter.ITweet() {
+			@Override
+			public Date getCreatedAt() {return createdAt;}
+			@Override
+			public Long getId() {return id;}
+			@Override
+			public String getText() {return query;}
+			@Override
+			public User getUser() {
+				if (jtwit.getScreenName() != null) {
+					return new User(jtwit.getScreenName());
+				}
+				return verifyCredentials();
+			}			
+		};
+		return search;
+	}
+	
+}
+
+class Search {
 	
 }
