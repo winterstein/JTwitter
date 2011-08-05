@@ -5,7 +5,8 @@
  	- TwitterAccount.getSavedSearches()
  	- TwitterAccount.createSavedSearch()
  	- TwitterAccount.destroySavedSearch()
-
+ - Added TwitterGeo to give access to Twitter geolocation search.
+ 
 2.1.6
  - Workaround for a serious bug in the Twitter search API re location and OR
  - Removed SimpleRSSReader (no longer used since the introduction of the
