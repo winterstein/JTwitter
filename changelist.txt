@@ -6,6 +6,7 @@
  	- TwitterAccount.createSavedSearch()
  	- TwitterAccount.destroySavedSearch()
  - Added TwitterGeo to give access to Twitter geolocation search.
+ - Added Twitter.setUntilId()
  
 2.1.6
  - Workaround for a serious bug in the Twitter search API re location and OR
