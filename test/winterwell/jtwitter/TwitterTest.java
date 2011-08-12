@@ -27,6 +27,7 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.Printer;
 
 /**
  * Unit tests for JTwitter.
@@ -146,6 +147,12 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testSuspendedAccounts() throws JSONException {
 		Twitter tw = newTestTwitter();
+		try {
+			User leo = tw.show("lottoeurooffers");
+			Printer.out(leo);
+		} catch (Exception e) {
+			Printer.out(e);
+		}
 		try {
 			tw.show("ykarya35a4wr");
 		} catch (SuspendedUser e) {
