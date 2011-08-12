@@ -1495,6 +1495,7 @@ public class Twitter implements Serializable {
 	private Integer pageNumber;
 
 	private Number sinceId;
+	private Number untilId;
 
 	private Date sinceDate;
 
@@ -1562,6 +1563,9 @@ public class Twitter implements Serializable {
 			Map<String, String> vars) {
 		if (sinceId != null)
 			vars.put("since_id", sinceId.toString());
+		if (untilId != null) {
+			vars.put("max_id", untilId.toString());
+		}
 		if (pageNumber != null) {
 			vars.put("page", pageNumber.toString());
 			// this is used once only
@@ -2858,6 +2862,11 @@ public class Twitter implements Serializable {
 		Map<String, String> vars = aMap("rpp", "" + rpp, "q", searchTerm);
 		if (sinceId != null)
 			vars.put("since_id", sinceId.toString());
+		if (untilId != null) {
+			// It's unclear from the docs whether this will work
+			// c.f. https://dev.twitter.com/docs/api/1/get/search
+			vars.put("max_id", untilId.toString());
+		}
 		// since date is no longer supported. until is though?!
 		// if (sinceDate != null) vars.put("since", df.format(sinceDate));
 		if (untilDate != null)
@@ -3043,6 +3052,14 @@ public class Twitter implements Serializable {
 	 */
 	public void setSinceId(Number statusId) {
 		sinceId = statusId;
+	}
+	
+	/**
+	 * If set, return results older than this.
+	 * @param untilId aka max_id 
+	 */
+	public void setUntilId(Number untilId) {
+		this.untilId = untilId;
 	}
 
 	/**
