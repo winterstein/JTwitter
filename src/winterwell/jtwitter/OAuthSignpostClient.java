@@ -255,9 +255,10 @@ implements IHttpClient, Serializable {
 	 * You will need to collect the verifier pin - either from the callback servlet,
 	 * or from the user (out-of-band).
 	 * <p>
-	 * <i>This method requires Swing. It will not work on all devices.</i>
+	 * <i>This method requires Swing. It will not work on Android!</i>
 	 * @see #authorizeUrl()
 	 */
+	@Deprecated // this is convenient for getting started, but probably you should build your own GUI.
 	public void authorizeDesktop() {
 		URI uri = authorizeUrl();
 		try {
@@ -298,7 +299,7 @@ implements IHttpClient, Serializable {
 	 * @param verifier a pin code which Twitter gives the user (with 
 	 * the oob method), or which you get from the callback response
 	 * as the parameter "oauth_verifier".
-	 * @throws RuntimeException Scribe throws an exception if the verifier is invalid
+	 * @throws RuntimeException throws an exception if the verifier is invalid
 	 */
 	public void setAuthorizationCode(String verifier) throws TwitterException {
 		assert accessToken==null : "This JTwitter already has an access token and is ready for use.";
