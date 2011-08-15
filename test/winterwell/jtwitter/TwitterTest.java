@@ -41,6 +41,7 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {
 	
+	
 	/**
 	 * Location + OR = Twitter API fail -- July 2011
 	 * But Location + OR + -term = success.
@@ -369,6 +370,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 		"59714113-kiyrSzrCqsmGLl0RXlEak8rnvzGVtJFc9e8TbxLBU",
 		"COBn8690I3JdfivVsr14mphbvOTjIFRmwEUU8Tygi4"
 	};
+	
+	
 
 	public static void main(String[] args) {
 		TwitterTest tt = new TwitterTest();
@@ -472,7 +475,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		int lag = 2000; //300000;
 		OAuthSignpostClient client = new OAuthSignpostClient(
 				OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthSignpostClient.JTWITTER_OAUTH_SECRET, "oob");
-		Twitter tw = new Twitter(TEST_USER, client);
+		Twitter tw = new Twitter("forkmcguffin", client);
 		// open the authorisation page in the user's browser
 		client.authorizeDesktop();
 		// get the pin
@@ -790,6 +793,12 @@ extends TestCase // Comment out to remove the JUnit dependency
 		return new Twitter("jtwittest2", client);
 	}
 
+
+	
+
+
+	
+	
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getMentions()}.
 	 */
