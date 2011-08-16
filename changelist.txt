@@ -1,6 +1,7 @@
 # JTwitter Change list 
 
-2.1.7 (pending)
+2.1.7
+ - Fixed issue with t.co shortener upsetting Twitter.updateStatus' sanity check.
  - Added Saved Search support in TwitterAccount:
  	- TwitterAccount.getSavedSearches()
  	- TwitterAccount.createSavedSearch()

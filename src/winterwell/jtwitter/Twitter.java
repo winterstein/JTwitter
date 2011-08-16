@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.web.WebUtilsTest;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -579,7 +580,12 @@ public class Twitter implements Serializable {
 		}
 
 		public final Date createdAt;
+		
+		/**
+		 * Warning: use equals() not == to compare these!
+		 */
 		public final BigInteger id;
+		
 		/** The actual status text. */
 		public final String text;
 
@@ -3425,16 +3431,24 @@ public class Twitter implements Serializable {
 		}
 		try {
 			Status s = new Status(new JSONObject(result), null);
-			// sanity check
+			// Weird bug: Twitter occasionally rejects tweets?!
+			// TODO does this still happen or have they fixed it? Hard to know
+			// with an intermittent bug!
+			// Sanity check...
 			String targetText = statusText.trim();
 			String returnedStatusText = s.text.trim();
+			// strip the urls to remove the effects of the t.co shortener
+			// (obviously this weakens the safety test, but failure would be 
+			// a corner case of a corner case)
+			targetText = stripUrls(targetText);
+			returnedStatusText = stripUrls(returnedStatusText);			
 			if (returnedStatusText.equals(targetText))
 				return s;
-			// weird bug: Twitter occasionally rejects tweets?
-			String st = statusText.toLowerCase();
-			// is it a direct message? - which doesn't return the true status
-			if (st.startsWith("dm") || st.startsWith("d")) {
-				return null;
+			{	// is it a direct message? - which doesn't return the true status
+				String st = statusText.toLowerCase();
+				if (st.startsWith("dm") || st.startsWith("d")) {
+					return null;
+				}
 			}
 			// try waiting and rechecking - maybe it did work after all
 			try {
@@ -3447,7 +3461,7 @@ public class Twitter implements Serializable {
 								+ returnedStatusText);
 			}
 			Status s2 = getStatus();
-			if (s2 != null && targetText.equals(s2.text)) {
+			if (s2 != null && targetText.equals(stripUrls(s2.text.trim()))) {
 				// Log.report("Weird transitory bug in Twitter update status with "+targetText);
 				return s2;
 			}
@@ -3458,6 +3472,19 @@ public class Twitter implements Serializable {
 			throw new TwitterException.Parsing(result, e);
 		}
 	}
+
+	String stripUrls(String text) {
+		return URL_REGEX.matcher(text).replaceAll("");
+	}
+	
+	/**
+	 * Matches urls. 
+	 * Note: Excludes any trailing .
+	 * @testedy {@link WebUtilsTest#testUrlRegex()}
+	 */
+	private static final Pattern URL_REGEX = Pattern.compile(
+			"[hf]tt?ps?://[a-zA-Z0-9_%\\-\\.,\\?&\\/=\\+'~#!\\*:]+[a-zA-Z0-9_%\\-&\\/=\\+]");
+
 
 	static final Pattern contentTag = Pattern.compile(
 			"<content>(.+?)<\\/content>", Pattern.DOTALL);

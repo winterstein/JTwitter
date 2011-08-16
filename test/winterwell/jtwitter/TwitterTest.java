@@ -27,7 +27,6 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.utils.Printer;
 
 /**
  * Unit tests for JTwitter.
@@ -149,9 +148,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter tw = newTestTwitter();
 		try {
 			User leo = tw.show("lottoeurooffers");
-			Printer.out(leo);
+			System.out.println(leo);
 		} catch (Exception e) {
-			Printer.out(e);
+			System.out.println(e);
 		}
 		try {
 			tw.show("ykarya35a4wr");
@@ -972,11 +971,12 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testUpdateStatus() {
 		Twitter tw = newTestTwitter();
-		String s = "Experimenting (http://winterwell.com at "+new Date().toString()+")";
+		int salt = new Random().nextInt(1000);
+		String s = "Experimenting "+salt+" (http://winterwell.com at "+new Date().toString()+")";
 		Status s2a = tw.updateStatus(s);
 		Status s2b = tw.getStatus();
-		assert s2b.text.equals(s) : s2b.text;
-		assert s2a.id == s2b.id;
+		assert s2b.text.startsWith("Experimenting "+salt) : s2b.text;
+		assert s2a.id.equals(s2b.id) : s2a+" vs "+s2b;
 		//		assert s2b.source.equals("web") : s2b.source;
 	}
 
