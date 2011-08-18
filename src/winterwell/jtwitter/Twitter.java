@@ -2717,10 +2717,10 @@ public class Twitter implements Serializable {
 	 * @param callback
 	 *            an object whose process() method will be called on each new
 	 *            page of results.
-	 * @param the
-	 *            number of results to fetch per page
-	 * @return search results - up to maxResults / rpp if maxResults is
-	 *         positive, or rpp if maxResults is negative.
+	 * @param rpp
+	 *            results per page. 100 is the default 
+	 * @return search results - up to maxResults if maxResults is
+	 *         positive, or rpp if maxResults is negative/zero.
 	 */
 	public List<Status> search(String searchTerm, ICallback callback, int rpp) {
 		searchTerm = search2_bugHack(searchTerm);
@@ -2837,8 +2837,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Perform a search of Twitter. Convenience wrapper for
-	 * {@link #search(String, ICallback, int)} with no callback and fetching 100
-	 * results.
+	 * {@link #search(String, ICallback, int)} with no callback 
+	 * and fetching one pages worth of results.
 	 */
 	public List<Status> search(String searchTerm) {
 		return search(searchTerm, null, 100);
@@ -2877,7 +2877,7 @@ public class Twitter implements Serializable {
 	 * @return
 	 */
 	private Map<String, String> getSearchParams(String searchTerm, int rpp) {
-		Map<String, String> vars = aMap("rpp", "" + rpp, "q", searchTerm);
+		Map<String, String> vars = aMap("rpp", Integer.toString(rpp), "q", searchTerm);
 		if (sinceId != null)
 			vars.put("since_id", sinceId.toString());
 		if (untilId != null) {
