@@ -127,7 +127,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private final String password;
 
-	private final Map<KRequestType, RateLimit> rateLimits = new EnumMap(
+	final Map<KRequestType, RateLimit> rateLimits = new EnumMap(
 			KRequestType.class);
 
 	/**

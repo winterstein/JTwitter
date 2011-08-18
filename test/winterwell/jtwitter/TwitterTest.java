@@ -700,7 +700,10 @@ extends TestCase // Comment out to remove the JUnit dependency
 			if (i<1) return;
 			tw.getStatus();
 			Thread.sleep(1000);
-			int i2 = tw.getRateLimitStatus();
+			int i2 = tw.getRateLimitStatus();			
+			RateLimit rl = tw.getRateLimit(KRequestType.NORMAL);
+			assert rl != null;
+			assert rl.getRemaining() == i2;
 			assert i - 1 == i2;
 		}
 		{

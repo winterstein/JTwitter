@@ -2047,6 +2047,9 @@ public class Twitter implements Serializable {
 	 * {@link #getRateLimit(KRequestType)} but it's up-to-date
 	 * and safe against threads and other-programs using the same
 	 * allowance.
+	 * <p>
+	 * This may update getRateLimit(KRequestType) for NORMAL requests,
+	 * but sadly it doesn't fetch rate-limit info on other request types.
 	 *
 	 * @return the remaining number of API requests available to the
 	 *         authenticating user before the API limit is reached for the
@@ -2062,6 +2065,15 @@ public class Twitter implements Serializable {
 		try {
 			JSONObject obj = new JSONObject(json);
 			int hits = obj.getInt("remaining_hits");
+			// Update the RateLimit objects
+//			http.updateRateLimits(KRequestType.NORMAL); no header info sent!
+			if (http instanceof URLConnectionHttpClient) {
+				URLConnectionHttpClient _http = (URLConnectionHttpClient) http;
+				RateLimit rateLimit = new RateLimit(
+						obj.getString("hourly_limit"), Integer.toString(hits),
+						obj.getString("reset_time"));
+				_http.rateLimits.put(KRequestType.NORMAL, rateLimit);
+			}
 			return hits;
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(json, e);
