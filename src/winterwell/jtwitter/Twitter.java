@@ -118,7 +118,11 @@ public class Twitter implements Serializable {
 	
 	/**
 	 * Matches latitude, longitude, including with the UberTwitter UT: prefix
-	 * Group 2 = latitude, Group 3 = longitude
+	 * Group 2 = latitude, Group 3 = longitude.
+	 * <p>
+	 * Weird: I saw this as an address - "ÜT: 25.324488,55.376224t"
+	 * Is it just a one-off typo?
+	 * Should we match N/S/E/W markers?
 	 */
 	public static final Pattern latLongLocn = Pattern.compile(
 			"(\\S+:)?\\s*(-?[\\d\\.]+),\\s*(-?[\\d\\.]+)");
@@ -632,7 +636,7 @@ public class Twitter implements Serializable {
 		private String location;
 
 		/**
-		 * @return the location of this tweet. Can be null.
+		 * @return the location of this tweet. Can be null, never blank.
 		 * This can come from geo-tagging or the user's location.
 		 * This may be a place name, or in the form "latitude,longitude" if
 		 * it came from a geo-tagged source.
@@ -727,8 +731,9 @@ public class Twitter implements Serializable {
 
 				}
 				// location if geocoding is on
-				JSONObject geo = object.optJSONObject("geo");
 				location = object.optString("location");
+				// no blank strings
+				if (location!=null && location.isEmpty()) location = null;
 				if (location!=null) {
 					// normalise UT (UberTwitter?) locations
 					Matcher m = latLongLocn.matcher(location);
@@ -736,7 +741,8 @@ public class Twitter implements Serializable {
 						location = m.group(2)+","+m.group(3);
 					}
 				}
-				if (geo!=null&& geo != JSONObject.NULL && location==null) {
+				JSONObject geo = object.optJSONObject("geo");
+				if (geo!=null && geo != JSONObject.NULL && location==null) {
 					JSONArray latLong = geo.getJSONArray("coordinates");
 					location = latLong.get(0)+","+latLong.get(1);
 				}
