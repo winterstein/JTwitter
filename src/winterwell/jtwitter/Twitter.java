@@ -731,7 +731,7 @@ public class Twitter implements Serializable {
 
 				}
 				// location if geocoding is on
-				location = object.optString("location");
+				location = jsonGet("location", object);
 				// no blank strings
 				if (location!=null && location.isEmpty()) location = null;
 				if (location!=null) {
@@ -917,7 +917,7 @@ public class Twitter implements Serializable {
 		public final Long id;
 		/**
 		 * The location, as reported by the user.
-		 * Can be metaphorical, e.g. "close to your heart"), or null.
+		 * Can be metaphorical, e.g. "close to your heart"), or null; never blank.
 		 * UberTwitter & similar lat/long references will be normalised
 		 * using {@link Twitter#latLongLocn}. 
 		 */
@@ -1020,6 +1020,7 @@ public class Twitter implements Serializable {
 				screenName = Twitter.CASE_SENSITIVE_SCREENNAMES? sn : sn.toLowerCase();
 				// location - normalise a bit
 				String _location = jsonGet("location", obj);
+				if (_location!=null && _location.isEmpty()) _location = null;
 				if (_location!=null) {
 					// normalise UT (UberTwitter?) locations
 					Matcher m = latLongLocn.matcher(_location);
@@ -1508,7 +1509,8 @@ public class Twitter implements Serializable {
 			return null;
 		if (JSONObject.NULL.equals(val))
 			return null;
-		return val.toString();
+		String s = val.toString();
+		return s;
 	}
 
 	/**
