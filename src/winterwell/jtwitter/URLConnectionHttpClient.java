@@ -553,6 +553,11 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			remaining = getHeader("X-FeatureRateLimit-Remaining");
 			reset = getHeader("X-FeatureRateLimit-Reset");
 			break;
+		case UPLOAD_MEDIA:
+			limit = getHeader("X-MediaRateLimit-Limit");
+			remaining = getHeader("X-MediaRateLimit-Remaining");
+			reset = getHeader("X-MediaRateLimit-Reset");
+			break; 
 		}
 		if (limit != null) {
 			rateLimits.put(reqType, new RateLimit(limit, remaining, reset));

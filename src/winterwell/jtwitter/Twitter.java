@@ -1,5 +1,6 @@
 package winterwell.jtwitter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -133,7 +134,8 @@ public class Twitter implements Serializable {
 	public static enum KRequestType {
 		NORMAL, SEARCH, SHOW_USER,
 		/** this is X-Feature Class "namesearch" in the response headers*/
-		SEARCH_USERS
+		SEARCH_USERS, 
+		UPLOAD_MEDIA
 	}
 
 	/**
@@ -1353,6 +1355,59 @@ public class Twitter implements Serializable {
 			m.put(keyValuePairs[i], v);
 		}
 		return m;
+	}
+	
+	
+	// TODO
+	// c.f. https://dev.twitter.com/discussions/1059
+	Status updateStatusWithMedia(String statusText, Number inReplyToStatusId, File media) { 
+
+		// should we trim statusText??
+		// TODO support URL shortening
+		if (statusText.length() > 160) {
+			throw new IllegalArgumentException(
+					"Status text must be 160 characters or less: "
+							+ statusText.length() + " " + statusText);
+		}
+		Map<String, String> vars = asMap("status", statusText);
+
+		// add in long/lat if set
+		if (myLatLong != null) {
+			vars.put("lat", Double.toString(myLatLong[0]));
+			vars.put("long", Double.toString(myLatLong[1]));
+		}
+
+		if (sourceApp != null)
+			vars.put("source", sourceApp);
+		if (inReplyToStatusId != null) {
+			// TODO remove this legacy check
+			double v = inReplyToStatusId.doubleValue();
+			assert v!=0 && v!=-1;
+			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
+		}
+//		media[]
+//		possibly_sensitive
+		// place_id
+		// display_coordinates
+		String result = null;
+		try {
+			result = http.post( // WithMedia
+//					TWITTER_URL + 
+					"http://upload.twitter.com/1/statuses/update_with_media.json", vars,
+					true);
+			http.updateRateLimits(KRequestType.UPLOAD_MEDIA);
+			Status s = new Status(new JSONObject(result), null);
+			return s;
+		} catch (E403 e) {
+			// test for repetition (which gets a 403)
+			Status s = getStatus();
+			if (s != null && s.getText().equals(statusText)) {
+				throw new TwitterException.Repetition(s.getText());
+			}
+			throw e;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(result, e);
+		}
 	}
 
 	static Date parseDate(String c) {
@@ -2907,6 +2962,8 @@ public class Twitter implements Serializable {
 
 	private String twitlongerApiKey;
 
+	public static long PHOTO_SIZE_LIMIT;
+
 	/**
 	 * Set this to allow the use of twitlonger via
 	 * {@link #updateLongStatus(String, long)}. To get an api-key for your app,
@@ -3408,6 +3465,7 @@ public class Twitter implements Serializable {
 	public Status updateStatus(String statusText, Number inReplyToStatusId)
 			throws TwitterException {
 		// should we trim statusText??
+		// TODO support URL shortening
 		if (statusText.length() > 160) {
 			throw new IllegalArgumentException(
 					"Status text must be 160 characters or less: "
@@ -3642,6 +3700,38 @@ public class Twitter implements Serializable {
 		lang = language;
 	}
 
+	/**
+	 * The length of a url after t.co shortening.
+	 * Currently 20 characters.
+	 * <p>
+	 * Use updateConfiguration() if you want to get the latest settings from Twitter.
+	 */
+	public static int LINK_LENGTH = 20;
+	
+//	/**
+//	 * The length of an https url after t.co shortening.
+//	 * This is just 1 more than {@link #LINK_LENGTH}
+//	 * <p>
+//	 * Use updateConfiguration() if you want to get the latest settings from Twitter.
+//	 */
+//	public static int LINK_LENGTH_HTTPS = LINK_LENGTH+1;
+	
+	public void updateConfiguration() {
+		String json = http.getPage(TWITTER_URL+"help/configuration.format", null, false);
+		try {
+			JSONObject jo = new JSONObject(json);
+			LINK_LENGTH = jo.getInt("short_url_length");
+	//		LINK_LENGTH_HTTPS = jo.getInt("short_url_length_https"); LINK_LENGTH + 1
+	//		characters_reserved_per_media -- this is just LINK_LENGTH 
+	//		max_media_per_upload // 1!
+			PHOTO_SIZE_LIMIT = jo.getLong("photo_size_limit");
+	//		photo_sizes
+	//		short_url_length_https
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+	
 	/**
 	 * FIXME: This no longer works.
 	 * Use http://api.twitter.com/1/trends.json instead
