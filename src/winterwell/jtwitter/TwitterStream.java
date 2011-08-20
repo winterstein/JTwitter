@@ -21,7 +21,7 @@ import winterwell.jtwitter.Twitter.ITweet;
  */
 public class TwitterStream {
 
-	private IHttpClient client;
+	private final IHttpClient client;
 
 	public TwitterStream(IHttpClient client) {
 		this.client = client;
