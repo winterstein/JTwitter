@@ -136,7 +136,7 @@ public class TwitterAccount {
 	 * @param id The id for this search
 	 * @return the deleted search
 	 */
-	public ITweet destroySavedSearch(Long id) {
+	public Search destroySavedSearch(Long id) {
 		String url = jtwit.TWITTER_URL+"saved_searches/destroy/"+id+".json";
 		String json = jtwit.getHttpClient().post(url, null, true);
 		try {
@@ -151,7 +151,7 @@ public class TwitterAccount {
 	 * @param query The search query
 	 * @return the new search
 	 */
-	public ITweet createSavedSearch(String query) {
+	public Search createSavedSearch(String query) {
 		String url = jtwit.TWITTER_URL+"saved_searches/create.json";
 		Map vars = Twitter.asMap("query", query);
 		String json = jtwit.getHttpClient().post(url, vars, true);
@@ -167,15 +167,15 @@ public class TwitterAccount {
 	 * @return The current user's saved searches on Twitter.
 	 * Use {@link ITweet#getText()} to retrieve the search query.
 	 */
-	public List<Twitter.ITweet> getSavedSearches() {
+	public List<Search> getSavedSearches() {
 		String url = jtwit.TWITTER_URL+"saved_searches.json";
 		String json = jtwit.getHttpClient().getPage(url, null, true);
 		try {
 			JSONArray ja = new JSONArray(json);
-			List<ITweet> searches = new ArrayList();
+			List<Search> searches = new ArrayList();
 			for (int i=0; i<ja.length(); i++) {
 				final JSONObject jo = ja.getJSONObject(i);
-				ITweet search = makeSearch(jo);
+				Search search = makeSearch(jo);
 				searches.add(search);
 			}
 			return searches;
@@ -191,30 +191,31 @@ public class TwitterAccount {
 	 * @return a search in ITweet format.
 	 * @throws JSONException
 	 */
-	private ITweet makeSearch(JSONObject jo) throws JSONException {
+	private Search makeSearch(JSONObject jo) throws JSONException {
 		final Date createdAt = Twitter.parseDate(jo.getString("created_at"));
 		final Long id = jo.getLong("id");
 		final String query = jo.getString("query");
-		ITweet search = new Twitter.ITweet() {
-			@Override
-			public Date getCreatedAt() {return createdAt;}
-			@Override
-			public Long getId() {return id;}
-			@Override
-			public String getText() {return query;}
-			@Override
-			public User getUser() {
-				if (jtwit.getScreenName() != null) {
-					return new User(jtwit.getScreenName());
-				}
-				return verifyCredentials();
-			}			
-		};
+		Search search = new Search(id, createdAt, query);
 		return search;
 	}
-	
+
+	public static class Search {
+		private Long id;
+		private Date createdAt;
+		private String query;
+		public Search(Long id, Date createdAt, String query) {
+			this.id = id;
+			this.createdAt = createdAt;
+			this.query = query;
+		}
+		
+		public Date getCreatedAt() {return createdAt;}
+		
+		public Long getId() {return id;}
+		
+		public String getText() {return query;}
+		
+	}
+
 }
 
-class Search {
-	
-}

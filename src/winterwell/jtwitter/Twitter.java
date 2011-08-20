@@ -29,6 +29,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Twitter.KEntityType;
+import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
@@ -181,6 +183,11 @@ public class Twitter implements Serializable {
 			}
 		}
 
+		/**
+		 * The slice of text in the tweet.
+		 * E.g. for a url, this will be the *shortened* version.
+		 * @see #displayVersion()
+		 */
 		@Override
 		public String toString() {
 			return tweet.getText().substring(start, end);
@@ -345,6 +352,20 @@ public class Twitter implements Serializable {
 	 */
 	public static interface ITweet extends Serializable {
 
+		/**
+		 * Twitter wrap urls with their own url-shortener (as a defence against malicious tweets).
+		 * You are recommended to direct people to the Twitter-url, but use the
+		 * original url for display.
+		 * <p>
+		 * Entity support is off by default. Request entity support by setting
+		 * {@link Twitter#setIncludeTweetEntities(boolean)}.
+		 * Twitter do NOT support entities for search :(
+		 *
+		 * @param type urls, user_mentions, or hashtags
+		 * @return the text entities in this tweet, or null if the info was not supplied.
+		 */
+		List<TweetEntity> getTweetEntities(KEntityType type);
+		
 		Date getCreatedAt();
 
 		/**
@@ -427,7 +448,13 @@ public class Twitter implements Serializable {
 		private final User recipient;
 		private final User sender;
 		public final String text;
+		private EnumMap<KEntityType, List<TweetEntity>> entities;
 
+		
+		public List<TweetEntity> getTweetEntities(KEntityType type) {
+			return entities==null? null : entities.get(type);
+		}
+		
 		/**
 		 * @param obj
 		 * @throws JSONException
@@ -449,6 +476,16 @@ public class Twitter implements Serializable {
 			} else {
 				recipient = null;
 			}
+			JSONObject jsonEntities = obj.optJSONObject("entities");
+			if (jsonEntities!=null) {
+				// Note: Twitter filters out dud @names
+				entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(KEntityType.class);
+				for(KEntityType type : KEntityType.values()) {
+					List<TweetEntity> es = TweetEntity.parse(this, type, jsonEntities);
+					entities.put(type, es);
+				}
+			}
+
 		}
 
 		public Date getCreatedAt() {
@@ -830,18 +867,7 @@ public class Twitter implements Serializable {
 			return list;
 		}
 
-		/**
-		 * Twitter are wrapping some urls with their own url-shortener (as a defence against malicious tweets).
-		 * You are recommended to direct people to the Twitter-url, but use the
-		 * original url for display.
-		 * <p>
-		 * Entity support is off by default. Request entity support by setting
-		 * {@link Twitter#setIncludeTweetEntities(boolean)}.
-		 * Twitter do NOT support entities for search :(
-		 *
-		 * @param type urls, user_mentions, or hashtags
-		 * @return the text entities in this tweet
-		 */
+		
 		public List<TweetEntity> getTweetEntities(KEntityType type) {
 			return entities==null? null : entities.get(type);
 		}
@@ -850,6 +876,8 @@ public class Twitter implements Serializable {
 		public String getText() {
 			return text;
 		}
+		
+		
 
 		public User getUser() {
 			return user;
@@ -2589,13 +2617,15 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Note: does NOT work for search() methods (not supported by Twitter).
-	 * @param tweetEntities Set to true to enable {@link Status#getTweetEntities(KEntityType)}.
+	 * @param tweetEntities Set to true to enable {@link Status#getTweetEntities(KEntityType)}, false
+	 * if you don't care.
+	 * Default is true.
 	 */
 	public void setIncludeTweetEntities(boolean tweetEntities) {
 		this.tweetEntities = tweetEntities;
 	}
 
-	boolean tweetEntities;
+	boolean tweetEntities = true;
 
 	/**
 	 * Is the authenticating user <i>followed by</i> userB?
@@ -3055,6 +3085,7 @@ public class Twitter implements Serializable {
 		if (text.length() > 140)
 			throw new IllegalArgumentException("Message is too long.");
 		Map<String, String> vars = asMap("user", recipient, "text", text);
+		if (tweetEntities) vars.put("include_entities", "1");
 		String result=null;
 		try {
 			// post it

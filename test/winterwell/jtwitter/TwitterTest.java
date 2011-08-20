@@ -20,9 +20,11 @@ import junit.framework.TestCase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.Message;
 import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -908,6 +910,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Twitter tw = newTestTwitter();
 			List<Status> javaTweets = tw.search("java");
 			assert javaTweets.size() != 0;
+			Status tweet = javaTweets.get(0);
+		}
+		{	// with entities
+			Twitter tw = newTestTwitter();
+			List<Status> linkTweets = tw.search("http");
+			assert linkTweets.size() != 0;
+			Status tweet = linkTweets.get(0);
+			System.out.println(tweet);
+			List<TweetEntity> urls = tweet.getTweetEntities(KEntityType.urls);
+			System.out.println(urls); // Nope, we don't get any
 		}
 //		{	// long search - This is too complex, gets an exception
 //			Twitter tw = newTestTwitter();
@@ -943,8 +955,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testSendMessage() {
 		Twitter tw = newTestTwitter();
-		Message sent = tw.sendMessage("winterstein", "Please ignore this message");
+		String msg = "Please ignore this message http://www.winterwell.com "+new Random().nextInt(1000);
+		Message sent = tw.sendMessage("winterstein", msg);
 		System.out.println(""+sent);
+		tw.setIncludeTweetEntities(true);
+		String msg2 = "Please ignore this message too http://www.winterwell.com "+new Random().nextInt(1000);
+		Message sent2 = tw.sendMessage("winterstein", msg2);
+		System.out.println(""+sent2.getTweetEntities(KEntityType.urls));
 	}
 
 	/**

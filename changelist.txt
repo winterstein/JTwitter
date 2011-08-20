@@ -1,5 +1,10 @@
 # JTwitter Change list 
 
+2.1.8 (pending)
+ - Breaking change: created a TwitterAccount.Search class to describe saved searched.
+ - Added entity support to ITweet and Message 
+ - Twitter.setIncludeTweetEntities() now defaults to true, so you get the t.co link info by default. 
+ 
 2.1.7
  - Fixed issue with t.co shortener upsetting Twitter.updateStatus' sanity check.
  - Added Saved Search support in TwitterAccount:
