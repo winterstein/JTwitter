@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -22,6 +24,14 @@ import winterwell.jtwitter.Twitter.Status;
  */
 abstract class AStream {
 
+	// TODO
+	/**
+	 * Attempt the first, and, only the first, reconnect to user streams immediately upon failure.
+If reconnect succeeds, clear the failure time.
+If reconnect fails, wait for an increasing period of time before attempting the next reconnect – an exponential back-off. Wait a random number of seconds between 20 and 40 seconds. Double this value on each subsequent connection failure. Limit this value to the maximum of a random number of seconds between 240 and 300 seconds.
+Do not resume REST API polling immediately after a stream failure. Wait at least a minute or two after the initial failure before you begin REST API polling. This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on the streaming API.
+Perform a final REST API poll after a successful connection is established to ensure that there is no data loss.
+	 */
 
 	@Override
 	protected void finalize() throws Throwable {
@@ -34,7 +44,7 @@ abstract class AStream {
 	 */
 	public List<TwitterEvent> popEvents() {
 		read();
-		List evs = events;
+		List evs = getEvents();
 		events = new ArrayList();
 		return evs;
 	}
@@ -44,7 +54,7 @@ abstract class AStream {
 	 */
 	public List<ITweet> popTweets() {
 		read();
-		List<ITweet> ts = tweets;
+		List<ITweet> ts = getTweets();
 		tweets = new ArrayList();
 		return ts;
 	}
@@ -56,6 +66,13 @@ abstract class AStream {
 	
 	public List<ITweet> getTweets() {
 		read();
+//		// re-order?? Or do we not care TODO test this is the right way round
+//		Collections.sort(tweets, new Comparator<ITweet>() {
+//			@Override
+//			public int compare(ITweet t1, ITweet t2) {
+//				return t1.getCreatedAt().compareTo(t2.getCreatedAt());
+//			}
+//		});
 		return tweets;
 	}
 
@@ -82,6 +99,11 @@ abstract class AStream {
 				System.out.println(jo);
 				if (jo.has("text")) {
 					Status tweet = new Twitter.Status(jo, null);
+					// de-duplicate??
+					if (tweets.contains(tweet)) {
+						System.out.println("DUPLICATE TWEET!");
+						continue;
+					}
 					tweets.add(tweet);
 					continue;
 				}
