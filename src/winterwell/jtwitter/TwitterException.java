@@ -258,6 +258,23 @@ public class TwitterException extends RuntimeException {
 		}
 		private static final long serialVersionUID = 1L;		
 	}
+	
+	/**
+	 * A code 420 error indicates that the account has been logging in too often. This code will 
+	 * be the indication that the account has exceeded the per-account-per-application 
+	 * connection limit. This situation should be raised to the 
+	 * user, as they have been automatically and temporarily banned from User Streams 
+	 * for an excessive login rate. The user should be advised to shut down extra 
+	 * copies of the application, perhaps instances running on another device, to 
+	 * restore streaming access.
+	 */
+	public static class TooManyLogins extends TwitterException {
+		public TooManyLogins(String string) {
+			super(string);
+		}
+		private static final long serialVersionUID = 1L;		
+	}
+	
 	/**
 	 * Indicates a rate limit error (i.e. you've over-used Twitter)
 	 */

@@ -783,6 +783,7 @@ public class Twitter implements Serializable {
 					JSONArray latLong = geo.getJSONArray("coordinates");
 					location = latLong.get(0)+","+latLong.get(1);
 				}
+				// TODO place
 				retweetCount = object.optInt("retweet_count", -1);
 				// ignore this as it can be misleading: true is reliable, false isn't
 				// retweeted = object.optBoolean("retweeted");

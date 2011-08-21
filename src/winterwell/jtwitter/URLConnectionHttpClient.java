@@ -392,6 +392,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 							+ url);
 				throw new TwitterException.E404(error + "\n" + url);
 			}
+			if (code == 420) {
+				throw new TwitterException.TooManyLogins(error + "\n" + url);
+			}
 			if (code >= 500 && code < 600)
 				throw new TwitterException.E50X(error + "\n" + url);
 
