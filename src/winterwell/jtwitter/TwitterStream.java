@@ -54,7 +54,7 @@ public class TwitterStream extends AStream {
 	 * works with no extra settings.
 	 * @param method
 	 */
-	public void setMethod(KMethod method) {
+	void setMethod(KMethod method) {
 		this.method = method;
 	}
 		
@@ -65,8 +65,9 @@ public class TwitterStream extends AStream {
 				vars.put("follow", Twitter.join(follow, 0, Integer.MAX_VALUE));
 			}
 			if (track!=null) {
-				vars.put("track", Twitter.join(track, 0, Integer.MAX_VALUE));
+				vars.put("track", Twitter.join(track, 0, Integer.MAX_VALUE));	
 			}
+			// FIXME need to use post for long sets of vars :(
 			HttpURLConnection con = client.connect(url, vars, true);
 			return con;
 	}
@@ -76,6 +77,7 @@ public class TwitterStream extends AStream {
 	 * @param userIds
 	 */
 	public void setFollowUsers(List<Long> userIds) {
+		method = KMethod.filter;
 		follow = userIds;
 	}
 	
@@ -88,15 +90,17 @@ public class TwitterStream extends AStream {
 	Each element consists of longitude/latitude south-west, north-east.	 
 	*/
 	public void setLocation(List<double[]> boundingBoxes) {
-		throw new TodoException();
+		method = KMethod.filter;
+		throw new TodoException();		
 	}
 	
 	/**
-	 * 
+	 * See https://dev.twitter.com/docs/streaming-api/methods#track
 	 * @param keywords The default access level allows up to 400 track keywords.
 	 */
 	public void setTrackKeywords(List<String> keywords) {		
 		this.track = keywords;
+		method = KMethod.filter;
 	}
 }
 
