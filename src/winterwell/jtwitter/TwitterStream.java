@@ -24,6 +24,11 @@ import winterwell.utils.TodoException;
  */
 public class TwitterStream extends AStream {
 
+	/**
+	 * 
+	 * @param client This will have it's timeout set to 90 seconds.
+	 * So you probably don't want to reuse the object with the REST api. 
+	 */
 	public TwitterStream(IHttpClient client) {
 		super(client);
 	}

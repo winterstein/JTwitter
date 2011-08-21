@@ -352,6 +352,15 @@ public class Twitter implements Serializable {
 	 */
 	public static interface ITweet extends Serializable {
 
+
+		/**
+		 * @return the location of this tweet. Can be null, never blank.
+		 * This can come from geo-tagging or the user's location.
+		 * This may be a place name, or in the form "latitude,longitude" if
+		 * it came from a geo-tagged source.
+		 */
+		String getLocation();
+		
 		/**
 		 * Twitter wrap urls with their own url-shortener (as a defence against malicious tweets).
 		 * You are recommended to direct people to the Twitter-url, but use the
@@ -391,6 +400,11 @@ public class Twitter implements Serializable {
 	 * TODO are there more fields now? check the raw json
 	 */
 	public static final class Message implements ITweet {
+		
+		public String getLocation() {
+			return location;
+		}
+		
 		private static final long serialVersionUID = 1L;
 		/**
 		 * Equivalent to {@link Status#inReplyToStatusId} *but null by default*.
@@ -449,6 +463,7 @@ public class Twitter implements Serializable {
 		private final User sender;
 		public final String text;
 		private EnumMap<KEntityType, List<TweetEntity>> entities;
+		private String location;
 
 		
 		public List<TweetEntity> getTweetEntities(KEntityType type) {
@@ -485,7 +500,8 @@ public class Twitter implements Serializable {
 					entities.put(type, es);
 				}
 			}
-
+			// geo-location?
+			location = Twitter.Status.jsonGetLocn(obj);
 		}
 
 		public Date getCreatedAt() {
@@ -544,6 +560,18 @@ public class Twitter implements Serializable {
 	public static final class Status implements ITweet {
 		private static final long serialVersionUID = 1L;
 
+		boolean sensitive;
+		
+		/**
+		 * A <i>self-applied</i> label for sensitive content (eg. X-rated images).
+		 * Obviously, you can only rely on this label if the tweeter is reliably
+		 * setting it.
+		 * @return true=kinky, false=family-friendly
+		 */
+		public boolean isSensitive() {
+			return sensitive;
+		}
+		
 		@Override
 		public int hashCode() {
 			return id.hashCode();
@@ -672,12 +700,6 @@ public class Twitter implements Serializable {
 
 		private String location;
 
-		/**
-		 * @return the location of this tweet. Can be null, never blank.
-		 * This can come from geo-tagging or the user's location.
-		 * This may be a place name, or in the form "latitude,longitude" if
-		 * it came from a geo-tagged source.
-		 */
 		public String getLocation() {
 			return location;
 		}
@@ -768,22 +790,7 @@ public class Twitter implements Serializable {
 
 				}
 				// location if geocoding is on
-				location = jsonGet("location", object);
-				// no blank strings
-				if (location!=null && location.isEmpty()) location = null;
-				if (location!=null) {
-					// normalise UT (UberTwitter?) locations
-					Matcher m = latLongLocn.matcher(location);
-					if (m.matches()) {
-						location = m.group(2)+","+m.group(3);
-					}
-				}
-				JSONObject geo = object.optJSONObject("geo");
-				if (geo!=null && geo != JSONObject.NULL && location==null) {
-					JSONArray latLong = geo.getJSONArray("coordinates");
-					location = latLong.get(0)+","+latLong.get(1);
-				}
-				// TODO place
+				location = jsonGetLocn(object);
 				retweetCount = object.optInt("retweet_count", -1);
 				// ignore this as it can be misleading: true is reliable, false isn't
 				// retweeted = object.optBoolean("retweeted");
@@ -797,9 +804,37 @@ public class Twitter implements Serializable {
 						entities.put(type, es);
 					}
 				}
+				sensitive = object.optBoolean("possibly_sensitive");
 			} catch (JSONException e) {
 				throw new TwitterException.Parsing(null, e);
 			}
+		}
+
+		/**
+		 * @param object
+		 * @return location, failing which geo coordinates
+		 * TODO place
+		 * @throws JSONException
+		 */
+		static String jsonGetLocn(JSONObject object) throws JSONException {
+			String _location = jsonGet("location", object);
+			// no blank strings
+			if (_location!=null && _location.isEmpty()) _location = null;
+			if (_location!=null) {
+				// normalise UT (UberTwitter?) locations
+				Matcher m = latLongLocn.matcher(_location);
+				if (m.matches()) {
+					_location = m.group(2)+","+m.group(3);					
+				}
+				return _location; // should we also check geo and place for extra info??
+			}			
+			JSONObject geo = object.optJSONObject("geo");
+			if (geo!=null && geo != JSONObject.NULL) {
+				JSONArray latLong = geo.getJSONArray("coordinates");
+				_location = latLong.get(0)+","+latLong.get(1);
+			}
+			// TODO place (when is this set?)
+			return _location;
 		}
 
 		/**

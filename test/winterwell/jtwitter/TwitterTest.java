@@ -955,6 +955,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testSendMessage() {
 		Twitter tw = newTestTwitter();
+		TwitterAccount ta = new TwitterAccount(tw);
+		// TODO ta.setgeotagging true
+		tw.setMyLocation(new double[]{-55,1});
 		String msg = "Please ignore this message http://www.winterwell.com "+new Random().nextInt(1000);
 		Message sent = tw.sendMessage("winterstein", msg);
 		System.out.println(""+sent);

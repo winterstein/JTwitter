@@ -181,17 +181,28 @@ public class TwitterException extends RuntimeException {
 	 *  - If search is passed a sinceId which is too old. Though the 
 	 *  API documentation suggests a 404 should be thrown instead.
 	 */
-	public static class E403 extends TwitterException {
+	public static class E403 extends E40X {
 		public E403(String string) {
 			super(string);
 		}
 		private static final long serialVersionUID = 1L;
 	}
+	
+	/**
+	 * A user-error. This is sub-classed to privde more info.
+	 */
+	public static class E40X extends TwitterException {
+		public E40X(String string) {
+			super(string);
+		}
+		private static final long serialVersionUID = 1L;		
+	}
+	
 	/**
 	 * An unauthorised exception. This is thrown (eg) if a password is wrong
 	 * or a login is required.
 	 */
-	public static class E401 extends TwitterException {
+	public static class E401 extends E40X {
 		public E401(String string) {
 			super(string);
 		}
@@ -252,7 +263,7 @@ public class TwitterException extends RuntimeException {
 	 * Note: *Used* to be thrown in relation to suspended users (e.g. spambots)
 	 * These now get a 403, as of August 2010.
 	 */
-	public static class E404 extends TwitterException {
+	public static class E404 extends E40X {
 		public E404(String string) {
 			super(string);
 		}
@@ -268,7 +279,7 @@ public class TwitterException extends RuntimeException {
 	 * copies of the application, perhaps instances running on another device, to 
 	 * restore streaming access.
 	 */
-	public static class TooManyLogins extends TwitterException {
+	public static class TooManyLogins extends E40X {
 		public TooManyLogins(String string) {
 			super(string);
 		}

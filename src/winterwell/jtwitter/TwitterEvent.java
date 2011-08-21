@@ -73,6 +73,7 @@ public class TwitterEvent {
 			targetObject = to;
 		}
 	}
+
 	
 	/** The affected object, if not a user. 
 	 * E.g. For a favorite event, 

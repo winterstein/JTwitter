@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,21 +19,23 @@ import org.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.Twitter.User;
+import winterwell.utils.reporting.Log;
 
 /**
- * Internal base class for UserStream and TwitterStream
+ * Internal base class for UserStream and TwitterStream.
+ * 
+ * <h3>Memory Management</h3>
+ * 
+ * 
  * @author daniel
  */
 abstract class AStream {
 
-	// TODO
 	/**
-	 * Attempt the first, and, only the first, reconnect to user streams immediately upon failure.
-If reconnect succeeds, clear the failure time.
-If reconnect fails, wait for an increasing period of time before attempting the next reconnect – an exponential back-off. Wait a random number of seconds between 20 and 40 seconds. Double this value on each subsequent connection failure. Limit this value to the maximum of a random number of seconds between 240 and 300 seconds.
-Do not resume REST API polling immediately after a stream failure. Wait at least a minute or two after the initial failure before you begin REST API polling. This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on the streaming API.
-Perform a final REST API poll after a successful connection is established to ensure that there is no data loss.
+	 * 5 minutes
 	 */
+	private static final int MAX_WAIT_SECONDS = 300;
 
 	@Override
 	protected void finalize() throws Throwable {
@@ -43,17 +47,33 @@ Perform a final REST API poll after a successful connection is established to en
 	 * @return the recent events. Calling this will clear the list of events.
 	 */
 	public List<TwitterEvent> popEvents() {
-		read();
 		List evs = getEvents();
 		events = new ArrayList();
 		return evs;
+	}
+	
+	/**
+	 * @return the recent system events, such as "delete this status". 
+	 * Calling this will clear the list of system events.
+	 */
+	public List<TwitterEvent> popSystemEvents() {		
+		List evs = getSystemEvents();
+		sysEvents = new ArrayList();
+		return evs;
+	}
+	
+	
+	/**
+	 * @return the recent system events, such as "delete this status". */
+	public List<Object> getSystemEvents() {
+		read();
+		return sysEvents;
 	}
 
 	/**
 	 * @return the recent events. Calling this will clear the list of tweets.
 	 */
 	public List<ITweet> popTweets() {
-		read();
 		List<ITweet> ts = getTweets();
 		tweets = new ArrayList();
 		return ts;
@@ -77,47 +97,167 @@ Perform a final REST API poll after a successful connection is established to en
 	}
 
 	List<Long> friends;
+
+	private int forgotten;
+
+	private boolean autoReconnect;
 	
-	void read() {
-		assert readThread.isAlive();
+	/**
+	 * @return the number of messages (which could be tweets, events, or
+	 * system events) which the stream has dropped to stay within it's
+	 * (very generous) bounds.
+	 * <p>
+	 * Best practice is to NOT rely on this for memory management.
+	 * You should call {@link #popEvents()}, {@link #popSystemEvents()}
+	 * and {@link #popTweets()} regularly to clear the buffers.
+	 */
+	public int getForgotten() {
+		return forgotten;
+	}
+	
+	/**
+	 * 
+	 * @param yes If true, attempt to connect if disconnected. true by default.
+	 */
+	public void setAutoReconnect(boolean yes) {
+		autoReconnect = yes;
+	}
+	
+	void read() {		
 		String[] jsons = readThread.popJsons();		
-		for (String json : jsons) {
+		for (String json : jsons) {				
 			try {
-				JSONObject jo = new JSONObject(json);
-				// the 1st object for a user stream is a list of friend ids
-				JSONArray _friends = jo.optJSONArray("friends");
-				if (_friends != null) {
-					friends = new ArrayList(_friends.length());
-					for (int i = 0, n = _friends.length(); i < n; i++) {
-						friends.add(_friends.getLong(i));
-					}
-					continue;
-				}
-				
-				// tweets
-				// TODO DMs??
-				System.out.println(jo);
-				if (jo.has("text")) {
-					Status tweet = new Twitter.Status(jo, null);
-					// de-duplicate??
-					if (tweets.contains(tweet)) {
-						System.out.println("DUPLICATE TWEET!");
-						continue;
-					}
-					tweets.add(tweet);
-					continue;
-				}
-				
-				// Events
-				String eventType = jo.optString("event");
-				if (eventType != "") {
-					TwitterEvent event = new TwitterEvent(jo, jtwit);
-					events.add(event);
-				}
+				read2(json);
 			} catch (JSONException e) {
 				throw new TwitterException.Parsing(json, e);
 			}
+		}		
+		if (readThread.isAlive() && readThread.ex == null) return;
+		// close all
+		URLConnectionHttpClient.close(stream);
+		if (readThread.isAlive()) {
+			readThread.pleaseStop();
+			readThread.interrupt();
 		}
+		// The connection is down!		
+		if ( ! autoReconnect) {
+			throw new TwitterException(readThread.ex);
+		}		
+		// TODO this in a different thread so as not to block (by upto five minutes)
+		reconnect();
+	}
+	
+	public void reconnect() {		
+		// TODO try again:
+		// 1. straightaway
+		long offTime = readThread.offTime;
+		try {
+			connect();
+			offTime = 0;
+			return;
+		} catch (TwitterException.E40X e) {
+			throw e;
+		} catch (Exception e) {
+			// oh well
+			Log.report(""+e);
+		}
+		// 2. Exponential back-off. Wait a random number of seconds between 20 and 40 seconds. 
+		// Double this value on each subsequent connection failure. 
+		// Limit this value to the maximum of a random number of seconds between 240 and 300 seconds.
+		int wait = 20 + new Random().nextInt(40);
+		int waited = 0;
+		while(waited < MAX_WAIT_SECONDS) {
+			try {
+				Thread.sleep(wait*1000);
+				waited += wait;				
+				if (wait<300) wait = wait*2;
+				connect();	
+				// success :)
+				offTime = 0;
+				return;
+			} catch (TwitterException.E40X e) {
+				throw e;
+			} catch (Exception e) {
+				// oh well
+				Log.report(""+e);
+			}			
+		}
+		throw new TwitterException.E50X("Could not connect to streaming server");
+        // TODO Do not resume REST API polling immediately after a stream failure. 
+		// Wait at least a minute or two after the initial failure before you begin REST API polling. 
+		// This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on 
+		// the streaming API.
+		
+		// Perform a final REST API poll after a successful connection is established to ensure that 
+		// there is no data loss.		
+	}
+	
+	public boolean isConnected() {
+		return readThread != null && readThread.isAlive() && readThread.ex==null;
+	}
+
+	// TODO record the outages somewhere to allow for fill-in List<long[]> outages = new ArrayList();
+	
+	private void read2(String json) throws JSONException {
+		JSONObject jo = new JSONObject(json);
+		// the 1st object for a user stream is a list of friend ids
+		JSONArray _friends = jo.optJSONArray("friends");
+		if (_friends != null) {
+			friends = new ArrayList(_friends.length());
+			for (int i = 0, n = _friends.length(); i < n; i++) {
+				friends.add(_friends.getLong(i));
+			}
+			return;
+		}
+		
+		// tweets
+		// TODO DMs??
+		//System.out.println(jo);
+		if (jo.has("text")) {
+			Status tweet = new Twitter.Status(jo, null);
+			// de-duplicate??
+			if (tweets.contains(tweet)) {
+				System.out.println("DUPLICATE TWEET!");
+				return;
+			}
+			tweets.add(tweet);
+			forgotten += forgetIfFull(tweets);
+			return;
+		}
+		
+		// Events
+		String eventType = jo.optString("event");
+		if (eventType != "") {
+			TwitterEvent event = new TwitterEvent(jo, jtwit);
+			events.add(event);
+			forgotten += forgetIfFull(events);
+		}
+		// Deletes TODO and other system events, like limits
+		JSONObject del = jo.optJSONObject("delete");
+		if (del!=null) {
+			JSONObject s = del.getJSONObject("status");
+			BigInteger id = new BigInteger(s.getString("id_str"));
+			long userId = s.getLong("user_id");
+			Status deadTweet = new Status(null, null, id, null);
+			// prune local (which is unlikely to do much)
+			boolean pruned = tweets.remove(deadTweet);
+			if ( ! pruned) {
+				sysEvents.add(new Object[]{"delete", deadTweet, userId});
+				forgotten += forgetIfFull(sysEvents);
+			}
+			return;
+		}
+		System.out.println(jo);
+	}
+
+	static int forgetIfFull(List incoming) {
+		// forget a batch?
+		if (incoming.size() < StreamGobbler.MAX_BUFFER) return 0;
+		int chop = StreamGobbler.MAX_BUFFER / 10;
+		for(int i=0; i<chop; i++) {
+			incoming.remove(0);
+		}		
+		return chop;
 	}
 
 	/**
@@ -170,9 +310,9 @@ Perform a final REST API poll after a successful connection is established to en
 
 	final IHttpClient client;
 
-	List<TwitterEvent> events = new ArrayList<TwitterEvent>();
+	List<TwitterEvent> events = new ArrayList();
 	List<ITweet> tweets = new ArrayList();
-
+	List<Object> sysEvents = new ArrayList();
 
 	/**
 	 * Needed for constructing some objects.
@@ -197,14 +337,15 @@ Perform a final REST API poll after a successful connection is established to en
  * 
  */
 final class StreamGobbler extends Thread {
+	long offTime;
 	private final InputStream is;
 	private volatile boolean stopFlag;
-	private IOException ex;
+	IOException ex;
 
 	/**
 	 * start dropping messages after this.
 	 */
-	private static final int MAX_BUFFER = 1000000;
+	static final int MAX_BUFFER = 1000000;
 	
 	public StreamGobbler(InputStream is) {
 		super("gobbler:" + is.toString());
@@ -217,7 +358,7 @@ final class StreamGobbler extends Thread {
 	 * count of the number of tweets this gobbler had to drop
 	 * due to buffer size
 	 */
-	private int forgotten;
+	int forgotten;
 	
 	/**
 	 * Read off the collected json snippets for processing
@@ -250,7 +391,7 @@ final class StreamGobbler extends Thread {
 		try {
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
-			while (!stopFlag) {
+			while ( ! stopFlag) {
 				int len = readLength(br);
 				readJson(br, len);
 			}
@@ -261,6 +402,7 @@ final class StreamGobbler extends Thread {
 			}
 			ioe.printStackTrace();
 			ex = ioe;
+			offTime = System.currentTimeMillis();
 		}
 	}
 
@@ -278,12 +420,7 @@ final class StreamGobbler extends Thread {
 		synchronized (jsons) {
 			jsons.add(new String(sb));
 			// forget a batch?
-			if (jsons.size() > MAX_BUFFER) {
-				forgotten += 1000;
-				for(int i=0; i<1000; i++) {
-					jsons.remove(0);
-				}
-			}
+			forgotten += AStream.forgetIfFull(jsons);
 		}		
 	}
 
