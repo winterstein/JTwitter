@@ -12,6 +12,7 @@ import java.util.Map;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.TodoException;
 
 /**
  * Connect to the streaming API.
@@ -21,13 +22,15 @@ import winterwell.jtwitter.Twitter.ITweet;
  * Status: This class is in an early stage, and may change. 
  * @author Daniel
  */
-public class TwitterStream extends UserStream {
+public class TwitterStream extends AStream {
 
 	public TwitterStream(IHttpClient client) {
 		super(client);
 	}
 	
 	KMethod method = KMethod.sample;
+	private List<String> track;
+	private List<Long> follow;
 	
 	public static enum KMethod {
 		/**
@@ -58,10 +61,43 @@ public class TwitterStream extends UserStream {
 	HttpURLConnection connect2() throws IOException {
 			String url = "http://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
 			Map<String, String> vars = new HashMap();
+			if (follow!=null) {
+				vars.put("follow", Twitter.join(follow, 0, Integer.MAX_VALUE));
+			}
+			if (track!=null) {
+				vars.put("track", Twitter.join(track, 0, Integer.MAX_VALUE));
+			}
 			HttpURLConnection con = client.connect(url, vars, true);
 			return con;
 	}
-		
+
+	/**
+	 * , 5,000 follow userids and 
+	 * @param userIds
+	 */
+	public void setFollowUsers(List<Long> userIds) {
+		follow = userIds;
+	}
+	
+	/**
+	25 0.1-360 degree location boxes.
+	
+	Only tweets that are both created using the Geotagging API and are placed from within a tracked bounding box will be included in the stream – the user’s location field is not used to filter tweets
+	
+	@param boundingBoxes
+	Each element consists of longitude/latitude south-west, north-east.	 
+	*/
+	public void setLocation(List<double[]> boundingBoxes) {
+		throw new TodoException();
+	}
+	
+	/**
+	 * 
+	 * @param keywords The default access level allows up to 400 track keywords.
+	 */
+	public void setTrackKeywords(List<String> keywords) {		
+		this.track = keywords;
+	}
 }
 
 
