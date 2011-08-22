@@ -25,6 +25,7 @@ public class TwitterGeo {
 	private double accuracy;
 
 	public TwitterGeo(Twitter jtwit) {
+		assert jtwit != null;
 		assert jtwit.getHttpClient().canAuthenticate();
 		this.jtwit = jtwit;
 	}
