@@ -358,8 +358,17 @@ public class Twitter implements Serializable {
 		 * This can come from geo-tagging or the user's location.
 		 * This may be a place name, or in the form "latitude,longitude" if
 		 * it came from a geo-tagged source.
+		 * <p>
+		 * Note: This will be set if Twitter supply any geo-information.
+		 * We extract a location from geo and place objects.  
 		 */
 		String getLocation();
+
+		/**
+		 * @return more information on the location of this tweet. 
+		 * This is usually null!
+		 */
+		Place getPlace();
 		
 		/**
 		 * Twitter wrap urls with their own url-shortener (as a defence against malicious tweets).
@@ -464,6 +473,7 @@ public class Twitter implements Serializable {
 		public final String text;
 		private EnumMap<KEntityType, List<TweetEntity>> entities;
 		private String location;
+		private Place place;
 
 		
 		public List<TweetEntity> getTweetEntities(KEntityType type) {
@@ -501,7 +511,16 @@ public class Twitter implements Serializable {
 				}
 			}
 			// geo-location?
-			location = Twitter.Status.jsonGetLocn(obj);
+			Object _locn = Twitter.Status.jsonGetLocn(obj);
+			location = _locn==null? null : _locn.toString();
+			if (_locn instanceof Place) {
+				place = (Place) _locn;
+			}
+		}
+		
+		@Override
+		public Place getPlace() {
+			return place;
 		}
 
 		public Date getCreatedAt() {
@@ -560,6 +579,11 @@ public class Twitter implements Serializable {
 	public static final class Status implements ITweet {
 		private static final long serialVersionUID = 1L;
 
+		@Override
+		public Place getPlace() {
+			return place;
+		}
+		
 		boolean sensitive;
 		
 		/**
@@ -700,6 +724,8 @@ public class Twitter implements Serializable {
 
 		private String location;
 
+		private Place place;
+
 		public String getLocation() {
 			return location;
 		}
@@ -790,7 +816,12 @@ public class Twitter implements Serializable {
 
 				}
 				// location if geocoding is on
-				location = jsonGetLocn(object);
+				Object _locn = Twitter.Status.jsonGetLocn(object);
+				location = _locn==null? null : _locn.toString();
+				if (_locn instanceof Place) {
+					place = (Place) _locn;
+				}
+				
 				retweetCount = object.optInt("retweet_count", -1);
 				// ignore this as it can be misleading: true is reliable, false isn't
 				// retweeted = object.optBoolean("retweeted");
@@ -812,14 +843,14 @@ public class Twitter implements Serializable {
 
 		/**
 		 * @param object
-		 * @return location, failing which geo coordinates
-		 * TODO place
+		 * @return place, location, failing which geo coordinates
 		 * @throws JSONException
 		 */
-		static String jsonGetLocn(JSONObject object) throws JSONException {
+		static Object jsonGetLocn(JSONObject object) throws JSONException {
 			String _location = jsonGet("location", object);
 			// no blank strings
-			if (_location!=null && _location.isEmpty()) _location = null;
+			if (_location!=null && _location.isEmpty()) _location = null;			
+			JSONObject _place = object.optJSONObject("place");
 			if (_location!=null) {
 				// normalise UT (UberTwitter?) locations
 				Matcher m = latLongLocn.matcher(_location);
@@ -827,7 +858,12 @@ public class Twitter implements Serializable {
 					_location = m.group(2)+","+m.group(3);					
 				}
 				return _location; // should we also check geo and place for extra info??
-			}			
+			}
+			// Twitter place			
+			if (_place !=null) {
+				Place place = new Place(_place);
+				return place;
+			}
 			JSONObject geo = object.optJSONObject("geo");
 			if (geo!=null && geo != JSONObject.NULL) {
 				JSONArray latLong = geo.getJSONArray("coordinates");
@@ -1066,8 +1102,13 @@ public class Twitter implements Serializable {
 		 * The number of public lists a user is listed in. -1 if unknown.
 		 */
 		public final int listedCount;
+		private Place place;
 
 
+		public Place getPlace() {
+			return place;
+		}
+		
 		/**
 		 * Create a User from a json blob
 		 *
@@ -1082,17 +1123,12 @@ public class Twitter implements Serializable {
 				name = unencode(jsonGet("name", obj));
 				String sn = jsonGet("screen_name", obj);
 				screenName = Twitter.CASE_SENSITIVE_SCREENNAMES? sn : sn.toLowerCase();
-				// location - normalise a bit
-				String _location = jsonGet("location", obj);
-				if (_location!=null && _location.isEmpty()) _location = null;
-				if (_location!=null) {
-					// normalise UT (UberTwitter?) locations
-					Matcher m = latLongLocn.matcher(_location);
-					if (m.matches()) {
-						_location = m.group(2)+","+m.group(3);
-					}
+				// location - normalise a bit				
+				Object _locn = Twitter.Status.jsonGetLocn(obj);
+				location = _locn==null? null : _locn.toString();
+				if (_locn instanceof Place) {
+					place = (Place) _locn;
 				}
-				location = _location;
 
 				description = unencode(jsonGet("description", obj));
 				String img = jsonGet("profile_image_url", obj);

@@ -215,9 +215,8 @@ abstract class AStream {
 		//System.out.println(jo);
 		if (jo.has("text")) {
 			Status tweet = new Twitter.Status(jo, null);
-			// de-duplicate??
+			// de-duplicate a bit locally (this is rare -- perhaps don't bother??)
 			if (tweets.contains(tweet)) {
-				System.out.println("DUPLICATE TWEET!");
 				return;
 			}
 			tweets.add(tweet);

@@ -17,6 +17,7 @@ import org.json.JSONObject;
  * @see Twitter.Status#getLocation()
  * 
  * @author daniel
+ * @testedby TwitterGeoTest
  */
 public class TwitterGeo {
 
@@ -55,9 +56,10 @@ public class TwitterGeo {
 			JSONArray arr = jo2.getJSONArray("places");
 			List places = new ArrayList(arr.length());
 			for (int i=0; i<arr.length(); i++) {
-				JSONObject place = arr.getJSONObject(i);
+				JSONObject _place = arr.getJSONObject(i);
 				// interpret it - maybe pinch code from jGeoPlanet?
 	//			https://dev.twitter.com/docs/api/1/get/geo/id/%3Aplace_id
+				Place place = new Place(_place);
 				places.add(place);
 			}
 			return places;

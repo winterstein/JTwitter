@@ -5,6 +5,7 @@
  - Added entity support to ITweet and Message 
  - Twitter.setIncludeTweetEntities() now defaults to true, so you get the t.co link info by default.
  - Streaming API: UserStream and TwitterStream provide beta-level support. 
+ - Place class to model Twitter place data, plus ITweet.getPlace() and User.getPlace() 
  
 2.1.7
  - Fixed issue with t.co shortener upsetting Twitter.updateStatus' sanity check.
