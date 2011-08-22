@@ -41,7 +41,7 @@ public class TwitterGeo {
 		throw new RuntimeException();
 	}
 	
-	public List geoSearch(String query) {
+	public List<Place> geoSearch(String query) {
 		String url = jtwit.TWITTER_URL+"/geo/search.json";
 		Map vars = Twitter.asMap(
 				"query", query
