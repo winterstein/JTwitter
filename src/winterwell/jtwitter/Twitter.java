@@ -127,7 +127,7 @@ public class Twitter implements Serializable {
 	 * Should we match N/S/E/W markers?
 	 */
 	public static final Pattern latLongLocn = Pattern.compile(
-			"(\\S+:)?\\s*(-?[\\d\\.]+),\\s*(-?[\\d\\.]+)");
+			"(\\S+:)?\\s*(-?[\\d\\.]+)\\s*,\\s*(-?[\\d\\.]+)");
 
 	public static enum KEntityType {
 		urls, user_mentions, hashtags
