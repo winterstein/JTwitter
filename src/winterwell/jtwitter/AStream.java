@@ -211,7 +211,7 @@ abstract class AStream {
 		}
 		
 		// tweets
-		// TODO DMs??
+		// TODO DMs?? They don;t seem to get sent!
 		//System.out.println(jo);
 		if (jo.has("text")) {
 			Status tweet = new Twitter.Status(jo, null);
@@ -230,6 +230,7 @@ abstract class AStream {
 			TwitterEvent event = new TwitterEvent(jo, jtwit);
 			events.add(event);
 			forgotten += forgetIfFull(events);
+			return;
 		}
 		// Deletes TODO and other system events, like limits
 		JSONObject del = jo.optJSONObject("delete");
@@ -260,13 +261,16 @@ abstract class AStream {
 	}
 
 	/**
-	 * How many messages prior-to-connecting to retrieve
+	 * How many messages prior-to-connecting to retrieve.
+	 * Twitter bug: Currently this does not work!
 	 * 
 	 * @param previousCount
 	 *            Up to 150,000 but subject to change.
 	 * 
 	 *            Negative values are allowed -- they mean the stream will
 	 *            terminate when it reaches the end of the historical messages.
+	 *            
+	 * @deprecated Twitter need to fix this :(
 	 */
 	public void setPreviousCount(int previousCount) {
 		this.previousCount = previousCount;

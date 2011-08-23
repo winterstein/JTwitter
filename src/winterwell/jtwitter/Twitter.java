@@ -3911,8 +3911,14 @@ public class Twitter implements Serializable {
 			if (!ok) return false;
 		}
 		RateLimit rl = getRateLimit(reqType);
-		// assume things are OK
-		if (rl==null) return false;
+		// assume things are OK (except for NORMAL which we quickly check by calling Twitter)
+		if (rl==null) {
+			if (reqType==KRequestType.NORMAL) {
+				int rls = getRateLimitStatus();
+				return rls >= minCalls;
+			}
+			return false;
+		}
 		// in credit?
 		if (rl.getRemaining() >= minCalls) return false;
 		// out of date?

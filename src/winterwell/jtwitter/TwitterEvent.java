@@ -11,6 +11,18 @@ import winterwell.jtwitter.Twitter.User;
 
 public class TwitterEvent {
 
+	public static interface Type {
+		public static final String FOLLOW = "follow";
+		public static final String FAVORITE = "favorite";
+		public static final String UNFAVORITE = "unfavorite";
+		public static final String LIST_CREATED = "list_created";
+		/**
+		 * Indicates changes to the user's profile -- eg. their picture or location.
+		 */
+		public static final String USER_UPDATE = "user_update";		
+		public static final String ADDED_TO_LIST = "list_member_added";
+		public static final String REMOVED_FROM_LIST = "list_member_removed";
+	}
 	
 	/**
 	 * The user who was affected, or who owns the affected object.
@@ -29,6 +41,7 @@ public class TwitterEvent {
 	 * <li> list_created
 	 * <li> list_member_added, list_member_removed
 	 * </ul>
+	 * See the {@link Type} constants for known definitions. 
 	 */
 	public final String type;
 	public final Date createdAt;
@@ -58,7 +71,6 @@ public class TwitterEvent {
 	
 	public TwitterEvent(JSONObject jo, Twitter jtwit) throws JSONException {
 		type = jo.getString("event");
-		System.out.println(type);
 		target = new User(jo.getJSONObject("target"), null);
 		source = new User(jo.getJSONObject("source"), null);
 		createdAt = Twitter.parseDate(jo.getString("created_at"));
@@ -88,5 +100,18 @@ public class TwitterEvent {
 	@Override
 	public String toString() {
 		return source+" "+type+" "+target+" "+getTargetObject();
+	}
+
+	/**
+	 * Convenience method for filtering events. E.g. given a
+	 * <code>TwitterEvent event</code> use
+	 * <code>event.is(TwitterEvent.Type.FOLLOW)</code> to pick
+	 * out follow events.
+	 * 
+	 * @param type
+	 * @return true if this is an event of the given type.
+	 */
+	public boolean is(String type) {
+		return this.type.equals(type);
 	}
 }
