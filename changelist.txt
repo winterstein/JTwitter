@@ -7,6 +7,7 @@
  - Streaming API: UserStream and TwitterStream provide streaming support :) 
  - Place class to model Twitter place data, plus ITweet.getPlace() and User.getPlace() 
  - Fixed date parsing bug in rate-limits (alternative format depending on source)
+ - RateLimit logic bug (isRateLimited() could be overly optimistic) 
  
 2.1.7
  - Fixed issue with t.co shortener upsetting Twitter.updateStatus' sanity check.
