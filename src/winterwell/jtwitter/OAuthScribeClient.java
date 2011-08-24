@@ -23,6 +23,7 @@ import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
 
 /**
+ * It is recommended that you use {@link OAuthSignpostClient} instead.
  * OAuth based login using Scribe (http://github.com/fernandezpablo85/scribe).
  * <i>You need version 0.6.6 of Scribe (or above)!</i>
  * <p> 
