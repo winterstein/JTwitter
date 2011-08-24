@@ -3910,10 +3910,10 @@ public class Twitter implements Serializable {
 	 * @see #getRateLimitStatus() for guaranteed up-to-date info
 	 */
 	public boolean isRateLimited(KRequestType reqType, int minCalls) {
-		// TODO Check NORMAL first, then reqType??
+		// Check NORMAL first
 		if (reqType!=KRequestType.NORMAL) {
-			boolean ok = isRateLimited(KRequestType.NORMAL, minCalls);
-			if (!ok) return false;
+			boolean isLimited = isRateLimited(KRequestType.NORMAL, minCalls);
+			if (isLimited) return true;
 		}
 		RateLimit rl = getRateLimit(reqType);
 		// assume things are OK (except for NORMAL which we quickly check by calling Twitter)
