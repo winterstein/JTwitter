@@ -1517,7 +1517,12 @@ public class Twitter implements Serializable {
 		}
 	}
 
+	private static final Pattern REGEX_JUST_DIGITS = Pattern.compile("\\d+");
+	
 	static Date parseDate(String c) {
+		if (REGEX_JUST_DIGITS.matcher(c).matches()) {
+			return new Date(Long.valueOf(c));
+		}
 		try {
 			Date _createdAt = new Date(c);
 			return _createdAt;

@@ -67,7 +67,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(lists);
 	}
 
-	public void testParsing() {
+	public void testParsingLocation() {
 //		String json = "[252059223,19082904,12435562,18881316,72806554,213104665]";
 //		JSONArray arr = new JSONArray(json);
 
@@ -76,6 +76,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert m.matches();
 		assert m.group(2).equals("37.892943");
 		assert m.group(3).equals("-122.270439");
+	}
+	
+	public void testParseDate() {
+		Date date = Twitter.parseDate(""+System.currentTimeMillis());
+		assert date != null;
+		assert Math.abs(System.currentTimeMillis() - date.getTime()) < 1000;
+		date = Twitter.parseDate("Wed Aug 24 11:54:46 +0000 2011");
 	}
 
 	public void testStopFollowing() {

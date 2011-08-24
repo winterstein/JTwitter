@@ -31,7 +31,7 @@ public class TwitterException extends RuntimeException {
 	 */
 	public static class Parsing extends TwitterException {
 		private static final long serialVersionUID = 1L;
-		Parsing(String json, JSONException e) {
+		public Parsing(String json, JSONException e) {
 			super(clip(json, 280), e);
 		}
 		public Parsing(String date, ParseException e) {

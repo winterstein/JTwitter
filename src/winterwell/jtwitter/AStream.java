@@ -19,7 +19,6 @@ import org.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.User;
 import winterwell.utils.reporting.Log;
 
 /**
