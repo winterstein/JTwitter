@@ -2934,19 +2934,38 @@ public class Twitter implements Serializable {
 
 
 	/**
-	 * This fixes a bug in Twitter's search API:
-	 * Searches using OR and a location return gibberish,
-	 * unless they also include a -term. Strangely that seems to fix things. 
-	 * So we just add one if needed.
+	 * This fixes a couple of bugs in Twitter's search API:
 	 * 
+	 * 1. Searches using OR and a location return gibberish,
+	 * unless they also include a -term. Strangely that seems to fix things. 
+	 * So we just add one if needed.<br>
+	 * 
+	 * 2. Searches that start and end with quotes, and use an OR have problems:
+	 *  they become AND searches with the OR turned into a keyword. E.g.
+	 *  /"apple" OR "pear"/ acts like /"apple" AND or AND "pear"/ 
+	 * <p>
 	 * It should be tested periodically whether we need this.
+	 * See {@link TwitterTest#testSearchBug()}, 
+	 * {@link TwitterTest#testSearchBug2()}
+	 * 
 	 * @param searchTerm
 	 * @return e.g. "apples OR pears" (near Edinburgh) goes to "apples OR pears -kfz" (near Edinburgh) 
 	 */
 	private String search2_bugHack(String searchTerm) {
-		if (geocode==null) return searchTerm;
-		if ( ! searchTerm.contains(" OR ") || searchTerm.contains("-")) return searchTerm;
-		return searchTerm+" -kfz"; // add a -gibberish term
+		// zero-length is valid with location
+		if (searchTerm.isEmpty()) return searchTerm;
+		// bug 1: a OR b near X fails
+		if (searchTerm.contains(" OR ") && ! searchTerm.contains("-")
+				&& geocode != null) {
+			return searchTerm+" -kfz"; // add a -gibberish term
+		}
+		// bug 2: "a" OR "b" fails
+		if (searchTerm.contains(" OR ") && searchTerm.charAt(0) == '"'
+			&& searchTerm.charAt(searchTerm.length()-1) == '"') {
+			return searchTerm+" -kfz"; // add a -gibberish term
+		}
+		// hopefully fine as-is
+		return searchTerm;
 	}
 
 	/**
@@ -3069,6 +3088,9 @@ public class Twitter implements Serializable {
 
 	static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * Used by search
+	 */
 	private String geocode;
 
 	private double[] myLatLong;

@@ -42,7 +42,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 {
 	
 	/**
-	 * Location + OR = Twitter API fail.
+	 * Location + OR = Twitter API fail -- July 2011
 	 * But Location + OR + -term = success.
 	 * Strange.
 	 */
@@ -60,6 +60,35 @@ extends TestCase // Comment out to remove the JUnit dependency
 			assert text.contains("apple") || text.contains("pear");
 		}
 	}
+	
+	/**
+	 * "apples" OR "pears" = Twitter API fail -- 24th AUgust 2011
+	 */
+	public void testSearchBug2() {
+		Twitter ts = new Twitter();
+		// this will work
+		List<Status> tweets1 = ts.search("apple OR pear");
+		// this will only have apples AND or AND pear! (without the search2_bugHack in 
+		List<Status> tweets2 = ts.search("\"apple\" OR \"pear\"");
+		// these are OK
+		List<Status> tweets2a = ts.search("apple OR \"pear\"");
+		List<Status> tweets2b = ts.search("\"apple\" OR pear");
+		List<Status> tweets2c = ts.search("\"apple\" OR \"pear\" -fxz");
+		// this is fine
+		List<Status> tweets3 = ts.search("apple OR \"orange\" OR \"pear\"");
+		// works
+		List<Status> tweets3a = ts.search("\"apple\" OR \"orange\" OR pear");
+		// fails
+		List<Status> tweets3b = ts.search("\"apple\" OR pear OR \"orange\"");
+		// fails
+		List<Status> tweets3c = ts.search("\"apple\" OR (pear -fxz) OR \"orange\"");
+		// fails
+		List<Status> tweets3d = ts.search("\"apple\" OR pear OR \"orange\" -\"fxz\"");
+		// 3a and 3b should be equivalent!
+		assert tweets3b.size() == tweets3a.size();
+		// OK - it looks like the bug only affects searches which use OR and start and end with quotes
+	}
+	
 	
 	public void testGetListsContaining() {
 		Twitter jtwit = newTestTwitter();
