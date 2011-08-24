@@ -110,7 +110,7 @@ public class TwitterException extends RuntimeException {
 	/**
 	 * Subclass of 403 thrown when you breach the access level of the
 	 * app / oauth-token.
-	 * @see TwitterAccount#getAccessLevel()
+	 * @see Twitter_Account#getAccessLevel()
 	 */
 	public static class AccessLevel extends E401 {
 		private static final long serialVersionUID = 1L;

@@ -23,12 +23,12 @@ import winterwell.jtwitter.Twitter.User;
  * @author Daniel Winterstein
  *
  */
-public class TwitterAccount {
+public class Twitter_Account {
 
 	final Twitter jtwit;
 	private KAccessLevel accessLevel;
 	
-	public TwitterAccount(Twitter jtwit) {
+	public Twitter_Account(Twitter jtwit) {
 		assert jtwit.getHttpClient().canAuthenticate();
 		this.jtwit = jtwit;
 	}

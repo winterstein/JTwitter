@@ -1,7 +1,9 @@
 # JTwitter Change list 
 
 2.2 (pending)
- - Breaking change: created a TwitterAccount.Search class to describe saved searched.
+ - *Breaking change:* renamed TwitterGeo to Twitter_Geo and TwitterAccount to Twitter_Account
+ to reflect that conceptually they're an extension of the Twitter class.
+ - *Breaking change:* created a TwitterAccount.Search class to describe saved searched.
  - Added entity support to ITweet and Message 
  - Twitter.setIncludeTweetEntities() now defaults to true, so you get the t.co link info by default.
  - Streaming API: UserStream and TwitterStream provide streaming support :) 

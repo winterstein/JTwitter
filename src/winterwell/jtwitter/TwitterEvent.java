@@ -69,6 +69,14 @@ public class TwitterEvent {
 		return type;
 	}
 	
+	TwitterEvent(Date createdAt, User source, String type, User target, Object targetObject) {
+		this.createdAt = createdAt;
+		this.source = source;
+		this.type = type;
+		this.target = target;
+		this.targetObject = targetObject;				
+	}
+	
 	public TwitterEvent(JSONObject jo, Twitter jtwit) throws JSONException {
 		type = jo.getString("event");
 		target = new User(jo.getJSONObject("target"), null);

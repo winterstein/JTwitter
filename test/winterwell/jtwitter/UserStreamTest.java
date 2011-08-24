@@ -18,7 +18,7 @@ public class UserStreamTest {
 	@Test
 	public void testRead() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
-		UserStream us = new UserStream(jtwit.getHttpClient());
+		UserStream us = new UserStream(jtwit);
 		us.setPreviousCount(100);
 		us.setWithFollowings(false); // no need to hear what JTwitTest2 has to say
 		// -- unless it's too us
@@ -33,18 +33,23 @@ public class UserStreamTest {
 			jtwit2.follow("jtwit");
 		}
 		jtwit2.setStatus("Public hello to @jtwit "+salt);
-		jtwit2.setStatus("Public shout about monkeys: they're cute "+salt);
+		Status m = jtwit2.setStatus("Public shout by tester2 about monkeys: they're cute "+salt);
 		jtwit2.sendMessage("jtwit", "Private hello to jtwit "+salt);
 		
 		jtwit.setStatus("@jtwittest2 Public hello from jtwit "+salt);
 		jtwit.sendMessage("jtwittest2", "Private hello from jtwit "+salt);
+		Status w = jtwit.setStatus("Public shout by tester1 about whales: they're big "+salt);
+		
+		// retweets
+		jtwit2.retweet(w);
+		jtwit.retweet(m);
 		
 		// Favorite
 //		List<Status> ht = jtwit.getHomeTimeline();
 //		Status s = ht.get(0);
 //		jtwit.setFavorite(s, ! s.isFavorite());
 				
-		TwitterAccount ta = new TwitterAccount(jtwit);
+		Twitter_Account ta = new Twitter_Account(jtwit);
 //		ta.setProfile(null, null,
 //				new String[]{
 //				"UK", "Edinburgh", "I is in your twitters LOL", "Scotland"

@@ -14,7 +14,7 @@ public class TwitterStreamTest {
 	@Test
 	public void testConnect() throws InterruptedException {
 		Twitter jtwit = new TwitterTest().newTestTwitter();
-		TwitterStream ts = new TwitterStream(jtwit.getHttpClient());
+		TwitterStream ts = new TwitterStream(jtwit);
 		ts.connect();
 		Thread.sleep(5000);
 		System.out.println(ts.readThread.popJsons());
@@ -25,7 +25,7 @@ public class TwitterStreamTest {
 	@Test
 	public void testLocations() throws InterruptedException {
 		Twitter jtwit = new TwitterTest().newTestTwitter();
-		TwitterStream ts = new TwitterStream(jtwit.getHttpClient());
+		TwitterStream ts = new TwitterStream(jtwit);
 		ts.connect();
 		HashMap<String,Double> infodist = new HashMap();
 		for(int i=0; i<100; i++){

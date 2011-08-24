@@ -4,13 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +23,7 @@ import org.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.Twitter.User;
 import winterwell.utils.reporting.Log;
 
 /**
@@ -29,7 +34,7 @@ import winterwell.utils.reporting.Log;
  * 
  * @author daniel
  */
-abstract class AStream {
+public abstract class AStream {
 
 	/**
 	 * 5 minutes
@@ -142,17 +147,59 @@ abstract class AStream {
 		if ( ! autoReconnect) {
 			throw new TwitterException(readThread.ex);
 		}		
-		// TODO this in a different thread so as not to block (by upto five minutes)
+		// reconnect
 		reconnect();
+		// store the outage
+		outages.add(new Outage(lastId, System.currentTimeMillis()));
+		// paranoia: avoid memory leaks
+		if (outages.size() > 100000) {
+			for(int i=0; i<1000; i++) {
+				outages.remove(0);
+			}
+			// add an arbitrary number to the forgotten count: 10 per outage
+			forgotten += 10000;
+		}
+	}
+	
+	final List<Outage> outages = new ArrayList();
+
+	private BigInteger lastId = BigInteger.ZERO;
+
+	boolean fillInFollows = true;
+	
+	public List<Outage> getOutages() {
+		return outages;
+	}
+	
+	/**
+	 * Use the REST API to fill in any outages.
+	 * <p>From <i>dev.twitter.com</i>:<br>
+	 * Do not resume REST API polling immediately after a stream failure. 
+		// Wait at least a minute or two after the initial failure before you begin REST API polling. 
+		// This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on 
+		// the streaming API.
+		 *</p>
+	 */
+	public void fillInOutages() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+	
+	public static final class Outage implements Serializable {
+		private static final long serialVersionUID = 1L;
+		final BigInteger sinceId;
+		final long untilTime;
+		public Outage(BigInteger sinceId, long untilTime) {
+			super();
+			this.sinceId = sinceId;
+			this.untilTime = untilTime;
+		}		
 	}
 	
 	public void reconnect() {		
-		// TODO try again:
-		// 1. straightaway
-		long offTime = readThread.offTime;
+		// Try again as advised by dev.twitter.com:
+		// 1. straightaway		
 		try {
 			connect();
-			offTime = 0;
 			return;
 		} catch (TwitterException.E40X e) {
 			throw e;
@@ -172,7 +219,6 @@ abstract class AStream {
 				if (wait<300) wait = wait*2;
 				connect();	
 				// success :)
-				offTime = 0;
 				return;
 			} catch (TwitterException.E40X e) {
 				throw e;
@@ -181,31 +227,19 @@ abstract class AStream {
 				Log.report(""+e);
 			}			
 		}
-		throw new TwitterException.E50X("Could not connect to streaming server");
-        // TODO Do not resume REST API polling immediately after a stream failure. 
-		// Wait at least a minute or two after the initial failure before you begin REST API polling. 
-		// This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on 
-		// the streaming API.
-		
-		// Perform a final REST API poll after a successful connection is established to ensure that 
-		// there is no data loss.		
+		throw new TwitterException.E50X("Could not connect to streaming server");      
 	}
 	
 	public boolean isConnected() {
 		return readThread != null && readThread.isAlive() && readThread.ex==null;
 	}
-
-	// TODO record the outages somewhere to allow for fill-in List<long[]> outages = new ArrayList();
 	
 	private void read2(String json) throws JSONException {
 		JSONObject jo = new JSONObject(json);
 		// the 1st object for a user stream is a list of friend ids
 		JSONArray _friends = jo.optJSONArray("friends");
 		if (_friends != null) {
-			friends = new ArrayList(_friends.length());
-			for (int i = 0, n = _friends.length(); i < n; i++) {
-				friends.add(_friends.getLong(i));
-			}
+			read3_friends(_friends);
 			return;
 		}
 		
@@ -219,6 +253,10 @@ abstract class AStream {
 				return;
 			}
 			tweets.add(tweet);
+			// track the last id for tracking outages
+			if (tweet.id.compareTo(lastId) > 0) {
+				lastId = tweet.id;
+			}
 			forgotten += forgetIfFull(tweets);
 			return;
 		}
@@ -249,6 +287,30 @@ abstract class AStream {
 		System.out.println(jo);
 	}
 
+	private void read3_friends(JSONArray _friends) throws JSONException {
+		List<Long> oldFriends = friends;
+		friends = new ArrayList(_friends.length());
+		for (int i = 0, n = _friends.length(); i < n; i++) {
+			long fi = _friends.getLong(i);
+			friends.add(fi);
+		}
+		if (oldFriends==null || ! fillInFollows) return;
+		
+		// This is after a reconnect -- did we miss any follow events?				
+		HashSet<Long> friends2 = new HashSet(friends);
+		friends2.removeAll(oldFriends);
+		if (friends2.isEmpty()) return;
+		Twitter_Users tu = new Twitter_Users(jtwit);
+		List<User> newFriends = tu.showById(friends2);
+		User trgt = jtwit.getSelf();
+		for (User nf : newFriends) {					
+			TwitterEvent e = new TwitterEvent(new Date(), 
+					nf, TwitterEvent.Type.FOLLOW, trgt, null);
+			events.add(e);					
+		}
+		forgotten += forgetIfFull(events);		
+	}
+
 	static int forgetIfFull(List incoming) {
 		// forget a batch?
 		if (incoming.size() < StreamGobbler.MAX_BUFFER) return 0;
@@ -276,9 +338,9 @@ abstract class AStream {
 	}
 
 	
-	public AStream(IHttpClient client) {
-		this.client = client;
-		this.jtwit = new Twitter(null, client);
+	public AStream(Twitter jtwit) {
+		this.client = jtwit.getHttpClient();
+		this.jtwit = jtwit;
 		// Twitter send 30 second keep-alive pulses, but ask that
 		// you wait 3 cycles before disconnecting
 		client.setTimeout(90 * 1000);
@@ -319,7 +381,7 @@ abstract class AStream {
 	/**
 	 * Needed for constructing some objects.
 	 */
-	private Twitter jtwit;
+	final Twitter jtwit;
 
 	int previousCount;
 
@@ -355,7 +417,11 @@ final class StreamGobbler extends Thread {
 		this.is = is;
 	}
 
+	/**
+	 * Use synchronised blocks when editing this
+	 */
 	final List<String> jsons = new ArrayList();
+	
 	/**
 	 * count of the number of tweets this gobbler had to drop
 	 * due to buffer size

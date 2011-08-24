@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class TwitterGeoTest {
+public class Twitter_GeoTest {
 
 	@Test
 	public void testGeoSearchString() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
-		TwitterGeo tg = new TwitterGeo(jtwit);
+		Twitter_Geo tg = new Twitter_Geo(jtwit);
 		{
 			List eds = tg.geoSearch("Edinburgh");
 			System.out.println(eds);

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -29,8 +30,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sun.awt.X11.Screen;
+
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.TweetEntity;
+import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
@@ -94,9 +98,9 @@ import winterwell.utils.web.WebUtilsTest;
  * normal tweet beginning "RT @whoever") differently from new-style retweets
  * (those made using the retweet API). The differences are documented in various
  * methods.
- * <li>Most methods are in this class (Twitter), except for list support (in
+ * <li>Most methods are available via this class (Twitter), except for list support (in
  * {@link TwitterList} - though {@link #getLists()} is here) and some
- * profile/account settings (in {@link TwitterAccount}).
+ * profile/account settings (in {@link Twitter_Account}).
  * <li>This class is not thread safe. If you're using multiple threads,
  * it is best to create separate Twitter objects (which is fine).
  * </ul>
@@ -117,6 +121,27 @@ import winterwell.utils.web.WebUtilsTest;
  */
 public class Twitter implements Serializable {
 	private static final long serialVersionUID = 1L;	
+	
+	/**
+	 * Geo-location API methods.
+	 */
+	public Twitter_Geo geo() {
+		return new Twitter_Geo(this);
+	}
+	
+	/**
+	 * User and social-network related API methods.
+	 */
+	public Twitter_Users users() {
+		return new Twitter_Users(this);
+	}
+	
+	/**
+	 * API methods relating to your account.
+	 */
+	public Twitter_Account account() {
+		return new Twitter_Account(this);
+	}
 	
 	/**
 	 * Matches latitude, longitude, including with the UberTwitter UT: prefix
@@ -262,7 +287,7 @@ public class Twitter implements Serializable {
 		 * Twitter server. Note: This is a fast method that does not call the
 		 * server, so it does not check whether the access token or password is
 		 * valid. See {Twitter#isValidLogin()} or
-		 * {@link TwitterAccount#verifyCredentials()} if you need to check a
+		 * {@link Twitter_Account#verifyCredentials()} if you need to check a
 		 * login.
 		 * */
 		boolean canAuthenticate();
@@ -1087,12 +1112,12 @@ public class Twitter implements Serializable {
 
 		public final boolean verified;
 
-		private final boolean followedBy;
+		private final boolean followingYou;
 
-		private final boolean following;
+		private final boolean followedByYou;
 
 		/**
-		 * True if the user you are authenticating as has requested to follow
+		 * True if the authenticated user has requested to follow
 		 * this user. This will be false unless the friendship request is
 		 * pending. False if Twitter does not say otherwise.
 		 */
@@ -1135,8 +1160,8 @@ public class Twitter implements Serializable {
 				profileImageUrl = img == null ? null : URI(img);
 				String url = jsonGet("url", obj);
 				website = url == null ? null : URI(url);
-				protectedUser = obj.getBoolean("protected");
-				followersCount = obj.getInt("followers_count");
+				protectedUser = obj.optBoolean("protected");
+				followersCount = obj.optInt("followers_count");
 				profileBackgroundColor = jsonGet("profile_background_color",
 						obj);
 				profileLinkColor = jsonGet("profile_link_color", obj);
@@ -1145,11 +1170,11 @@ public class Twitter implements Serializable {
 						obj);
 				profileSidebarBorderColor = jsonGet(
 						"profile_sidebar_border_color", obj);
-				friendsCount = obj.getInt("friends_count");
+				friendsCount = obj.optInt("friends_count");
 				// date
 				String c = jsonGet("created_at", obj);
-				createdAt = parseDate(c);
-				favoritesCount = obj.getInt("favourites_count");
+				createdAt = c==null? null : parseDate(c); // null when fetching relationship-info
+				favoritesCount = obj.optInt("favourites_count");
 				String utcOffSet = jsonGet("utc_offset", obj);
 				timezoneOffSet = utcOffSet == null ? 0 : Double
 						.parseDouble(utcOffSet);
@@ -1157,14 +1182,30 @@ public class Twitter implements Serializable {
 				img = jsonGet("profile_background_image_url", obj);
 				profileBackgroundImageUrl = img == null ? null : URI(img);
 				profileBackgroundTile = obj
-						.getBoolean("profile_background_tile");
-				statusesCount = obj.getInt("statuses_count");
+						.optBoolean("profile_background_tile");
+				statusesCount = obj.optInt("statuses_count");
 				notifications = obj.optBoolean("notifications");
 				verified = obj.optBoolean("verified");
-				following = obj.optBoolean("following");
-				followedBy = obj.optBoolean("followed_by");
-				listedCount = obj.optInt("listed_count", -1);
-				followRequestSent = obj.optBoolean("follow_request_sent");
+				// relationship info -- can come in 2 formats...
+				if (obj.has("connections")) {	// from a getRelationshipInfo call
+					JSONArray cons = obj.getJSONArray("connections");
+					boolean _following=false,_followedBy=false, _followRequested=false;
+					for(int i=0,n=cons.length(); i<n; i++) {
+						String ci = cons.getString(i);
+						if ("following".equals(ci)) _following = true;
+						else if ("followed_by".equals(ci)) _followedBy = true;
+						else if ("following_requested".equals(ci)) _followRequested = true;
+					}
+					followedByYou = _following;
+					followingYou = _followedBy;
+					followRequestSent = _followRequested;
+				} else {	// from a normal User call
+					followedByYou = obj.optBoolean("following");
+					followingYou = obj.optBoolean("followed_by");
+					followRequestSent = obj.optBoolean("follow_request_sent");
+				}
+				
+				listedCount = obj.optInt("listed_count", -1);				
 				// status
 				if (status == null) {
 					JSONObject s = obj.optJSONObject("status");
@@ -1194,9 +1235,16 @@ public class Twitter implements Serializable {
 		 *            is set)
 		 */
 		public User(String screenName) {
-			id = null;
+			this(screenName, null);
+		}
+		
+		private User(String screenName, Long id) {
+			this.id = id;
 			name = null;
-			this.screenName = Twitter.CASE_SENSITIVE_SCREENNAMES? screenName : screenName.toLowerCase();
+			if (screenName!=null && ! Twitter.CASE_SENSITIVE_SCREENNAMES) {
+				screenName : screenName.toLowerCase();
+			}
+			this.screenName = screenName;
 			status = null;
 			location = null;
 			description = null;
@@ -1219,21 +1267,38 @@ public class Twitter implements Serializable {
 			statusesCount = 0;
 			notifications = false;
 			verified = false;
-			following = false;
-			followedBy = false;
+			followedByYou = false;
+			followingYou = false;
 			followRequestSent = false;
 			listedCount = -1;
 		}
+
+//		/**
+//		 * A 2nd species of fake user. For internal use only.
+//		 * WARNING: these users break {@link #hashCode()}'s behaviour!
+//		 * @param id
+//		 */
+//		User(Long id) {
+//			this(null, id);
+//		}
 
 		@Override
 		public boolean equals(Object other) {
 			if (this == other)
 				return true;
-			if (!(other instanceof User))
+			if (other.getClass() != User.class) {
 				return false;
+			}
 			User ou = (User) other;
-			if (screenName.equals(ou.screenName))
-				return true;
+			// normal case
+			if (screenName!=null && ou.screenName!=null) {
+				return screenName.equals(ou.screenName);
+			}
+			// fake user case
+			if (id!=null && ou.id!=null) {
+				return id == ou.id;
+			}
+			// can't compare = fail
 			return false;
 		}
 
@@ -1376,6 +1441,7 @@ public class Twitter implements Serializable {
 
 		@Override
 		public int hashCode() {
+			// normal case
 			return screenName.hashCode();
 		}
 
@@ -1393,14 +1459,14 @@ public class Twitter implements Serializable {
 		 * Is this person following you?
 		 */
 		public boolean isFollowingYou() {
-			return followedBy;
+			return followingYou;
 		}
 
 		/**
 		 * Are you following this person?
 		 */
 		public boolean isFollowedByYou() {
-			return following;
+			return followedByYou;
 		}
 
 		public boolean isNotifications() {
@@ -1463,6 +1529,8 @@ public class Twitter implements Serializable {
 		}
 		return m;
 	}
+	
+	
 	
 	
 	// TODO
@@ -1684,9 +1752,9 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Twitter login name. Can be null even if we have authentication when using
-	 * OAuth
+	 * OAuth.
 	 */
-	private final String name;
+	private String name;
 
 	/**
 	 * Create a Twitter client without specifying a user. This is an easy way to
@@ -1750,6 +1818,9 @@ public class Twitter implements Serializable {
 		}
 		if (tweetEntities) {
 			vars.put("include_entities", "1");
+		}
+		if (includeRTs) {
+			vars.put("include_rts", "1");
 		}
 		return vars;
 	}
@@ -2059,6 +2130,7 @@ public class Twitter implements Serializable {
 	/**
 	 * Returns the authenticating user's (latest) followers, each with current
 	 * status inline. Occasionally contains duplicates.
+	 * @deprecated Twitter advise using {@link #getFollowerIDs()} and {@link #show(Number)}
 	 */
 	public List<User> getFollowers() throws TwitterException {
 		return getUsers(TWITTER_URL + "/statuses/followers.json", null);
@@ -2113,7 +2185,7 @@ public class Twitter implements Serializable {
 	 * @see #getFriendIDs()
 	 * @see #isFollowing(String)
 	 * @deprecated Twitter advise you to use {@link #getFriendIDs()}
-	 * with {@link #bulkShowById(List)} instead.
+	 * with {@link Twitter_Users#showById(List)} instead.
 	 */
 	@Deprecated
 	public List<User> getFriends() throws TwitterException {
@@ -2599,8 +2671,8 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Returns the 20 most recent statuses from the
-	 * authenticating user.
+	 * Returns the most recent statuses from the
+	 * authenticating user. 20 by default.
 	 */
 	public List<Status> getUserTimeline() throws TwitterException {
 		return getStatuses(TWITTER_URL + "/statuses/user_timeline.json",
@@ -2608,8 +2680,7 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Returns the most recent statuses from the
-	 * given user. Does NOT include new-style retweets.
+	 * Returns the most recent statuses from the given user.
 	 * <p>
 	 * This will return 20 results by default, though {@link #setMaxResults(int)}
 	 * can be used to fetch multiple pages.
@@ -2625,7 +2696,6 @@ public class Twitter implements Serializable {
 	 * @param screenName
 	 *            Can be null. Specifies the screen name of the user for whom to
 	 *            return the user_timeline.
-	 * @see #getUserTimelineWithRetweets(String)
 	 * @throws TwitterException.E401 if the user has protected their tweets,
 	 * and you do not have access.
 	 * @throws TwitterException.SuspendedUser if the user has been suspended
@@ -2647,7 +2717,20 @@ public class Twitter implements Serializable {
 		}
 	}
 
+	boolean includeRTs = true;
+	
 	/**
+	 * true by default. If true, lists of tweets will include new-style retweets.
+	 * If false, they won't (execpt for the retweet-specific calls).
+	 * @param includeRTs
+	 */
+	public void setIncludeRTs(boolean includeRTs) {
+		this.includeRTs = includeRTs;
+	}
+	
+	/**
+	 * @deprecated Use {@link #setIncludeRTs(boolean)} instead to control retweet behaviour.
+	 * 
 	 * Returns the most recent statuses posted
 	 * by the given user. Unlike {@link #getUserTimeline(String)}, this includes
 	 * new-style retweets.
@@ -2663,7 +2746,7 @@ public class Twitter implements Serializable {
 		@param screenName
 	 *            Can be null. Specifies the screen name of the user for whom to
 	 *            return the user_timeline.
-
+	 *            
 	 */
 	public List<Status> getUserTimelineWithRetweets(String screenName)
 			throws TwitterException
@@ -2792,13 +2875,13 @@ public class Twitter implements Serializable {
 	 * Are the login details used for authentication valid?
 	 *
 	 * @return true if OK, false if unset or invalid
-	 * @see TwitterAccount#verifyCredentials() which returns user info
+	 * @see Twitter_Account#verifyCredentials() which returns user info
 	 */
 	public boolean isValidLogin() {
 		if (!http.canAuthenticate())
 			return false;
 		try {
-			TwitterAccount ta = new TwitterAccount(this);
+			Twitter_Account ta = new Twitter_Account(this);
 			User u = ta.verifyCredentials();
 			return true;
 		} catch (TwitterException.E403 e) {
@@ -3037,6 +3120,9 @@ public class Twitter implements Serializable {
 	 * Warning: there is a bug within twitter.com which means that
 	 * location-based searches are treated as OR. E.g. "John near:Scotland" will
 	 * happily return "Andrew from Aberdeen" :(
+	 * <p>
+	 * Unlike tweet search, this method does not support any operators. 
+	 * Only the first 1000 matches are available.
 	 * <p>
 	 * Does not do paging-to-max-results. But does support using {@link #setPageNumber(Integer)},
 	 * and {@link #setMaxResults(int)} for less than the standard 20.
@@ -3353,31 +3439,22 @@ public class Twitter implements Serializable {
 			throw new TwitterException.Parsing(json, e);
 		}
 	}
-
+	
 	/**
-	 * Lookup user info. This is done in batches of 100. Users can look up at
-	 * most 1000 users in an hour.
-	 *
-	 * @param screenNames
-	 * @return user objects for screenNames. Warning 1: This may be less than
-	 *         the full set if Twitter returns an error part-way through (e.g.
-	 *         you hit your rate limit). Warning 2: the ordering may be
-	 *         different from the screenNames parameter
-	 * @see #bulkShowById(List)
+	 * @deprecated Use {@link Twitter_Users#show(List)} instead
 	 */
 	public List<User> bulkShow(List<String> screenNames) {
-		return bulkShow2(String.class, screenNames);
+		return bulkShow2("/users/lookup.json", String.class, screenNames);
 	}
 
+
 	/**
-	 * Lookup user info. Same as {@link #bulkShow(List)}, but works with Twitter
-	 * user-ID numbers.
-	 *
-	 * @param userIds
+	 * @deprecated Use {@link #showById(List)} instead
 	 */
 	public List<User> bulkShowById(List<? extends Number> userIds) {
-		return bulkShow2(Number.class, userIds);
+		return bulkShow2("/users/lookup.json", Number.class, userIds);
 	}
+	
 
 	/**
 	 * Common backend for {@link #bulkShow(List)} and
@@ -3388,21 +3465,23 @@ public class Twitter implements Serializable {
 	 * <p>
 	 * Suspended bot accounts seem to just get ignored.
 	 *
-	 * @param stringOrLong
+	 * @param stringOrNumber 
 	 * @param screenNamesOrIds
 	 */
-	private List<User> bulkShow2(Class stringOrNumber, List screenNamesOrIds) {
+	List<User> bulkShow2(String apiMethod, Class stringOrNumber, Collection screenNamesOrIds) {
 		int batchSize = 100;
 		ArrayList<User> users = new ArrayList<Twitter.User>(screenNamesOrIds
 				.size());
-		for (int i = 0; i < screenNamesOrIds.size(); i += batchSize) {
+		List _screenNamesOrIds = screenNamesOrIds instanceof List? (List) screenNamesOrIds
+				: new ArrayList(screenNamesOrIds);
+		for (int i = 0; i < _screenNamesOrIds.size(); i += batchSize) {
 			int last = i + batchSize;
-			String names = join(screenNamesOrIds, i, last);
+			String names = join(_screenNamesOrIds, i, last);
 			String var = stringOrNumber == String.class ? "screen_name"
 					: "user_id";
 			Map<String, String> vars = asMap(var, names);
 			try {
-				String json = http.getPage(TWITTER_URL + "/users/lookup.json",
+				String json = http.getPage(TWITTER_URL + apiMethod,
 						vars, http.canAuthenticate());
 				List<User> usersi = User.getUsers(json);
 				users.addAll(usersi);
@@ -3959,6 +4038,27 @@ public class Twitter implements Serializable {
 	 * This is needed for *some* installs of Status.Net, though not for Identi.ca.
 	 */
 	static final DateFormat dfMarko = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+
+	/**
+	 * @return you, or null if this is an anonymous Twitter object.
+	 * <p>
+	 * This will avoid making an API call if it can (i.e. it 
+	 * uses {@link #getScreenName()} if set), and will cache the result
+	 * if it does make an API call.
+	 */
+	public User getSelf() {
+		if (self!=null) return self;
+		if (name!=null) {
+			self = new User(name);
+			return self;
+		}
+		if ( ! http.canAuthenticate()) return null;
+		self = new Twitter_Account(this).verifyCredentials();
+		name = self.getScreenName();
+		return self;
+	}
+	
+	User self;
 
 
 }

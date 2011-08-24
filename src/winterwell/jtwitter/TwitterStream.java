@@ -29,8 +29,8 @@ public class TwitterStream extends AStream {
 	 * @param client This will have it's timeout set to 90 seconds.
 	 * So you probably don't want to reuse the object with the REST api. 
 	 */
-	public TwitterStream(IHttpClient client) {
-		super(client);
+	public TwitterStream(Twitter jtwit) {
+		super(jtwit);
 	}
 	
 	KMethod method = KMethod.sample;

@@ -11,20 +11,28 @@ import org.json.JSONObject;
 /**
  * Status: DRAFT!
  * Twitter's geolocation support.
+ * Use {@link Twitter#geo()} to get one.
+ * <p>
+ * Conceptually, this is an extension of {@link Twitter}. The methods are
+ * here because Twitter was getting crowded.
  * 
  * @see Twitter#setMyLocation(double[])
  * @see Twitter#setSearchLocation(double, double, String)
  * @see Twitter.Status#getLocation()
  * 
- * @author daniel
- * @testedby TwitterGeoTest
+ * @author Daniel Winterstein
+ * @testedby {@link Twitter_GeoTest}
  */
-public class TwitterGeo {
+public class Twitter_Geo {
 
 	private final Twitter jtwit;
 	private double accuracy;
 
-	public TwitterGeo(Twitter jtwit) {
+	/**
+	 * Use {@link Twitter#geo()} to get one.
+	 * @param jtwit
+	 */
+	Twitter_Geo(Twitter jtwit) {
 		assert jtwit != null;
 		assert jtwit.getHttpClient().canAuthenticate();
 		this.jtwit = jtwit;
