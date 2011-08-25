@@ -244,7 +244,7 @@ public abstract class AStream {
 		}
 		
 		// tweets
-		// TODO DMs?? They don;t seem to get sent!
+		// TODO DMs?? They don't seem to get sent!
 		//System.out.println(jo);
 		if (jo.has("text")) {
 			Status tweet = new Twitter.Status(jo, null);
@@ -497,7 +497,7 @@ final class StreamGobbler extends Thread {
 		while(true) {
 			int ich = br.read();		
 			if (ich == -1)
-				throw new IOException("end of stream");
+				throw new IOException("end of stream ");
 			char ch = (char) ich;
 			if (ch=='\n' || ch=='\r') {
 				// ignore leading whitespace, stop otherwise

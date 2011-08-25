@@ -24,6 +24,13 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.utils.TodoException;
 
 /**
+ * @deprecated There are bugs on Twitter's end -- the messages returned by this
+ * stream may not include all the messages to a user. The results vary from 
+ * user to user. The variance is probably to do with Twitter's sharding & code-update
+ * process.<br>
+ * 
+ * Currently, we advise using {@link TwitterStream} with an @user keyword.
+ * <p>
  * Connect to the streaming API.
  * <p>
  * This class picks up the following tweets: <br>

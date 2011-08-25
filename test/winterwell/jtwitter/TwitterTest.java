@@ -817,6 +817,15 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 		System.out.println("Replies "+r);
 	}
+	
+	public void testSendMention() throws InterruptedException {
+		Twitter jtwit = newTestTwitter();
+		int salt = new Random().nextInt(1000);
+		Status s = jtwit.setStatus("@winterstein Public hello "+salt);
+		Thread.sleep(1000);
+		Status s2 = jtwit.setStatus("Public hello "+salt+" v2 to @winterstein");
+		System.out.println(s);
+	}
 
 	// Test written to flush out a problem with the paging code
 	public void testPaging() {

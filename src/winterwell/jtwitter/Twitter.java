@@ -2582,6 +2582,29 @@ public class Twitter implements Serializable {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Equivalent to {@link #getUserTimeline(String)}, but takes a numeric
+	 * user-id instead of a screen-name.
+	 * @param userId
+	 * @return tweets by userId
+	 */
+	public List<Status> getUserTimeline(Long userId)
+		throws TwitterException {
+		Map<String, String> vars = InternalUtils.asMap("user_id", userId);
+		addStandardishParameters(vars);
+		// Authenticate if we can (for protected streams)
+		boolean authenticate = http.canAuthenticate();
+		try {
+			return getStatuses(TWITTER_URL + "/statuses/user_timeline.json", vars,
+					authenticate);
+		} catch (E401 e) {
+			// Bug in Twitter: this can be a suspended user
+			//  - in which case this will generate a SuspendedUser exception
+//			isSuspended(userId); // TODO?
+			throw e;
+		}
+	}
 
 	boolean includeRTs = true;
 	
@@ -3114,8 +3137,8 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Sends a new direct message to the specified user from the authenticating
-	 * user.
+	 * Sends a new direct message (DM) to the specified user from the authenticating
+	 * user. This is a private message!
 	 *
 	 * @param recipient
 	 *            Required. The screen name of the recipient user.
@@ -3871,17 +3894,18 @@ public class Twitter implements Serializable {
 	/**
 	 * @return you, or null if this is an anonymous Twitter object.
 	 * <p>
-	 * This will avoid making an API call if it can (i.e. it 
-	 * uses {@link #getScreenName()} if set), and will cache the result
-	 * if it does make an API call.
+	 * This will cache the result if it makes an API call.
 	 */
 	public User getSelf() {
 		if (self!=null) return self;
-		if (name!=null) {
-			self = new User(name);
-			return self;
+		if ( ! http.canAuthenticate()) {
+			if (name!=null) {
+				// not sure this case makes sense, but we may as well handle it
+				self = new User(name);
+				return self;
+			}
+			return null;
 		}
-		if ( ! http.canAuthenticate()) return null;
 		account().verifyCredentials();
 		name = self.getScreenName();
 		return self;

@@ -6,12 +6,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import winterwell.jtwitter.AStream.Outage;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.Twitter.User;
 import winterwell.utils.TodoException;
 
 /**
@@ -24,6 +28,47 @@ import winterwell.utils.TodoException;
  */
 public class TwitterStream extends AStream {
 
+	@Override
+	public void fillInOutages() throws UnsupportedOperationException {
+		if (outages.isEmpty()) return;
+		if (method != KMethod.filter) throw new UnsupportedOperationException();
+		Outage[] outs = outages.toArray(new Outage[0]);		
+		// protect our original object from edits
+		User self = jtwit.getSelf();
+		Twitter jtwit2 = new Twitter(self.getScreenName(), jtwit.getHttpClient());
+		for (Outage outage : outs) {			
+			jtwit2.setSinceId(outage.sinceId);
+			jtwit2.setUntilDate(new Date(outage.untilTime));
+			jtwit2.setMaxResults(100000); // hopefully not needed!
+			// keywords?
+			if (track!=null) {
+				for(String keyword : track) {
+					List<Status> msgs = jtwit.search(keyword);
+					for (Status status : msgs) {
+						if (tweets.contains(status)) continue;
+						tweets.add(status);
+					}
+				}
+			}
+			// users?
+			if (follow!=null) {
+				for(Long user : follow) {
+					List<Status> msgs = jtwit.getUserTimeline(user);
+					for (Status status : msgs) {
+						if (tweets.contains(status)) continue;
+						tweets.add(status);
+					}
+				}
+			}
+			// regions?
+			if (locns != null && ! locns.isEmpty()) {
+				throw new UnsupportedOperationException("TODO"); // TODO
+			}
+			// success			
+			outages.remove(outage);
+		}
+	}
+	
 	/**
 	 * 
 	 * @param client This will have it's timeout set to 90 seconds.
@@ -36,6 +81,7 @@ public class TwitterStream extends AStream {
 	KMethod method = KMethod.sample;
 	private List<String> track;
 	private List<Long> follow;
+	private List<double[]> locns;
 	
 	public static enum KMethod {
 		/**
@@ -96,6 +142,7 @@ public class TwitterStream extends AStream {
 	*/
 	public void setLocation(List<double[]> boundingBoxes) {
 		method = KMethod.filter;
+		this.locns = boundingBoxes;
 		throw new TodoException();		
 	}
 	
