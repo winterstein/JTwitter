@@ -170,7 +170,8 @@ public class InternalUtils {
 		return m;
 	}
 
-	static final Pattern REGEX_JUST_DIGITS = Pattern.compile("\\d+");
+	public static final Pattern REGEX_JUST_DIGITS = Pattern.compile("\\d+");
+	
 	/**
 	 * Matches urls. 
 	 * Note: Excludes any trailing .
@@ -280,10 +281,12 @@ public class InternalUtils {
 		if (usage==null) return;
 		// ignore parameters
 		int i = url.indexOf("?");
-		if (i!=-1) url = url.substring(0, i);
+		if (i!=-1) url = url.substring(0, i);		
 		// for clarity
 		i = url.indexOf("/1/");
 		if (i!=-1) url = url.substring(i+3);
+		// some calls - eg statuses/show - include the tweet id
+		url.replaceAll("\\d+", "");
 		// non-blocking
 		for(int j = 0; j<100; j++) {
 			Long v = usage.get(url);

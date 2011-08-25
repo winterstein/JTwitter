@@ -54,7 +54,13 @@ public class BuildJTwitter extends BuildTask {
 		FileUtils.copy(new File(base,"changelist.txt"), webDir);
 		CopyTask copydoc = new CopyTask(doc, new File(webDir, "javadoc"));
 		copydoc.run();
-
+		// Update the version number
+		File webPageFile = new File(webDir, "../jtwitter.php");
+		String webpage = FileUtils.read(webPageFile);
+		webpage = webpage.replaceAll("<span class='version'>[0-9\\.]+</span>", 
+									"<span class='version'>"+Twitter.version+"</span>");
+		FileUtils.write(webPageFile, webpage);
+		
 		// Git stuff
 		// Commit changes
 		GitTask git = new GitTask(GitTask.COMMIT, webDir);
