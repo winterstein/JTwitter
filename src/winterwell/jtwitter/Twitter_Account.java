@@ -54,10 +54,10 @@ public class Twitter_Account {
 	 */
 	public User setProfile(String name, String url, String location, String description) 
 	{		
-		Map<String, String> vars = Twitter.asMap("name", name, "url", url, "location", location, "description", description);
+		Map<String, String> vars = InternalUtils.asMap("name", name, "url", url, "location", location, "description", description);
 		String apiUrl = jtwit.TWITTER_URL+"/account/update_profile.json";
 		String json = jtwit.getHttpClient().post(apiUrl, vars, true);
-		return user(json);
+		return InternalUtils.user(json);
 	}
 	
 	/**
@@ -71,21 +71,13 @@ public class Twitter_Account {
 		assert ! colorName2hexCode.isEmpty();
 		String url = jtwit.TWITTER_URL+"/account/update_profile_colors.json";
 		String json = jtwit.getHttpClient().post(url, colorName2hexCode, true);
-		return user(json);
+		return InternalUtils.user(json);
 	}
 	
-	private User user(String json) {
-		try {
-			JSONObject obj = new JSONObject(json);
-			User u = new User(obj, null);
-			return u;
-		} catch (JSONException e) {
-			throw new TwitterException(e);
-		}
-	}
 
 	/**
-	 * Test the login credentials -- and get some user info.
+	 * Test the login credentials -- and get some user info (which gets cached
+	 * at {@link Twitter#getSelf()}).
 	 * @return a representation of the requesting user if authentication 
 	 * was successful
 	 * @throws TwitterException.E401 thrown if the authorisation credentials fail.
@@ -103,7 +95,10 @@ public class Twitter_Account {
 			if ("read-write".equals(al)) accessLevel = KAccessLevel.READ_WRITE;
 			if ("read-write-directmessages".equals(al)) accessLevel = KAccessLevel.READ_WRITE_DM;
 		}
-		return user(json);
+		User self = InternalUtils.user(json);
+		// update the self object
+		jtwit.self = self;
+		return self;
 	}
 	
 	public static enum KAccessLevel {
@@ -153,7 +148,7 @@ public class Twitter_Account {
 	 */
 	public Search createSavedSearch(String query) {
 		String url = jtwit.TWITTER_URL+"saved_searches/create.json";
-		Map vars = Twitter.asMap("query", query);
+		Map vars = InternalUtils.asMap("query", query);
 		String json = jtwit.getHttpClient().post(url, vars, true);
 		try {
 			return makeSearch(new JSONObject(json));
@@ -192,7 +187,7 @@ public class Twitter_Account {
 	 * @throws JSONException
 	 */
 	private Search makeSearch(JSONObject jo) throws JSONException {
-		final Date createdAt = Twitter.parseDate(jo.getString("created_at"));
+		final Date createdAt = InternalUtils.parseDate(jo.getString("created_at"));
 		final Long id = jo.getLong("id");
 		final String query = jo.getString("query");
 		Search search = new Search(id, createdAt, query);

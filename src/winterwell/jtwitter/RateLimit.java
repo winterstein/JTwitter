@@ -23,7 +23,7 @@ public final class RateLimit {
 	 * @return The date at which the limit will be reset.
 	 */
 	public Date getReset() {
-		return Twitter.parseDate(reset);
+		return InternalUtils.parseDate(reset);
 	}
 
 	/**

@@ -78,7 +78,7 @@ public class TwitterList extends AbstractList<Twitter.User> {
 		int batchSize = 100;
 		for (int i = 0; i < users.size(); i += batchSize) {
 			int last = i + batchSize;
-			String names = Twitter.join(newUsersList, i, last);
+			String names = InternalUtils.join(newUsersList, i, last);
 			map.put("screen_name", names);		
 			String json = http.post(url, map, true);
 			// adjust size
@@ -211,7 +211,7 @@ public class TwitterList extends AbstractList<Twitter.User> {
 		this.http = jtwit.getHttpClient();
 		// create!
 		String url = jtwit.TWITTER_URL + "/lists/create.json";		
-		Map<String, String> vars = Twitter.asMap(
+		Map<String, String> vars = InternalUtils.asMap(
 				"name", listName,
 				"mode", isPublic? "public" : "private", 
 				"description", description);

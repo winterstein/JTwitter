@@ -102,6 +102,7 @@ implements IHttpClient, Serializable {
 	public String post(String uri, Map<String, String> vars,
 			boolean authenticate) throws TwitterException {
 		HttpURLConnection connection = null;
+		InternalUtils.count(uri);
 		try {
 			connection = (HttpURLConnection) new URL(uri).openConnection();
 			connection.setRequestMethod("POST");
@@ -128,7 +129,7 @@ implements IHttpClient, Serializable {
 			// Get the response
 			processError(connection);
 			processHeaders(connection);
-			String response = toString(connection.getInputStream());
+			String response = InternalUtils.toString(connection.getInputStream());
 			return response;
 			
 		} catch (IOException e) {
@@ -317,10 +318,6 @@ implements IHttpClient, Serializable {
 		return consumer.getToken() != null;
 	}
 
-	@SuppressWarnings("deprecation")
-	private static String encode(Object x) {
-		return URLEncoder.encode(String.valueOf(x));
-	}
 	
 	/**
 	 * This consumer key (and secret) allows you to get up and running fast.

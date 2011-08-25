@@ -52,7 +52,7 @@ public class Twitter_Geo {
 	
 	public List<Place> geoSearch(String query) {
 		String url = jtwit.TWITTER_URL+"/geo/search.json";
-		Map vars = Twitter.asMap(
+		Map vars = InternalUtils.asMap(
 				"query", query
 		);
 		if (accuracy != 0) {

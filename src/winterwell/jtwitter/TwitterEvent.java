@@ -81,7 +81,7 @@ public class TwitterEvent {
 		type = jo.getString("event");
 		target = new User(jo.getJSONObject("target"), null);
 		source = new User(jo.getJSONObject("source"), null);
-		createdAt = Twitter.parseDate(jo.getString("created_at"));
+		createdAt = InternalUtils.parseDate(jo.getString("created_at"));
 		// TODO how can we tell what this is??
 		JSONObject to = jo.optJSONObject("target_object");
 		if (to==null) {

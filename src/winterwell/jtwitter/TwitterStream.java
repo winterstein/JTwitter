@@ -67,10 +67,10 @@ public class TwitterStream extends AStream {
 			String url = "http://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
 			Map<String, String> vars = new HashMap();
 			if (follow!=null) {
-				vars.put("follow", Twitter.join(follow, 0, Integer.MAX_VALUE));
+				vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
 			}
 			if (track!=null) {
-				vars.put("track", Twitter.join(track, 0, Integer.MAX_VALUE));	
+				vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));	
 			}
 			// FIXME need to use post for long sets of vars :(
 			HttpURLConnection con = client.connect(url, vars, true);

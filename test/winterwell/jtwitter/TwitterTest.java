@@ -101,17 +101,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 //		JSONArray arr = new JSONArray(json);
 
 		String locn = "ÜT: 37.892943,-122.270439";
-		Matcher m = Twitter.latLongLocn.matcher(locn);
+		Matcher m = InternalUtils.latLongLocn.matcher(locn);
 		assert m.matches();
 		assert m.group(2).equals("37.892943");
 		assert m.group(3).equals("-122.270439");
 	}
 	
 	public void testParseDate() {
-		Date date = Twitter.parseDate(""+System.currentTimeMillis());
+		Date date = InternalUtils.parseDate(""+System.currentTimeMillis());
 		assert date != null;
 		assert Math.abs(System.currentTimeMillis() - date.getTime()) < 1000;
-		date = Twitter.parseDate("Wed Aug 24 11:54:46 +0000 2011");
+		date = InternalUtils.parseDate("Wed Aug 24 11:54:46 +0000 2011");
 	}
 
 	public void testStopFollowing() {

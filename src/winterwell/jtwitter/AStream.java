@@ -302,10 +302,10 @@ public abstract class AStream {
 		if (friends2.isEmpty()) return;
 		Twitter_Users tu = new Twitter_Users(jtwit);
 		List<User> newFriends = tu.showById(friends2);
-		User trgt = jtwit.getSelf();
+		User you = jtwit.getSelf();
 		for (User nf : newFriends) {					
 			TwitterEvent e = new TwitterEvent(new Date(), 
-					nf, TwitterEvent.Type.FOLLOW, trgt, null);
+					you, TwitterEvent.Type.FOLLOW, nf, null);
 			events.add(e);					
 		}
 		forgotten += forgetIfFull(events);		

@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -16,7 +15,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -68,56 +66,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			input.close();
 		} catch (IOException e) {
 			// Ignore
-		}
-	}
-
-	private static String encode(Object x) {
-		try {
-			return URLEncoder.encode(String.valueOf(x), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// This shouldn't happen as UTF-8 is standard
-			return URLEncoder.encode(String.valueOf(x));
-		}
-	}
-
-	/**
-	 * Use a bufferred reader (preferably UTF-8) to extract the contents of the
-	 * given stream. A convenience method for {@link #toString(Reader)}.
-	 */
-	protected static String toString(InputStream inputStream) {
-		InputStreamReader reader;
-		try {
-			reader = new InputStreamReader(inputStream, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			reader = new InputStreamReader(inputStream);
-		}
-		return toString(reader);
-	}
-
-	/**
-	 * Use a buffered reader to extract the contents of the given reader.
-	 *
-	 * @param reader
-	 * @return The contents of this reader.
-	 */
-	private static String toString(Reader reader) throws RuntimeException {
-		try {
-			// Buffer if not already buffered
-			reader = reader instanceof BufferedReader ? (BufferedReader) reader
-					: new BufferedReader(reader);
-			StringBuilder output = new StringBuilder();
-			while (true) {
-				int c = reader.read();
-				if (c == -1) {
-					break;
-				}
-				output.append((char) c);
-			}
-			return output.toString();
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			close(reader);
 		}
 	}
 
@@ -174,9 +122,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				if (e.getValue() == null) {
 					continue;
 				}
-				String ek = encode(e.getKey());
+				String ek = InternalUtils.encode(e.getKey());
 				assert !url.contains(ek + "=") : url + " " + vars;
-				uri.append(ek + "=" + encode(e.getValue()) + "&");
+				uri.append(ek + "=" + InternalUtils.encode(e.getValue()) + "&");
 			}
 			url = uri.toString();
 		}
@@ -213,7 +161,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private String getErrorStream(HttpURLConnection connection) {
 		try {
-			return toString(connection.getErrorStream());
+			return InternalUtils.toString(connection.getErrorStream());
 		} catch (NullPointerException e) {
 			return null;
 		}
@@ -236,11 +184,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			boolean authenticate) throws TwitterException {
 		assert url != null;
 		HttpURLConnection connection = null;
+		InternalUtils.count(url);
 		try {
 			HttpURLConnection con = connect(url, vars, authenticate);
 			InputStream inStream = con.getInputStream();
 			// Read in the web page
-			String page = toString(inStream);
+			String page = InternalUtils.toString(inStream);
 			// Done
 			return page;
 		} catch (SocketTimeoutException e) {
@@ -311,7 +260,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			// Get the response
 			processError(connection);
 			processHeaders(connection);
-			String response = toString(connection.getInputStream());
+			String response = InternalUtils.toString(connection.getInputStream());
 			return response;
 		} catch (IOException e) {
 			throw new TwitterException(e);
@@ -339,8 +288,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		StringBuilder encodedData = new StringBuilder();
 
 		for (String key : vars.keySet()) {
-			String val = encode(vars.get(key));
-			encodedData.append(encode(key));
+			String val = InternalUtils.encode(vars.get(key));
+			encodedData.append(InternalUtils.encode(key));
 			encodedData.append('=');
 			encodedData.append(val);
 			encodedData.append('&');

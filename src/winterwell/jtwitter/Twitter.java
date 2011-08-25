@@ -3,23 +3,15 @@ package winterwell.jtwitter;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumMap;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +30,6 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.utils.web.WebUtilsTest;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -143,17 +134,6 @@ public class Twitter implements Serializable {
 		return new Twitter_Account(this);
 	}
 	
-	/**
-	 * Matches latitude, longitude, including with the UberTwitter UT: prefix
-	 * Group 2 = latitude, Group 3 = longitude.
-	 * <p>
-	 * Weird: I saw this as an address - "ÜT: 25.324488,55.376224t"
-	 * Is it just a one-off typo?
-	 * Should we match N/S/E/W markers?
-	 */
-	public static final Pattern latLongLocn = Pattern.compile(
-			"(\\S+:)?\\s*(-?[\\d\\.]+)\\s*,\\s*(-?[\\d\\.]+)");
-
 	public static enum KEntityType {
 		urls, user_mentions, hashtags
 	}
@@ -516,9 +496,9 @@ public class Twitter implements Serializable {
 //			id = new BigInteger(_id==null? ""+obj.get("id") : _id);
 			id = obj.getLong("id");
 			String _text = obj.getString("text");
-			text = unencode(_text);
-			String c = jsonGet("created_at", obj);
-			createdAt = Twitter.parseDate(c);
+			text = InternalUtils.unencode(_text);
+			String c = InternalUtils.jsonGet("created_at", obj);
+			createdAt = InternalUtils.parseDate(c);
 			sender = new User(obj.getJSONObject("sender"), null);
 			// recipient - for messages you sent
 			if (obj.has("recipient")) {
@@ -689,7 +669,7 @@ public class Twitter implements Serializable {
 					String userScreenName = obj.getString("from_user");
 					String profileImgUrl = obj.getString("profile_image_url");
 					User user = new User(userScreenName);
-					user.profileImageUrl = URI(profileImgUrl);
+					user.profileImageUrl = InternalUtils.URI(profileImgUrl);
 					Status s = new Status(obj, user);
 					users.add(s);
 				}
@@ -789,21 +769,21 @@ public class Twitter implements Serializable {
 			try {
 				String _id = object.optString("id_str");
 				id = new BigInteger(_id==""? object.get("id").toString() : _id);
-				String _text = jsonGet("text", object);
-				text = unencode(_text);
+				String _text = InternalUtils.jsonGet("text", object);
+				text = InternalUtils.unencode(_text);
 				// date
-				String c = jsonGet("created_at", object);
-				createdAt = Twitter.parseDate(c);
+				String c = InternalUtils.jsonGet("created_at", object);
+				createdAt = InternalUtils.parseDate(c);
 				// source - sometimes encoded (search), sometimes not
 				// (timelines)!
-				String src = jsonGet("source", object);
-				source = src.contains("&lt;") ? unencode(src) : src;
+				String src = InternalUtils.jsonGet("source", object);
+				source = src.contains("&lt;") ? InternalUtils.unencode(src) : src;
 				// retweet?
 				JSONObject retweeted = object.optJSONObject("retweeted_status");
 				if (retweeted != null) {
 					original = new Status(retweeted, null);
 				}
-				String irt = jsonGet("in_reply_to_status_id", object);
+				String irt = InternalUtils.jsonGet("in_reply_to_status_id", object);
 				if (irt == null) {
 					// Twitter doesn't give in-reply-to for retweets
 					// - but since we have the info, let's make it available
@@ -872,13 +852,13 @@ public class Twitter implements Serializable {
 		 * @throws JSONException
 		 */
 		static Object jsonGetLocn(JSONObject object) throws JSONException {
-			String _location = jsonGet("location", object);
+			String _location = InternalUtils.jsonGet("location", object);
 			// no blank strings
 			if (_location!=null && _location.isEmpty()) _location = null;			
 			JSONObject _place = object.optJSONObject("place");
 			if (_location!=null) {
 				// normalise UT (UberTwitter?) locations
-				Matcher m = latLongLocn.matcher(_location);
+				Matcher m = InternalUtils.latLongLocn.matcher(_location);
 				if (m.matches()) {
 					_location = m.group(2)+","+m.group(3);					
 				}
@@ -1044,7 +1024,7 @@ public class Twitter implements Serializable {
 		 * The location, as reported by the user.
 		 * Can be metaphorical, e.g. "close to your heart"), or null; never blank.
 		 * UberTwitter & similar lat/long references will be normalised
-		 * using {@link Twitter#latLongLocn}. 
+		 * using {@link InternalUtils#latLongLocn}. 
 		 */
 		public final String location;
 		
@@ -1145,8 +1125,8 @@ public class Twitter implements Serializable {
 		User(JSONObject obj, Status status) throws TwitterException {
 			try {
 				id = obj.getLong("id");
-				name = unencode(jsonGet("name", obj));
-				String sn = jsonGet("screen_name", obj);
+				name = InternalUtils.unencode(InternalUtils.jsonGet("name", obj));
+				String sn = InternalUtils.jsonGet("screen_name", obj);
 				screenName = Twitter.CASE_SENSITIVE_SCREENNAMES? sn : sn.toLowerCase();
 				// location - normalise a bit				
 				Object _locn = Twitter.Status.jsonGetLocn(obj);
@@ -1155,32 +1135,32 @@ public class Twitter implements Serializable {
 					place = (Place) _locn;
 				}
 
-				description = unencode(jsonGet("description", obj));
-				String img = jsonGet("profile_image_url", obj);
-				profileImageUrl = img == null ? null : URI(img);
-				String url = jsonGet("url", obj);
-				website = url == null ? null : URI(url);
+				description = InternalUtils.unencode(InternalUtils.jsonGet("description", obj));
+				String img = InternalUtils.jsonGet("profile_image_url", obj);
+				profileImageUrl = img == null ? null : InternalUtils.URI(img);
+				String url = InternalUtils.jsonGet("url", obj);
+				website = url == null ? null : InternalUtils.URI(url);
 				protectedUser = obj.optBoolean("protected");
 				followersCount = obj.optInt("followers_count");
-				profileBackgroundColor = jsonGet("profile_background_color",
+				profileBackgroundColor = InternalUtils.jsonGet("profile_background_color",
 						obj);
-				profileLinkColor = jsonGet("profile_link_color", obj);
-				profileTextColor = jsonGet("profile_text_color", obj);
-				profileSidebarFillColor = jsonGet("profile_sidebar_fill_color",
+				profileLinkColor = InternalUtils.jsonGet("profile_link_color", obj);
+				profileTextColor = InternalUtils.jsonGet("profile_text_color", obj);
+				profileSidebarFillColor = InternalUtils.jsonGet("profile_sidebar_fill_color",
 						obj);
-				profileSidebarBorderColor = jsonGet(
+				profileSidebarBorderColor = InternalUtils.jsonGet(
 						"profile_sidebar_border_color", obj);
 				friendsCount = obj.optInt("friends_count");
 				// date
-				String c = jsonGet("created_at", obj);
-				createdAt = c==null? null : parseDate(c); // null when fetching relationship-info
+				String c = InternalUtils.jsonGet("created_at", obj);
+				createdAt = c==null? null : InternalUtils.parseDate(c); // null when fetching relationship-info
 				favoritesCount = obj.optInt("favourites_count");
-				String utcOffSet = jsonGet("utc_offset", obj);
+				String utcOffSet = InternalUtils.jsonGet("utc_offset", obj);
 				timezoneOffSet = utcOffSet == null ? 0 : Double
 						.parseDouble(utcOffSet);
-				timezone = jsonGet("time_zone", obj);
-				img = jsonGet("profile_background_image_url", obj);
-				profileBackgroundImageUrl = img == null ? null : URI(img);
+				timezone = InternalUtils.jsonGet("time_zone", obj);
+				img = InternalUtils.jsonGet("profile_background_image_url", obj);
+				profileBackgroundImageUrl = img == null ? null : InternalUtils.URI(img);
 				profileBackgroundTile = obj
 						.optBoolean("profile_background_tile");
 				statusesCount = obj.optInt("statuses_count");
@@ -1513,26 +1493,6 @@ public class Twitter implements Serializable {
 		}
 	};
 
-	/**
-	 * Create a map from a list of key, value pairs. An easy way to make small
-	 * maps, basically the equivalent of {@link Arrays#asList(Object...)}.
-	 * If the value is null, the key will not be included.
-	 */
-	@SuppressWarnings("unchecked")
-	static <K, V> Map<K, V> asMap(Object... keyValuePairs) {
-		assert keyValuePairs.length % 2 == 0;
-		Map m = new HashMap(keyValuePairs.length / 2);
-		for (int i = 0; i < keyValuePairs.length; i += 2) {
-			Object v = keyValuePairs[i + 1];
-			if (v==null) continue;
-			m.put(keyValuePairs[i], v);
-		}
-		return m;
-	}
-	
-	
-	
-	
 	// TODO
 	// c.f. https://dev.twitter.com/discussions/1059
 	Status updateStatusWithMedia(String statusText, Number inReplyToStatusId, File media) { 
@@ -1544,7 +1504,7 @@ public class Twitter implements Serializable {
 					"Status text must be 160 characters or less: "
 							+ statusText.length() + " " + statusText);
 		}
-		Map<String, String> vars = asMap("status", statusText);
+		Map<String, String> vars = InternalUtils.asMap("status", statusText);
 
 		// add in long/lat if set
 		if (myLatLong != null) {
@@ -1585,72 +1545,6 @@ public class Twitter implements Serializable {
 		}
 	}
 
-	private static final Pattern REGEX_JUST_DIGITS = Pattern.compile("\\d+");
-	
-	static Date parseDate(String c) {
-		if (REGEX_JUST_DIGITS.matcher(c).matches()) {
-			return new Date(Long.valueOf(c));
-		}
-		try {
-			Date _createdAt = new Date(c);
-			return _createdAt;
-		} catch (Exception e) { // Bug reported by Marakana with *some* Status.Net sites
-			try {
-				Date _createdAt = dfMarko.parse(c);
-				return _createdAt;
-			} catch (ParseException e1) {
-				throw new TwitterException.Parsing(c, e1);
-			}
-		}
-	}
-
-	/**
-	 * Twitter html encodes some entities: ", ', <, >, &
-	 *
-	 * @param text
-	 *            Can be null (which returns null)
-	 * @return normal-ish text
-	 */
-	static String unencode(String text) {
-		if (text == null)
-			return null;
-		// TODO use Jakarta to handle all html entities?
-		text = text.replace("&quot;", "\"");
-		text = text.replace("&apos;", "'");
-		text = text.replace("&nbsp;", " ");
-		text = text.replace("&amp;", "&");
-		text = text.replace("&gt;", ">");
-		text = text.replace("&lt;", "<");
-		// zero-byte chars are a rare but annoying occurence
-		if (text.indexOf(0) != -1) {
-			text = text.replace((char)0, ' ').trim();
-		}
-		// if (Pattern.compile("&\\w+;").matcher(text).find()) {
-		// System.out.print(text);
-		// }
-		return text;
-	}
-
-	/**
-	 * Convenience method for making Dates. Because Date is a tricksy bugger of
-	 * a class.
-	 *
-	 * @param year
-	 * @param month
-	 * @param day
-	 * @return date object
-	 */
-	public static Date getDate(int year, String month, int day) {
-		try {
-			Field field = GregorianCalendar.class.getField(month.toUpperCase());
-			int m = field.getInt(null);
-			Calendar date = new GregorianCalendar(year, m, day);
-			return date.getTime();
-		} catch (Exception x) {
-			throw new IllegalArgumentException(x.getMessage());
-		}
-	}
-
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the
 	 * list.
@@ -1667,23 +1561,6 @@ public class Twitter implements Serializable {
 				return user;
 		}
 		return null;
-	}
-
-	/**
-	 * Helper method to deal with JSON-in-Java weirdness
-	 *
-	 * @return Can be null
-	 * */
-	protected static String jsonGet(String key, JSONObject jsonObj) {
-		assert key != null : jsonObj;
-		assert jsonObj != null;
-		Object val = jsonObj.opt(key);
-		if (val == null)
-			return null;
-		if (JSONObject.NULL.equals(val))
-			return null;
-		String s = val.toString();
-		return s;
 	}
 
 	/**
@@ -1714,17 +1591,6 @@ public class Twitter implements Serializable {
 		System.out.println("Released under LGPL by Winterwell Associates Ltd.");
 		System.out
 				.println("See source code, JavaDoc, or http://winterwell.com for details on how to use.");
-	}
-
-	/**
-	 * Convert to a URI, or return null if this is badly formatted
-	 */
-	private static URI URI(String uri) {
-		try {
-			return new URI(uri);
-		} catch (URISyntaxException e) {
-			return null; // Bad syntax
-		}
 	}
 
 	private String sourceApp = "jtwitterlib";
@@ -2492,7 +2358,7 @@ public class Twitter implements Serializable {
 	 *         tweets were all new-style retweets!
 	 */
 	public Status getStatus() throws TwitterException {
-		Map<String, String> vars = asMap("count", 6);
+		Map<String, String> vars = InternalUtils.asMap("count", 6);
 		String json = http.getPage(
 				TWITTER_URL + "/statuses/user_timeline.json", vars, true);
 		List<Status> statuses = Status.getStatuses(json);
@@ -2529,7 +2395,7 @@ public class Twitter implements Serializable {
 		// new-style retweets can cause blanks in your timeline
 		// show(username).status is just as vulnerable
 		// grab a few tweets to give some robustness
-		Map<String, String> vars = asMap("id", username, "count", 6);
+		Map<String, String> vars = InternalUtils.asMap("id", username, "count", 6);
 		String json = http.getPage(
 				TWITTER_URL + "/statuses/user_timeline.json", vars, false);
 		List<Status> statuses = Status.getStatuses(json);
@@ -2702,7 +2568,7 @@ public class Twitter implements Serializable {
 	 */
 	public List<Status> getUserTimeline(String screenName)
 			throws TwitterException {
-		Map<String, String> vars = asMap("screen_name", screenName);
+		Map<String, String> vars = InternalUtils.asMap("screen_name", screenName);
 		addStandardishParameters(vars);
 		// Should we authenticate?
 		boolean authenticate = http.canAuthenticate();
@@ -2751,7 +2617,7 @@ public class Twitter implements Serializable {
 	public List<Status> getUserTimelineWithRetweets(String screenName)
 			throws TwitterException
 	{
-		Map<String, String> vars = asMap("screen_name", screenName,
+		Map<String, String> vars = InternalUtils.asMap("screen_name", screenName,
 				"include_rts", "1");
 		addStandardishParameters(vars);
 		// Should we authenticate?
@@ -3131,7 +2997,7 @@ public class Twitter implements Serializable {
 	 */
 	public List<User> searchUsers(String searchTerm) {
 		assert searchTerm != null;
-		Map<String, String> vars = asMap("q", searchTerm);
+		Map<String, String> vars = InternalUtils.asMap("q", searchTerm);
 		if (pageNumber != null) {
 			vars.put("page", pageNumber.toString());
 		}
@@ -3163,7 +3029,7 @@ public class Twitter implements Serializable {
 		// since date is no longer supported. until is though?!
 		// if (sinceDate != null) vars.put("since", df.format(sinceDate));
 		if (untilDate != null)
-			vars.put("until", df.format(untilDate));
+			vars.put("until", InternalUtils.df.format(untilDate));
 		if (lang != null)
 			vars.put("lang", lang);
 		if (geocode != null)
@@ -3171,8 +3037,6 @@ public class Twitter implements Serializable {
 		addStandardishParameters(vars);
 		return vars;
 	}
-
-	static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * Used by search
@@ -3269,7 +3133,7 @@ public class Twitter implements Serializable {
 		assert ! text.startsWith("d " + recipient) : recipient+" "+text;
 		if (text.length() > 140)
 			throw new IllegalArgumentException("Message is too long.");
-		Map<String, String> vars = asMap("user", recipient, "text", text);
+		Map<String, String> vars = InternalUtils.asMap("user", recipient, "text", text);
 		if (tweetEntities) vars.put("include_entities", "1");
 		String result=null;
 		try {
@@ -3428,7 +3292,7 @@ public class Twitter implements Serializable {
 	 *             happens to spam bots).
 	 */
 	public User show(Number userId) {
-		Map<String, String> vars = asMap("user_id", userId.toString());
+		Map<String, String> vars = InternalUtils.asMap("user_id", userId.toString());
 		String json = http.getPage(TWITTER_URL + "/users/show.json", vars, http
 				.canAuthenticate());
 		http.updateRateLimits(KRequestType.SHOW_USER);
@@ -3476,10 +3340,10 @@ public class Twitter implements Serializable {
 				: new ArrayList(screenNamesOrIds);
 		for (int i = 0; i < _screenNamesOrIds.size(); i += batchSize) {
 			int last = i + batchSize;
-			String names = join(_screenNamesOrIds, i, last);
+			String names = InternalUtils.join(_screenNamesOrIds, i, last);
 			String var = stringOrNumber == String.class ? "screen_name"
 					: "user_id";
-			Map<String, String> vars = asMap(var, names);
+			Map<String, String> vars = InternalUtils.asMap(var, names);
 			try {
 				String json = http.getPage(TWITTER_URL + apiMethod,
 						vars, http.canAuthenticate());
@@ -3497,26 +3361,6 @@ public class Twitter implements Serializable {
 			}
 		}
 		return users;
-	}
-
-	/**
-	 * Join a slice of the list
-	 * @param screenNamesOrIds
-	 * @param first Inclusive
-	 * @param last Exclusive. Can be > list.size (will be truncated).
-	 * @return
-	 */
-	static String join(List screenNamesOrIds, int first, int last) {
-		StringBuilder names = new StringBuilder();
-		for (int si = first, n = Math.min(last, screenNamesOrIds.size()); 
-			si < n; si++) 
-		{
-			names.append(screenNamesOrIds.get(si));
-			names.append(",");
-		}
-		// pop final ,
-		names.delete(names.length() - 1, names.length());
-		return names.toString();
 	}
 
 	/**
@@ -3688,7 +3532,7 @@ public class Twitter implements Serializable {
 					"Status text must be 160 characters or less: "
 							+ statusText.length() + " " + statusText);
 		}
-		Map<String, String> vars = asMap("status", statusText);
+		Map<String, String> vars = InternalUtils.asMap("status", statusText);
 
 		// add in long/lat if set
 		if (myLatLong != null) {
@@ -3761,18 +3605,9 @@ public class Twitter implements Serializable {
 	}
 
 	String stripUrls(String text) {
-		return URL_REGEX.matcher(text).replaceAll("");
+		return InternalUtils.URL_REGEX.matcher(text).replaceAll("");
 	}
 	
-	/**
-	 * Matches urls. 
-	 * Note: Excludes any trailing .
-	 * @testedy {@link WebUtilsTest#testUrlRegex()}
-	 */
-	private static final Pattern URL_REGEX = Pattern.compile(
-			"[hf]tt?ps?://[a-zA-Z0-9_%\\-\\.,\\?&\\/=\\+'~#!\\*:]+[a-zA-Z0-9_%\\-&\\/=\\+]");
-
-
 	static final Pattern contentTag = Pattern.compile(
 			"<content>(.+?)<\\/content>", Pattern.DOTALL);
 	static final Pattern idTag = Pattern.compile("<id>(.+?)<\\/id>",
@@ -3811,7 +3646,7 @@ public class Twitter implements Serializable {
 					+ " chars). Just post a normal Twitter status. ");
 		}
 		String url = "http://www.twitlonger.com/api_post";
-		Map<String, String> vars = asMap("application", twitlongerAppName,
+		Map<String, String> vars = InternalUtils.asMap("application", twitlongerAppName,
 				"api_key", twitlongerApiKey, "username", name, "message",
 				message);
 		if (inReplyToStatusId != null) {
@@ -4034,12 +3869,6 @@ public class Twitter implements Serializable {
 	}
 	
 	/**
-	 * The date format used by Marko from Marakana.
-	 * This is needed for *some* installs of Status.Net, though not for Identi.ca.
-	 */
-	static final DateFormat dfMarko = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
-
-	/**
 	 * @return you, or null if this is an anonymous Twitter object.
 	 * <p>
 	 * This will avoid making an API call if it can (i.e. it 
@@ -4053,12 +3882,14 @@ public class Twitter implements Serializable {
 			return self;
 		}
 		if ( ! http.canAuthenticate()) return null;
-		self = new Twitter_Account(this).verifyCredentials();
+		account().verifyCredentials();
 		name = self.getScreenName();
 		return self;
 	}
 	
+	/**
+	 * The user. Can be null. Can be a "fake-user" (screenname-only) object.
+	 */
 	User self;
-
 
 }

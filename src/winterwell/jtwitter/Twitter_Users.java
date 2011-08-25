@@ -1,9 +1,14 @@
 package winterwell.jtwitter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.User;
@@ -83,4 +88,96 @@ public class Twitter_Users {
 		return users;
 	}
 	
+	/**
+	 * @return an array of numeric user ids the authenticating user is blocking.
+	 * Use {@link #showById(Collection)} if you want to convert thse into User objects.
+	 */
+	public List<Number> getBlockedIds() {
+		String json = http.getPage(jtwit.TWITTER_URL+"/blocks/blocking/ids.json", null, true);
+		try {
+			JSONArray arr = new JSONArray(json);
+			List<Number> ids = new ArrayList(arr.length());
+			for(int i=0,n=arr.length(); i<n; i++) {
+				ids.add(arr.getLong(i));
+			}
+			return ids;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+	
+	public User reportSpammer(String screenName) {
+		HashMap vars = new HashMap();
+		vars.put("screen_name", screenName);			
+		// Returns if the authenticating user is blocking a target user. 
+		// Will return the blocked user's object if a block exists, and error with 
+		// a HTTP 404 response code otherwise.
+		String json = http.post(jtwit.TWITTER_URL+"/report_spam.json", vars, true);
+		return InternalUtils.user(json);
+	}
+	
+	/**
+	 * blocks/create: Blocks screenName from following the authenticating user. 
+	 * In addition the blocked user will not show in the authenticating users mentions 
+	 * or timeline (unless retweeted by another user). If a follow or friend relationship 
+	 * exists it is destroyed.
+	 * @param screenName
+	 * @return info on the (now blocked) user
+	 * @see #unblock(String)
+	 */
+	public User block(String screenName) {
+		HashMap vars = new HashMap();
+		vars.put("screen_name", screenName);			
+		// Returns if the authenticating user is blocking a target user. 
+		// Will return the blocked user's object if a block exists, and error with 
+		// a HTTP 404 response code otherwise.
+		String json = http.post(jtwit.TWITTER_URL+"/blocks/create.json", vars, true);
+		return InternalUtils.user(json);
+	}
+	
+	/**
+	 * blocks/destroy: Un-blocks screenName for the authenticating user. 
+	 * Returns the un-blocked user when successful. If relationships existed 
+	 * before the block was instated, they will not be restored.
+	 * @param screenName
+	 * @return the now un-blocked User
+	 * @see #block(String)
+	 */
+	public User unblock(String screenName) {
+		HashMap vars = new HashMap();
+		vars.put("screen_name", screenName);			
+		// Returns if the authenticating user is blocking a target user. 
+		// Will return the blocked user's object if a block exists, and error with 
+		// a HTTP 404 response code otherwise.
+		String json = http.post(jtwit.TWITTER_URL+"/blocks/destroy.json", vars, true);
+		return InternalUtils.user(json);
+	}
+	
+	public boolean isBlocked(String screenName) {		
+		try {
+			HashMap vars = new HashMap();
+			vars.put("screen_name", screenName);			
+			// Returns if the authenticating user is blocking a target user. 
+			// Will return the blocked user's object if a block exists, and error with 
+			// a HTTP 404 response code otherwise.
+			String json = http.getPage(jtwit.TWITTER_URL+"/blocks/exists.json", vars, true);
+			return true;
+		} catch (TwitterException.E404 e) {
+			return false;
+		}
+	}
+	
+	public boolean isBlocked(Long userId) {		
+		try {
+			HashMap vars = new HashMap();
+			vars.put("user_id", Long.toString(userId));			
+			// Returns if the authenticating user is blocking a target user. 
+			// Will return the blocked user's object if a block exists, and error with 
+			// a HTTP 404 response code otherwise.
+			String json = http.getPage(jtwit.TWITTER_URL+"/blocks/exists.json", vars, true);
+			return true;
+		} catch (TwitterException.E404 e) {
+			return false;
+		}
+	}
 }

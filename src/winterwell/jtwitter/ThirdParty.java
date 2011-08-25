@@ -40,7 +40,7 @@ public class ThirdParty {
 	 */
 	public double getInfochimpTrustRank(User user, String apiKey) {
 		String json = client.getPage("http://api.infochimps.com/soc/net/tw/trstrank.json", 
-				(Map) Twitter.asMap(
+				(Map) InternalUtils.asMap(
 				"screen_name", user.screenName,
 				"apikey",apiKey), false);
 		try {

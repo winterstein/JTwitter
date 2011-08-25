@@ -67,11 +67,11 @@ public class Place implements Serializable {
 //		"url":"http://api.twitter.com/1/geo/id/0a3e119020705b64.json",
 //		"full_name":"Parsons, KS","country":"United States"}
 		id = _place.getString("id");
-		type = Twitter.jsonGet("place_type", _place);
-		name = Twitter.jsonGet("full_name", _place);
-		if (name==null) name = Twitter.jsonGet("name", _place);
-		countryCode = Twitter.jsonGet("country_code", _place);
-		country = Twitter.jsonGet("country", _place);		
+		type = InternalUtils.jsonGet("place_type", _place);
+		name = InternalUtils.jsonGet("full_name", _place);
+		if (name==null) name = InternalUtils.jsonGet("name", _place);
+		countryCode = InternalUtils.jsonGet("country_code", _place);
+		country = InternalUtils.jsonGet("country", _place);		
 		// TODO bounding box
 	}
 

@@ -88,14 +88,14 @@ public class UserStream extends AStream {
 			}
 			// get your traffic
 			List<Status> updates = jtwit2.getUserTimelineWithRetweets(self.getScreenName());
-			for (Status status : mentions) {
+			for (Status status : updates) {
 				if (tweets.contains(status)) continue;
 				tweets.add(status);
 			}
 			// success			
 			outages.remove(outage);
 		}
-		// Missed follow events are sort of OK - the reconnect will update friends
+		// Missed follow events are sort of OK: the reconnect will update friends
 	}
 	
 	boolean withFollowings;
@@ -106,7 +106,7 @@ public class UserStream extends AStream {
 
 	HttpURLConnection connect2() throws IOException {
 		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
-		Map<String, String> vars = Twitter.asMap("with",
+		Map<String, String> vars = InternalUtils.asMap("with",
 				(withFollowings ? "followings" : "user"));
 		HttpURLConnection con = client.connect(url, vars, true);
 		return con;
