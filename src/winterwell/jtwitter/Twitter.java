@@ -1242,7 +1242,7 @@ public class Twitter implements Serializable {
 			this.id = id;
 			name = null;
 			if (screenName!=null && ! Twitter.CASE_SENSITIVE_SCREENNAMES) {
-				screenName : screenName.toLowerCase();
+				screenName = screenName.toLowerCase();
 			}
 			this.screenName = screenName;
 			status = null;
