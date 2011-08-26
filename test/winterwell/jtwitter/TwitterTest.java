@@ -29,6 +29,9 @@ import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.Printer;
+import winterwell.utils.time.TUnit;
+import winterwell.utils.time.Time;
 
 /**
  * Unit tests for JTwitter.
@@ -836,6 +839,80 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(s);
 	}
 
+	/**
+	 * An exploration test for checking whether the lowest level twitter
+	 * functionality is working
+	 * @throws InterruptedException 
+	 */
+	public void testSendMentionScratch() throws InterruptedException{
+		Twitter jtwit = newTestTwitter();
+		Twitter jtwit2 = newTestTwitter2();
+		Time time = new Time().plus(1, TUnit.HOUR);
+		String timeStr = (time.getHour()+1) + " " + time.getMinutes() + " " + time.getSeconds();
+		int salt = new Random().nextInt(100000);
+		String messageText = "Hoopla!" + salt;
+		
+		Status s3 = jtwit2.setStatus("@jtwit " + messageText + " " + time);
+		Thread.sleep(1000);
+		System.out.println(s3);
+		Status s4 = jtwit2.setStatus("Public "+ messageText + " " + time + " v2 to @jtwit");
+		Thread.sleep(1000);
+		System.out.println(s4);
+		Thread.sleep(3000);
+	
+		Status s = jtwit.setStatus("@twittest2 Public hello "+ messageText + " " + time);
+		Thread.sleep(1000);
+		System.out.println(s);
+		Status s2 = jtwit.setStatus("Public "+ messageText + " " + time + " v2 to @twittest2");
+		Thread.sleep(1000);
+		System.out.println(s2);
+		
+		//Mysteriously, jtwit2 doesn't get recent mentions
+		List<Status> aList2 = jtwit2.getMentions();
+		for (Status stat : aList2){
+			if (stat.toString().contains("" + salt)){
+			Printer.out("J2's mentions: ", stat);
+			}
+		}
+
+		//Jtwit gets recent mentions.
+		List<Status> aList = jtwit.getMentions();
+		for (Status stat : aList){
+			if (stat.toString().contains("" + salt)){
+				Printer.out("J1's mentions: ", stat);
+				}
+		}
+		
+		//Let's try to get all of the mentions for jtwit2
+		String name = jtwit2.getSelf().screenName;
+		List<Status> bigList = jtwit2.search(name);
+	int success = 0;
+		for (Status stat : bigList){
+			if (stat.toString().contains("" + salt)){
+				success ++;
+				Printer.out("J2's biglist: ", stat);
+				}
+		}
+		//This appears to be successful, both messages received
+		assert(success==2);
+	}
+	
+	public void testDirectMessageScratch(){
+		
+	}
+
+	/**
+	 * An exploration test for checking whether the lowest level twitter
+	 * functionality is working
+	 */
+	public void testGetMentionScratch(){
+	
+		
+		
+	}
+
+	
+	
 	// Test written to flush out a problem with the paging code
 	public void testPaging() {
 		Twitter tw = newTestTwitter();
