@@ -44,10 +44,21 @@ public class InternalUtils {
 
 	static ConcurrentHashMap<String, Long> usage;
 	
+	/**
+	 * @return a map of API endpoint to count-of-calls.
+	 * null if switched off (which is the default).
+	 * 
+	 * @see #setTrackAPIUsage(boolean)
+	 */
 	static public ConcurrentHashMap<String, Long> getAPIUsageStats() {
 		return usage;
 	}
 	
+	/**
+	 * @param on true to activate {@link #getAPIUsageStats()}. false to
+	 * switch stats off. 
+	 * false by default
+	 */
 	static public void setTrackAPIUsage(boolean on) {
 		if ( ! on) {
 			usage = null;

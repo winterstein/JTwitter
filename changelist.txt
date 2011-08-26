@@ -1,21 +1,22 @@
 # JTwitter Change list 
 
 2.2 (pending)
- - *breaking change:* User.isFollowingYou() and User.isFollowedByYou() return null if the information
+ - *breaking change:* User.isFollowingYou() and User.isFollowedByYou() return null if the information.
  is unknown. Previously they defaulted to false.
- - *Breaking change:* renamed TwitterGeo to Twitter_Geo and TwitterAccount to Twitter_Account
+ - *Breaking change:* renamed TwitterGeo to Twitter_Geo and TwitterAccount to Twitter_Account.
  to reflect that conceptually they're an extension of the Twitter class.
  - *Breaking change:* created a TwitterAccount.Search class to describe saved searched.
- - Added E40X as a common base-class for errors that are YOUR fault.
- - Added entity support to ITweet and Message 
+ - Added E40X as a common base-class for errors that are the user's (or progammer's) fault.
+ - Added entity support to ITweet and Message. 
  - Twitter.setIncludeTweetEntities() now defaults to true, so you get the t.co link info by default.
  - Streaming API: UserStream and TwitterStream provide streaming support :) 
  - Place class to model Twitter place data, plus ITweet.getPlace() and User.getPlace() 
  - Fixed date parsing bug in rate-limits (alternative format depending on source)
  - RateLimit logic bug (isRateLimited() could be overly optimistic) 
  - Fixed _another_ Twitter Search API bug!
- - Moved some of Twitter's static internal utility methods into InternalUtils
- - Added E406, E413, E416 exceptions (all sub-classes of E40X) for streaming-API user errors
+ - Moved some of Twitter's static internal utility methods into InternalUtils.
+ - Added InternalUtils.getAPIUsageStats() to allow analysis of API usage.
+ - Added E406, E413, E416 exceptions (all sub-classes of E40X) for streaming-API user errors. 
  
 2.1.7
  - Fixed issue with t.co shortener upsetting Twitter.updateStatus' sanity check.
