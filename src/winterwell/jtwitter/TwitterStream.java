@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import winterwell.jtwitter.AStream.Outage;
 import winterwell.jtwitter.Twitter.IHttpClient;
@@ -28,6 +29,8 @@ import winterwell.utils.TodoException;
  */
 public class TwitterStream extends AStream {
 
+	private static final Map<String, AStream> user2stream = new ConcurrentHashMap();
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("TwitterStream");
@@ -133,17 +136,31 @@ public class TwitterStream extends AStream {
 	}
 		
 	HttpURLConnection connect2() throws IOException {
-			String url = "http://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
-			Map<String, String> vars = new HashMap();
-			if (follow!=null) {
-				vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
+		// protect the rate limits (only locally! Do NOT rely on this)
+		if (jtwit.getScreenName() != null) {
+			AStream s = user2stream.get(jtwit.getScreenName());
+			if (s.isConnected()) {
+				throw new TwitterException.TooManyLogins("One account, one stream (running: "+s
+						+").\n	But streams OR their filter parameters, so one stream can do a lot.");
 			}
-			if (track!=null) {
-				vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));	
+			// memory paranoia
+			if (user2stream.size() > 1000) {
+				user2stream.clear();
 			}
-			// FIXME need to use post for long sets of vars :(
-			HttpURLConnection con = client.connect(url, vars, true);
-			return con;
+			user2stream.put(jtwit.getScreenName(), this);			
+		}
+		
+		String url = "http://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
+		Map<String, String> vars = new HashMap();
+		if (follow!=null) {
+			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
+		}
+		if (track!=null) {
+			vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));	
+		}
+		// FIXME need to use post for long sets of vars :(
+		HttpURLConnection con = client.connect(url, vars, true);		
+		return con;
 	}
 
 	/**
