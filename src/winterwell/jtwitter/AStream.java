@@ -368,6 +368,8 @@ public abstract class AStream {
 			readThread = new StreamGobbler(stream);
 			readThread.setName("Gobble:"+toString());
 			readThread.start();			
+		} catch (TwitterException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new TwitterException(e);
 		}

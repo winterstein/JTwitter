@@ -1187,7 +1187,7 @@ public class Twitter implements Serializable {
 					this.status = status;
 				}
 			} catch (JSONException e) {
-				throw new TwitterException.Parsing(obj.toString(), e);
+				throw new TwitterException.Parsing(String.valueOf(obj), e);
 			} catch (NullPointerException e) {
 				throw new TwitterException(e + " from <" + obj + ">, <"
 						+ status + ">\n\t"+e.getStackTrace()[0]+"\n\t"+e.getStackTrace()[1]);
