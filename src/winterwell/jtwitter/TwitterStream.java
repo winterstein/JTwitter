@@ -90,6 +90,7 @@ public class TwitterStream extends AStream {
 	}
 	
 	KMethod method = KMethod.sample;
+	
 	private List<String> track;
 	private List<Long> follow;
 	private List<double[]> locns;
@@ -100,7 +101,11 @@ public class TwitterStream extends AStream {
 		 */
 		filter,
 		/**
-		 * Garden-hose: a sample of tweets, suitable for trend analysis.
+		 * Spritzer or Garden-hose: 
+		 * a sample of tweets, suitable for trend analysis.<br>
+		 * The default level (spritzer) is roughly 1% of all public tweets.<br>
+		 * The upgraded level (garden-hose - apply to Twitter for this) is 10%.<br>
+		 * In both cases the algorithm is based on the tweet-id modulo 100.
 		 */
 		sample, 
 		/** Requires special access privileges */
