@@ -1086,9 +1086,9 @@ public class Twitter implements Serializable {
 
 		public final boolean verified;
 
-		private final boolean followingYou;
+		private final Boolean followingYou;
 
-		private final boolean followedByYou;
+		private final Boolean followedByYou;
 
 		/**
 		 * True if the authenticated user has requested to follow
@@ -1102,7 +1102,6 @@ public class Twitter implements Serializable {
 		 */
 		public final int listedCount;
 		private Place place;
-
 
 		public Place getPlace() {
 			return place;
@@ -1174,8 +1173,8 @@ public class Twitter implements Serializable {
 					followingYou = _followedBy;
 					followRequestSent = _followRequested;
 				} else {	// from a normal User call
-					followedByYou = obj.optBoolean("following");
-					followingYou = obj.optBoolean("followed_by");
+					followedByYou = InternalUtils.getOptBoolean(obj,"following");
+					followingYou = InternalUtils.getOptBoolean(obj,"followed_by");
 					followRequestSent = obj.optBoolean("follow_request_sent");
 				}
 				
@@ -1188,7 +1187,7 @@ public class Twitter implements Serializable {
 					this.status = status;
 				}
 			} catch (JSONException e) {
-				throw new TwitterException.Parsing(null, e);
+				throw new TwitterException.Parsing(obj.toString(), e);
 			} catch (NullPointerException e) {
 				throw new TwitterException(e + " from <" + obj + ">, <"
 						+ status + ">\n\t"+e.getStackTrace()[0]+"\n\t"+e.getStackTrace()[1]);
@@ -1241,8 +1240,8 @@ public class Twitter implements Serializable {
 			statusesCount = 0;
 			notifications = false;
 			verified = false;
-			followedByYou = false;
-			followingYou = false;
+			followedByYou = null;
+			followingYou = null;
 			followRequestSent = false;
 			listedCount = -1;
 		}
@@ -1431,17 +1430,19 @@ public class Twitter implements Serializable {
 
 		/**
 		 * Is this person following you?
+		 * @return true if this user is following you. Can return null if unset.
 		 */
-		public boolean isFollowingYou() {
+		public Boolean isFollowingYou() {
 			return followingYou;
 		}
 
 		/**
 		 * Are you following this person?
+		 * @return true if you are following this user. Can return null if unset.
 		 */
-		public boolean isFollowedByYou() {
+		public Boolean isFollowedByYou() {
 			return followedByYou;
-		}
+		}		
 
 		public boolean isNotifications() {
 			return notifications;

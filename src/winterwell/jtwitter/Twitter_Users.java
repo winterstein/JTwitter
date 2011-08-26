@@ -65,7 +65,7 @@ public class Twitter_Users {
 	/**
 	 * Bulk-fetch relationship info by screen-name.
 	 * @param screenNames Can be empty
-	 * @return User objects which are mostly blank, but which have {@link User#isFollowingYou()}
+	 * @return User objects which are mostly blank, but do have {@link User#isFollowingYou()}
 	 * and {@link User#isFollowedByYou()} set (plus name, screenname and id).
 	 * @see #getRelationshipInfoById(List)
 	 */

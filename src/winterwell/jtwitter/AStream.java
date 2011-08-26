@@ -37,6 +37,16 @@ import winterwell.utils.reporting.Log;
 public abstract class AStream {
 
 	/**
+	 * Forget the past. Clears all current queues of tweets, etc.
+	 */
+	public void clear() {
+		outages.clear();
+		popEvents();
+		popSystemEvents();
+		popTweets();
+	}
+	
+	/**
 	 * 5 minutes
 	 */
 	private static final int MAX_WAIT_SECONDS = 300;

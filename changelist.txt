@@ -1,6 +1,8 @@
 # JTwitter Change list 
 
 2.2 (pending)
+ - *breaking change:* User.isFollowingYou() and User.isFollowedByYou() return null if the information
+ is unknown. Previously they defaulted to false.
  - *Breaking change:* renamed TwitterGeo to Twitter_Geo and TwitterAccount to Twitter_Account
  to reflect that conceptually they're an extension of the Twitter class.
  - *Breaking change:* created a TwitterAccount.Search class to describe saved searched.

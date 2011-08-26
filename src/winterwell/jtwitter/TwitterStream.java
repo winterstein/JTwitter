@@ -154,6 +154,7 @@ public class TwitterStream extends AStream {
 		this.track = keywords;
 		method = KMethod.filter;
 	}
+	
 }
 
 

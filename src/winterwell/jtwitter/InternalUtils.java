@@ -302,5 +302,20 @@ public class InternalUtils {
 		}
 	}
 
+	static Boolean getOptBoolean(JSONObject obj, String key) throws JSONException {
+		Object o = obj.opt(key);
+		if (o==null || o.equals(JSONObject.NULL)) return null;
+		if (o.equals(Boolean.FALSE) ||
+                (o instanceof String &&
+                ((String)o).equalsIgnoreCase("false"))) {
+            return false;
+        } else if (o.equals(Boolean.TRUE) ||
+                (o instanceof String &&
+                ((String)o).equalsIgnoreCase("true"))) {
+            return true;
+        }
+		throw new JSONException(o+" ("+key+") is not boolean");
+	}
+
 	
 }
