@@ -805,34 +805,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 				"claNlUI3rWxDYFCpTZU3mJIe4yAGFbv7Aeudj1lw");
 		return new Twitter("jtwittest2", client);
 	}
-	
-	/**
-	 * A third test account (for testing 2 streams against each other)
-	 */
-	public static Twitter newTestTwitter3() {
-//		OAuthSignpostClient client = new OAuthSignpostClient(
-//				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
-//				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
-//		client.authorizeDesktop();
-//		String pin = client.askUser("The Pin?");
-//		System.out.println(pin);
-//		client.setAuthorizationCode(pin);
-//		String[] tokens = client.getAccessToken();
-//		System.out.println(tokens[0]+" "+tokens[1]);		
-		OAuthSignpostClient client = new OAuthSignpostClient(
-				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
-				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
-		"362743177-IxAGXB94YGutU1q57Cu2BC2ebyjUyWUcWTUd36vn", 
-		"6QxSOJaHgQugnz3qpPDjZuZG8h2nVSy9wt4jpHPX6V4");
-		return new Twitter("aux_j", client);
-	}
-
-
-	
-
-
-	
-	
+		
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getMentions()}.
 	 */

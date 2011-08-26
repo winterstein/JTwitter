@@ -31,8 +31,8 @@ public class TwitterStreamTest {
 	
 	@Test
 	public void testSampler() throws InterruptedException {
-		Twitter jtwit = TwitterTest.newTestTwitter2();
-		Twitter jtwit2 = TwitterTest.newTestTwitter3();
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit2 = TwitterTest.newTestTwitter2();
 		TwitterStream sampler = new TwitterStream(jtwit);
 		TwitterStream justin = new TwitterStream(jtwit2);
 		justin.setTrackKeywords(Arrays.asList("london"));

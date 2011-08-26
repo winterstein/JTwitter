@@ -100,19 +100,26 @@ public class TwitterStream extends AStream {
 		 * Follow hashtags, users or regions
 		 */
 		filter,
+		
 		/**
-		 * Spritzer or Garden-hose: 
-		 * a sample of tweets, suitable for trend analysis.<br>
-		 * The default level (spritzer) is roughly 1% of all public tweets.<br>
-		 * The upgraded level (garden-hose - apply to Twitter for this) is 10%.<br>
+		 * Spritzer or Garden-hose: A sample of tweets, suitable for trend analysis. <br>
+		 * The default level (spritzer) is roughly 1% of all public tweets. <br>
+		 * The upgraded level (garden-hose - apply to Twitter for this) is 10%. <br>
 		 * In both cases the algorithm is based on the tweet-id modulo 100.
 		 */
 		sample, 
-		/** Requires special access privileges */
+		
+		/** Requires special access privileges! */
 		links, 
-		/** New-style retweets. Requires special access privileges */
-		retweet, 
-		/** Everything! Requires special access privileges */
+		
+		/** New-style retweets. Requires special access privileges!
+		 *  From dev.twitter.com: <i>Few applications require this level of access. 
+		 *  Creative use of a combination of other resources and various access levels 
+		 *  can satisfy nearly every application use case.</i>
+		 *  */
+		retweet,
+		
+		/** Everything! Requires special access privileges! */
 		firehose
 	}
 	
