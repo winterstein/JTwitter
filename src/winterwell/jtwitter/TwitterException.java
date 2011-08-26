@@ -189,10 +189,53 @@ public class TwitterException extends RuntimeException {
 	}
 	
 	/**
-	 * A user-error. This is sub-classed to privde more info.
+	 * A user-error. This is sub-classed to provide more info.
+	 * <p>
+	 * This indicates an error in you request.
+	 * You should catch E40X and deal with the cause.
+	 * Don't just re-try -- it won't work.
 	 */
 	public static class E40X extends TwitterException {
 		public E40X(String string) {
+			super(string);
+		}
+		private static final long serialVersionUID = 1L;		
+	}
+	
+/**
+ * 	Not Acceptable. One or more of the parameters are not suitable for the resource. The track parameter, for example, would throw this error if:
+
+	The track keyword is too long or too short.
+	The bounding box specified is invalid.
+	No predicates defined for filtered resource, for example, neither track nor follow parameter defined.
+	Follow userid cannot be read.
+ */
+	public static class E406 extends E40X {
+		public E406(String string) {
+			super(string);
+		}
+		private static final long serialVersionUID = 1L;		
+	}
+
+	/**Too Long. A parameter list is too long. The track parameter, for example, would throw this error if:
+
+	Too many track tokens specified for role; contact API team for increased access.
+	Too many bounding boxes specified for role; contact API team for increased access.
+	Too many follow userids specified for role; contact API team for increased access.
+	*/
+	public static class E413 extends E40X {
+		public E413(String string) {
+			super(string);
+		}
+		private static final long serialVersionUID = 1L;		
+	}
+	
+	/** Range Unacceptable. Possible reasons are:
+
+	Count parameter is not allowed in role.
+	Count parameter value is too large. */
+	public static class E416 extends E40X {
+		public E416(String string) {
 			super(string);
 		}
 		private static final long serialVersionUID = 1L;		

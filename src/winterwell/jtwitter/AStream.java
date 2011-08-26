@@ -28,9 +28,9 @@ import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.
- * 
- * <h3>Memory Management</h3>
- * 
+ * <p>
+ * Warning from Twitter: Consuming applications must tolerate duplicate statuses, 
+ *  out-of-order statuses and non-status messages.
  * 
  * @author daniel
  */
@@ -279,7 +279,7 @@ public abstract class AStream {
 			forgotten += forgetIfFull(events);
 			return;
 		}
-		// Deletes TODO and other system events, like limits
+		// Deletes and other system events, like limits
 		JSONObject del = jo.optJSONObject("delete");
 		if (del!=null) {
 			JSONObject s = del.getJSONObject("status");
@@ -294,6 +294,18 @@ public abstract class AStream {
 			}
 			return;
 		}
+		// 	e.g.	{"limit":{"track":1234}}
+		JSONObject limit = jo.optJSONObject("limit");
+		if (limit!=null) {
+			int cnt = limit.optInt("track");
+			if (cnt==0) {	
+				System.out.println(jo); // API change :( - a new limit object		
+			}
+			sysEvents.add(new Object[]{"limit", cnt});
+			forgotten += cnt;
+			return;
+		}
+		// ??
 		System.out.println(jo);
 	}
 
@@ -367,7 +379,12 @@ public abstract class AStream {
 			stream = con.getInputStream();
 			readThread = new StreamGobbler(stream);
 			readThread.setName("Gobble:"+toString());
-			readThread.start();			
+			readThread.start();
+			// check the connection took
+			Thread.sleep(10);
+			if ( ! isConnected()) {
+				throw new TwitterException(readThread.ex);
+			}
 		} catch (TwitterException e) {
 			throw e;
 		} catch (Exception e) {

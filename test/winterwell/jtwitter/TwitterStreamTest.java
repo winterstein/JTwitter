@@ -32,13 +32,14 @@ public class TwitterStreamTest {
 	@Test
 	public void testSampler() throws InterruptedException {
 		Twitter jtwit = TwitterTest.newTestTwitter2();
+		Twitter jtwit2 = TwitterTest.newTestTwitter3();
 		TwitterStream sampler = new TwitterStream(jtwit);
-		TwitterStream justin = new TwitterStream(jtwit);
-		justin.setTrackKeywords(Arrays.asList("edinburgh"));
-		sampler.connect();
+		TwitterStream justin = new TwitterStream(jtwit2);
+		justin.setTrackKeywords(Arrays.asList("london"));
 		sampler.setAutoReconnect(true);
-		justin.connect();
+		sampler.connect();		
 		justin.setAutoReconnect(true);
+		justin.connect();		
 		HashSet<Number> samplerTweets = new HashSet();
 		HashSet<Number> justinTweets = new HashSet();
 		for(int i=0; i<10000; i++) {
@@ -61,8 +62,8 @@ public class TwitterStreamTest {
 				}
 			}			
 			float p = (100f*caught)/justinTweets.size();
-			Printer.formatOut("Caught {0} of {1} = {2}%", 
-					caught, justinTweets.size(), p);
+			Printer.formatOut("Caught {0} of {1} = {2}%	forgottens: {3} v {4}", 
+					caught, justinTweets.size(), p, sampler.getForgotten(), justin.getForgotten());
 		}
 		sampler.close();
 		justin.close();
