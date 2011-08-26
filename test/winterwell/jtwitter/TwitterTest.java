@@ -370,8 +370,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public static final String TEST_PASSWORD = "notsofast";
 
 	public static final String[] TEST_ACCESS_TOKEN = new String[]{
-		"59714113-kiyrSzrCqsmGLl0RXlEak8rnvzGVtJFc9e8TbxLBU",
-		"COBn8690I3JdfivVsr14mphbvOTjIFRmwEUU8Tygi4"
+		"59714113-b8dOCGjVKS717QUCjN7gdJx1AQ1urfZLx6q54waFs",
+		"FQkHfEJYY9JuICUp7lj5wbT6yKxYOpnVRvACtiD62ik"
 	};
 	
 	
@@ -765,6 +765,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 	public static Twitter newTestTwitter() {
+
 		OAuthSignpostClient client = new OAuthSignpostClient(
 				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
 				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
@@ -773,7 +774,15 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 	
 	public void testScratch() {
-		newTestTwitter2();
+		OAuthSignpostClient client = new OAuthSignpostClient(
+		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
+		client.authorizeDesktop();
+		String pin = client.askUser("The Pin?");
+		System.out.println(pin);
+		client.setAuthorizationCode(pin);
+		String[] tokens = client.getAccessToken();
+		System.out.println(tokens[0] + " " + tokens[1]);
 	}
 	/**
 	 * A second test account (for testing messaging)
@@ -844,7 +853,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 * functionality is working
 	 * @throws InterruptedException 
 	 */
-	public void testSendMentionScratch() throws InterruptedException{
+	public void testSendMention2() throws InterruptedException{
 		Twitter jtwit = newTestTwitter();
 		Twitter jtwit2 = newTestTwitter2();
 		Time time = new Time().plus(1, TUnit.HOUR);
@@ -867,6 +876,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Thread.sleep(1000);
 		System.out.println(s2);
 		
+		//Jtwit gets recent mentions.
+		List<Status> aList = jtwit.getMentions();
+		for (Status stat : aList) {
+			if (stat.toString().contains("" + salt)) {
+				Printer.out("J1's mentions: ", stat);
+			}
+		}
 		//Mysteriously, jtwit2 doesn't get recent mentions
 		List<Status> aList2 = jtwit2.getMentions();
 		for (Status stat : aList2){
@@ -874,44 +890,78 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Printer.out("J2's mentions: ", stat);
 			}
 		}
-
-		//Jtwit gets recent mentions.
-		List<Status> aList = jtwit.getMentions();
-		for (Status stat : aList){
-			if (stat.toString().contains("" + salt)){
-				Printer.out("J1's mentions: ", stat);
-				}
-		}
-		
 		//Let's try to get all of the mentions for jtwit2
 		String name = jtwit2.getSelf().screenName;
-		List<Status> bigList = jtwit2.search(name);
-	int success = 0;
-		for (Status stat : bigList){
-			if (stat.toString().contains("" + salt)){
-				success ++;
-				Printer.out("J2's biglist: ", stat);
+		Printer.out("name = " + name);
+		{
+			List<Status> bigList = jtwit2.search(name);
+			int success = 0;
+			for (Status stat : bigList) {
+				if (stat.toString().contains("" + salt)) {
+					success++;
+					Printer.out("J2's biglist: ", stat);
 				}
-		}
+			}
 		//This appears to be successful, both messages received
 		assert(success==2);
+		}
+		{
+//			new UserStream(jtwit2);
+//			new TwitterStream(jtwit2);
+			List<Status> bigList = jtwit2.search("@" + name);
+			int success = 0;
+			for (Status stat : bigList) {
+				if (stat.toString().contains("" + salt)) {
+					success++;
+					Printer.out("J2's biglist: ", stat);
+				}
+			}
+			// This fails, you can't get mentions this way.
+			assert (success == 0);
+		}
+		
 	}
-	
-	public void testDirectMessageScratch(){
+	/**
+	 * This tests two users pinging DMs at each other, it seems to work fine.
+	 * @throws InterruptedException
+	 */
+	public void testDirectMessage2() throws InterruptedException{
 		Twitter jtwit = newTestTwitter();
 		Twitter jtwit2 = newTestTwitter2();
 		Time time = new Time().plus(1, TUnit.HOUR);
 		String timeStr = (time.getHour()+1) + " " + time.getMinutes() + " " + time.getSeconds();
 		int salt = new Random().nextInt(100000);
 		String messageText = "Dee EMM!" + salt;
-		jtwit.sendMessage("@"+jtwit2.getSelf().screenName, messageText + " " + time);
-		jtwit2.sendMessage("@"+jtwit.getSelf().screenName, messageText + " " + time);
-		
+		jtwit.sendMessage("@"+jtwit2.getSelf().screenName, messageText + " I'm jtwit " + time);
+		jtwit2.sendMessage("@"+jtwit.getSelf().screenName, messageText + " I'm jtwittest2 " + time);
+		Thread.sleep(10000);
 		List<Message> mList1 = jtwit.getDirectMessages();
-		List<Message> mSentList1 = jtwit.getDirectMessagesSent();
+		for (Message mess : mList1){
+			if (mess.toString().contains("" + salt)){
+				Printer.out("J1's DMs in : ", mess);
+				}
+		}
 		
+		List<Message> mSentList1 = jtwit.getDirectMessagesSent();
+		for (Message mess : mSentList1){
+			if (mess.toString().contains("" + salt)){
+				Printer.out("J1's DMs sent : ", mess);
+				}
+		}
+
 		List<Message> mList2 = jtwit2.getDirectMessages();
+		for (Message mess : mList2){
+			if (mess.toString().contains("" + salt)){
+				Printer.out("J2's DMs in : ", mess);
+				}
+		}
+
 		List<Message> mSentList2 = jtwit2.getDirectMessagesSent();
+		for (Message mess : mSentList2){
+			if (mess.toString().contains("" + salt)){
+				Printer.out("J2's DMs sent : ", mess);
+				}
+		}
 		
 		String placeholder = "";
 

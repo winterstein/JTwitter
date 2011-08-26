@@ -11,8 +11,11 @@ import org.junit.Test;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.Twitter.User;
+import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
+import winterwell.utils.time.TUnit;
+import winterwell.utils.time.Time;
 
 public class UserStreamTest {
 
@@ -37,7 +40,7 @@ public class UserStreamTest {
 		TwitterStream us2 = new TwitterStream(jtwit);
 		us2.setTrackKeywords(Arrays.asList("@jtwit"));
 		User me = jtwit.getSelf();
-//		us2.setFollowUsers(Arrays.asList(me.id));
+		us2.setFollowUsers(Arrays.asList(me.id));
 		us2.setAutoReconnect(true);
 		us2.connect();
 		
@@ -102,5 +105,144 @@ public class UserStreamTest {
 		us2.close();
 	}
 
+	/**
+	 * Checks if UserStream gets mentions, 2 way due to the irregularites in shown in
+	 * {@link winterwell.jtwitter.TwitterTest.#testSendMention2()}. This seems to
+	 * work.
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void testUSGetMentions() throws InterruptedException {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit2 = TwitterTest.newTestTwitter2();
+		UserStream us = new UserStream(jtwit2);
+		us.setPreviousCount(100);
+		us.setWithFollowings(false); // no need to hear what JTwitTest2 has to say		
+		// -- unless it's too us
+		us.setAutoReconnect(true);
+		us.connect();
+		
+		UserStream us2 = new UserStream(jtwit2);
+		us2.setPreviousCount(100);
+		us2.setWithFollowings(false); // no need to hear what JTwitTest2 has to say		
+		// -- unless it's too us
+		us2.setAutoReconnect(true);
+		us2.connect();
+		
+		//V simple test. Get jtwit2 to send 2 messages, see if it picks it up.
+		String jtSName = jtwit.getSelf().screenName;
+		String jt2SName = jtwit2.getSelf().screenName;
+		Time time = new Time().plus(1, TUnit.HOUR);
+		int salt = new Random().nextInt(100000);
+		String messageText = "Cripes! This is UserST! " + salt + " "; 
+		String messageText2 = "Public mess This is UserST2! " + salt + " ";
+		
+		Status s = jtwit.setStatus("@" + jt2SName + " " + messageText + " from " + jtSName + " " + time);
+		Thread.sleep(1000);
+		System.out.println(s);
+
+		Status s2 = jtwit.setStatus(messageText2 + "@" + jt2SName + " from " + jtSName + " " + time);
+		Thread.sleep(1000);
+		System.out.println(s2);
+
+		Status s3 = jtwit2.setStatus("@" + jtSName + " " + messageText + " from " + jt2SName + " " + time);
+		Thread.sleep(1000);
+		System.out.println(s3);
+
+		Status s4 = jtwit2.setStatus(messageText2 + "@" + jtSName + " from " + jt2SName + " " + time);
+		Thread.sleep(1000);
+		System.out.println(s4);
+		
+
+		List<ITweet> tweets = us.popTweets();
+		List<ITweet> tweets2 = us2.popTweets();
+		//Both messages should appear here, for both users.
+		boolean m1Present = false; 
+		boolean m2Present = false;
+		
+		Printer.out("@"+jtSName);
+		for (ITweet tw : tweets){
+			String text = tw.getText();
+			
+			//Note, @jtwit is a *substring* of @jtwittest2 - this caused quite some confusion
+			if (text.contains(messageText)&&text.contains("@"+jtSName + " ")){
+				Printer.out("J1 - M1 found!");
+				m1Present = true;
+			}
+			if (text.contains(messageText2)&&text.contains("@"+jtSName + " ")){
+				Printer.out("J1 - M2 found!");
+				m2Present = true;
+			}
+		}
+		assert (m1Present&&m2Present);
+		
+		m1Present = m2Present = false;
+		for (ITweet tw : tweets2){
+			if (tw.getText().contains(messageText)&&tw.getText().contains("@"+jt2SName + " ")){
+				Printer.out("J2 - M1 found!");
+				m1Present = true;
+			}
+			if (tw.getText().contains(messageText2)&&tw.getText().contains("@"+jt2SName + " ")){
+				Printer.out("J2 - M2 found!");
+				m2Present = true;
+			}
+		}
+		//This test fails here, although us2 gets the message starting @jtwittest2, it doesn't get
+		//The one with @jtwittest2 later in the text.
+		assert (m1Present&&m2Present);
+		
+		us.close();
+		us2.close();
+	}
+
+	/**
+	 * This shows that we don't get direct messages from UserStream
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testUSGetDMs() throws InterruptedException {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit2 = TwitterTest.newTestTwitter2();
+		UserStream us = new UserStream(jtwit);
+		us.setPreviousCount(0);
+		us.setWithFollowings(false); // no need to hear what JTwitTest2 has to say		
+		// -- unless it's too us
+		us.setAutoReconnect(true);
+		us.connect();
+		
+		UserStream us2 = new UserStream(jtwit2);
+		us2.setPreviousCount(0);
+		us2.setWithFollowings(false); // no need to hear what JTwitTest2 has to say		
+		// -- unless it's too us
+		us2.setAutoReconnect(true);
+		us2.connect();
+		
+		Time time = new Time().plus(1, TUnit.HOUR);
+		String timeStr = (time.getHour()+1) + " " + time.getMinutes() + " " + time.getSeconds();
+		int salt = new Random().nextInt(100000);
+		String messageText = "Dee EMM UStream!" + salt;
+		jtwit.sendMessage("@"+jtwit2.getSelf().screenName, messageText + " I'm jtwit " + time);
+		jtwit2.sendMessage("@"+jtwit.getSelf().screenName, messageText + " I'm jtwittest2 " + time);
+		Thread.sleep(10000);
+		
+		
+		List<ITweet> tweetsRand = us.getTweets();
+		List<ITweet> tweets = us.popTweets();
+		List<TwitterEvent> evs = us.popEvents();
+		List<ITweet> tweets2 = us2.popTweets();
+		List<TwitterEvent> evs2 = us2.popEvents();
+		
+		boolean weGetSomething = false;
+		weGetSomething = weGetSomething||!tweets.isEmpty();
+		weGetSomething = weGetSomething||!tweets2.isEmpty();
+		weGetSomething = weGetSomething||!evs.isEmpty();
+		weGetSomething = weGetSomething||!evs2.isEmpty();
+		assert weGetSomething;
+		String placeHolder="";
+	}
 	
+	@Test
+	public void scratch(){
+		assert ("@bob bob".contains("@ob"));
+	}
 }
