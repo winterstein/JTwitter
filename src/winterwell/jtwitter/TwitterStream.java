@@ -29,6 +29,17 @@ import winterwell.utils.TodoException;
 public class TwitterStream extends AStream {
 
 	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("TwitterStream");
+		sb.append("["+method);
+		if (track!=null) sb.append(" track:"+InternalUtils.join(track, 0, 3));
+		if (follow!=null) sb.append(" follow:"+InternalUtils.join(follow, 0, 3));
+		if (locns!=null) sb.append(" in:"+InternalUtils.join(locns, 0, 3));
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	@Override
 	public void fillInOutages() throws UnsupportedOperationException {
 		if (outages.isEmpty()) return;
 		if (method != KMethod.filter) throw new UnsupportedOperationException();

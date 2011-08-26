@@ -47,9 +47,9 @@ public abstract class AStream {
 	}
 	
 	/**
-	 * 5 minutes
+	 * 10 minutes
 	 */
-	private static final int MAX_WAIT_SECONDS = 300;
+	private static final int MAX_WAIT_SECONDS = 600;
 
 	@Override
 	protected void finalize() throws Throwable {
@@ -353,7 +353,7 @@ public abstract class AStream {
 		this.jtwit = jtwit;
 		// Twitter send 30 second keep-alive pulses, but ask that
 		// you wait 3 cycles before disconnecting
-		client.setTimeout(90 * 1000);
+		client.setTimeout(91 * 1000);
 		// this.user = jtwit.getScreenName();
 		// if (user==null) {
 		//
@@ -366,7 +366,8 @@ public abstract class AStream {
 			HttpURLConnection con = connect2();
 			stream = con.getInputStream();
 			readThread = new StreamGobbler(stream);
-			readThread.start();
+			readThread.setName("Gobble:"+toString());
+			readThread.start();			
 		} catch (Exception e) {
 			throw new TwitterException(e);
 		}
@@ -422,7 +423,7 @@ final class StreamGobbler extends Thread {
 	static final int MAX_BUFFER = 1000000;
 	
 	public StreamGobbler(InputStream is) {
-		super("gobbler:" + is.toString());
+//		super("gobbler");
 		setDaemon(true);
 		this.is = is;
 	}
@@ -452,7 +453,7 @@ final class StreamGobbler extends Thread {
 	
 	@Override
 	public String toString() {
-		return "StreamGobbler:"+jsons;
+		return getName()+"["+jsons.size()+"]";
 	}
 
 	/**
@@ -478,7 +479,7 @@ final class StreamGobbler extends Thread {
 				// we were told to stop already so ignore
 				return;
 			}
-			ioe.printStackTrace();
+			System.out.println(ioe); //.printStackTrace();
 			ex = ioe;
 			offTime = System.currentTimeMillis();
 		}
@@ -490,8 +491,10 @@ final class StreamGobbler extends Thread {
 		int cnt = 0;
 		while(len>0) {
 			int rd = br.read(sb, cnt, len);		
-			if (rd == -1)
+			if (rd == -1) {
 				throw new IOException("end of stream");
+//				continue;
+			}
 			cnt += rd;
 			len -= rd;
 		}		
@@ -506,8 +509,10 @@ final class StreamGobbler extends Thread {
 		StringBuilder numSb = new StringBuilder();		
 		while(true) {
 			int ich = br.read();		
-			if (ich == -1)
-				throw new IOException("end of stream ");
+			if (ich == -1) {
+				throw new IOException("end of stream "+this);
+//				continue;
+			}
 			char ch = (char) ich;
 			if (ch=='\n' || ch=='\r') {
 				// ignore leading whitespace, stop otherwise

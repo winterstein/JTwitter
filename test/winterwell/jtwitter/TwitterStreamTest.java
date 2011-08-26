@@ -25,18 +25,20 @@ public class TwitterStreamTest {
 		TwitterStream ts = new TwitterStream(jtwit);
 		ts.connect();
 		Thread.sleep(5000);
-		System.out.println(ts.readThread.popJsons());
+		System.out.println(ts.popTweets());
 		ts.close();
 	}
 	
 	@Test
 	public void testSampler() throws InterruptedException {
-		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit = TwitterTest.newTestTwitter2();
 		TwitterStream sampler = new TwitterStream(jtwit);
 		TwitterStream justin = new TwitterStream(jtwit);
 		justin.setTrackKeywords(Arrays.asList("edinburgh"));
 		sampler.connect();
+		sampler.setAutoReconnect(true);
 		justin.connect();
+		justin.setAutoReconnect(true);
 		HashSet<Number> samplerTweets = new HashSet();
 		HashSet<Number> justinTweets = new HashSet();
 		for(int i=0; i<10000; i++) {
@@ -46,9 +48,9 @@ public class TwitterStreamTest {
 			for (ITweet iTweet : tweets) {
 				samplerTweets.add(iTweet.getId());
 			}
-			tweets = justin.popTweets();
+			List<ITweet> tweets2 = justin.popTweets();
 			justin.popEvents(); justin.popSystemEvents();
-			for (ITweet iTweet : tweets) {
+			for (ITweet iTweet : tweets2) {
 				justinTweets.add(iTweet.getId());
 			}
 			int caught = 0;
