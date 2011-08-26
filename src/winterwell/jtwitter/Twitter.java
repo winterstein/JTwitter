@@ -21,12 +21,6 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import sun.awt.X11.Screen;
-
-import winterwell.jtwitter.Twitter.KEntityType;
-import winterwell.jtwitter.Twitter.TweetEntity;
-import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
