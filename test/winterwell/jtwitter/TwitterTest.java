@@ -898,7 +898,23 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 	
 	public void testDirectMessageScratch(){
+		Twitter jtwit = newTestTwitter();
+		Twitter jtwit2 = newTestTwitter2();
+		Time time = new Time().plus(1, TUnit.HOUR);
+		String timeStr = (time.getHour()+1) + " " + time.getMinutes() + " " + time.getSeconds();
+		int salt = new Random().nextInt(100000);
+		String messageText = "Dee EMM!" + salt;
+		jtwit.sendMessage("@"+jtwit2.getSelf().screenName, messageText + " " + time);
+		jtwit2.sendMessage("@"+jtwit.getSelf().screenName, messageText + " " + time);
 		
+		List<Message> mList1 = jtwit.getDirectMessages();
+		List<Message> mSentList1 = jtwit.getDirectMessagesSent();
+		
+		List<Message> mList2 = jtwit2.getDirectMessages();
+		List<Message> mSentList2 = jtwit2.getDirectMessagesSent();
+		
+		String placeholder = "";
+
 	}
 
 	/**
