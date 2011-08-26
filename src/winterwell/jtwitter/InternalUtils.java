@@ -297,7 +297,7 @@ public class InternalUtils {
 		i = url.indexOf("/1/");
 		if (i!=-1) url = url.substring(i+3);
 		// some calls - eg statuses/show - include the tweet id
-		url.replaceAll("\\d+", "");
+		url = url.replaceAll("\\d+", "");
 		// non-blocking
 		for(int j = 0; j<100; j++) {
 			Long v = usage.get(url);
