@@ -2671,6 +2671,8 @@ public class Twitter implements Serializable {
 
 	boolean tweetEntities = true;
 
+	private String resultType;
+
 	/**
 	 * Is the authenticating user <i>followed by</i> userB?
 	 *
@@ -2825,6 +2827,22 @@ public class Twitter implements Serializable {
 		String page = http.post(uri, vars, authenticate);
 		return page;
 	}
+	
+	/**
+	 * Optional. Specifies what type of search results you would prefer 
+	 * to receive. The current default is "mixed." Valid values:<br>
+{@link #SEARCH_MIXED}: Include both popular and real time results in the response.<br>
+{@link #SEARCH_RECENT}: return only the most recent results in the response<br>
+{@link #SEARCH_POPULAR}: return only the most popular results in the response.<br>
+	 * @param resultType
+	 */
+	public void setSearchResultType(String resultType) {
+		this.resultType = resultType;
+	}
+	
+	public static final String SEARCH_MIXED = "mixed";
+	public static final String SEARCH_RECENT = "recent";
+	public static final String SEARCH_POPULAR = "popular";
 
 	/**
 	 * Perform a search of Twitter.
@@ -3052,6 +3070,9 @@ public class Twitter implements Serializable {
 			vars.put("lang", lang);
 		if (geocode != null)
 			vars.put("geocode", geocode);
+		if (resultType!=null) {
+			vars.put("result_type", resultType);
+		}
 		addStandardishParameters(vars);
 		return vars;
 	}
