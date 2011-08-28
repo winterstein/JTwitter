@@ -22,6 +22,8 @@ import java.util.Map.Entry;
 
 import lgpl.haustein.Base64Encoder;
 
+import oauth.signpost.exception.OAuthException;
+
 import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.KRequestType;
@@ -237,33 +239,16 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	@Override
 	public String post(String uri, Map<String, String> vars,
-			boolean authenticate) throws TwitterException {
+			boolean authenticate) throws TwitterException 
+	{
 		HttpURLConnection connection = null;
 		try {
-			connection = (HttpURLConnection) new URL(uri).openConnection();
-			connection.setRequestMethod("POST");
-			connection.setDoOutput(true);
-			if (authenticate) {
-				setAuthentication(connection, name, password);
-			}
-			connection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded");
-			connection.setReadTimeout(timeout);
-			connection.setConnectTimeout(timeout);
-			// build the post body
-			String payload = post2_getPayload(vars);
-			connection.setRequestProperty("Content-Length",
-					"" + payload.length());
-			OutputStream os = connection.getOutputStream();
-			os.write(payload.getBytes());
-			close(os);
+			connection = post2_connect(uri, vars);
 			// Get the response
 			processError(connection);
 			processHeaders(connection);
 			String response = InternalUtils.toString(connection.getInputStream());
 			return response;
-		} catch (IOException e) {
-			throw new TwitterException(e);
 		} catch (TwitterException.E50X e) {
 			if (!retryOnError || retryingFlag)
 				throw e;
@@ -277,6 +262,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			} finally {
 				retryingFlag = false;
 			}
+		} catch (Exception e) {
+			throw new TwitterException(e);
 		} finally {
 			disconnect(connection);
 		}
@@ -523,6 +510,31 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		if (limit != null) {
 			rateLimits.put(reqType, new RateLimit(limit, remaining, reset));
 		}
+	}
+
+	@Override
+	public HttpURLConnection post2_connect(String uri, Map<String, String> vars) 
+	throws Exception
+	{
+		InternalUtils.count(uri);
+		HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		// post methods are alwasy with authentication
+		setAuthentication(connection, name, password);
+		
+		connection.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded");
+		connection.setReadTimeout(timeout);
+		connection.setConnectTimeout(timeout);
+		// build the post body
+		String payload = post2_getPayload(vars);
+		connection.setRequestProperty("Content-Length",
+				"" + payload.length());
+		OutputStream os = connection.getOutputStream();
+		os.write(payload.getBytes());
+		close(os);
+		return connection;		
 	}
 
 }

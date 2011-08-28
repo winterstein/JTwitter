@@ -326,8 +326,26 @@ public class Twitter implements Serializable {
 		 */
 		String getHeader(String headerName);
 
+		/**
+		 * Lower-level GET method.
+		 * @param url
+		 * @param vars
+		 * @param authenticate
+		 * @return
+		 * @throws IOException
+		 */
 		HttpURLConnection connect(String url, Map<String, String> vars,
-				boolean b) throws IOException;
+				boolean authenticate) throws IOException;
+		
+		/**
+		 * Lower-level POST method.
+		 * @param uri
+		 * @param vars
+		 * @return a freshly opened authorised connection
+		 * @throws TwitterException
+		 */
+		HttpURLConnection post2_connect(String uri, Map<String, String> vars) 
+			throws Exception;
 
 		/**
 		 * Update the rate limits for the given type of api call.

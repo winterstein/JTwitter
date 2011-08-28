@@ -405,5 +405,11 @@ public class OAuthScribeClient implements IHttpClient {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
+			throws TwitterException {
+		throw new UnsupportedOperationException();
+	}
+
 	
 }

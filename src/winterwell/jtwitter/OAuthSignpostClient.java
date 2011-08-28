@@ -17,7 +17,10 @@ import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.HttpURLConnectionRequestAdapter;
+import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.http.HttpRequest;
 import winterwell.jtwitter.Twitter.IHttpClient;
 
@@ -98,40 +101,46 @@ implements IHttpClient, Serializable {
 		}
 	}
 	
+	
+	@Override
+	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
+			throws IOException, OAuthException 
+	{
+		HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setReadTimeout(timeout);
+		connection.setConnectTimeout(timeout);
+		final String payload = post2_getPayload(vars);
+		// needed for OAuthConsumer.collectBodyParameters() not to get upset
+		HttpURLConnectionRequestAdapter wrapped = new HttpURLConnectionRequestAdapter(connection) {
+			@Override
+			public InputStream getMessagePayload() throws IOException {
+				// SHould we use ByteArrayInputStream instead? With what encoding?
+				return new StringBufferInputStream(payload);
+			}
+		};
+		consumer.sign(wrapped);
+		
+		// add the payload
+		OutputStream os = connection.getOutputStream();
+		os.write(payload.getBytes());
+		close(os);
+		return connection;
+	}
 	@Override
 	public String post(String uri, Map<String, String> vars,
-			boolean authenticate) throws TwitterException {
+			boolean authenticate) throws TwitterException 
+	{		
 		HttpURLConnection connection = null;
-		InternalUtils.count(uri);
 		try {
-			connection = (HttpURLConnection) new URL(uri).openConnection();
-			connection.setRequestMethod("POST");
-			connection.setDoOutput(true);
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			connection.setReadTimeout(timeout);
-			connection.setConnectTimeout(timeout);
-			final String payload = post2_getPayload(vars);
-			if (authenticate) { 
-				// needed for OAuthConsumer.collectBodyParameters() not to get upset
-				HttpURLConnectionRequestAdapter wrapped = new HttpURLConnectionRequestAdapter(connection) {
-					@Override
-					public InputStream getMessagePayload() throws IOException {
-						// SHould we use ByteArrayInputStream instead? With what encoding?
-						return new StringBufferInputStream(payload);
-					}
-				};
-				consumer.sign(wrapped);
-			}
-			// add the payload
-			OutputStream os = connection.getOutputStream();
-			os.write(payload.getBytes());
-			close(os);
+			connection = post2_connect(uri, vars);			
 			// Get the response
 			processError(connection);
 			processHeaders(connection);
 			String response = InternalUtils.toString(connection.getInputStream());
-			return response;
-			
+			return response;		
 		} catch (IOException e) {
 			throw new TwitterException(e);
 		} catch (OAuthException e) {
