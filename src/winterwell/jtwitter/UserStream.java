@@ -57,45 +57,26 @@ public class UserStream extends AStream {
 	
 	/**
 	 * Use the REST API to fill in: mentions of you.
-	 * <p>
-	 * Missed follow events are automatically generated on reconnect. 
-	 * 
-	 * <p>From <i>dev.twitter.com</i>:<br>
-	 * Do not resume REST API polling immediately after a stream failure. 
-		// Wait at least a minute or two after the initial failure before you begin REST API polling. 
-		// This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on 
-		// the streaming API.
-		 *</p>
+	 * Missed you-follow-them events are automatically generated on reconnect.
 	 */
 	@Override
-	public void fillInOutages() throws UnsupportedOperationException, TwitterException {
-		Outage[] outs = outages.toArray(new Outage[0]);
-		// protect our original object from edits
-		User self = jtwit.getSelf();
-		Twitter jtwit2 = new Twitter(self.getScreenName(), jtwit.getHttpClient());
-		for (Outage outage : outs) {			
-			jtwit2.setSinceId(outage.sinceId);
-			jtwit2.setUntilDate(new Date(outage.untilTime));
-			jtwit2.setMaxResults(100000); // hopefully not needed!
-			// fetch
-			if (withFollowings) {
-				// TODO pull in network activity
-				throw new UnsupportedOperationException("TODO");
-			}			
-			// get mentions of you
-			List<Status> mentions = jtwit2.getMentions();
-			for (Status status : mentions) {
-				if (tweets.contains(status)) continue;
-				tweets.add(status);
-			}
-			// get your traffic
-			List<Status> updates = jtwit2.getUserTimelineWithRetweets(self.getScreenName());
-			for (Status status : updates) {
-				if (tweets.contains(status)) continue;
-				tweets.add(status);
-			}
-			// success			
-			outages.remove(outage);
+	void fillInOutages2(Twitter jtwit2, Outage outage) throws UnsupportedOperationException, TwitterException {
+		// fetch
+		if (withFollowings) {
+			// TODO pull in network activity
+			throw new UnsupportedOperationException("TODO");
+		}			
+		// get mentions of you
+		List<Status> mentions = jtwit2.getMentions();
+		for (Status status : mentions) {
+			if (tweets.contains(status)) continue;
+			tweets.add(status);
+		}
+		// get your traffic
+		List<Status> updates = jtwit2.getUserTimelineWithRetweets(jtwit2.getScreenName());
+		for (Status status : updates) {
+			if (tweets.contains(status)) continue;
+			tweets.add(status);
 		}
 		// Missed follow events are sort of OK: the reconnect will update friends
 	}

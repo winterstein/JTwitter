@@ -182,18 +182,46 @@ public abstract class AStream {
 	}
 	
 	/**
-	 * Use the REST API to fill in any outages.
+	 * Use the REST API to fill in when possible. 
+	 * <p>
+	 * In accordance with best-practice, this method will skip over 
+	 * very recent outages (which will be picked up by subsequent calls 
+	 * to {@link #fillInOutages()}).</p> 
 	 * <p>From <i>dev.twitter.com</i>:<br>
 	 * Do not resume REST API polling immediately after a stream failure. 
-		// Wait at least a minute or two after the initial failure before you begin REST API polling. 
-		// This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on 
-		// the streaming API.
-		 *</p>
+		Wait at least a minute or two after the initial failure before you begin REST API polling. 
+		This delay is crucial to prevent dog-piling the REST API in the event of a minor hiccup on 
+		the streaming API.
+		 *</p> 
 	 */
-	public void fillInOutages() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
+	public final void fillInOutages() throws UnsupportedOperationException {
+		if (outages.isEmpty()) return;
+		Outage[] outs = outages.toArray(new Outage[0]);
+		// protect our original object from edits
+		User self = jtwit.getSelf();
+		Twitter jtwit2 = new Twitter(self.getScreenName(), jtwit.getHttpClient());
+		for (Outage outage : outs) {
+			// too recent? wait at least 1 minute
+			if (System.currentTimeMillis() - outage.untilTime < 60000) {
+				continue;
+			}
+			jtwit2.setSinceId(outage.sinceId);
+			jtwit2.setUntilDate(new Date(outage.untilTime));
+			jtwit2.setMaxResults(100000); // hopefully not needed!
+			// fetch
+			fillInOutages2(jtwit, outage);
+			// success			
+			outages.remove(outage);
+		}
 	}
 	
+	/**
+	 * 
+	 * @param jtwit2 with screenname, auth-token, sinceId and untilDate all set up
+	 * @param outage 
+	 */
+	abstract void fillInOutages2(Twitter jtwit2, Outage outage);
+
 	public static final class Outage implements Serializable {
 		private static final long serialVersionUID = 1L;
 		final BigInteger sinceId;

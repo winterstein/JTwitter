@@ -43,43 +43,31 @@ public class TwitterStream extends AStream {
 	}
 	
 	@Override
-	public void fillInOutages() throws UnsupportedOperationException {
-		if (outages.isEmpty()) return;
+	void fillInOutages2(Twitter jtwit2, Outage outage) {		
 		if (method != KMethod.filter) throw new UnsupportedOperationException();
-		Outage[] outs = outages.toArray(new Outage[0]);		
-		// protect our original object from edits
-		User self = jtwit.getSelf();
-		Twitter jtwit2 = new Twitter(self.getScreenName(), jtwit.getHttpClient());
-		for (Outage outage : outs) {			
-			jtwit2.setSinceId(outage.sinceId);
-			jtwit2.setUntilDate(new Date(outage.untilTime));
-			jtwit2.setMaxResults(100000); // hopefully not needed!
-			// keywords?
-			if (track!=null) {
-				for(String keyword : track) {
-					List<Status> msgs = jtwit.search(keyword);
-					for (Status status : msgs) {
-						if (tweets.contains(status)) continue;
-						tweets.add(status);
-					}
+		// keywords?
+		if (track!=null) {
+			for(String keyword : track) {
+				List<Status> msgs = jtwit.search(keyword);
+				for (Status status : msgs) {
+					if (tweets.contains(status)) continue;
+					tweets.add(status);
 				}
 			}
-			// users?
-			if (follow!=null) {
-				for(Long user : follow) {
-					List<Status> msgs = jtwit.getUserTimeline(user);
-					for (Status status : msgs) {
-						if (tweets.contains(status)) continue;
-						tweets.add(status);
-					}
+		}
+		// users?
+		if (follow!=null) {
+			for(Long user : follow) {
+				List<Status> msgs = jtwit.getUserTimeline(user);
+				for (Status status : msgs) {
+					if (tweets.contains(status)) continue;
+					tweets.add(status);
 				}
 			}
-			// regions?
-			if (locns != null && ! locns.isEmpty()) {
-				throw new UnsupportedOperationException("TODO"); // TODO
-			}
-			// success			
-			outages.remove(outage);
+		}
+		// regions?
+		if (locns != null && ! locns.isEmpty()) {
+			throw new UnsupportedOperationException("TODO"); // TODO
 		}
 	}
 	
