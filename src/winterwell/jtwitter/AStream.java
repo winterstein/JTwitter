@@ -420,7 +420,7 @@ public abstract class AStream {
 		}
 	}
 
-	abstract HttpURLConnection connect2() throws IOException;
+	abstract HttpURLConnection connect2() throws Exception;
 
 	public void close() {
 		if (readThread != null) {

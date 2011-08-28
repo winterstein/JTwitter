@@ -123,7 +123,7 @@ public class TwitterStream extends AStream {
 		this.method = method;
 	}
 		
-	HttpURLConnection connect2() throws IOException {
+	HttpURLConnection connect2() throws Exception {
 		// protect the rate limits (only locally! Do NOT rely on this)
 		if (jtwit.getScreenName() != null) {
 			AStream s = user2stream.get(jtwit.getScreenName());
@@ -147,7 +147,7 @@ public class TwitterStream extends AStream {
 			vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));	
 		}
 		// FIXME need to use post for long sets of vars :(
-		HttpURLConnection con = client.connect(url, vars, true);		
+		HttpURLConnection con = client.post2_connect(url, vars);		
 		return con;
 	}
 
