@@ -197,9 +197,8 @@ public abstract class AStream {
 	public final void fillInOutages() throws UnsupportedOperationException {
 		if (outages.isEmpty()) return;
 		Outage[] outs = outages.toArray(new Outage[0]);
-		// protect our original object from edits
-		User self = jtwit.getSelf();
-		Twitter jtwit2 = new Twitter(self.getScreenName(), jtwit.getHttpClient());
+		// protect our original object from edits and threading-issues
+		Twitter jtwit2 = new Twitter(jtwit);
 		for (Outage outage : outs) {
 			// too recent? wait at least 1 minute
 			if (System.currentTimeMillis() - outage.untilTime < 60000) {
@@ -209,7 +208,7 @@ public abstract class AStream {
 			jtwit2.setUntilDate(new Date(outage.untilTime));
 			jtwit2.setMaxResults(100000); // hopefully not needed!
 			// fetch
-			fillInOutages2(jtwit, outage);
+			fillInOutages2(jtwit2, outage);
 			// success			
 			outages.remove(outage);
 		}
