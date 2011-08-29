@@ -147,7 +147,10 @@ public class TwitterStreamTest {
 		List<ITweet> inc = tspoon.popTweets();
 		String ph = "";
 		//Yes... it's ignoring jtwit.
-		
+		for (ITweet tw : inc){
+			assert (tw.getText().contains("xoappleox"));
+			
+		}
 		
 	}
 	
