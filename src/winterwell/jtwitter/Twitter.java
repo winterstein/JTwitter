@@ -86,7 +86,7 @@ import winterwell.jtwitter.TwitterException.SuspendedUser;
  * <li>Most methods are available via this class (Twitter), except for list support (in
  * {@link TwitterList} - though {@link #getLists()} is here) and some
  * profile/account settings (in {@link Twitter_Account}).
- * <li>This class is not thread safe. If you're using multiple threads,
+ * <li>This class is NOT thread safe. If you're using multiple threads,
  * it is best to create separate Twitter objects (which is fine).
  * </ul>
  *
@@ -357,6 +357,12 @@ public class Twitter implements Serializable {
 		 * This is where the Twitter method is implemented.
 		 */
 		RateLimit getRateLimit(KRequestType reqType);
+
+		/**
+		 * @return a copy of this client. The copy can share structure, but it MUST be
+		 * safe for passing to a new thread to be used in parallel with the original. 
+		 */
+		IHttpClient copy();
 
 	}
 
@@ -1641,6 +1647,14 @@ public class Twitter implements Serializable {
 	 */
 	public Twitter() {
 		this(null, new URLConnectionHttpClient());
+	}
+	
+	/**
+	 * Copy constructor. Use this to pass cloned Twitter objects for multi-threaded work.
+	 * @param jtwit
+	 */
+	public Twitter(Twitter jtwit) {
+		this(jtwit.getScreenName(), jtwit.http.copy());
 	}
 
 	/**

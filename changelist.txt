@@ -1,6 +1,8 @@
 # JTwitter Change list 
 
 2.2 (pending)
+ - Added copy-constructor and IHttpClient.copy() method for safer multi-threading.
+ This addresses a thread-safety issue in Signpost which can lead to an infinite loop or out-of-memory problem.
  - *breaking change:* User.isFollowingYou() and User.isFollowedByYou() return null if the information.
  is unknown. Previously they defaulted to false.
  - *Breaking change:* renamed TwitterGeo to Twitter_Geo and TwitterAccount to Twitter_Account.

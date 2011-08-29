@@ -49,6 +49,15 @@ import winterwell.jtwitter.Twitter.KRequestType;
 public class OAuthScribeClient implements IHttpClient {
 	
 	@Override
+	public IHttpClient copy() {
+		OAuthScribeClient c = new OAuthScribeClient(consumerKey, consumerSecret, accessToken);
+		c.callbackUrl = callbackUrl;
+		c.setTimeout(timeout);
+		c.setRetryOnError(retryOnError);
+		return c;
+	}
+	
+	@Override
 	public RateLimit getRateLimit(KRequestType reqType) {
 		return rateLimits.get(reqType);
 	}

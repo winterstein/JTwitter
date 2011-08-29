@@ -26,6 +26,7 @@ import oauth.signpost.exception.OAuthException;
 
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.TwitterException.Timeout;
 
@@ -89,7 +90,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 * If true, will wait 1/2 second and make a 2nd request when presented with a
 	 * server error.
 	 */
-	private boolean retryOnError;
+	boolean retryOnError;
 
 	protected int timeout = dfltTimeOutMilliSecs;
 
@@ -535,6 +536,14 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		os.write(payload.getBytes());
 		close(os);
 		return connection;		
+	}
+
+	@Override
+	public IHttpClient copy() {
+		URLConnectionHttpClient c = new URLConnectionHttpClient(name, password);
+		c.setTimeout(timeout);
+		c.setRetryOnError(retryOnError);
+		return c;
 	}
 
 }

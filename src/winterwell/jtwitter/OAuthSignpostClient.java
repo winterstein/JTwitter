@@ -101,6 +101,20 @@ implements IHttpClient, Serializable {
 		}
 	}
 	
+	@Override
+	public IHttpClient copy() {
+		OAuthSignpostClient c;
+		if (accessToken!=null) {
+			c = new OAuthSignpostClient(consumerKey, consumerSecret,
+					accessToken, accessTokenSecret);
+			c.callbackUrl = callbackUrl;
+		} else {
+			c = new OAuthSignpostClient(consumerKey, consumerSecret, callbackUrl);
+		}
+		c.setTimeout(timeout);
+		c.setRetryOnError(retryOnError);
+		return c;
+	}
 	
 	@Override
 	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
