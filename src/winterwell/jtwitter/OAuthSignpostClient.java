@@ -93,6 +93,7 @@ implements IHttpClient, Serializable {
 	@Override
 	protected void setAuthentication(URLConnection connection, String name, String password) 
 	{
+//		safetyCheck();
 		try {
 			// sign the request
 	        consumer.sign(connection);
@@ -101,6 +102,11 @@ implements IHttpClient, Serializable {
 		}
 	}
 	
+//	private final Thread creator = Thread.currentThread();
+//	private void safetyCheck() {
+//		assert Thread.currentThread() == creator;
+//	}
+
 	@Override
 	public IHttpClient copy() {
 		OAuthSignpostClient c;
@@ -135,6 +141,7 @@ implements IHttpClient, Serializable {
 				return new StringBufferInputStream(payload);
 			}
 		};
+//		safetyCheck();
 		consumer.sign(wrapped);
 		
 		// add the payload
