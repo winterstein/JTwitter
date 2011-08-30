@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -326,6 +327,14 @@ public class InternalUtils {
             return true;
         }
 		throw new JSONException(o+" ("+key+") is not boolean");
+	}
+
+	public static void close(Closeable strm) {
+		try {
+			strm.close();
+		} catch (IOException e) {
+			// ignore
+		}
 	}
 
 	

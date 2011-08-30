@@ -115,12 +115,12 @@ public class TwitterStream extends AStream {
 
 	@Override
 	HttpURLConnection connect2() throws Exception {
-		// protect the rate limits (only locally! Do NOT rely on this)
+		// protect the rate limits (only locally! And forgetful! Do NOT rely on this)
 		if (jtwit.getScreenName() != null) {
 			AStream s = user2stream.get(jtwit.getScreenName());
 			if (s != null && s.isConnected()) {
 				throw new TwitterException.TooManyLogins("One account, one stream (running: "+s
-						+").\n	But streams OR their filter parameters, so one stream can do a lot.");
+						+"; trying to run"+this+").\n	But streams OR their filter parameters, so one stream can do a lot.");
 			}
 			// memory paranoia
 			if (user2stream.size() > 1000) {
@@ -137,7 +137,7 @@ public class TwitterStream extends AStream {
 		if (track!=null) {
 			vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));
 		}
-		// FIXME need to use post for long sets of vars :(
+		// use post in case it's a long set of vars
 		HttpURLConnection con = client.post2_connect(url, vars);
 		return con;
 	}

@@ -86,7 +86,7 @@ public abstract class AStream {
 	
 	int previousCount;
 	
-	StreamGobbler readThread;
+	StreamGobbler readThread;	
 	
 	private InputStream stream;
 	
@@ -234,7 +234,10 @@ public abstract class AStream {
 	}
 
 	public boolean isConnected() {
-		return readThread != null && readThread.isAlive() && readThread.ex==null;
+		return readThread != null && readThread.isAlive() 
+				&& readThread.ex==null 
+				/* so technically this counts a requested stop as an actual stop */
+				&& ! readThread.stopFlag;
 	}
 
 	/**
@@ -458,6 +461,12 @@ public abstract class AStream {
  * 
  */
 final class StreamGobbler extends Thread {
+	
+	@Override
+	protected void finalize() throws Throwable {
+		InternalUtils.close(is);
+	}
+	
 	/**
 	 * start dropping messages after this.
 	 */
@@ -477,7 +486,7 @@ final class StreamGobbler extends Thread {
 	
 	long offTime;
 
-	private volatile boolean stopFlag;
+	volatile boolean stopFlag;
 	
 	public StreamGobbler(InputStream is) {
 //		super("gobbler");
