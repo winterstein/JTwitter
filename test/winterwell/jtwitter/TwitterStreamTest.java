@@ -1,14 +1,12 @@
 package winterwell.jtwitter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
-
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.Status;
@@ -31,42 +29,20 @@ public class TwitterStreamTest {
 	
 	@Test
 	public void testSampler() throws InterruptedException {
-		Twitter jtwit = TwitterTest.newTestTwitter();
 		Twitter jtwit2 = TwitterTest.newTestTwitter2();
-		TwitterStream sampler = new TwitterStream(jtwit);
-		TwitterStream justin = new TwitterStream(jtwit2);
-		justin.setTrackKeywords(Arrays.asList("london"));
+		TwitterStream sampler = new TwitterStream(jtwit2);
 		sampler.setAutoReconnect(true);
 		sampler.connect();		
-		justin.setAutoReconnect(true);
-		justin.connect();		
-		HashSet<Number> samplerTweets = new HashSet();
-		HashSet<Number> justinTweets = new HashSet();
-		for(int i=0; i<10000; i++) {
-			Thread.sleep(500);			
+		int count = 0;
+		while(true) {
+			Thread.sleep(5000);			
+			sampler.fillInOutages();
 			List<ITweet> tweets = sampler.popTweets();
-			sampler.popEvents(); sampler.popSystemEvents();
-			for (ITweet iTweet : tweets) {
-				samplerTweets.add(iTweet.getId());
-			}
-			List<ITweet> tweets2 = justin.popTweets();
-			justin.popEvents(); justin.popSystemEvents();
-			for (ITweet iTweet : tweets2) {
-				justinTweets.add(iTweet.getId());
-			}
-			int caught = 0;
-			if (justinTweets.isEmpty()) continue;
-			for(Number id : justinTweets) {
-				if (samplerTweets.contains(id)) {
-					caught++;
-				}
-			}			
-			float p = (100f*caught)/justinTweets.size();
-			Printer.formatOut("Caught {0} of {1} = {2}%	forgottens: {3} v {4}", 
-					caught, justinTweets.size(), p, sampler.getForgotten(), justin.getForgotten());
+			sampler.popEvents(); sampler.popSystemEvents();			
+			count += tweets.size();
+			System.out.print("\t"+count);
 		}
-		sampler.close();
-		justin.close();
+//		sampler.close();
 	}
 	
 	@Test
