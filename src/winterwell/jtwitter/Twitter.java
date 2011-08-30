@@ -169,6 +169,7 @@ public class Twitter implements Serializable {
 			JSONArray indices = obj.getJSONArray("indices");
 			this.start = indices.getInt(0);
 			this.end = indices.getInt(1);
+			assert start>=0 && end >= start : obj;
 			this.tweet = tweet;
 			this.type = type;
 			switch(type) {
