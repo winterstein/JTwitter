@@ -148,8 +148,8 @@ public class TwitterStreamTest {
 		String ph = "";
 		//Yes... it's ignoring jtwit.
 		for (ITweet tw : inc){
-			assert (tw.getText().contains("xoappleox"));
-			
+			System.out.println(tw.toString());
+			assert ! (tw.getText().contains("xoappleox"));
 		}
 		
 	}
