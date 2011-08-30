@@ -150,7 +150,13 @@ public class Twitter implements Serializable {
 	 */
 	public final static class TweetEntity implements Serializable {
 		private static final long serialVersionUID = 1L;
+		/**
+		 * start of the entity in the contents String, inclusive
+		 */
 		public final int start;
+		/**
+		 * end of the entity in the contents String, exclusive
+		 */
 		public final int end;
 		private final ITweet tweet;
 		private final String display;
