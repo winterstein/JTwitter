@@ -2409,8 +2409,9 @@ public class Twitter implements Serializable {
 	 *            The numerical ID of the status you're trying to retrieve.
 	 */
 	public Status getStatus(Number id) throws TwitterException {
+		Map vars = tweetEntities? InternalUtils.asMap("include_entities", "1") : null;
 		String json = http.getPage(TWITTER_URL + "/statuses/show/" + id
-				+ ".json", null, http.canAuthenticate());
+				+ ".json", vars, http.canAuthenticate());
 		try {
 			return new Status(new JSONObject(json), null);
 		} catch (JSONException e) {
