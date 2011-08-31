@@ -46,6 +46,29 @@ public class TwitterStreamTest {
 	}
 	
 	@Test
+	public void testTooManyStreams() throws InterruptedException {
+		Twitter jtwit2 = TwitterTest.newTestTwitter2();
+		TwitterStream sampler = new TwitterStream(jtwit2);
+		sampler.setAutoReconnect(true);
+		sampler.connect();
+		Thread.sleep(100);
+		try {
+			TwitterStream sampler2 = new TwitterStream(jtwit2);
+			sampler2.connect();
+			assert false;
+		} catch (Exception e) {
+			// good
+		}
+		Thread.sleep(500);
+		sampler.close();
+		assert ! sampler.isConnected();
+		TwitterStream sampler2 = new TwitterStream(jtwit2);
+		sampler2.connect();
+		Thread.sleep(500);						
+		sampler2.close();
+	}
+	
+	@Test
 	public void testConnectWithTerm() throws InterruptedException {
 		Twitter jtwit = new TwitterTest().newTestTwitter();
 		TwitterStream ts = new TwitterStream(jtwit);

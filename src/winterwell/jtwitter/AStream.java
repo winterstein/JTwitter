@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,7 +35,7 @@ import winterwell.utils.reporting.Log;
  * 
  * @author daniel
  */
-public abstract class AStream {
+public abstract class AStream implements Closeable {
 
 	public static final class Outage implements Serializable {
 		private static final long serialVersionUID = 1L;
@@ -119,8 +120,10 @@ public abstract class AStream {
 	public void close() {
 		if (readThread != null) {
 			readThread.pleaseStop();
+			readThread = null;
 		}
 		URLConnectionHttpClient.close(stream);
+		stream = null;
 	}
 	
 	public void connect() {
