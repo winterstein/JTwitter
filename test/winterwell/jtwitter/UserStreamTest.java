@@ -188,7 +188,7 @@ public class UserStreamTest {
 			}
 		}
 		//This test fails here, although us2 gets the message starting @jtwittest2, it doesn't get
-		//The one with @jtwittest2 later in the text.
+		//the one with @jtwittest2 later in the text.
 		assert (m1Present&&m2Present);
 		
 		us.close();
