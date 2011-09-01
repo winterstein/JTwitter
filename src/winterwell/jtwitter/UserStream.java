@@ -41,6 +41,15 @@ import winterwell.utils.TodoException;
  * <p>
  * Duplicate messages may be delivered when reconnecting to the Streaming API.
 
+TODO test out url-signing over header-signing -- c.f.
+http://groups.google.com/group/twitter-development-talk/browse_thread/thread/420c4b555198aa6c/f85e2507b7f65e39?pli=1
+
+"figured it out on my own.  must use HTTP GET with OAuth params passed 
+in URI string.  Not mentioned in the documentation.  Wasted many hours 
+figuring out this stuff would be clarified if someone updated the docs 
+and made some examples."
+
+
  * @author Daniel
  * @testedby {@link UserStreamTest}
  */

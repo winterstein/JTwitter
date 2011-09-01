@@ -102,11 +102,6 @@ implements IHttpClient, Serializable {
 		}
 	}
 	
-//	private final Thread creator = Thread.currentThread();
-//	private void safetyCheck() {
-//		assert Thread.currentThread() == creator;
-//	}
-
 	@Override
 	public IHttpClient copy() {
 		OAuthSignpostClient c;
