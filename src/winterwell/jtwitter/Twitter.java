@@ -3864,13 +3864,21 @@ public class Twitter implements Serializable {
 	}
 	
 	/**
-	 * FIXME: This no longer works.
-	 * Use http://api.twitter.com/1/trends.json instead
-	 * @return the latest trending topics on Twitter
+	 * @return the latest global trending topics on Twitter
 	 */
 	public List<String> getTrends() {
+		return getTrends(1);
+	}
+	
+	/**
+	 * @param a Yahoo Where-on-Earth ID. c.f. 
+	 * http://developer.yahoo.com/geo/geoplanet/
+	 * @return the latest regional trending topics on Twitter
+	 * @see Twitter_Geo#getTrendRegions()
+	 */
+	public List<String> getTrends(Number woeid) {
 		String jsonTrends = http.getPage(
-				TWITTER_URL + "/trends.json", null, false);
+				TWITTER_URL + "/trends/"+woeid+".json", null, false);
 		try {
 			JSONObject json1 = new JSONObject(jsonTrends);
 			JSONArray json2 = json1.getJSONArray("trends");
@@ -3885,6 +3893,8 @@ public class Twitter implements Serializable {
 			throw new TwitterException.Parsing(jsonTrends, e);
 		}
 	}
+	
+	
 
 	/**
 	 * Provides access to the {@link IHttpClient} which manages the low-level

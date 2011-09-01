@@ -25,6 +25,28 @@ import org.json.JSONObject;
  */
 public class Twitter_Geo {
 
+	/**
+	 * @param woeid
+	 * @return regions from which you can get trending info
+	 * @see Twitter#getTrends(Number)
+	 */
+	public List<Place> getTrendRegions() {
+		String json = jtwit.getHttpClient().getPage(
+				jtwit.TWITTER_URL + "/trends/available.json", null, false);
+		try {			
+			JSONArray json2 = new JSONArray(json);
+			List<Place> trends = new ArrayList();
+			for (int i = 0; i < json2.length(); i++) {
+				JSONObject ti = json2.getJSONObject(i);
+				Place place = new Place(ti);
+				trends.add(place);
+			}
+			return trends;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+	
 	private final Twitter jtwit;
 	private double accuracy;
 

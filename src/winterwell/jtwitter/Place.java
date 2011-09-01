@@ -65,8 +65,13 @@ public class Place implements Serializable {
 //		"name":"Parsons","attributes":{},
 //		"country_code":"US",
 //		"url":"http://api.twitter.com/1/geo/id/0a3e119020705b64.json",
-//		"full_name":"Parsons, KS","country":"United States"}
-		id = _place.getString("id");
+//		"full_name":"Parsons, KS","country":"United States"}		
+		id = InternalUtils.jsonGet("id", _place);
+		if (id==null) {	// a Yahoo ID?
+			id = InternalUtils.jsonGet("woeid", _place);
+			// TODO Test Me!
+			// TODO should we have a separate id field for Yahoo?
+		}
 		type = InternalUtils.jsonGet("place_type", _place);
 		name = InternalUtils.jsonGet("full_name", _place);
 		if (name==null) name = InternalUtils.jsonGet("name", _place);

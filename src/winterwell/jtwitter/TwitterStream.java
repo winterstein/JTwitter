@@ -115,21 +115,9 @@ public class TwitterStream extends AStream {
 
 	@Override
 	HttpURLConnection connect2() throws Exception {
-		// protect the rate limits (only locally! And forgetful! Do NOT rely on this)
-		if (jtwit.getScreenName() != null) {
-			AStream s = user2stream.get(jtwit.getScreenName());
-			if (s != null && s.isConnected()) {
-				throw new TwitterException.TooManyLogins("One account, one stream (running: "+s
-						+"; trying to run"+this+").\n	But streams OR their filter parameters, so one stream can do a lot.");
-			}
-			// memory paranoia
-			if (user2stream.size() > 1000) {
-				user2stream.clear();
-			}
-			user2stream.put(jtwit.getScreenName(), this);
-		}
+		connect3_rateLimit();
 
-		String url = "http://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
+		String url = "https://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
 		Map<String, String> vars = new HashMap();
 		if (follow!=null) {
 			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
@@ -140,6 +128,23 @@ public class TwitterStream extends AStream {
 		// use post in case it's a long set of vars
 		HttpURLConnection con = client.post2_connect(url, vars);
 		return con;
+	}
+
+	/**
+	 Protect the rate limits (only locally! And forgetful! Do NOT rely on this)
+	 */
+	private void connect3_rateLimit() {
+		if (jtwit.getScreenName() == null) return; // dunno
+		AStream s = user2stream.get(jtwit.getScreenName());
+		if (s != null && s.isConnected()) {
+			throw new TwitterException.TooManyLogins("One account, one stream (running: "+s
+					+"; trying to run"+this+").\n	But streams OR their filter parameters, so one stream can do a lot.");
+		}
+		// memory paranoia
+		if (user2stream.size() > 1000) {
+			user2stream.clear();
+		}
+		user2stream.put(jtwit.getScreenName(), this);		
 	}
 
 	/**
