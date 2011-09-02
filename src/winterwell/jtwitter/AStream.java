@@ -21,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.AStream.IListen;
+import winterwell.jtwitter.AStream.Outage;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.Status;
@@ -31,12 +33,90 @@ import winterwell.utils.reporting.Log;
  * Internal base class for UserStream and TwitterStream.
  * <p>
  * Warning from Twitter: Consuming applications must tolerate duplicate statuses, 
- *  out-of-order statuses and non-status messages.
- * 
+ *  out-of-order statuses (upto 3 seconds of scrambling) and non-status messages.
+ * <p>
+ * <h3>Threading</h3>
+ * Streams create a gobbler thread which consumes the output from Twitter.
+ * They are then accessed on a polling basis from a second thread.
+ * You can also register a listener for push notifications in the gobbler thread.
+ * They are thread-safe for this usage -- but not thread-safe for multi-threaded
+ * polling (which would be confusing anyway, cos polling typically consumes data). 
  * @author daniel
  */
 public abstract class AStream implements Closeable {
 
+	/**
+	 * Use these for push-notification of incoming tweets and stream activity.
+	 * 
+	 * WARNING: listeners should be fast. They run in the gobbler thread, which
+	 * may be switched off by Twitter if it can't keep up with the flow.
+	 * 
+	 * @see AStream#popTweets() etc. for pull-based notification.
+	 */
+	public static interface IListen {
+		/**
+		 * @param tweet
+		 * @return true to pass this on to any other, earlier-added, listeners. false
+		 * to stop earlier listeners from hearing this event.
+		 */
+		boolean processTweet(ITweet tweet);
+		/**
+		 * @param event
+		 * @return true to pass this on to any other, earlier-added, listeners. false
+		 * to stop earlier listeners from hearing this event.
+		 */
+		boolean processEvent(TwitterEvent event);
+		/**
+		 * @param obj Miscellaneous Twitter messages, such as limits & deletes
+		 * @return true to pass this on to any other, earlier-added, listeners. false
+		 * to stop earlier listeners from hearing this event.
+		 */
+		boolean processSystemEvent(Object[] obj);
+	}
+	
+	/**
+	 * Add a listener to the front of the queue.
+	 * WARNING: listeners need to be fast (see javadoc notes on {@link IListen})
+	 * @param listener
+	 */
+	public void addListener(IListen listener) {
+		synchronized (listeners) {
+			// remove if already there
+			listeners.remove(listener);
+			// add to the front of the list
+			listeners.add(0, listener);			
+		}
+	}
+	
+	public boolean removeListener(IListen listener) {
+		synchronized (listeners) {
+			return listeners.remove(listener);
+		}
+	}	
+	
+	final List<IListen> listeners = new ArrayList(0);
+	
+	/**
+	 * The stream will track outages during use (provided {@link #setAutoReconnect(boolean)} is true).
+	 * This method allows you to manually add outages (which can then be filled in using {@link #fillInOutages()})
+	 * -- e.g. to cover restarting Java.
+	 * @param outage
+	 */
+	public void addOutage(Outage outage) {
+		// TODO handle overlaps with an existing outage by merging??
+		for(int i=0; i<outages.size(); i++) {
+			Outage o = outages.get(i);
+			if (o.sinceId.compareTo(outage.sinceId) > 0) {
+				// insert here
+				outages.add(i, outage);
+				return;
+			}
+		}		
+		// add to the end
+		outages.add(outage);
+	}
+
+	
 	public static final class Outage implements Serializable {
 		private static final long serialVersionUID = 1L;
 		final BigInteger sinceId;
@@ -91,7 +171,7 @@ public abstract class AStream implements Closeable {
 	
 	private InputStream stream;
 	
-	List<Object> sysEvents = new ArrayList();
+	List<Object[]> sysEvents = new ArrayList();
 
 	List<ITweet> tweets = new ArrayList();
 
@@ -131,7 +211,7 @@ public abstract class AStream implements Closeable {
 		try {
 			HttpURLConnection con = connect2();
 			stream = con.getInputStream();
-			readThread = new StreamGobbler(stream);
+			readThread = new StreamGobbler(stream, this);
 			readThread.setName("Gobble:"+toString());
 			readThread.start();
 			// check the connection took
@@ -219,7 +299,7 @@ public abstract class AStream implements Closeable {
 	
 	/**
 	 * @return the recent system events, such as "delete this status". */
-	public List<Object> getSystemEvents() {
+	public List<Object[]> getSystemEvents() {
 		read();
 		return sysEvents;
 	}
@@ -271,6 +351,7 @@ public abstract class AStream implements Closeable {
 		tweets = new ArrayList();
 		return ts;
 	}
+	
 	void read() {		
 		String[] jsons = readThread.popJsons();		
 		for (String json : jsons) {				
@@ -306,6 +387,7 @@ public abstract class AStream implements Closeable {
 	}
 	private void read2(String json) throws JSONException {
 		JSONObject jo = new JSONObject(json);
+
 		// the 1st object for a user stream is a list of friend ids
 		JSONArray _friends = jo.optJSONArray("friends");
 		if (_friends != null) {
@@ -313,6 +395,9 @@ public abstract class AStream implements Closeable {
 			return;
 		}
 		
+		// parse the json
+		Object object = read3_parse(jo, jtwit);
+				
 		// tweets
 		// TODO DMs?? They don't seem to get sent!
 		//System.out.println(jo);
@@ -367,6 +452,43 @@ public abstract class AStream implements Closeable {
 		}
 		// ??
 		System.out.println(jo);
+	}
+
+	static Object read3_parse(JSONObject jo, Twitter jtwitr) throws JSONException {
+		// tweets
+		// TODO DMs?? They don't seem to get sent!
+		if (jo.has("text")) {
+			Status tweet = new Twitter.Status(jo, null);
+			return tweet;
+		}
+		
+		// Events
+		String eventType = jo.optString("event");
+		if (eventType != "") {
+			TwitterEvent event = new TwitterEvent(jo, jtwitr);
+			return event;
+		}
+		// Deletes and other system events, like limits
+		JSONObject del = jo.optJSONObject("delete");
+		if (del!=null) {
+			JSONObject s = del.getJSONObject("status");
+			BigInteger id = new BigInteger(s.getString("id_str"));
+			long userId = s.getLong("user_id");
+			Status deadTweet = new Status(null, null, id, null);
+			return new Object[]{"delete", deadTweet, userId};
+		}
+		// 	e.g.	{"limit":{"track":1234}}
+		JSONObject limit = jo.optJSONObject("limit");
+		if (limit!=null) {
+			int cnt = limit.optInt("track");
+			if (cnt==0) {	
+				System.out.println(jo); // API change :( - a new limit object		
+			}
+			return new Object[]{"limit", cnt};
+		}
+		// ??
+		System.out.println(jo);
+		return jo;
 	}
 
 	private void read3_friends(JSONArray _friends) throws JSONException {
@@ -465,6 +587,8 @@ public abstract class AStream implements Closeable {
  */
 final class StreamGobbler extends Thread {
 	
+	final AStream stream;
+	
 	@Override
 	protected void finalize() throws Throwable {
 		InternalUtils.close(is);
@@ -491,10 +615,11 @@ final class StreamGobbler extends Thread {
 
 	volatile boolean stopFlag;
 	
-	public StreamGobbler(InputStream is) {
+	public StreamGobbler(InputStream is, AStream stream) {
 //		super("gobbler");
 		setDaemon(true);
 		this.is = is;
+		this.stream = stream;
 	}
 	
 	/**
@@ -531,11 +656,36 @@ final class StreamGobbler extends Thread {
 			cnt += rd;
 			len -= rd;
 		}		
-		synchronized (jsons) {
-			jsons.add(new String(sb));
+		String json = new String(sb);
+		synchronized (jsons) {					
+			jsons.add(json);
 			// forget a batch?
 			forgotten += AStream.forgetIfFull(jsons);
-		}		
+		}
+		
+		// push notifications
+		if (stream.listeners.isEmpty()) return;
+		synchronized (stream.listeners) {
+			try {
+				JSONObject jo = new JSONObject(json);
+				Object obj = AStream.read3_parse(jo, stream.jtwit);
+				for (IListen listener : stream.listeners) {
+					boolean carryOn;  
+					if (obj instanceof ITweet) {
+						carryOn = listener.processTweet((ITweet) obj);
+					} else if (obj instanceof TwitterEvent) {
+						carryOn = listener.processEvent((TwitterEvent) obj);
+					} else {
+						carryOn = listener.processSystemEvent((Object[]) obj);
+					}
+					// hide from earlier listeners?
+					if ( ! carryOn) break;
+				}
+			} catch (Exception e) {
+				// swallow it & keep the stream flowing 
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private int readLength(BufferedReader br) throws IOException {

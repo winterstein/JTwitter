@@ -2585,8 +2585,11 @@ public class Twitter implements Serializable {
 	 * <p>
 	 * This will return 20 results by default, though {@link #setMaxResults(int)}
 	 * can be used to fetch multiple pages.
-	 * Note that the exclusion of new-style retweets can lead to less
-	 * than 20 results being returned.
+	 * 
+	 * Note that if you exclude new-style retweets (via {@link #setIncludeRTs(boolean)})
+	 * then this can return less than 20 results -- it can even return none if the latest
+	 * 20 are all retweets.
+	 * <p>
 	 * There is a cap of 3200 tweets
 	 *  - this is the farthest back you can go down a user timeline!
 	 * <p>

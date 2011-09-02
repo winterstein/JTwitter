@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import winterwell.jtwitter.AStream.Outage;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.utils.TodoException;
 

@@ -1119,6 +1119,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<User> rters = tw.getRetweeters(s);
 		assert rters.contains(new User(TEST_USER)) : rters;
 
+		// user timeline includes RTs
+		List<Status> tweets = tw.getUserTimeline();
+		assert tweets.contains(rt1) : tweets;
 	}
 
 	public void testSearch() {		
