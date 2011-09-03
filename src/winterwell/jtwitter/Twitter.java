@@ -431,6 +431,17 @@ public class Twitter implements Serializable {
 		/** The User who made the tweet */
 		User getUser();
 
+		/**
+		 * @return list of screen-names this message is to. May be empty, never null.
+		 * For Statuses, this is anyone mentioned in the message.
+		 * For DMs, this is a wrapper round {@link Message#getRecipient()}.
+		 * <p>
+		 * Notes: This method is in ITweet as a convenience to allow the same code to process both
+		 * Statuses and Messages where possible. It would be better named "getRecipients()",
+		 * but for historical reasons it isn't.
+		 */
+		List<String> getMentions();
+
 	}
 
 	/**
@@ -439,6 +450,11 @@ public class Twitter implements Serializable {
 	 * TODO are there more fields now? check the raw json
 	 */
 	public static final class Message implements ITweet {
+		
+		@Override
+		public List<String> getMentions() {
+			return Collections.singletonList(recipient.screenName);
+		}
 		
 		public String getLocation() {
 			return location;
@@ -608,7 +624,7 @@ public class Twitter implements Serializable {
 	 */
 	public static final class Status implements ITweet {
 		private static final long serialVersionUID = 1L;
-
+		
 		@Override
 		public Place getPlace() {
 			return place;
@@ -948,7 +964,8 @@ public class Twitter implements Serializable {
 		/**
 		 * @return list of \@mentioned people (there is no guarantee that these
 		 *         mentions are for correct Twitter screen-names). May be empty,
-		 *         never null. Screen-names are always lowercased.
+		 *         never null. Screen-names are always lowercased -- unless
+		 *         {@link Twitter#CASE_SENSITIVE_SCREENNAMES} is switched on.
 		 */
 		public List<String> getMentions()
 		{
@@ -963,8 +980,11 @@ public class Twitter implements Serializable {
 					continue;
 				}
 				String mention = m.group(1);
-				// enforce lower case
-				list.add(mention.toLowerCase());
+				// enforce lower case? (normally yes)
+				if ( ! Twitter.CASE_SENSITIVE_SCREENNAMES) {
+					mention = mention.toLowerCase();
+				}
+				list.add(mention);
 			}
 			return list;
 		}
@@ -979,8 +999,6 @@ public class Twitter implements Serializable {
 			return text;
 		}
 		
-		
-
 		public User getUser() {
 			return user;
 		}
