@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.jtwitter.Twitter.User;
 
 /**
  * Access the account methods: e.g. change your profile colours.
@@ -29,7 +28,7 @@ public class Twitter_Account {
 	private KAccessLevel accessLevel;
 	
 	public Twitter_Account(Twitter jtwit) {
-		assert jtwit.getHttpClient().canAuthenticate();
+		assert jtwit.getHttpClient().canAuthenticate() : jtwit;
 		this.jtwit = jtwit;
 	}
 	

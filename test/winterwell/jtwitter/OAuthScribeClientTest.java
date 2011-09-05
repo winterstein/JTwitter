@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 
 import org.scribe.oauth.Token;
 
-import winterwell.jtwitter.Twitter.Message;
 
 public class OAuthScribeClientTest 
 extends TestCase

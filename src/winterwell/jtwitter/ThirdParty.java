@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.User;
 
 /**
  * Status: experimental!

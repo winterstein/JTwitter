@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import winterwell.jtwitter.Twitter.User;
 
 public class Twitter_UsersTest {
 

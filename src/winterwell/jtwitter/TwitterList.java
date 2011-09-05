@@ -14,8 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.User;
 
 /**
  * A Twitter list, which uses lazy-fetching of its members.
@@ -36,7 +34,7 @@ import winterwell.jtwitter.Twitter.User;
  * @author daniel
  * 
  */
-public class TwitterList extends AbstractList<Twitter.User> {
+public class TwitterList extends AbstractList<User> {
 
 	@Override
 	public String toString() {
@@ -255,7 +253,7 @@ public class TwitterList extends AbstractList<Twitter.User> {
 
 	private final Twitter jtwit;
 
-	private final List<User> users = new ArrayList<Twitter.User>();
+	private final List<User> users = new ArrayList<User>();
 
 	private String name;
 

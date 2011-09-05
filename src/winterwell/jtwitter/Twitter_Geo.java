@@ -18,7 +18,7 @@ import org.json.JSONObject;
  * 
  * @see Twitter#setMyLocation(double[])
  * @see Twitter#setSearchLocation(double, double, String)
- * @see Twitter.Status#getLocation()
+ * @see Status#getLocation()
  * 
  * @author Daniel Winterstein
  * @testedby {@link Twitter_GeoTest}

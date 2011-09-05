@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import junit.framework.TestCase;
-import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E404;
 
 /**

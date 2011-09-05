@@ -22,10 +22,7 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.KRequestType;
-import winterwell.jtwitter.Twitter.Message;
-import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.Twitter.TweetEntity;
-import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
@@ -168,7 +165,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testNewestFirstSorting() {
 		Twitter tw = newTestTwitter();
 		List<Status> tweets = tw.getUserTimeline("winterstein");
-		Collections.sort(tweets, Twitter.NEWEST_FIRST);
+		Collections.sort(tweets, InternalUtils.NEWEST_FIRST);
 		Date prev=null;
 		System.out.println(tweets);
 		for (Status status : tweets) {
@@ -643,7 +640,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testGetFeatured() {
 		Twitter tw = newTestTwitter();
-		List<User> f = tw.getFeatured();
+		List<User> f = tw.users().getFeatured();
 		assert f.size() > 0;
 		assert f.get(0).status != null;
 	}
@@ -1362,9 +1359,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testUserExists() {
 		Twitter tw = newTestTwitter();
-		assert tw.userExists("spoonmcguffin") : "There is a Spoon, honest";
-		assert ! tw.userExists("chopstickmcguffin") : "However, there is no Chopstick";
-		assert ! tw.userExists("Alysha6822") : "Suspended users show up as nonexistent";
+		assert tw.users().userExists("spoonmcguffin") : "There is a Spoon, honest";
+		assert ! tw.users().userExists("chopstickmcguffin") : "However, there is no Chopstick";
+		assert ! tw.users().userExists("Alysha6822") : "Suspended users show up as nonexistent";
 	}
 
 

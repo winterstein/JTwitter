@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.User;
 
 public class TwitterAccountTest {
 

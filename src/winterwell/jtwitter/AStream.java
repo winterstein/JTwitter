@@ -25,8 +25,6 @@ import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.AStream.Outage;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.User;
 import winterwell.utils.reporting.Log;
 
 /**
@@ -45,6 +43,12 @@ import winterwell.utils.reporting.Log;
  */
 public abstract class AStream implements Closeable {
 
+
+	/**
+	 * Start dropping messages after this.
+	 */
+	public static int MAX_BUFFER = 10000;
+	
 	/**
 	 * Use these for push-notification of incoming tweets and stream activity.
 	 * 
@@ -135,8 +139,8 @@ public abstract class AStream implements Closeable {
 
 	static int forgetIfFull(List incoming) {
 		// forget a batch?
-		if (incoming.size() < StreamGobbler.MAX_BUFFER) return 0;
-		int chop = StreamGobbler.MAX_BUFFER / 10;
+		if (incoming.size() < MAX_BUFFER) return 0;
+		int chop = MAX_BUFFER / 10;
 		for(int i=0; i<chop; i++) {
 			incoming.remove(0);
 		}		
@@ -274,7 +278,7 @@ public abstract class AStream implements Closeable {
 		close();
 	}
 
-	public List<TwitterEvent> getEvents() {
+	public final List<TwitterEvent> getEvents() {
 		read();
 		return events;
 	}
@@ -288,23 +292,23 @@ public abstract class AStream implements Closeable {
 	 * You should call {@link #popEvents()}, {@link #popSystemEvents()}
 	 * and {@link #popTweets()} regularly to clear the buffers.
 	 */
-	public int getForgotten() {
+	public final int getForgotten() {
 		return forgotten;
 	}
 
-	public List<Outage> getOutages() {
+	public final List<Outage> getOutages() {
 		return outages;
 	}
 
 	
 	/**
 	 * @return the recent system events, such as "delete this status". */
-	public List<Object[]> getSystemEvents() {
+	public final List<Object[]> getSystemEvents() {
 		read();
 		return sysEvents;
 	}
 
-	public List<ITweet> getTweets() {
+	public final List<ITweet> getTweets() {
 		read();
 //		// re-order?? Or do we not care TODO test this is the right way round
 //		Collections.sort(tweets, new Comparator<ITweet>() {
@@ -316,7 +320,7 @@ public abstract class AStream implements Closeable {
 		return tweets;
 	}
 
-	public boolean isConnected() {
+	public final  boolean isConnected() {
 		return readThread != null && readThread.isAlive() 
 				&& readThread.ex==null 
 				/* so technically this counts a requested stop as an actual stop */
@@ -326,7 +330,7 @@ public abstract class AStream implements Closeable {
 	/**
 	 * @return the recent events. Calling this will clear the list of events.
 	 */
-	public List<TwitterEvent> popEvents() {
+	public final List<TwitterEvent> popEvents() {
 		List evs = getEvents();
 		events = new ArrayList();
 		return evs;
@@ -337,7 +341,7 @@ public abstract class AStream implements Closeable {
 	 * @return the recent system events, such as "delete this status". 
 	 * Calling this will clear the list of system events.
 	 */
-	public List<TwitterEvent> popSystemEvents() {		
+	public final  List<TwitterEvent> popSystemEvents() {		
 		List evs = getSystemEvents();
 		sysEvents = new ArrayList();
 		return evs;
@@ -346,13 +350,13 @@ public abstract class AStream implements Closeable {
 	/**
 	 * @return the recent events. Calling this will clear the list of tweets.
 	 */
-	public List<ITweet> popTweets() {
+	public final List<ITweet> popTweets() {
 		List<ITweet> ts = getTweets();
 		tweets = new ArrayList();
 		return ts;
 	}
 	
-	void read() {		
+	final void read() {		
 		String[] jsons = readThread.popJsons();		
 		for (String json : jsons) {				
 			try {
@@ -402,7 +406,7 @@ public abstract class AStream implements Closeable {
 		// TODO DMs?? They don't seem to get sent!
 		//System.out.println(jo);
 		if (jo.has("text")) {
-			Status tweet = new Twitter.Status(jo, null);
+			Status tweet = new Status(jo, null);
 			// de-duplicate a bit locally (this is rare -- perhaps don't bother??)
 			if (tweets.contains(tweet)) {
 				return;
@@ -458,7 +462,7 @@ public abstract class AStream implements Closeable {
 		// tweets
 		// TODO DMs?? They don't seem to get sent!
 		if (jo.has("text")) {
-			Status tweet = new Twitter.Status(jo, null);
+			Status tweet = new Status(jo, null);
 			return tweet;
 		}
 		
@@ -594,10 +598,6 @@ final class StreamGobbler extends Thread {
 		InternalUtils.close(is);
 	}
 	
-	/**
-	 * start dropping messages after this.
-	 */
-	static final int MAX_BUFFER = 100000;
 	
 	IOException ex;
 	/**
@@ -610,7 +610,7 @@ final class StreamGobbler extends Thread {
 	/**
 	 * Use synchronised blocks when editing this
 	 */
-	final List<String> jsons = new ArrayList();
+	private ArrayList<String> jsons = new ArrayList();
 	
 	long offTime;
 
@@ -636,14 +636,13 @@ final class StreamGobbler extends Thread {
 	 * Read off the collected json snippets for processing
 	 * @return
 	 */
-	public String[] popJsons() {
-		synchronized (jsons) {
-			String[] arr = jsons.toArray(new String[jsons.size()]);
-			jsons.clear();
-			return arr;
-		}		
+	public synchronized String[] popJsons() {
+		String[] arr = jsons.toArray(new String[jsons.size()]);
+//		jsons.clear(); This wasn't really working for good memory management 
+		jsons = new ArrayList();
+		return arr;		
 	}
-
+	
 	private void readJson(BufferedReader br, int len) throws IOException {
 		assert len > 0;
 		char[] sb = new char[len];
@@ -658,7 +657,7 @@ final class StreamGobbler extends Thread {
 			len -= rd;
 		}		
 		String json = new String(sb);
-		synchronized (jsons) {					
+		synchronized (this) {					
 			jsons.add(json);
 			// forget a batch?
 			forgotten += AStream.forgetIfFull(jsons);

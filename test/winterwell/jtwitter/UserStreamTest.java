@@ -9,8 +9,6 @@ import java.util.Random;
 import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.User;
 import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;

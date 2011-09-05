@@ -5,13 +5,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +142,7 @@ public class Twitter implements Serializable {
 
 	/**
 	 * A special slice of text within a tweet.
-	 * Status: experimental (for us and Twitter)
+
 	 * @see Twitter#setIncludeTweetEntities(boolean)
 	 */
 	public final static class TweetEntity implements Serializable {
@@ -445,576 +442,6 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * A Twitter direct message. Fields are null if unset.
-	 *
-	 * TODO are there more fields now? check the raw json
-	 */
-	public static final class Message implements ITweet {
-		
-		@Override
-		public List<String> getMentions() {
-			return Collections.singletonList(recipient.screenName);
-		}
-		
-		public String getLocation() {
-			return location;
-		}
-		
-		private static final long serialVersionUID = 1L;
-		/**
-		 * Equivalent to {@link Status#inReplyToStatusId} *but null by default*.
-		 * If you want to use this, you must set it yourself. The field is just
-		 * a convenient storage place. Strangely Twitter don't report the
-		 * previous ID for messages.
-		 */
-		public Number inReplyToMessageId;
-
-		/**
-		 * Tests by class=Message and tweet id number
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Message other = (Message) obj;
-			return id.equals(other.id);
-		}
-
-		@Override
-		public int hashCode() {
-			return id.hashCode();
-		}
-
-		/**
-		 *
-		 * @param json
-		 * @return
-		 * @throws TwitterException
-		 */
-		static List<Message> getMessages(String json) throws TwitterException {
-			if (json.trim().equals(""))
-				return Collections.emptyList();
-			try {
-				List<Message> msgs = new ArrayList<Message>();
-				JSONArray arr = new JSONArray(json);
-				for (int i = 0; i < arr.length(); i++) {
-					JSONObject obj = arr.getJSONObject(i);
-					Message u = new Message(obj);
-					msgs.add(u);
-				}
-				return msgs;
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(json, e);
-			}
-		}
-
-		private final Date createdAt;
-		private final Long id;
-		private final User recipient;
-		private final User sender;
-		public final String text;
-		private EnumMap<KEntityType, List<TweetEntity>> entities;
-		private String location;
-		private Place place;
-
-		
-		public List<TweetEntity> getTweetEntities(KEntityType type) {
-			return entities==null? null : entities.get(type);
-		}
-		
-		/**
-		 * @param obj
-		 * @throws JSONException
-		 * @throws TwitterException
-		 */
-		Message(JSONObject obj) throws JSONException, TwitterException {
-			// No need for BigInteger - yet
-//			String _id = obj.getString("id_str");
-//			id = new BigInteger(_id==null? ""+obj.get("id") : _id);
-			id = obj.getLong("id");
-			String _text = obj.getString("text");
-			text = InternalUtils.unencode(_text);
-			String c = InternalUtils.jsonGet("created_at", obj);
-			createdAt = InternalUtils.parseDate(c);
-			sender = new User(obj.getJSONObject("sender"), null);
-			// recipient - for messages you sent
-			if (obj.has("recipient")) {
-				recipient = new User(obj.getJSONObject("recipient"), null);
-			} else {
-				recipient = null;
-			}
-			JSONObject jsonEntities = obj.optJSONObject("entities");
-			if (jsonEntities!=null) {
-				// Note: Twitter filters out dud @names
-				entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(KEntityType.class);
-				for(KEntityType type : KEntityType.values()) {
-					List<TweetEntity> es = TweetEntity.parse(this, type, jsonEntities);
-					entities.put(type, es);
-				}
-			}
-			// geo-location?
-			Object _locn = Twitter.Status.jsonGetLocn(obj);
-			location = _locn==null? null : _locn.toString();
-			if (_locn instanceof Place) {
-				place = (Place) _locn;
-			}
-		}
-		
-		@Override
-		public Place getPlace() {
-			return place;
-		}
-
-		public Date getCreatedAt() {
-			return createdAt;
-		}
-
-		/**
-		 * @return The Twitter id for this post. This is used by some API
-		 *         methods.
-		 *         <p>
-		 *         Note: this may switch to BigInteger in the future, if Twitter
-		 *         change their id numbering scheme. Use Number (which is a super-class
-		 *         for both Long and BigInteger) if you wish to future-proof your code.
-		 */
-		public Long getId() {
-			return id;
-		}
-
-		/**
-		 * @return the recipient (for messages sent by the authenticating user)
-		 */
-		public User getRecipient() {
-			return recipient;
-		}
-
-		public User getSender() {
-			return sender;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		/**
-		 * This is equivalent to {@link #getSender()}
-		 */
-		public User getUser() {
-			return getSender();
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-
-	}
-
-	/**
-	 * A Twitter status post. .toString() returns the status text.
-	 * <p>
-	 * Notes: This is a finalised data object. It exposes its fields for
-	 * convenient access. If you want to change your status, use
-	 * {@link Twitter#setStatus(String)} and
-	 * {@link Twitter#destroyStatus(Status)}.
-	 */
-	public static final class Status implements ITweet {
-		private static final long serialVersionUID = 1L;
-		
-		@Override
-		public Place getPlace() {
-			return place;
-		}
-		
-		boolean sensitive;
-		
-		/**
-		 * A <i>self-applied</i> label for sensitive content (eg. X-rated images).
-		 * Obviously, you can only rely on this label if the tweeter is reliably
-		 * setting it.
-		 * @return true=kinky, false=family-friendly
-		 */
-		public boolean isSensitive() {
-			return sensitive;
-		}
-		
-		@Override
-		public int hashCode() {
-			return id.hashCode();
-		}
-
-		/**
-		 * Tests by class=Status and tweet id number
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Status other = (Status) obj;
-			return id.equals(other.id);
-		}
-
-		/**
-		 * Convert from a json array of objects into a list of tweets.
-		 *
-		 * @param json
-		 *            can be empty, must not be null
-		 * @throws TwitterException
-		 */
-		static List<Status> getStatuses(String json) throws TwitterException {
-			if (json.trim().equals(""))
-				return Collections.emptyList();
-			try {
-				List<Status> tweets = new ArrayList<Status>();
-				JSONArray arr = new JSONArray(json);
-				for (int i = 0; i < arr.length(); i++) {
-					Object ai = arr.get(i);
-					if (JSONObject.NULL.equals(ai)) {
-						continue;
-					}
-					JSONObject obj = (JSONObject) ai;
-					Status tweet = new Status(obj, null);
-					tweets.add(tweet);
-				}
-				return tweets;
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(json, e);
-			}
-		}
-
-		/**
-		 * Search results use a slightly different protocol! In particular
-		 * w.r.t. user ids and info.
-		 *
-		 * @param searchResults
-		 * @return search results as Status objects - but with dummy users! The
-		 *         dummy users have a screenname and a profile image url, but no
-		 *         other information. This reflects the current behaviour of the
-		 *         Twitter API.
-		 */
-		static List<Status> getStatusesFromSearch(Twitter tw, String json) {
-			try {
-				JSONObject searchResults = new JSONObject(json);
-				List<Status> users = new ArrayList<Status>();
-				JSONArray arr = searchResults.getJSONArray("results");
-				for (int i = 0; i < arr.length(); i++) {
-					JSONObject obj = arr.getJSONObject(i);
-					String userScreenName = obj.getString("from_user");
-					String profileImgUrl = obj.getString("profile_image_url");
-					User user = new User(userScreenName);
-					user.profileImageUrl = InternalUtils.URI(profileImgUrl);
-					Status s = new Status(obj, user);
-					users.add(s);
-				}
-				return users;
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(json, e);
-			}
-		}
-
-		public final Date createdAt;
-		
-		/**
-		 * Warning: use equals() not == to compare these!
-		 */
-		public final BigInteger id;
-		
-		/** The actual status text. */
-		public final String text;
-
-		/**
-		 * Rarely null.
-		 * <p>
-		 * When can this be null?<br>
-		 * - If creating a "fake" tweet via
-		 * {@link Status#Status(User, String, long, Date)} and supplying a null
-		 * User!
-		 */
-		public final User user;
-
-		/**
-		 * E.g. "web" vs. "im"
-		 * <p>
-		 * "fake" if this Status was made locally or from an RSS feed rather
-		 * than retrieved from Twitter json (as normal).
-		 */
-		public final String source;
-
-		/**
-		 * Often null (even when this Status is a reply). This is the
-		 * in-reply-to status id as reported by Twitter.
-		 */
-		public final BigInteger inReplyToStatusId;
-
-		private boolean favorited;
-		/**
-		 * null, except for official retweets when this is the original
-		 * retweeted Status.
-		 */
-		private Status original;
-
-		/**
-		 * Represents the number of times a status has been retweeted using
-		 * _new-style_ retweets. -1 if unknown.
-		 */
-		public final int retweetCount;
-		private EnumMap<KEntityType, List<TweetEntity>> entities;
-
-		private String location;
-
-		private Place place;
-
-		public String getLocation() {
-			return location;
-		}
-
-		/**
-		 * Only set for official new-style retweets. This is the original
-		 * retweeted Status. null otherwise.
-		 */
-		public Status getOriginal() {
-			return original;
-		}
-
-		/**
-		 * true if this has been marked as a favourite by the authenticating
-		 * user
-		 */
-		public boolean isFavorite() {
-			return favorited;
-		}
-
-		/**
-		 * regex for @you mentions
-		 */
-		static final Pattern AT_YOU_SIR = Pattern.compile("@(\\w+)");
-		private static final String FAKE = "fake";
-
-		/**
-		 * @param object
-		 * @param user
-		 *            Set when parsing the json returned for a User. null when
-		 *            parsing the json returned for a Status.
-		 * @throws TwitterException
-		 */
-		@SuppressWarnings("deprecation")
-		Status(JSONObject object, User user) throws TwitterException {
-			try {
-				String _id = object.optString("id_str");
-				id = new BigInteger(_id==""? object.get("id").toString() : _id);
-				String _text = InternalUtils.jsonGet("text", object);
-				text = InternalUtils.unencode(_text);
-				// date
-				String c = InternalUtils.jsonGet("created_at", object);
-				createdAt = InternalUtils.parseDate(c);
-				// source - sometimes encoded (search), sometimes not
-				// (timelines)!
-				String src = InternalUtils.jsonGet("source", object);
-				source = src.contains("&lt;") ? InternalUtils.unencode(src) : src;
-				// retweet?
-				JSONObject retweeted = object.optJSONObject("retweeted_status");
-				if (retweeted != null) {
-					original = new Status(retweeted, null);
-				}
-				String irt = InternalUtils.jsonGet("in_reply_to_status_id", object);
-				if (irt == null) {
-					// Twitter doesn't give in-reply-to for retweets
-					// - but since we have the info, let's make it available
-					inReplyToStatusId = original == null ? null : original
-							.getId();
-				} else {
-					inReplyToStatusId = new BigInteger(irt);
-				}
-				favorited = object.optBoolean("favorited");
-
-				// set user
-				if (user != null) {
-					this.user = user;
-				} else {
-					JSONObject jsonUser = object.optJSONObject("user");
-					// null user happens in very rare circumstances, which I
-					// have not pinned down yet.
-					if (jsonUser==null) {
-						this.user = null;
-					} else if (jsonUser.length() < 3) {
-						// TODO seen a bug where the jsonUser is just {"id":24147187,"id_str":"24147187"}
-						// Not sure when/why this happens
-						String _uid = jsonUser.optString("id_str");
-						BigInteger userId = new BigInteger(_uid==""? object.get("id").toString() : _uid);
-						try {
-							user = new Twitter().show(userId);
-						} catch (Exception e) {
-							// ignore
-						}
-						this.user = user;
-					} else {
-						// normal JSON case
-						this.user = new User(jsonUser, this);
-					}
-
-				}
-				// location if geocoding is on
-				Object _locn = Twitter.Status.jsonGetLocn(object);
-				location = _locn==null? null : _locn.toString();
-				if (_locn instanceof Place) {
-					place = (Place) _locn;
-				}
-				
-				retweetCount = object.optInt("retweet_count", -1);
-				// ignore this as it can be misleading: true is reliable, false isn't
-				// retweeted = object.optBoolean("retweeted");
-				// Entities (switched on by Twitter.setIncludeTweetEntities(true))
-				JSONObject jsonEntities = object.optJSONObject("entities");
-				if (jsonEntities!=null) {
-					// Note: Twitter filters out dud @names
-					entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(KEntityType.class);
-					for(KEntityType type : KEntityType.values()) {
-						List<TweetEntity> es = TweetEntity.parse(this, type, jsonEntities);
-						entities.put(type, es);
-					}
-				}
-				sensitive = object.optBoolean("possibly_sensitive");
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(null, e);
-			}
-		}
-
-		/**
-		 * @param object
-		 * @return place, location, failing which geo coordinates
-		 * @throws JSONException
-		 */
-		static Object jsonGetLocn(JSONObject object) throws JSONException {
-			String _location = InternalUtils.jsonGet("location", object);
-			// no blank strings
-			if (_location!=null && _location.isEmpty()) _location = null;			
-			JSONObject _place = object.optJSONObject("place");
-			if (_location!=null) {
-				// normalise UT (UberTwitter?) locations
-				Matcher m = InternalUtils.latLongLocn.matcher(_location);
-				if (m.matches()) {
-					_location = m.group(2)+","+m.group(3);					
-				}
-				return _location; // should we also check geo and place for extra info??
-			}
-			// Twitter place			
-			if (_place !=null) {
-				Place place = new Place(_place);
-				return place;
-			}
-			JSONObject geo = object.optJSONObject("geo");
-			if (geo!=null && geo != JSONObject.NULL) {
-				JSONArray latLong = geo.getJSONArray("coordinates");
-				_location = latLong.get(0)+","+latLong.get(1);
-			}
-			// TODO place (when is this set?)
-			return _location;
-		}
-
-		/**
-		 * Create a *fake* Status object. This does not represent a real tweet!
-		 * Uses: few and far between. There is no real contract as to how
-		 * objects made in this way will behave.
-		 * <p>
-		 * If you want to post a tweet (and hence get a real Status object), use
-		 * {@link Twitter#setStatus(String)}.
-		 *
-		 * @param user
-		 *            Can be null or bogus -- provided that's OK with your code.
-		 * @param text
-		 *            Can be null or bogus -- provided that's OK with your code.
-		 * @param id
-		 *            Can be null or bogus -- provided that's OK with your code.
-		 * @param createdAt
-		 *            Can be null -- provided that's OK with your code.
-		 */
-		@Deprecated
-		public Status(User user, String text, Number id, Date createdAt) {
-			this.text = text;
-			this.user = user;
-			this.createdAt = createdAt;
-			this.id = id==null?  null :
-						(id instanceof BigInteger? (BigInteger)id
-									: new BigInteger(id.toString()));
-			inReplyToStatusId = null;
-			source = FAKE;
-			retweetCount = -1;
-		}
-
-		public Date getCreatedAt() {
-			return createdAt;
-		}
-
-		/**
-		 * @return The Twitter id for this post. This is used by some API
-		 *         methods.
-		 */
-		public BigInteger getId() {
-			return id;
-		}
-
-		/**
-		 * @return list of \@mentioned people (there is no guarantee that these
-		 *         mentions are for correct Twitter screen-names). May be empty,
-		 *         never null. Screen-names are always lowercased -- unless
-		 *         {@link Twitter#CASE_SENSITIVE_SCREENNAMES} is switched on.
-		 */
-		public List<String> getMentions()
-		{
-			// TODO test & use this
-//			List<TweetEntity> ms = entities.get(KEntityType.user_mentions);
-			Matcher m = AT_YOU_SIR.matcher(text);
-			List<String> list = new ArrayList<String>(2);
-			while (m.find()) {
-				// skip email addresses (and other poorly formatted things)
-				if (m.start() != 0
-					&& Character.isLetterOrDigit(text.charAt(m.start() - 1))) {
-					continue;
-				}
-				String mention = m.group(1);
-				// enforce lower case? (normally yes)
-				if ( ! Twitter.CASE_SENSITIVE_SCREENNAMES) {
-					mention = mention.toLowerCase();
-				}
-				list.add(mention);
-			}
-			return list;
-		}
-
-		
-		public List<TweetEntity> getTweetEntities(KEntityType type) {
-			return entities==null? null : entities.get(type);
-		}
-
-		/** The actual status text. This is also returned by {@link #toString()} */
-		public String getText() {
-			return text;
-		}
-		
-		public User getUser() {
-			return user;
-		}
-
-		/**
-		 * @return The text of this status. E.g. "Kicking fommil's arse at
-		 *         Civilisation."
-		 */
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
-
-	/**
 	 * This rather dangerous global toggle switches off lower-casing
 	 * on Twitter screen-names.
 	 * <p>
@@ -1027,515 +454,9 @@ public class Twitter implements Serializable {
 	public static boolean CASE_SENSITIVE_SCREENNAMES;
 
 	/**
-	 * A Twitter user. Fields are null if unset.
-	 *
-	 * @author daniel
-	 */
-	public static final class User implements Serializable {
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Convert from a JSON array into a list of users.
-		 *
-		 * @param json
-		 * @throws TwitterException
-		 */
-		static List<User> getUsers(String json) throws TwitterException {
-			if (json.trim().equals(""))
-				return Collections.emptyList();
-			try {
-				JSONArray arr = new JSONArray(json);
-				return getUsers2(arr);
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(json, e);
-			}
-		}
-
-		static List<User> getUsers2(JSONArray arr) throws JSONException {
-			List<User> users = new ArrayList<User>();
-			for (int i = 0; i < arr.length(); i++) {
-				JSONObject obj = arr.getJSONObject(i);
-				User u = new User(obj, null);
-				users.add(u);
-			}
-			return users;
-		}
-
-		public final String description;
-		public final Long id;
-		/**
-		 * The location, as reported by the user.
-		 * Can be metaphorical, e.g. "close to your heart"), or null; never blank.
-		 * UberTwitter & similar lat/long references will be normalised
-		 * using {@link InternalUtils#latLongLocn}. 
-		 */
-		public final String location;
-		
-		/** The display name, e.g. "Daniel Winterstein" */
-		public final String name;
-		/**
-		 * The url for the user's Twitter profile picture.
-		 * <p>
-		 * Note: we allow this to be edited as a convenience for the User
-		 * objects generated by search
-		 */
-		public URI profileImageUrl;
-		/**
-		 * true if this user keeps their updates private
-		 */
-		public final boolean protectedUser;
-		/**
-		 * The login name, e.g. "winterstein" This is the only thing used by
-		 * equals() and hashcode(). This is always lower-case, as Twitter
-		 * screen-names are case insensitive, *unless* you set
-		 * {@link Twitter#CASE_SENSITIVE_SCREENNAMES}
-		 */
-		public final String screenName;
-
-
-		/**
-		 * The user's current status - *if* returned by Twitter. Not all calls
-		 * return this, so can be null.
-		 */
-		public final Status status;
-		public final URI website;
-		/**
-		 * Number of seconds between a user's registered time zone and Greenwich
-		 * Mean Time (GMT) - aka Coordinated Universal Time or UTC. Can be
-		 * positive or negative.
-		 */
-		public final double timezoneOffSet;
-		public final String timezone;
-		public int followersCount;
-		public final String profileBackgroundColor;
-		public final String profileLinkColor;
-		public final String profileTextColor;
-		public final String profileSidebarFillColor;
-		public final String profileSidebarBorderColor;
-
-		/**
-		 * The number of people this user is following.
-		 * <p>
-		 * "following count" would be a better name, but historically Twitter calls
-		 * this "friends count".
-		 */
-		public final int friendsCount;
-
-		public final Date createdAt;
-
-		public final int favoritesCount;
-
-		public final URI profileBackgroundImageUrl;
-
-		public final boolean profileBackgroundTile;
-
-		public final int statusesCount;
-
-		public final boolean notifications;
-
-		public final boolean verified;
-
-		private final Boolean followingYou;
-
-		private final Boolean followedByYou;
-
-		/**
-		 * True if the authenticated user has requested to follow
-		 * this user. This will be false unless the friendship request is
-		 * pending. False if Twitter does not say otherwise.
-		 */
-		public final boolean followRequestSent;
-
-		/**
-		 * The number of public lists a user is listed in. -1 if unknown.
-		 */
-		public final int listedCount;
-		private Place place;
-
-		public Place getPlace() {
-			return place;
-		}
-		
-		/**
-		 * Create a User from a json blob
-		 *
-		 * @param obj
-		 * @param status
-		 *            can be null
-		 * @throws TwitterException
-		 */
-		User(JSONObject obj, Status status) throws TwitterException {
-			try {
-				id = obj.getLong("id");
-				name = InternalUtils.unencode(InternalUtils.jsonGet("name", obj));
-				String sn = InternalUtils.jsonGet("screen_name", obj);
-				screenName = Twitter.CASE_SENSITIVE_SCREENNAMES? sn : sn.toLowerCase();
-				// location - normalise a bit				
-				Object _locn = Twitter.Status.jsonGetLocn(obj);
-				location = _locn==null? null : _locn.toString();
-				if (_locn instanceof Place) {
-					place = (Place) _locn;
-				}
-
-				description = InternalUtils.unencode(InternalUtils.jsonGet("description", obj));
-				String img = InternalUtils.jsonGet("profile_image_url", obj);
-				profileImageUrl = img == null ? null : InternalUtils.URI(img);
-				String url = InternalUtils.jsonGet("url", obj);
-				website = url == null ? null : InternalUtils.URI(url);
-				protectedUser = obj.optBoolean("protected");
-				followersCount = obj.optInt("followers_count");
-				profileBackgroundColor = InternalUtils.jsonGet("profile_background_color",
-						obj);
-				profileLinkColor = InternalUtils.jsonGet("profile_link_color", obj);
-				profileTextColor = InternalUtils.jsonGet("profile_text_color", obj);
-				profileSidebarFillColor = InternalUtils.jsonGet("profile_sidebar_fill_color",
-						obj);
-				profileSidebarBorderColor = InternalUtils.jsonGet(
-						"profile_sidebar_border_color", obj);
-				friendsCount = obj.optInt("friends_count");
-				// date
-				String c = InternalUtils.jsonGet("created_at", obj);
-				createdAt = c==null? null : InternalUtils.parseDate(c); // null when fetching relationship-info
-				favoritesCount = obj.optInt("favourites_count");
-				String utcOffSet = InternalUtils.jsonGet("utc_offset", obj);
-				timezoneOffSet = utcOffSet == null ? 0 : Double
-						.parseDouble(utcOffSet);
-				timezone = InternalUtils.jsonGet("time_zone", obj);
-				img = InternalUtils.jsonGet("profile_background_image_url", obj);
-				profileBackgroundImageUrl = img == null ? null : InternalUtils.URI(img);
-				profileBackgroundTile = obj
-						.optBoolean("profile_background_tile");
-				statusesCount = obj.optInt("statuses_count");
-				notifications = obj.optBoolean("notifications");
-				verified = obj.optBoolean("verified");
-				// relationship info -- can come in 2 formats...
-				if (obj.has("connections")) {	// from a getRelationshipInfo call
-					JSONArray cons = obj.getJSONArray("connections");
-					boolean _following=false,_followedBy=false, _followRequested=false;
-					for(int i=0,n=cons.length(); i<n; i++) {
-						String ci = cons.getString(i);
-						if ("following".equals(ci)) _following = true;
-						else if ("followed_by".equals(ci)) _followedBy = true;
-						else if ("following_requested".equals(ci)) _followRequested = true;
-					}
-					followedByYou = _following;
-					followingYou = _followedBy;
-					followRequestSent = _followRequested;
-				} else {	// from a normal User call
-					followedByYou = InternalUtils.getOptBoolean(obj,"following");
-					followingYou = InternalUtils.getOptBoolean(obj,"followed_by");
-					followRequestSent = obj.optBoolean("follow_request_sent");
-				}
-				
-				listedCount = obj.optInt("listed_count", -1);				
-				// status
-				if (status == null) {
-					JSONObject s = obj.optJSONObject("status");
-					this.status = s == null ? null : new Status(s, this);
-				} else {
-					this.status = status;
-				}
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(String.valueOf(obj), e);
-			} catch (NullPointerException e) {
-				throw new TwitterException(e + " from <" + obj + ">, <"
-						+ status + ">\n\t"+e.getStackTrace()[0]+"\n\t"+e.getStackTrace()[1]);
-			}
-		}
-
-		/**
-		 * Create a dummy User object. All fields are set to null. This will be
-		 * equals() to an actual User object, so it can be used to query
-		 * collections. E.g. <code><pre>
-		 * // Test whether jtwit is a friend
-		 * twitter.getFriends().contains(new User("jtwit"));
-		 * </pre></code>
-		 *
-		 * @param screenName
-		 *            This will be converted to lower-case as Twitter
-		 *            screen-names are case insensitive (unless {@link Twitter#CASE_SENSITIVE_SCREENNAMES}
-		 *            is set)
-		 */
-		public User(String screenName) {
-			this(screenName, null);
-		}
-		
-		private User(String screenName, Long id) {
-			this.id = id;
-			name = null;
-			if (screenName!=null && ! Twitter.CASE_SENSITIVE_SCREENNAMES) {
-				screenName = screenName.toLowerCase();
-			}
-			this.screenName = screenName;
-			status = null;
-			location = null;
-			description = null;
-			profileImageUrl = null;
-			website = null;
-			protectedUser = false;
-			followersCount = 0;
-			profileBackgroundColor = null;
-			profileLinkColor = null;
-			profileTextColor = null;
-			profileSidebarFillColor = null;
-			profileSidebarBorderColor = null;
-			friendsCount = 0;
-			createdAt = null;
-			favoritesCount = 0;
-			timezoneOffSet = -1;
-			timezone = null;
-			profileBackgroundImageUrl = null;
-			profileBackgroundTile = false;
-			statusesCount = 0;
-			notifications = false;
-			verified = false;
-			followedByYou = null;
-			followingYou = null;
-			followRequestSent = false;
-			listedCount = -1;
-		}
-
-//		/**
-//		 * A 2nd species of fake user. For internal use only.
-//		 * WARNING: these users break {@link #hashCode()}'s behaviour!
-//		 * @param id
-//		 */
-//		User(Long id) {
-//			this(null, id);
-//		}
-
-		@Override
-		public boolean equals(Object other) {
-			if (this == other)
-				return true;
-			if (other.getClass() != User.class) {
-				return false;
-			}
-			User ou = (User) other;
-			// normal case
-			if (screenName!=null && ou.screenName!=null) {
-				return screenName.equals(ou.screenName);
-			}
-			// fake user case
-			if (id!=null && ou.id!=null) {
-				return id == ou.id;
-			}
-			// can't compare = fail
-			return false;
-		}
-
-		public Date getCreatedAt() {
-			return createdAt;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		/**
-		 * Number of statuses a user has marked as favorite.<br>
-		 * Warning: can be zero if Twitter did not supply the info (e.g. User
-		 * objects from searches or RSS feeds)
-		 * */
-		public int getFavoritesCount() {
-			return favoritesCount;
-		}
-
-		/**
-		 * @return Number of followers.<br>
-		 *         Warning: can be zero if Twitter did not supply the info (e.g.
-		 *         User objects from searches or RSS feeds)
-		 */
-		public int getFollowersCount() {
-			return followersCount;
-		}
-
-		/**
-		 * @return number of people this user is following.<br>
-		 *         Warning: can be zero if Twitter did not supply the info (e.g.
-		 *         User objects from searches or RSS feeds)
-		 */
-		public int getFriendsCount() {
-			return friendsCount;
-		}
-
-		/**
-		 * @return The Twitter id for this post. This is used by some API
-		 *         methods.
-		 *         <p>
-		 *         Note: this may switch to BigInteger in the future, if Twitter
-		 *         change their id numbering scheme. Use Number (which is a super-class
-		 *         for both Long and BigInteger) if you wish to future-proof your code.
-		 */
-		public Long getId() {
-			return id;
-		}
-
-		/**
-		 * @see #location
-		 */
-		public String getLocation() {
-			return location;
-		}
-
-		/**
-		 * The display name, e.g. "Daniel Winterstein"
-		 *
-		 * @see #getScreenName()
-		 * */
-		public String getName() {
-			return name;
-		}
-
-		public String getProfileBackgroundColor() {
-			return profileBackgroundColor;
-		}
-
-		public URI getProfileBackgroundImageUrl() {
-			return profileBackgroundImageUrl;
-		}
-
-		public URI getProfileImageUrl() {
-			return profileImageUrl;
-		}
-
-		public String getProfileLinkColor() {
-			return profileLinkColor;
-		}
-
-		public String getProfileSidebarBorderColor() {
-			return profileSidebarBorderColor;
-		}
-
-		public String getProfileSidebarFillColor() {
-			return profileSidebarFillColor;
-		}
-
-		public String getProfileTextColor() {
-			return profileTextColor;
-		}
-
-		public boolean getProtectedUser() {
-			return protectedUser;
-		}
-
-		/** The login name, e.g. "winterstein". Never null */
-		public String getScreenName() {
-			return screenName;
-		}
-
-		/**
-		 * The user's current status - *if* returned by Twitter. Not all calls
-		 * return this, so can be null.
-		 */
-		public Status getStatus() {
-			return status;
-		}
-
-		/**
-		 * @return number of status updates posted by this User.<br>
-		 *         Warning: can be zero if Twitter did not supply the info (e.g.
-		 *         User objects from searches or RSS feeds)
-		 */
-		public int getStatusesCount() {
-			return statusesCount;
-		}
-
-		/**
-		 * String version of the timezone
-		 */
-		public String getTimezone() {
-			return timezone;
-		}
-
-		/**
-		 * Number of seconds between a user's registered time zone and Greenwich
-		 * Mean Time (GMT) - aka Coordinated Universal Time or UTC. Can be
-		 * positive or negative.
-		 */
-		public double getTimezoneOffSet() {
-			return timezoneOffSet;
-		}
-
-		public URI getWebsite() {
-			return website;
-		}
-
-		@Override
-		public int hashCode() {
-			// normal case
-			return screenName.hashCode();
-		}
-
-		/**
-		 * @return true if this is a dummy User object, in which case almost all
-		 *         of it's fields will be null - with the exception of
-		 *         screenName and possibly {@link #profileImageUrl}. Dummy User
-		 *         objects are equals() to full User objects.
-		 */
-		public boolean isDummyObject() {
-			return name == null;
-		}
-
-		/**
-		 * Is this person following you?
-		 * @return true if this user is following you. Can return null if unset.
-		 */
-		public Boolean isFollowingYou() {
-			return followingYou;
-		}
-
-		/**
-		 * Are you following this person?
-		 * @return true if you are following this user. Can return null if unset.
-		 */
-		public Boolean isFollowedByYou() {
-			return followedByYou;
-		}		
-
-		public boolean isNotifications() {
-			return notifications;
-		}
-
-		public boolean isProfileBackgroundTile() {
-			return profileBackgroundTile;
-		}
-
-		/**
-		 * true if this user keeps their updates private
-		 */
-		public boolean isProtectedUser() {
-			return protectedUser;
-		}
-
-		/**
-		 * @return true if the account has been verified by Twitter to really be
-		 *         who it claims to be.
-		 */
-		public boolean isVerified() {
-			return verified;
-		}
-
-		/**
-		 * Returns the User's screenName (i.e. their Twitter login)
-		 */
-		@Override
-		public String toString() {
-			return screenName;
-		}
-	}
-
-	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.2";
-
-	static final Comparator<Status> NEWEST_FIRST = new Comparator<Status>() {
-		@Override
-		public int compare(Status o1, Status o2) {
-			return - o1.id.compareTo(o2.id);
-		}
-	};
+	public final static String version = "2.3";
 
 	// TODO
 	// c.f. https://dev.twitter.com/discussions/1059
@@ -1644,7 +565,7 @@ public class Twitter implements Serializable {
 	 * {@link #addStandardishParameters(Map)}. Gets updated in the while loops
 	 * of methods doing a get-all-pages.
 	 */
-	private Integer pageNumber;
+	Integer pageNumber;
 
 	private Number sinceId;
 	private Number untilId;
@@ -1658,7 +579,7 @@ public class Twitter implements Serializable {
 	 */
 	private int maxResults = -1;
 
-	private final IHttpClient http;
+	final IHttpClient http;
 
 	/**
 	 * Twitter login name. Can be null even if we have authentication when using
@@ -1743,6 +664,9 @@ public class Twitter implements Serializable {
 		return vars;
 	}
 
+	/**
+	 * TODO merge with {@link #maxResults}??
+	 */
 	Integer count;
 
 	private String lang;
@@ -1761,19 +685,6 @@ public class Twitter implements Serializable {
 		this.count = count;
 	}
 
-	/**
-	 * Create a map from a list of key/value pairs.
-	 *
-	 * @param keyValuePairs
-	 * @return
-	 */
-	private Map<String, String> aMap(String... keyValuePairs) {
-		HashMap<String, String> map = new HashMap<String, String>();
-		for (int i = 0; i < keyValuePairs.length; i += 2) {
-			map.put(keyValuePairs[i], keyValuePairs[i + 1]);
-		}
-		return map;
-	}
 
 	/**
 	 * Equivalent to {@link #follow(String)}. C.f.
@@ -1898,55 +809,19 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Start following a user.
-	 *
-	 * @param username
-	 *            Required. The ID or screen name of the user to befriend.
-	 * @return The befriended user, or null if (a) they were already being followed,
-	 * or (b) they protect their tweets & you already requested to follow them.
-	 * @throws TwitterException
-	 *             if the user does not exist or has been suspended.
-	 * @see #stopFollowing(String)
+	 * @see Twitter_Users#follow(String)
 	 */
+	@Deprecated
 	public User follow(String username) throws TwitterException {
-		if (username == null)
-			throw new NullPointerException();
-		if (username.equals(getScreenName())) {
-			throw new IllegalArgumentException("follow yourself makes no sense");
-		}
-		String page = null;
-		try {
-			Map<String, String> vars = newMap("screen_name", username);
-			page = post(TWITTER_URL + "/friendships/create.json", vars, true);
-			// is this needed? doesn't seem to fix things
-			// http.getPage(TWITTER_URL+"/friends", null, true);
-			return new User(new JSONObject(page), null);
-		} catch (SuspendedUser e) {
-			throw e;
-		} catch (TwitterException.Repetition e) {
-			return null;
-		} catch (E403 e) {
-			// check if we've tried to follow someone we're already following
-			try {
-				if (isFollowing(username)) {
-					return null;
-				}
-			} catch (TwitterException e2) {
-				// no extra info then
-			}
-			throw e;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(page, e);
-		}
+		return users().follow(username);
 	}
 
 	/**
-	 * Convenience for {@link #follow(String)}
-	 *
-	 * @param user
+	 * @see Twitter_Users#follow(User) 
 	 */
-	public void follow(User user) {
-		follow(user.screenName);
+	@Deprecated
+	public User follow(User user) {
+		return follow(user.screenName);
 	}
 	
 	
@@ -2003,125 +878,73 @@ public class Twitter implements Serializable {
 	 *            login-name.
 	 */
 	public List<Status> getFavorites(String screenName) {
-		Map<String, String> vars = newMap("screen_name", screenName);
+		Map<String, String> vars = InternalUtils.asMap("screen_name", screenName);
 		return getStatuses(TWITTER_URL + "/favorites.json",
 				addStandardishParameters(vars), http.canAuthenticate());
 	}
 
 	/**
-	 * Returns a list of the users currently featured on the site with their
-	 * current statuses inline.
-	 * <p>
-	 * Note: This is no longer part of the Twitter API. Support is provided via
-	 * other methods.
+	 * @see Twitter_Users#getFollowerIDs()
 	 */
-	public List<User> getFeatured() throws TwitterException {
-		List<User> users = new ArrayList<User>();
-		List<Status> featured = getPublicTimeline();
-		for (Status status : featured) {
-			User user = status.getUser();
-			users.add(user);
-		}
-		return users;
-	}
-
-	/**
-	 * Returns the IDs of the authenticating user's followers.
-	 *
-	 * @throws TwitterException
-	 */
+	@Deprecated
 	public List<Number> getFollowerIDs() throws TwitterException {
-		return getUserIDs(TWITTER_URL + "/followers/ids.json", null);
+		return users().getFollowerIDs();
 	}
 
 	/**
-	 * Returns the IDs of the specified user's followers.
-	 *
-	 * @param The
-	 *            screen name of the user whose followers are to be fetched.
-	 * @throws TwitterException
+	 * @see Twitter_Users#getFollowerIDs(String)
 	 */
+	@Deprecated
 	public List<Number> getFollowerIDs(String screenName) throws TwitterException {
-		return getUserIDs(TWITTER_URL + "/followers/ids.json", screenName);
+		return users().getFollowerIDs(screenName);
 	}
 
 	/**
-	 * Returns the authenticating user's (latest) followers, each with current
-	 * status inline. Occasionally contains duplicates.
-	 * @deprecated Twitter advise using {@link #getFollowerIDs()} and {@link #show(Number)}
+	 * @see Twitter_Users#getFollowers()
 	 */
+	@Deprecated
 	public List<User> getFollowers() throws TwitterException {
-		return getUsers(TWITTER_URL + "/statuses/followers.json", null);
+		return users().getFollowers();
 	}
 
 	/**
-	 *
-	 * Returns the (latest 100) given user's followers, each with current status
-	 * inline. Occasionally contains duplicates.
-	 *
-	 * @param username
-	 *            The screen name of the user for whom to request a list of
-	 *            friends.
-	 * @throws TwitterException
+	 * @see Twitter_Users#getFollowers(String)
 	 */
-
+	@Deprecated
 	public List<User> getFollowers(String username) throws TwitterException {
-		return getUsers(TWITTER_URL + "/statuses/followers.json", username);
+		return users().getFollowers(username);
 	}
 
 	/**
-	 * Returns the IDs of the authenticating user's friends. (people who the
-	 * user follows).
-	 *
-	 * @throws TwitterException
+	 * @see Twitter_Users#getFriendIDs()
 	 */
+	@Deprecated
 	public List<Number> getFriendIDs() throws TwitterException {
-		return getUserIDs(TWITTER_URL + "/friends/ids.json", null);
+		return users().getFriendIDs();
 	}
 
 	/**
-	 * Returns the IDs of the specified user's friends. Occasionally contains
-	 * duplicates.
-	 *
-	 * @param The
-	 *            screen name of the user whose friends are to be fetched.
-	 * @throws TwitterException
+	 * @see Twitter_Users#getFriendIDs(String)
 	 */
+	@Deprecated
 	public List<Number> getFriendIDs(String screenName) throws TwitterException {
-		return getUserIDs(TWITTER_URL + "/friends/ids.json", screenName);
+		return users().getFriendIDs(screenName);
 	}
 
 	/**
-	 * Returns the authenticating user's (latest 100) friends, each with current
-	 * status inline. NB - friends are people who *you* follow. Occasionally
-	 * contains duplicates.
-	 * <p>
-	 * Note that there seems to be a small delay from Twitter in updates to this
-	 * list.
-	 *
-	 * @throws TwitterException
-	 * @see #getFriendIDs()
-	 * @see #isFollowing(String)
-	 * @deprecated Twitter advise you to use {@link #getFriendIDs()}
-	 * with {@link Twitter_Users#showById(List)} instead.
+	 * @see Twitter_Users#getFriends()
 	 */
 	@Deprecated
 	public List<User> getFriends() throws TwitterException {
-		return getUsers(TWITTER_URL + "/statuses/friends.json", null);
+		return users().getFriends();
 	}
 
 	/**
-	 *
-	 * Returns the (latest 100) given user's friends, each with current status
-	 * inline. Occasionally contains duplicates.
-	 *
-	 * @param username
-	 *            The screen name of the user for whom to request a list of
-	 *            friends.
-	 * @throws TwitterException
+	 * @see Twitter_Users#getFriendss(String)
 	 */
+	@Deprecated
 	public List<User> getFriends(String username) throws TwitterException {
-		return getUsers(TWITTER_URL + "/statuses/friends.json", username);
+		return users().getFriends(username);
 	}
 
 	/**
@@ -2179,11 +1002,13 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @return Login name of the authenticating user, or null if not set.
-	 * If null but oauth is set, then use 
-	 * <code>new TwitterAccount(jtwitter).verifyCredentials()</code> to 
-	 * fetch user details.
+	 * <p>
+	 * Will call Twitter to find out if null but oauth is set.
+	 * @see #getSelf()
 	 */
 	public String getScreenName() {
+		// load if need be
+		getSelf();		
 		return name;
 	}
 
@@ -2311,7 +1136,7 @@ public class Twitter implements Serializable {
 		assert screenName != null;
 		try {
 			String url = TWITTER_URL + "/lists/memberships.json";
-			Map<String, String> vars = aMap("screen_name", screenName);
+			Map<String, String> vars = InternalUtils.asMap("screen_name", screenName);
 			if (filterToOwned) {
 				assert http.canAuthenticate();
 				vars.put("filter_to_owned_lists", "1");
@@ -2378,7 +1203,7 @@ public class Twitter implements Serializable {
 			 List<Status> oldStyle = search(sq.toString());
 			 // merge them
 			 newStyle.addAll(oldStyle);
-			 Collections.sort(newStyle, NEWEST_FIRST);
+			 Collections.sort(newStyle, InternalUtils.NEWEST_FIRST);
 			 return newStyle;
 		} catch (TwitterException e) {
 			// oh well
@@ -2501,41 +1326,6 @@ public class Twitter implements Serializable {
 	}
 
 
-	/**
-	 *
-	 * @param url
-	 *            API method to call
-	 * @param screenName
-	 * @return twitter-id numbers for friends/followers of screenName Is
-	 *         affected by {@link #maxResults}
-	 */
-	private List<Number> getUserIDs(String url, String screenName) {
-		Long cursor = -1L;
-		List<Number> ids = new ArrayList<Number>();
-		Map<String, String> vars = newMap("screen_name", screenName);
-		while (cursor != 0 && !enoughResults(ids)) {
-			vars.put("cursor", String.valueOf(cursor));
-			String json = http.getPage(url, vars, http.canAuthenticate());
-			try {
-				// it seems Twitter will occasionally return a raw array
-				JSONArray jarr;
-				if (json.charAt(0)=='[') {
-					jarr = new JSONArray(json);
-					cursor = 0L;
-				} else {
-					JSONObject jobj = new JSONObject(json);
-					jarr = (JSONArray) jobj.get("ids");
-					cursor = new Long(jobj.getString("next_cursor"));
-				}
-				for (int i = 0; i < jarr.length(); i++) {
-					ids.add(jarr.getLong(i));
-				}
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(json, e);
-			}
-		}
-		return ids;
-	}
 
 	/**
 	 * Have we got enough results for the current search?
@@ -2544,50 +1334,10 @@ public class Twitter implements Serializable {
 	 * @return false if maxResults is set to -1 (ie, unlimited) or if list
 	 *         contains less than maxResults results.
 	 */
-	private <X> boolean enoughResults(List<X> list) {
+	boolean enoughResults(List list) {
 		return (maxResults != -1 && list.size() >= maxResults);
 	}
 
-	/**
-	 * Convenience method for building small maps.
-	 *
-	 * @param keyValuePairs
-	 * @return map with these settings
-	 */
-	private Map<String, String> newMap(String... keyValuePairs) {
-		HashMap<String, String> map = new HashMap<String, String>();
-		for (int i = 0; i < keyValuePairs.length; i += 2) {
-			map.put(keyValuePairs[i], keyValuePairs[i + 1]);
-		}
-		return map;
-	}
-
-	/**
-	 * Low-level method for fetching e.g. your friends
-	 *
-	 * @param url
-	 * @param screenName
-	 *            e.g. your screen-name
-	 * @return
-	 */
-	private List<User> getUsers(String url, String screenName) {
-		Map<String, String> vars = newMap("screen_name", screenName);
-		List<User> users = new ArrayList<User>();
-		Long cursor = -1L;
-		while (cursor != 0 && !enoughResults(users)) {
-			vars.put("cursor", cursor.toString());
-			JSONObject jobj;
-			try {
-				jobj = new JSONObject(http.getPage(url, vars, http
-						.canAuthenticate()));
-				users.addAll(User.getUsers(jobj.getString("users")));
-				cursor = new Long(jobj.getString("next_cursor"));
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(null, e);
-			}
-		}
-		return users;
-	}
 
 	/**
 	 * Returns the most recent statuses from the
@@ -2735,85 +1485,34 @@ public class Twitter implements Serializable {
 	private String resultType;
 
 	/**
-	 * Is the authenticating user <i>followed by</i> userB?
-	 *
-	 * @param userB
-	 *            The screen name of a Twitter user.
-	 * @return Whether or not the user is followed by userB.
+	 * @see Twitter_Users#isFollower(String)
 	 */
+	@Deprecated
 	public boolean isFollower(String userB) {
 		return isFollower(userB, name);
 	}
 
 	/**
-	 * @return true if followerScreenName <i>is</i> following followedScreenName
-	 *
-	 * @throws TwitterException.E403
-	 *             if one of the users has protected their updates and you don't
-	 *             have access. This can be counter-intuitive (and annoying) at
-	 *             times!
-	 *             Also throws E403 if one of the users has been
-	 *             suspended (we use the {@link SuspendedUser} exception
-	 *             sub-class for this).
-	 * @throws TwitterException.E404
-	 * 				if one of the users does not exist
+	 * @see Twitter_Users#isFollower(String, String)
 	 */
+	@Deprecated
 	public boolean isFollower(String followerScreenName,
 			String followedScreenName) {
-		assert followerScreenName != null && followedScreenName != null;
-		try {
-			String page = http
-					.getPage(TWITTER_URL + "/friendships/exists.json", aMap(
-							"user_a", followerScreenName, "user_b",
-							followedScreenName), http.canAuthenticate());
-			return Boolean.valueOf(page);
-		} catch (TwitterException.E403 e) {
-			if (e instanceof SuspendedUser) {
-				throw e;
-			}
-			// Should this be a suspended user exception instead?
-			// Let's ask Twitter
-			// TODO check rate limits - only do if we have spare capacity
-			String whoFirst = followedScreenName.equals(getScreenName())? followerScreenName : followedScreenName;
-			try {
-				// this could throw a SuspendedUser exception
-				show(whoFirst);
-				String whoSecond = whoFirst.equals(followedScreenName)? followerScreenName : followedScreenName;
-				if (whoSecond.equals(getScreenName())) throw e;
-				show(whoSecond);
-			} catch (TwitterException.RateLimit e2) {
-				// ignore
-			}
-			// both shows worked?
-			throw e;
-		}  catch (TwitterException e) {
-			// FIXME investigating a weird new bug
-			if (e.getMessage()!=null && e.getMessage().contains(
-					"Two user ids or screen_names must be supplied")) {
-				throw new TwitterException("WTF? inputs: follower="+
-						followerScreenName+", followed="+
-						followedScreenName+", call-by="+getScreenName()+"; "+e.getMessage());
-			}
-			throw e;
-		}
+		return users().isFollower(followerScreenName, followedScreenName);
 	}
 
 	/**
-	 * Does the authenticating user <i>follow</i> userB?
-	 *
-	 * @param userB
-	 *            The screen name of a Twitter user.
-	 * @return Whether or not the user follows userB.
+	 * @see Twitter_Users#isFollowing(String)
 	 */
+	@Deprecated
 	public boolean isFollowing(String userB) {
 		return isFollower(name, userB);
 	}
 
 	/**
-	 * Convenience for {@link #isFollowing(String)}
-	 *
-	 * @param user
+	 * @see Twitter_Users#isFollowing(User)
 	 */
+	@Deprecated
 	public boolean isFollowing(User user) {
 		return isFollowing(user.screenName);
 	}
@@ -2850,7 +1549,7 @@ public class Twitter implements Serializable {
 	 * @return the specified user
 	 */
 	public User leaveNotifications(String screenName) {
-		Map<String, String> vars = newMap("screen_name", screenName);
+		Map<String, String> vars = InternalUtils.asMap("screen_name", screenName);
 		String page = http.getPage(TWITTER_URL + "/notifications/leave.json",
 				vars, true);
 		try {
@@ -2860,25 +1559,6 @@ public class Twitter implements Serializable {
 		}
 	}
 
-	/**
-	 * Enables notifications for updates from the specified user <i>who must
-	 * already be a friend</i>.
-	 *
-	 * @param username
-	 *            Get notifications from this user, who must already be one of
-	 *            your friends.
-	 * @return the specified user
-	 */
-	public User notify(String username) {
-		Map<String, String> vars = newMap("screen_name", username);
-		String page = http.getPage(TWITTER_URL + "/notifications/follow.json",
-				vars, true);
-		try {
-			return new User(new JSONObject(page), null);
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(page, e);
-		}
-	}
 
 	/**
 	 * Wrapper for {@link IHttpClient#post(String, Map, boolean)}.
@@ -3038,7 +1718,7 @@ public class Twitter implements Serializable {
 	 */
 	public void reportSpam(String screenName) {
 		http.getPage(TWITTER_URL+"/version/report_spam.json",
-					newMap("screen_name", screenName), true);
+					InternalUtils.asMap("screen_name", screenName), true);
 	}
 
 	/**
@@ -3080,33 +1760,11 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Warning: there is a bug within twitter.com which means that
-	 * location-based searches are treated as OR. E.g. "John near:Scotland" will
-	 * happily return "Andrew from Aberdeen" :(
-	 * <p>
-	 * Unlike tweet search, this method does not support any operators. 
-	 * Only the first 1000 matches are available.
-	 * <p>
-	 * Does not do paging-to-max-results. But does support using {@link #setPageNumber(Integer)},
-	 * and {@link #setMaxResults(int)} for less than the standard 20.
-	 * @param searchTerm
-	 * @return
+	@see Twitter_Users#searchUsers(String)
 	 */
+	@Deprecated
 	public List<User> searchUsers(String searchTerm) {
-		assert searchTerm != null;
-		Map<String, String> vars = InternalUtils.asMap("q", searchTerm);
-		if (pageNumber != null) {
-			vars.put("page", pageNumber.toString());
-		}
-		if (count != null && count <20) {
-			vars.put("per_page", String.valueOf(count));
-		}
-		// yes, it requires authentication
-		String json = http.getPage(TWITTER_URL + "/users/search.json", vars,
-				true);
-		http.updateRateLimits(KRequestType.SEARCH_USERS);
-		List<User> users = User.getUsers(json);
-		return users;
+		return users().searchUsers(searchTerm);
 	}
 
 	/**
@@ -3115,7 +1773,7 @@ public class Twitter implements Serializable {
 	 * @return
 	 */
 	private Map<String, String> getSearchParams(String searchTerm, int rpp) {
-		Map<String, String> vars = aMap("rpp", Integer.toString(rpp), "q", searchTerm);
+		Map<String, String> vars = InternalUtils.asMap("rpp", Integer.toString(rpp), "q", searchTerm);
 		if (sinceId != null)
 			vars.put("since_id", sinceId.toString());
 		if (untilId != null) {
@@ -3357,58 +2015,26 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Returns information of a given user, specified by screen name.
-	 *
-	 * @param screenName
-	 *            The screen name of a user.
-	 * @throws exception
-	 *             if the user does not exist
-	 * @throws SuspendedUser if the user has been terminated (as happens to spam bots).
-	 * @see #show(long)
+	 * @see Twitter_Users#show(String)
 	 */
+	@Deprecated
 	public User show(String screenName) throws TwitterException, TwitterException.SuspendedUser {
-		Map vars = newMap("screen_name", screenName);
-		String json = http.getPage(TWITTER_URL + "/users/show.json", vars, http
-				.canAuthenticate());
-		http.updateRateLimits(KRequestType.SHOW_USER);
-		if (json.length() == 0)
-			throw new TwitterException.E404(screenName
-					+ " does not seem to exist");
-		try {
-			User user = new User(new JSONObject(json), null);
-			return user;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(json, e);
-		}
+		return users().show(screenName);
 	}
 
 	/**
-	 * Returns information of a given user, specified by user-id.
-	 *
-	 * @param userId
-	 *            The user-id of a user.
-	 * @throws exception
-	 *             if the user does not exist - or has been terminated (as
-	 *             happens to spam bots).
+	 * @see Twitter_Users#show(Number)
 	 */
+	@Deprecated
 	public User show(Number userId) {
-		Map<String, String> vars = InternalUtils.asMap("user_id", userId.toString());
-		String json = http.getPage(TWITTER_URL + "/users/show.json", vars, http
-				.canAuthenticate());
-		http.updateRateLimits(KRequestType.SHOW_USER);
-		try {
-			User user = new User(new JSONObject(json), null);
-			return user;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(json, e);
-		}
+		return users().show(userId);
 	}
 	
 	/**
 	 * @deprecated Use {@link Twitter_Users#show(List)} instead
 	 */
 	public List<User> bulkShow(List<String> screenNames) {
-		return bulkShow2("/users/lookup.json", String.class, screenNames);
+		return users().show(screenNames);
 	}
 
 
@@ -3416,74 +2042,22 @@ public class Twitter implements Serializable {
 	 * @deprecated Use {@link #showById(List)} instead
 	 */
 	public List<User> bulkShowById(List<? extends Number> userIds) {
-		return bulkShow2("/users/lookup.json", Number.class, userIds);
+		return users().showById(userIds);
 	}
 	
 
 	/**
-	 * Common backend for {@link #bulkShow(List)} and
-	 * {@link #bulkShowById(List)}. 
-	 * <p>
-	 * This will throw exceptions from the 1st page of results, but swallow them
-	 * from subsequent pages (which are likely to be rate limit errors).
-	 * <p>
-	 * Suspended bot accounts seem to just get ignored.
-	 *
-	 * @param stringOrNumber 
-	 * @param screenNamesOrIds
+	 * @see Twitter_Users#getUser(String)
 	 */
-	List<User> bulkShow2(String apiMethod, Class stringOrNumber, Collection screenNamesOrIds) {
-		int batchSize = 100;
-		ArrayList<User> users = new ArrayList<Twitter.User>(screenNamesOrIds
-				.size());
-		List _screenNamesOrIds = screenNamesOrIds instanceof List? (List) screenNamesOrIds
-				: new ArrayList(screenNamesOrIds);
-		for (int i = 0; i < _screenNamesOrIds.size(); i += batchSize) {
-			int last = i + batchSize;
-			String names = InternalUtils.join(_screenNamesOrIds, i, last);
-			String var = stringOrNumber == String.class ? "screen_name"
-					: "user_id";
-			Map<String, String> vars = InternalUtils.asMap(var, names);
-			try {
-				String json = http.getPage(TWITTER_URL + apiMethod,
-						vars, http.canAuthenticate());
-				List<User> usersi = User.getUsers(json);
-				users.addAll(usersi);
-			} catch (TwitterException e) {
-				// Stop here. 
-				// Don't normally throw an exception so we don't waste the results we have.
-				if (users.isEmpty()) {
-					throw e;
-				}
-				break;
-			} finally {
-				http.updateRateLimits(KRequestType.SHOW_USER);
-			}
-		}
-		return users;
-	}
-
-	/**
-	 * Synonym for {@link #show(String)}. show is the Twitter API name, getUser
-	 * feels more Java-like.
-	 *
-	 * @param screenName
-	 *            The screen name of a user.
-	 * @return the user info
-	 */
+	@Deprecated
 	public User getUser(String screenName) {
 		return show(screenName);
 	}
 
 	/**
-	 * Synonym for {@link #show(long)}. show is the Twitter API name, getUser
-	 * feels more Java-like.
-	 *
-	 * @param userId
-	 *            The user-id of a user.
-	 * @return the user info
-	 * @see #getUser(String)
+	 * @see Twitter_Users#getUser(long)
 	 */
+	@Deprecated
 	public User getUser(long userId) {
 		return show(userId);
 	}
@@ -3534,48 +2108,17 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Destroy: Discontinues friendship with the user specified in the ID
-	 * parameter as the authenticating user.
-	 *
-	 * @param username
-	 *            The screen name of the user with whom to discontinue
-	 *            friendship.
-	 * @return the un-friended user (if they were a friend), or null if the
-	 *         method fails because the specified user was not a friend.
+	 * @see Twitter_Users#stopFollowing(String)
 	 */
+	@Deprecated
 	public User stopFollowing(String username) {
-		assert getScreenName() != null;
-		String page;
-		try {
-			Map<String, String> vars = newMap("screen_name", username);
-			page = post(TWITTER_URL + "/friendships/destroy.json", vars,
-					true);
-			// ?? is this needed to make Twitter update its cache? doesn't seem
-			// to fix things
-			// http.getPage(TWITTER_URL+"/friends", null, true);
-		} catch (TwitterException e) {
-			// were they a friend anyway?
-			if (e.getMessage()!=null && e.getMessage().contains("not friends")) {
-				return null;
-			}
-			// Something else went wrong
-			throw e;
-		}
-		// outside the try-catch block in case there is a json exception
-		try {
-			User user = new User(new JSONObject(page), null);
-			return user;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(page, e);
-		}
+		return users().stopFollowing(username);
 	}
 
 	/**
-	 * Convenience for {@link #stopFollowing(String)}
-	 *
-	 * @param user
-	 * @return
+	 * @see Twitter_Users#stopFollowing(User)
 	 */
+	@Deprecated
 	public User stopFollowing(User user) {
 		return stopFollowing(user.screenName);
 	}
@@ -3820,23 +2363,7 @@ public class Twitter implements Serializable {
 		String longMsg = m.group(1).trim();
 		return longMsg;
 	}
-
-	/**
-	 * Does a user with the specified name or id exist?
-	 *
-	 * @param screenName
-	 *            The screen name or user id of the suspected user.
-	 * @return False if the user doesn't exist or has been suspended, true
-	 *         otherwise.
-	 */
-	public boolean userExists(String screenName) {
-		try {
-			show(screenName);
-		} catch (TwitterException.E404 e) {
-			return false;
-		}
-		return true;
-	}
+	
 
 	/**
 	 * Set a language filter for search results. Note: This only applies to
@@ -3868,6 +2395,9 @@ public class Twitter implements Serializable {
 //	 */
 //	public static int LINK_LENGTH_HTTPS = LINK_LENGTH+1;
 	
+	/**
+	 * Update info on Twitter's configuration -- such as shortened url lengths. 
+	 */
 	public void updateConfiguration() {
 		String json = http.getPage(TWITTER_URL+"help/configuration.format", null, false);
 		try {

@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import winterwell.jtwitter.Twitter.User;
 import winterwell.jtwitter.TwitterException.Parsing;
 import winterwell.utils.web.WebUtilsTest;
 
@@ -171,7 +171,7 @@ public class InternalUtils {
 	 * If the value is null, the key will not be included.
 	 */
 	@SuppressWarnings("unchecked")
-	static <K, V> Map<K, V> asMap(Object... keyValuePairs) {
+	static Map asMap(Object... keyValuePairs) {
 		assert keyValuePairs.length % 2 == 0;
 		Map m = new HashMap(keyValuePairs.length / 2);
 		for (int i = 0; i < keyValuePairs.length; i += 2) {
@@ -336,6 +336,13 @@ public class InternalUtils {
 			// ignore
 		}
 	}
+
+	static final Comparator<Status> NEWEST_FIRST = new Comparator<Status>() {
+		@Override
+		public int compare(Status o1, Status o2) {
+			return - o1.id.compareTo(o2.id);
+		}
+	};
 
 	
 }

@@ -1,6 +1,13 @@
 # JTwitter Change list 
 
-2.2 (pending)
+2.3: Breaking changes!
+This release does a large (but cosmetic) refactoring:
+ - Status, User and Message now have their own files. They were getting too large
+ to be comfortably held in Twitter.
+ - User-related methods moved into Twitter_Users.
+ However (to limit the edits required) most methods can still be called via Twitter as before. 
+
+2.2:
  - Added ITweet.getMentions() to increase the overlap between Status and Message.
  - Added copy-constructor and IHttpClient.copy() method for safer multi-threading.
  This addresses a thread-safety issue in Signpost which can lead to an infinite loop or out-of-memory problem.
