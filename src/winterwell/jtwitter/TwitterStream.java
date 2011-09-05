@@ -20,7 +20,7 @@ import winterwell.utils.TodoException;
  */
 public class TwitterStream extends AStream {
 
-	private static final Map<String, AStream> user2stream = new ConcurrentHashMap();
+//	private static final Map<String, AStream> user2stream = new ConcurrentHashMap();
 
 	@Override
 	public String toString() {
@@ -132,20 +132,21 @@ public class TwitterStream extends AStream {
 	}
 
 	/**
-	 Protect the rate limits (only locally! And forgetful! Do NOT rely on this)
+	 ??Protect the rate limits (only locally! And forgetful! Do NOT rely on this)
 	 */
 	private void connect3_rateLimit() {
 		if (jtwit.getScreenName() == null) return; // dunno
-		AStream s = user2stream.get(jtwit.getScreenName());
-		if (s != null && s.isConnected()) {
-			throw new TwitterException.TooManyLogins("One account, one stream (running: "+s
-					+"; trying to run"+this+").\n	But streams OR their filter parameters, so one stream can do a lot.");
-		}
-		// memory paranoia
-		if (user2stream.size() > 1000) {
-			user2stream.clear();
-		}
-		user2stream.put(jtwit.getScreenName(), this);		
+		// investigating possible memory leaks
+//		AStream s = user2stream.get(jtwit.getScreenName());
+//		if (s != null && s.isConnected()) {
+//			throw new TwitterException.TooManyLogins("One account, one stream (running: "+s
+//					+"; trying to run"+this+").\n	But streams OR their filter parameters, so one stream can do a lot.");
+//		}
+//		// memory paranoia
+//		if (user2stream.size() > 1000) {
+//			user2stream.clear();
+//		}
+//		user2stream.put(jtwit.getScreenName(), this);		
 	}
 
 	/**

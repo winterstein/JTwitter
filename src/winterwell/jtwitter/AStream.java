@@ -597,7 +597,8 @@ final class StreamGobbler extends Thread {
 	/**
 	 * start dropping messages after this.
 	 */
-	static final int MAX_BUFFER = 1000000;
+	static final int MAX_BUFFER = 100000;
+	
 	IOException ex;
 	/**
 	 * count of the number of tweets this gobbler had to drop
