@@ -323,8 +323,7 @@ public class Twitter implements Serializable {
 		/**
 		 * Fetch a header from the last http request.
 		 * This is inherently NOT thread safe.
-		 * It is ambiguous whether headers from error messages should be cached,
-		 * but probably a good idea. TODO let's pin that policy down.
+		 * Headers from error messages should (probably) be cached.
 		 * @param headerName
 		 * @return header value, or null if unset
 		 */
