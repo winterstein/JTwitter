@@ -223,7 +223,7 @@ public abstract class AStream implements Closeable {
 			if ( ! isConnected()) {
 				throw new TwitterException(readThread.ex);
 			}
-		} catch (TwitterException e) {
+		} catch (RuntimeException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new TwitterException(e);
