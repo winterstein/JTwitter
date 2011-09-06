@@ -111,8 +111,10 @@ public class InternalUtils {
 			names.append(screenNamesOrIds.get(si));
 			names.append(",");
 		}
-		// pop final ,
-		names.delete(names.length() - 1, names.length());
+		// pop the final ","
+		if (names.length() != 0) {
+			names.delete(names.length() - 1, names.length());
+		}
 		return names.toString();
 	}
 
