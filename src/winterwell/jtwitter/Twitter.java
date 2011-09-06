@@ -1308,6 +1308,8 @@ public class Twitter implements Serializable {
 		List<Status> msgs = new ArrayList<Status>();
 		while (msgs.size() <= maxResults) {
 			String json = http.getPage(url, var, authenticate);
+			// rate limit update
+			http.updateRateLimits(KRequestType.NORMAL);
 			List<Status> nextpage = Status.getStatuses(json);
 			// This test replaces size<20. It requires an extra call to Twitter.
 			// But it fixes a bug whereby retweets aren't counted and can thus cause
@@ -1321,8 +1323,6 @@ public class Twitter implements Serializable {
 //			pageNumber++;
 			var.put("max_id", maxId.toString());
 		}
-		// rate limit update
-		http.updateRateLimits(KRequestType.NORMAL);
 		return msgs;
 	}
 

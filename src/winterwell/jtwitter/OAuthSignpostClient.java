@@ -110,6 +110,7 @@ implements IHttpClient, Serializable {
 		}
 		c.setTimeout(timeout);
 		c.setRetryOnError(retryOnError);
+		c.setMinRateLimit(minRateLimit);
 		return c;
 	}
 	

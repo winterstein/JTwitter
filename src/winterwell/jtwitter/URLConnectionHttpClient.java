@@ -485,6 +485,10 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 */
 	@Override
 	public void updateRateLimits(KRequestType reqType) {
+		// always update NORMAL
+		if (reqType!=KRequestType.NORMAL) {
+			updateRateLimits(KRequestType.NORMAL);
+		}
 		String limit = null, remaining = null, reset = null;
 		switch (reqType) {
 		case NORMAL:
@@ -557,6 +561,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		URLConnectionHttpClient c = new URLConnectionHttpClient(name, password);
 		c.setTimeout(timeout);
 		c.setRetryOnError(retryOnError);
+		c.setMinRateLimit(minRateLimit);
 		return c;
 	}
 

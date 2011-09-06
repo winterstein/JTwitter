@@ -173,6 +173,7 @@ public class Twitter_Users {
 					followedScreenName);
 			String page = http.getPage(jtwit.TWITTER_URL + "/friendships/exists.json", 
 							vars, http.canAuthenticate());
+			http.updateRateLimits(KRequestType.NORMAL);
 			return Boolean.valueOf(page);
 		} catch (TwitterException.E403 e) {
 			if (e instanceof SuspendedUser) {
