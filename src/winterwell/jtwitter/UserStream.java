@@ -68,7 +68,7 @@ public class UserStream extends AStream {
 			tweets.add(status);
 		}
 		// get your traffic
-		List<Status> updates = jtwit2.getUserTimelineWithRetweets(jtwit2.getScreenName());
+		List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
 		for (Status status : updates) {
 			if (tweets.contains(status)) continue;
 			tweets.add(status);
