@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import winterwell.jtwitter.TwitterException.Parsing;
 import winterwell.utils.web.WebUtilsTest;
 
 /**

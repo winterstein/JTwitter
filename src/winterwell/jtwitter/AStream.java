@@ -9,20 +9,16 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.AStream.IListen;
-import winterwell.jtwitter.AStream.Outage;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.utils.reporting.Log;

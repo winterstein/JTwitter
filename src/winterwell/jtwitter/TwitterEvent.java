@@ -5,8 +5,6 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import winterwell.jtwitter.Twitter.ITweet;
-
 public class TwitterEvent {
 
 	public static interface Type {

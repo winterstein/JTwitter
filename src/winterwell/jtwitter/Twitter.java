@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;

@@ -10,17 +10,13 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.Map;
 
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.HttpURLConnectionRequestAdapter;
-import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.http.HttpRequest;
 import winterwell.jtwitter.Twitter.IHttpClient;
 

@@ -4,22 +4,10 @@
 package winterwell.jtwitter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import winterwell.jtwitter.AStream.Outage;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.TodoException;
 
 /**
  * @deprecated There are bugs on Twitter's end -- the messages returned by this

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.ConnectException;
@@ -21,8 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lgpl.haustein.Base64Encoder;
-
-import oauth.signpost.exception.OAuthException;
 
 import org.json.JSONObject;
 

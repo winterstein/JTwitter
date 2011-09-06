@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 
-public class TwitterAccountTest {
+public class Twitter_AccountTest {
 
 	@Test
 	public void testVerifyCredentials() {

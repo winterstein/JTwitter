@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import winterwell.bob.BuildTask;
 import winterwell.bob.tasks.CompileTask;
@@ -6,6 +8,7 @@ import winterwell.bob.tasks.CopyTask;
 import winterwell.bob.tasks.GitTask;
 import winterwell.bob.tasks.JarTask;
 import winterwell.bob.tasks.JavaDocTask;
+import winterwell.bob.tasks.ZipTask;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterTest;
@@ -23,6 +26,7 @@ public class BuildJTwitter extends BuildTask {
 		System.out.println(base.getAbsolutePath());
 		File bin = new File(base, "bin");
 		File src = new File(base, "src");
+		File lib = new File(base, "lib");
 		assert src.isDirectory();
 		// Compile
 		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
@@ -36,15 +40,24 @@ public class BuildJTwitter extends BuildTask {
 		JarTask jar = new JarTask(jarFile, bin);
 //		jar.setAppend(true);
 		jar.run();
-		JarTask jar2 = new JarTask(new File(base, "jtwitter.jar"), src);
-		jar2.setAppend(true);
-		jar2.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, Twitter.version);
-		jar2.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, Twitter.class.getCanonicalName());
-		jar2.run();
+		
+//		JarTask jar2 = new JarTask(new File(base, "jtwitter.jar"), src);
+//		jar2.setAppend(true);
+//		jar2.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, Twitter.version);
+//		jar2.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, Twitter.class.getCanonicalName());
+//		jar2.run();
+		
 		// Doc
 		File doc = new File(base, "doc");
 		JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);
 		doctask.run();
+		
+		// zip
+		File zipFile = new File(base, "jtwitter-"+Twitter.version+".zip");
+		List<File> inputFiles = Arrays.asList(jarFile, src, lib, new File(base, "test"));
+		ZipTask zipTask = new ZipTask(zipFile, inputFiles, base);
+		zipTask.run();
+		
 		// Publish to www
 		// FIXME: Hardcoded path
 		File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
