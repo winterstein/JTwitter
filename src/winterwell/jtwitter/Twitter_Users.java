@@ -27,6 +27,25 @@ import winterwell.jtwitter.TwitterException.SuspendedUser;
  */
 public class Twitter_Users {
 
+	/**
+	 * Switches off notifications for updates from the specified user <i>who
+	 * must already be a friend</i>.
+	 *
+	 * @param screenName
+	 *            Stop getting notifications from this user, who must already be
+	 *            one of your friends.
+	 * @return the specified user
+	 */
+	public User leaveNotifications(String screenName) {
+		Map<String, String> vars = InternalUtils.asMap("screen_name", screenName);
+		String page = http.getPage(jtwit.TWITTER_URL + "/notifications/leave.json",
+				vars, true);
+		try {
+			return new User(new JSONObject(page), null);
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(page, e);
+		}
+	}
 
 	/**
 	 * Common backend for {@link #bulkShow(List)} and
