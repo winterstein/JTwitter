@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.jtwitter.Twitter.KRequestType;
 
 /**
  * Access the account methods: e.g. change your profile colours.
@@ -86,6 +87,7 @@ public class Twitter_Account {
 	public User verifyCredentials() throws TwitterException.E401 {
 		String url = jtwit.TWITTER_URL+"/account/verify_credentials.json";
 		String json = jtwit.getHttpClient().getPage(url, null, true);
+		jtwit.getHttpClient().updateRateLimits(KRequestType.NORMAL);
 		// store the access level info
 		IHttpClient client = jtwit.getHttpClient();
 		String al = client.getHeader("X-Access-Level");
