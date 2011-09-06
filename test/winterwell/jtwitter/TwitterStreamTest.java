@@ -153,6 +153,27 @@ public class TwitterStreamTest {
 	}
 	
 	@Test
+	public void testStreamAndSearch(){
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit2 = TwitterTest.newTestTwitter2();
+		String jtSName = jtwit.getSelf().screenName;
+		String jt2SName = jtwit2.getSelf().screenName;
+		
+		List<String> blob2 = new ArrayList<String>();
+		blob2.add("hello");
+		
+		TwitterStream ts = new TwitterStream(jtwit);
+		ts.setTrackKeywords(blob2);
+		ts.connect();
+
+		TwitterStream ts2 = new TwitterStream(jtwit2);
+		
+		ts2.setTrackKeywords(blob2);
+		ts2.connect();
+		
+	}
+	
+	@Test
 	public void testTSGetMentions() throws InterruptedException {
 		Twitter jtwit = TwitterTest.newTestTwitter();
 		Twitter jtwit2 = TwitterTest.newTestTwitter2();
