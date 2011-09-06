@@ -1007,6 +1007,7 @@ public class Twitter implements Serializable {
 	 * @see #getSelf()
 	 */
 	public String getScreenName() {
+		if (name!=null) return name;
 		// load if need be
 		getSelf();		
 		return name;
