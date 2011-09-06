@@ -505,10 +505,27 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			reset = getHeader("X-MediaRateLimit-Reset");
 			break; 
 		}
-		if (limit != null) {
-			rateLimits.put(reqType, new RateLimit(limit, remaining, reset));
+		if (limit == null) return;
+		rateLimits.put(reqType, new RateLimit(limit, remaining, reset));		
+		// Stop early to protect limits?
+		if (minRateLimit > 0 && Integer.valueOf(limit) <= minRateLimit) {
+			throw new TwitterException.RateLimit("Pre-emptive rate-limit block."); 
 		}
 	}
+	
+
+	int minRateLimit;
+	
+	/**
+	 * Use this to protect your Twitter API rate-limit.
+	 * E.g. if you want to keep some credit in reserve for core activity.
+	 * 0 by default. If set above zero, this JTwitter object will start pre-emptively
+	 * throwing rate-limit exceptions when it gets down to the specified level.
+	 */
+	public void setMinRateLimit(int minRateLimit) {
+		this.minRateLimit = minRateLimit;
+	}
+	
 
 	@Override
 	public HttpURLConnection post2_connect(String uri, Map<String, String> vars) 

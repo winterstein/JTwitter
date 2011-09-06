@@ -104,6 +104,7 @@ import winterwell.jtwitter.TwitterException.SuspendedUser;
 public class Twitter implements Serializable {
 	private static final long serialVersionUID = 1L;	
 	
+	
 	/**
 	 * Geo-location API methods.
 	 */
