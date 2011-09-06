@@ -4,8 +4,10 @@
 This release does a large (but cosmetic) refactoring:
  - Status, User and Message now have their own files. They were getting too large
  to be comfortably held in Twitter.
- - User-related methods moved into Twitter_Users.
+ - User-related methods moved into TwitterUsers.
  However (to limit the edits required) most methods can still be called via Twitter as before. 
+ - Extra support for keeping within rate-limits in SignpostHttpClient
+ - Bug fix for TwitterStream using track with no keywords / follow-ids 
 
 2.2:
  - Added ITweet.getMentions() to increase the overlap between Status and Message.
