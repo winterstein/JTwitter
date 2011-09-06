@@ -2412,7 +2412,8 @@ public class Twitter implements Serializable {
 		String jsonTrends = http.getPage(
 				TWITTER_URL + "/trends/"+woeid+".json", null, false);
 		try {
-			JSONObject json1 = new JSONObject(jsonTrends);
+			JSONArray jarr = new JSONArray(jsonTrends);
+			JSONObject json1 = jarr.getJSONObject(0);
 			JSONArray json2 = json1.getJSONArray("trends");
 			List<String> trends = new ArrayList<String>();
 			for (int i = 0; i < json2.length(); i++) {
