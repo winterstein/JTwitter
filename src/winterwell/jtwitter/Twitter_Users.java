@@ -49,7 +49,7 @@ public class Twitter_Users {
 
 	/**
 	 * Common backend for {@link #bulkShow(List)} and
-	 * {@link #bulkShowById(List)}. 
+	 * {@link #bulkShowById(List)}. Works in batches of 100.
 	 * <p>
 	 * This will throw exceptions from the 1st page of results, but swallow them
 	 * from subsequent pages (which are likely to be rate limit errors).
@@ -289,6 +289,7 @@ public class Twitter_Users {
 		while (cursor != 0 && ! jtwit.enoughResults(ids)) {
 			vars.put("cursor", String.valueOf(cursor));
 			String json = http.getPage(url, vars, http.canAuthenticate());
+			http.updateRateLimits(KRequestType.NORMAL);
 			try {
 				// it seems Twitter will occasionally return a raw array
 				JSONArray jarr;
@@ -340,6 +341,7 @@ public class Twitter_Users {
 			try {
 				jobj = new JSONObject(http.getPage(url, vars, http
 						.canAuthenticate()));
+				http.updateRateLimits(KRequestType.NORMAL);
 				users.addAll(User.getUsers(jobj.getString("users")));
 				cursor = new Long(jobj.getString("next_cursor"));
 			} catch (JSONException e) {
