@@ -354,6 +354,7 @@ public class Twitter implements Serializable {
 		/**
 		 * Update the rate limits for the given type of api call.
 		 */
+		// Possibly move this into OAuthSignpostClient so it can be done consistently at the actual call level.
 		void updateRateLimits(KRequestType rType);
 
 		/**
