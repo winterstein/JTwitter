@@ -1,7 +1,11 @@
 package winterwell.jtwitter;
 
 import java.io.Serializable;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +23,14 @@ public class Place implements Serializable {
 	private String countryCode;
 	private String name;
 	private String country;
+	private List<LatLong> boundingBox;
+	
+	/**
+	 * @return list of lat/long pairs
+	 */
+	public List<LatLong> getBoundingBox() {
+		return boundingBox;
+	}
 	
 	@Override
 	public String toString() {
@@ -77,7 +89,45 @@ public class Place implements Serializable {
 		if (name==null) name = InternalUtils.jsonGet("name", _place);
 		countryCode = InternalUtils.jsonGet("country_code", _place);
 		country = InternalUtils.jsonGet("country", _place);		
-		// TODO bounding box
+		// bounding box
+		if (_place.has("bounding_box")) {
+			JSONObject bbox = _place.getJSONObject("bounding_box");
+			JSONArray coords = bbox.getJSONArray("coordinates");
+			// pointless nesting?
+			coords = coords.getJSONArray(0);
+			List<LatLong> coordinates = new ArrayList();
+			for(int i=0,n=coords.length(); i<n; i++) {
+				// these are longitude, latitude pairs
+				JSONArray pt = coords.getJSONArray(i);
+				LatLong x = new LatLong(pt.getDouble(1), pt.getDouble(0));
+				coordinates.add(x);
+			}
+			this.boundingBox = coordinates;
+		}
+	}
+	
+	/**
+	 * A latitude-longitude coordinate.
+	 */
+	public static final class LatLong extends AbstractList<Double> {
+
+		public final double latitude;
+		public final double longitude;
+
+		public LatLong(double latitude, double longitude) {
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		@Override
+		public Double get(int index) {
+			return index==0? latitude : longitude;
+		}
+
+		@Override
+		public int size() {
+			return 2;
+		}		
 	}
 
 	/**
