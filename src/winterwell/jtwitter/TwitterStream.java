@@ -119,8 +119,9 @@ public class TwitterStream extends AStream {
 	HttpURLConnection connect2() throws Exception {
 		connect3_rateLimit();
 
-		String url = "https://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
+		String url = "https://stream.twitter.com/1/statuses/"+method+".json";
 		Map<String, String> vars = new HashMap();
+		vars.put("delimited", "length");
 		if (follow!=null && ! follow.isEmpty()) {
 			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
 		}

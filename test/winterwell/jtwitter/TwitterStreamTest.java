@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -65,6 +66,20 @@ public class TwitterStreamTest {
 		sampler2.connect();
 		Thread.sleep(500);						
 		sampler2.close();
+	}
+	
+
+	@Test
+	public void testTrack() throws InterruptedException {
+		Twitter jtwit = new TwitterTest().newTestTwitter();
+		TwitterStream ts = new TwitterStream(jtwit);
+		ts.setTrackKeywords(Arrays.asList("alice", "bob", "carol", "david"));
+		ts.connect();
+		Thread.sleep(2000);
+		List<ITweet> list = ts.popTweets();
+		assert ! list.isEmpty();
+		System.out.println(list);
+		ts.close();
 	}
 	
 	@Test
