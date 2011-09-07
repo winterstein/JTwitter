@@ -23,13 +23,17 @@ public class TwitterStream extends AStream {
 	 */
 	private static Map<String, AStream> user2stream = new ConcurrentHashMap();
 
+	public List<String> getTrackKeywords() {
+		return track;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("TwitterStream");
 		sb.append("["+method);
-		if (track!=null) sb.append(" track:"+InternalUtils.join(track, 0, 3));
-		if (follow!=null) sb.append(" follow:"+InternalUtils.join(follow, 0, 3));
-		if (locns!=null) sb.append(" in:"+InternalUtils.join(locns, 0, 3));
+		if (track!=null) sb.append(" track:"+InternalUtils.join(track, 0, 5));
+		if (follow!=null) sb.append(" follow:"+InternalUtils.join(follow, 0, 5));
+		if (locns!=null) sb.append(" in:"+InternalUtils.join(locns, 0, 5));
 		sb.append("]");
 		return sb.toString();
 	}

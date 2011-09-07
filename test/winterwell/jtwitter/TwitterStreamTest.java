@@ -82,6 +82,7 @@ public class TwitterStreamTest {
 		ts.close();
 	}
 	
+	
 	@Test
 	public void testConnectWithTerm() throws InterruptedException {
 		Twitter jtwit = new TwitterTest().newTestTwitter();

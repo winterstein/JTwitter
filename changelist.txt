@@ -1,6 +1,9 @@
 # JTwitter Change list 
 
-2.3: Breaking changes!
+2.3.1:
+ - Largely cosmetic edits in streaming
+ 
+2.3: BIG BREAKING CHANGES!
 This release does a large (but cosmetic) refactoring:
  - Status, User and Message now have their own files. They were getting too large
  to be comfortably held in Twitter.

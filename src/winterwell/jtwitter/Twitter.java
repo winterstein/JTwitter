@@ -196,8 +196,10 @@ public class Twitter implements Serializable {
 		public String toString() {
 			// There is a strange bug where -- rarely -- end > tweet length!
 			// TODO is there a pattern or is it just a random Twitter error?
-			int e = Math.max(end, tweet.getText().length());
-			return tweet.getText().substring(start, e);
+			String text = tweet.getText();			
+			int e = Math.max(end, text.length());
+			int s = Math.min(start, e);
+			return text.substring(s, e);
 		}
 
 		static List<TweetEntity> parse(ITweet tweet, KEntityType type, JSONObject jsonEntities) throws JSONException
@@ -460,7 +462,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.3";
+	public final static String version = "2.3.1";
 
 	// TODO
 	// c.f. https://dev.twitter.com/discussions/1059

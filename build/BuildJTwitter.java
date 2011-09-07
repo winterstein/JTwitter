@@ -53,10 +53,17 @@ public class BuildJTwitter extends BuildTask {
 		doctask.run();
 		
 		// zip
+		// ... clean out the old
+		File[] zips = FileUtils.ls(base, "jtwitter.+zip");
+		for (File file : zips) {
+			FileUtils.delete(file);
+		}		
 		File zipFile = new File(base, "jtwitter-"+Twitter.version+".zip");
 		List<File> inputFiles = Arrays.asList(jarFile, src, lib, new File(base, "test"));
 		ZipTask zipTask = new ZipTask(zipFile, inputFiles, base);
 		zipTask.run();
+		GitTask git0 = new GitTask(GitTask.ADD, zipFile);
+		git0.run();
 		
 		// Publish to www
 		// FIXME: Hardcoded path
@@ -77,7 +84,7 @@ public class BuildJTwitter extends BuildTask {
 		FileUtils.write(webPageFile, webpage);
 		
 		// Git stuff
-		// Commit changes
+		// Commit changes		
 		GitTask git = new GitTask(GitTask.COMMIT, webDir);
 		git.setMessage("Publishing JTwitter");
 		git.run();

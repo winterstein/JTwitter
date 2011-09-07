@@ -126,6 +126,10 @@ public abstract class AStream implements Closeable {
 			this.sinceId = sinceId;
 			this.untilTime = untilTime;
 		}		
+		@Override
+		public String toString() {
+			return "[id:"+sinceId+" to time:"+untilTime+"]";
+		}
 	}
 	
 	/**
