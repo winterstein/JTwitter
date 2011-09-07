@@ -25,6 +25,7 @@ public class TwitterStreamTest {
 		ts.close();
 	}
 	
+	
 	@Test
 	public void testSampler() throws InterruptedException {
 		Twitter jtwit2 = TwitterTest.newTestTwitter2();

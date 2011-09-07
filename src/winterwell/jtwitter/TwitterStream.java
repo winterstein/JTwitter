@@ -121,7 +121,7 @@ public class TwitterStream extends AStream {
 
 		String url = "https://stream.twitter.com/1/statuses/"+method+".json?delimited=length";
 		Map<String, String> vars = new HashMap();
-		if (follow!=null) {
+		if (follow!=null&&(!follow.isEmpty())) {
 			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
 		}
 		if (track!=null) {
