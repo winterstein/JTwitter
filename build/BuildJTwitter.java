@@ -72,7 +72,7 @@ public class BuildJTwitter extends BuildTask {
 		String webpage = FileUtils.read(webPageFile);
 		webpage = webpage.replaceAll("<span class='version'>[0-9\\.]+</span>", 
 									"<span class='version'>"+Twitter.version+"</span>");
-		webpage = webpage.replaceAll("jtwitter-[0-9\\-]+.zip", zipFile.getName());
+		webpage = webpage.replaceAll("jtwitter-[0-9\\-\\.]+.zip", zipFile.getName());
 		FileUtils.write(webPageFile, webpage);
 		
 		// Git stuff

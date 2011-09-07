@@ -244,6 +244,8 @@ public class TwitterException extends RuntimeException {
 	/**
 	 * An unauthorised exception. This is thrown (eg) if a password is wrong
 	 * or a login is required.
+	 * It may also be thrown when accessing a protected stream (you might
+	 * expect an E403 there, but be prepared for an E401).
 	 */
 	public static class E401 extends E40X {
 		public E401(String string) {

@@ -41,6 +41,10 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {
 	
+	/**
+	 * A random user who protects their tweets.
+	 */
+	static String PROTECTED_USER = "laurajarvis_";
 	
 	/**
 	 * Location + OR = Twitter API fail -- July 2011
