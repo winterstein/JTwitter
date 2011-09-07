@@ -157,7 +157,10 @@ public class TwitterStream extends AStream {
 	 */
 	public void setFollowUsers(List<Long> userIds) {
 		method = KMethod.filter;
+//		if (userIds!=null&&! userIds.isEmpty()){
 		follow = userIds;
+//		}
+		//If not, really don't! it screws stuff up.
 	}
 
 	/**
