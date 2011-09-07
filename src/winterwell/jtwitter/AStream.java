@@ -40,6 +40,9 @@ import winterwell.utils.reporting.Log;
 public abstract class AStream implements Closeable {
 
 
+	//TODO
+	// reconnects	MAX_RECONNECTS_PER_HOUR	
+	
 	/**
 	 * Start dropping messages after this.
 	 */
@@ -519,6 +522,7 @@ public abstract class AStream implements Closeable {
 		forgotten += forgetIfFull(events);		
 	}
 
+	// TODO move this into the StreamGobbler thread for faster pick-up
 	public void reconnect() {		
 		// Try again as advised by dev.twitter.com:
 		// 1. straightaway		
