@@ -63,6 +63,7 @@ public class BuildJTwitter extends BuildTask {
 		File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
 		assert jarFile.exists();
 		FileUtils.copy(jarFile, webDir);
+		FileUtils.copy(zipFile, webDir);
 		FileUtils.copy(new File(src, "winterwell/jtwitter/Twitter.java"), webDir);
 		FileUtils.copy(new File(base,"changelist.txt"), webDir);
 		CopyTask copydoc = new CopyTask(doc, new File(webDir, "javadoc"));
