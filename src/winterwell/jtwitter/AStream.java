@@ -208,6 +208,8 @@ public abstract class AStream implements Closeable {
 	/**
 	 * A closed stream can be restarted.
 	 */
+	// Note: this does NOT close the gobbler if called from the gobbler thread!
+	// But it always closes the input-stream.
 	synchronized public void close() {		
 		// close the gobbler (unless it's the gobbler who's calling this)
 		if (readThread != null && Thread.currentThread() != readThread) {
@@ -235,21 +237,21 @@ public abstract class AStream implements Closeable {
 	 * @see #reconnect()
 	 */
 	synchronized public void connect() throws TwitterException {
-		if (isConnected()) return;
+		if (isConnected()) return;		
 		// close all first
 		close();
+		assert readThread==null || readThread.stream == this : this;
 		try {
 			HttpURLConnection con = connect2();
 			stream = con.getInputStream();
 			if (readThread==null) {
-				readThread = new StreamGobbler(stream, this);
+				readThread = new StreamGobbler(this);
 				readThread.setName("Gobble:"+toString());
 				readThread.start();	
 			} else {
 				// we're being started from the gobbler itself
 				assert Thread.currentThread() == readThread : this;
-				assert readThread.stream == null : this;
-				readThread.stream = this;
+				assert readThread.stream == this : readThread;
 			}
 			// check the connection took
 			if (isConnected()) return;
@@ -658,6 +660,12 @@ public abstract class AStream implements Closeable {
 		this.previousCount = previousCount;
 	}
 
+	synchronized void reconnectFromGobblerThread() {
+		assert Thread.currentThread() == readThread : this;
+		if (isConnected()) return;
+		reconnect();
+	}
+
 
 }
 
@@ -671,7 +679,7 @@ public abstract class AStream implements Closeable {
  */
 final class StreamGobbler extends Thread {
 	
-	AStream stream;
+	final AStream stream;
 	
 	@Override
 	protected void finalize() throws Throwable {
@@ -696,7 +704,7 @@ final class StreamGobbler extends Thread {
 
 	volatile boolean stopFlag;
 	
-	public StreamGobbler(InputStream is, AStream stream) {
+	public StreamGobbler(AStream stream) {
 		setDaemon(true);
 		this.stream = stream;
 	}
@@ -742,6 +750,10 @@ final class StreamGobbler extends Thread {
 		}
 		
 		// push notifications
+		readJson2_notifyListeners(json);
+	}
+
+	private void readJson2_notifyListeners(String json) {
 		if (stream.listeners.isEmpty()) return;
 		synchronized (stream.listeners) {
 			try {
@@ -789,11 +801,11 @@ final class StreamGobbler extends Thread {
 	@Override
 	public void run() {
 		while( ! stopFlag) {
-			// not started yet?
-			if (stream==null) {
-				Utils.sleep(2);
-				continue;
-			}
+//			// not started yet?
+//			if (stream.stream==null) {
+//				Utils.sleep(2);
+//				continue;
+//			}
 			assert stream.stream != null : stream;
 			try {
 				InputStreamReader isr = new InputStreamReader(stream.stream);
@@ -811,13 +823,11 @@ final class StreamGobbler extends Thread {
 				offTime = System.currentTimeMillis();
 				// try a reconnect?
 				if ( ! stream.autoReconnect) return; // no - break out of the loop
-				// Note: the thread can also or hang die, so we also do reconnects from
-				// the AStream.read() method.				
-				// Drop our link -- which will be reset on success.
-				AStream _stream = stream;
-				stream = null;
+				// Note: the thread can also hang or die, so we also do reconnects from
+				// the AStream.read() method.
 				try {
-					_stream.reconnect();
+					stream.reconnectFromGobblerThread();
+					assert stream.stream != null : stream;
 				} catch (Exception e) {
 					// #fail
 					ex = e;

@@ -28,7 +28,7 @@ public class TwitterStreamTest {
 	
 	@Test
 	public void testBadConnectionFor5Minutes() throws InterruptedException {
-		Twitter jtwit = new TwitterTest().newTestTwitter();
+		Twitter jtwit = new TwitterTest().newBadTestTwitter();
 		BadHttpClient bhc = (BadHttpClient) jtwit.getHttpClient();
 		bhc.MAX_UPTIME = 30*1000;
 		bhc.P_SUCCESS = 0.4;
@@ -54,7 +54,7 @@ public class TwitterStreamTest {
 		sampler.setAutoReconnect(true);
 		sampler.connect();		
 		int count = 0;
-		while(true) {
+		for(int i=0; i<10; i++) {
 			Thread.sleep(5000);			
 			sampler.fillInOutages();
 			List<ITweet> tweets = sampler.popTweets();
@@ -62,7 +62,7 @@ public class TwitterStreamTest {
 			count += tweets.size();
 			System.out.print("\t"+count);
 		}
-//		sampler.close();
+		sampler.close();
 	}
 	
 	@Test
