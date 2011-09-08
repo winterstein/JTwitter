@@ -62,15 +62,24 @@ public class BuildJTwitter extends BuildTask {
 		List<File> inputFiles = Arrays.asList(jarFile, src, lib, new File(base, "test"));
 		ZipTask zipTask = new ZipTask(zipFile, inputFiles, base);
 		zipTask.run();
-		GitTask git0 = new GitTask(GitTask.ADD, zipFile);
-		git0.run();
 		
 		// Publish to www
 		// FIXME: Hardcoded path
 		File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
 		assert jarFile.exists();
 		FileUtils.copy(jarFile, webDir);
-		FileUtils.copy(zipFile, webDir);
+								
+		File zip2 = FileUtils.copy(zipFile, webDir);
+		// ... clean out the old zips
+		zips = FileUtils.ls(webDir, "jtwitter.+zip");
+		for (File file : zips) {
+			if (file.getName().equals(zip2.getName())) continue;
+			FileUtils.delete(file);
+		}
+		// git add
+		GitTask git0 = new GitTask(GitTask.ADD, zip2);
+		git0.run();
+		
 		FileUtils.copy(new File(src, "winterwell/jtwitter/Twitter.java"), webDir);
 		FileUtils.copy(new File(base,"changelist.txt"), webDir);
 		CopyTask copydoc = new CopyTask(doc, new File(webDir, "javadoc"));

@@ -329,6 +329,20 @@ public abstract class AStream implements Closeable {
 				/* so technically this counts a requested stop as an actual stop */
 				&& ! readThread.stopFlag;
 	}
+	
+	/**
+	 * @return true if connected, or if trying to reconnect.
+	 * Note: false for streams which have not yet been connected!
+	 */
+	public final boolean isAlive() {
+		if (isConnected()) return true;
+		if ( ! autoReconnect) return false;
+		// is this trying to reconnect -- or has it failed for good?
+		return readThread != null && readThread.isAlive()
+				&& ! readThread.stopFlag;
+	}
+	
+	
 
 	/**
 	 * @return the recent events. Calling this will clear the list of events.

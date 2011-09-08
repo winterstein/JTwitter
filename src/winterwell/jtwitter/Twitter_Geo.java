@@ -9,9 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Status: DRAFT!
  * Twitter's geolocation support.
- * Use {@link Twitter#geo()} to get one.
+ * Use {@link Twitter#geo()} to get one of these objects.
  * <p>
  * Conceptually, this is an extension of {@link Twitter}. The methods are
  * here because Twitter was getting crowded.

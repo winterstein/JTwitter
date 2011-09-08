@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Place.LatLong;
+
 /**
  * Support for Twitter's geo location features.
  * <p>
@@ -24,12 +26,20 @@ public class Place implements Serializable {
 	private String name;
 	private String country;
 	private List<LatLong> boundingBox;
+	private List<LatLong> geometry;
 	
 	/**
-	 * @return list of lat/long pairs
+	 * @return list of lat/long pairs. Can be null
 	 */
 	public List<LatLong> getBoundingBox() {
 		return boundingBox;
+	}
+	
+	/**
+	 * @return list of lat/long pairs. Usually null
+	 */
+	public List<LatLong> getGeometry() {
+		return geometry;
 	}
 	
 	@Override
@@ -46,7 +56,8 @@ public class Place implements Serializable {
 
 
 	/**
-	 * @return e.g. "city"
+	 * @return e.g. "city", "admin"
+	 * Often "admin" (which covers anything), so it's not clear how useful this is!
 	 */
 	public String getType() {
 		return type;
@@ -85,27 +96,36 @@ public class Place implements Serializable {
 			// TODO should we have a separate id field for Yahoo?
 		}
 		type = InternalUtils.jsonGet("place_type", _place);
+		// name and full_name seem to be much the same, e.g. "City of Edinburgh"?
 		name = InternalUtils.jsonGet("full_name", _place);
 		if (name==null) name = InternalUtils.jsonGet("name", _place);
 		countryCode = InternalUtils.jsonGet("country_code", _place);
 		country = InternalUtils.jsonGet("country", _place);		
 		// bounding box
 		if (_place.has("bounding_box")) {
-			JSONObject bbox = _place.getJSONObject("bounding_box");
-			JSONArray coords = bbox.getJSONArray("coordinates");
-			// pointless nesting?
-			coords = coords.getJSONArray(0);
-			List<LatLong> coordinates = new ArrayList();
-			for(int i=0,n=coords.length(); i<n; i++) {
-				// these are longitude, latitude pairs
-				JSONArray pt = coords.getJSONArray(i);
-				LatLong x = new LatLong(pt.getDouble(1), pt.getDouble(0));
-				coordinates.add(x);
-			}
-			this.boundingBox = coordinates;
+			JSONObject bbox = _place.getJSONObject("bounding_box");			
+			this.boundingBox = parseCoords(bbox);
 		}
+		if (_place.has("geometry")) {
+			JSONObject bbox = _place.getJSONObject("geometry");
+			this.geometry = parseCoords(bbox);
+		}		
 	}
 	
+	private List<LatLong> parseCoords(JSONObject bbox) throws JSONException {
+		JSONArray coords = bbox.getJSONArray("coordinates");
+		// pointless nesting?
+		coords = coords.getJSONArray(0);
+		List<LatLong> coordinates = new ArrayList();
+		for(int i=0,n=coords.length(); i<n; i++) {
+			// these are longitude, latitude pairs
+			JSONArray pt = coords.getJSONArray(i);
+			LatLong x = new LatLong(pt.getDouble(1), pt.getDouble(0));
+			coordinates.add(x);
+		}
+		return coordinates;
+	}
+
 	/**
 	 * A latitude-longitude coordinate.
 	 */
