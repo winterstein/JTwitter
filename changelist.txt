@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.3.2 (pending):
+ - Improved auto-reconnect behaviour in streams. 
+ - Added BadHttpClient for testing.
+
 2.3.1:
  - Largely cosmetic edits in streaming
  - Geometry handling in Place with a LatLong object

@@ -112,8 +112,9 @@ import winterwell.jtwitter.Twitter.TweetEntity;
 			createdAt = InternalUtils.parseDate(c);
 			sender = new User(obj.getJSONObject("sender"), null);
 			// recipient - for messages you sent
-			if (obj.has("recipient")) {
-				recipient = new User(obj.getJSONObject("recipient"), null);
+			Object recip = obj.opt("recipient");
+			if (recip instanceof JSONObject) { // Note JSONObject.has is dangerously misleading
+				recipient = new User((JSONObject) recip, null);
 			} else {
 				recipient = null;
 			}

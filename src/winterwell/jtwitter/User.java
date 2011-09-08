@@ -194,8 +194,9 @@ import org.json.JSONObject;
 				notifications = obj.optBoolean("notifications");
 				verified = obj.optBoolean("verified");
 				// relationship info -- can come in 2 formats...
-				if (obj.has("connections")) {	// from a getRelationshipInfo call
-					JSONArray cons = obj.getJSONArray("connections");
+				Object _cons = obj.opt("connections");
+				if (_cons instanceof JSONArray) {	// from a getRelationshipInfo call
+					JSONArray cons = (JSONArray) _cons;
 					boolean _following=false,_followedBy=false, _followRequested=false;
 					for(int i=0,n=cons.length(); i<n; i++) {
 						String ci = cons.getString(i);

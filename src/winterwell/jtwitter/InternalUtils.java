@@ -134,6 +134,7 @@ public class InternalUtils {
 		String s = val.toString();
 		return s;
 	}
+	
 
 	/**
 	 * Convert to a URI, or return null if this is badly formatted

@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.Utils;
 import winterwell.utils.reporting.Log;
 
 /**
@@ -136,9 +137,9 @@ public abstract class AStream implements Closeable {
 	}
 	
 	/**
-	 * 10 minutes
+	 * 15 minutes
 	 */
-	private static final int MAX_WAIT_SECONDS = 600;
+	private static final int MAX_WAIT_SECONDS = 900;
 
 	static int forgetIfFull(List incoming) {
 		// forget a batch?
@@ -150,7 +151,7 @@ public abstract class AStream implements Closeable {
 		return chop;
 	}
 
-	private boolean autoReconnect;
+	boolean autoReconnect;
 	
 	final IHttpClient client;
 	
@@ -176,7 +177,7 @@ public abstract class AStream implements Closeable {
 	
 	StreamGobbler readThread;	
 	
-	private InputStream stream;
+	InputStream stream;
 	
 	List<Object[]> sysEvents = new ArrayList();
 
@@ -204,31 +205,60 @@ public abstract class AStream implements Closeable {
 		popTweets();
 	}
 	
-	public void close() {
-		if (readThread != null) {
+	/**
+	 * A closed stream can be restarted.
+	 */
+	synchronized public void close() {		
+		// close the gobbler (unless it's the gobbler who's calling this)
+		if (readThread != null && Thread.currentThread() != readThread) {
 			readThread.pleaseStop();
+			// we mean it!
+			if (readThread.isAlive()) {
+				Utils.sleep(100);
+				readThread.interrupt();
+			}
 			readThread = null;
 		}
 		URLConnectionHttpClient.close(stream);
 		stream = null;
 	}
 	
-	public void connect() {
+	/**
+	 * Connect to Twitter.
+	 * <p>
+	 * Do nothing if we already have a good connection.
+	 * Bad or partly formed connections will be closed.
+	 * <p>
+	 * Auto-reconnect is ignored here: if there's an exception
+	 * it will be thrown and a reconnect will not be attempted.
+	 * This gives a fast-return.
+	 * @see #reconnect()
+	 */
+	synchronized public void connect() throws TwitterException {
+		if (isConnected()) return;
+		// close all first
 		close();
 		try {
 			HttpURLConnection con = connect2();
 			stream = con.getInputStream();
-			readThread = new StreamGobbler(stream, this);
-			readThread.setName("Gobble:"+toString());
-			readThread.start();
+			if (readThread==null) {
+				readThread = new StreamGobbler(stream, this);
+				readThread.setName("Gobble:"+toString());
+				readThread.start();	
+			} else {
+				// we're being started from the gobbler itself
+				assert Thread.currentThread() == readThread : this;
+				assert readThread.stream == null : this;
+				readThread.stream = this;
+			}
 			// check the connection took
+			if (isConnected()) return;
 			Thread.sleep(10);
 			if ( ! isConnected()) {
 				throw new TwitterException(readThread.ex);
 			}
-		} catch (RuntimeException e) {
-			throw e;
 		} catch (Exception e) {
+			if (e instanceof TwitterException) throw (TwitterException)e;
 			throw new TwitterException(e);
 		}
 	}
@@ -236,7 +266,8 @@ public abstract class AStream implements Closeable {
 	abstract HttpURLConnection connect2() throws Exception;
 	
 	/**
-	 * Use the REST API to fill in when possible. 
+	 * Use the REST API to fill in outages when possible.
+	 * Filled-in outages will be removed from the list. 
 	 * <p>
 	 * In accordance with best-practice, this method will skip over 
 	 * very recent outages (which will be picked up by subsequent calls 
@@ -299,6 +330,14 @@ public abstract class AStream implements Closeable {
 		return forgotten;
 	}
 
+	/**
+	 * @return the list outages so far.
+	 * <p>
+	 * This is the actual list used.
+	 * You can remove items from this list to quietly forget about them.
+	 * Use {@link #addOutage(Outage)} to add items in the correct order.
+	 * The list size is capped to avoid memory leakage.
+	 */
 	public final List<Outage> getOutages() {
 		return outages;
 	}
@@ -323,6 +362,14 @@ public abstract class AStream implements Closeable {
 		return tweets;
 	}
 
+	/**
+	 * Many users will want to use {@link #isAlive()} instead,
+	 * which takes into account auto-reconnect behaviour.
+	 * 
+	 * @return true if connected to Twitter without error
+	 * (and not in the middle of a stop-sequence).
+	 * @see #isAlive()
+	 */
 	public final  boolean isConnected() {
 		return readThread != null && readThread.isAlive() 
 				&& readThread.ex==null 
@@ -382,30 +429,20 @@ public abstract class AStream implements Closeable {
 				throw new TwitterException.Parsing(json, e);
 			}
 		}		
-		if (readThread.isAlive() && readThread.ex == null) return;
+		if (isConnected()) return;
+		// orderly shutdown? that's OK
+		if (readThread!=null && readThread.stopFlag) return;
+		// Dead/zombie thread? Clean Up!
 		// close all
-		URLConnectionHttpClient.close(stream);
-		if (readThread.isAlive()) {
-			readThread.pleaseStop();
-			readThread.interrupt();
-		}
+		close();
 		// The connection is down!		
 		if ( ! autoReconnect) {
 			throw new TwitterException(readThread.ex);
 		}		
-		// reconnect
-		reconnect();
-		// store the outage
-		outages.add(new Outage(lastId, System.currentTimeMillis()));
-		// paranoia: avoid memory leaks
-		if (outages.size() > 100000) {
-			for(int i=0; i<1000; i++) {
-				outages.remove(0);
-			}
-			// add an arbitrary number to the forgotten count: 10 per outage
-			forgotten += 10000;
-		}
+		// reconnect using a different thread		
+		reconnect();		
 	}
+	
 	private void read2(String json) throws JSONException {
 		JSONObject jo = new JSONObject(json);
 
@@ -536,8 +573,33 @@ public abstract class AStream implements Closeable {
 		forgotten += forgetIfFull(events);		
 	}
 
-	// TODO move this into the StreamGobbler thread for faster pick-up
-	public void reconnect() {		
+	/**
+	 * (Re)connect to Twitter.
+	 * This can take upto 15 minutes before it gives up!
+	 * Although it will give up straight away on user error (E40X exceptions).
+	 * <p>
+	 * Stores outage information if appropriate.
+	 */
+	synchronized void reconnect() {
+		// do the reconnect (can be slow)
+		reconnect2();
+		
+		// store the outage
+		// TODO merge small outages
+		if (lastId != BigInteger.ZERO) {
+			outages.add(new Outage(lastId, System.currentTimeMillis()));
+			// paranoia: avoid memory leaks
+			if (outages.size() > 100000) {
+				for(int i=0; i<1000; i++) {
+					outages.remove(0);
+				}
+				// add an arbitrary number to the forgotten count: 10 per outage
+				forgotten += 10000;
+			}
+		}
+	}
+
+	private void reconnect2() {
 		// Try again as advised by dev.twitter.com:
 		// 1. straightaway		
 		try {
@@ -609,21 +671,21 @@ public abstract class AStream implements Closeable {
  */
 final class StreamGobbler extends Thread {
 	
-	final AStream stream;
+	AStream stream;
 	
 	@Override
 	protected void finalize() throws Throwable {
-		InternalUtils.close(is);
+		if (stream!=null) InternalUtils.close(stream.stream);
 	}
 	
 	
-	IOException ex;
+	Exception ex;
+	
 	/**
 	 * count of the number of tweets this gobbler had to drop
 	 * due to buffer size
 	 */
 	int forgotten;
-	private final InputStream is;
 
 	/**
 	 * Use synchronised blocks when editing this
@@ -635,9 +697,7 @@ final class StreamGobbler extends Thread {
 	volatile boolean stopFlag;
 	
 	public StreamGobbler(InputStream is, AStream stream) {
-//		super("gobbler");
 		setDaemon(true);
-		this.is = is;
 		this.stream = stream;
 	}
 	
@@ -646,7 +706,7 @@ final class StreamGobbler extends Thread {
 	 * output, then this will not work.
 	 */
 	public void pleaseStop() {
-		URLConnectionHttpClient.close(is);
+		if (stream!=null) URLConnectionHttpClient.close(stream.stream);
 		stopFlag = true;
 	}
 	
@@ -728,21 +788,42 @@ final class StreamGobbler extends Thread {
 
 	@Override
 	public void run() {
-		try {
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			while ( ! stopFlag) {
-				int len = readLength(br);
-				readJson(br, len);
+		while( ! stopFlag) {
+			// not started yet?
+			if (stream==null) {
+				Utils.sleep(2);
+				continue;
 			}
-		} catch (IOException ioe) {
-			if (stopFlag) {
-				// we were told to stop already so ignore
-				return;
+			assert stream.stream != null : stream;
+			try {
+				InputStreamReader isr = new InputStreamReader(stream.stream);
+				BufferedReader br = new BufferedReader(isr);
+				while ( ! stopFlag) {
+					int len = readLength(br);
+					readJson(br, len);
+				}
+			} catch (Exception ioe) {
+				if (stopFlag) {
+					// we were told to stop already so ignore
+					return;
+				}
+				ex = ioe;
+				offTime = System.currentTimeMillis();
+				// try a reconnect?
+				if ( ! stream.autoReconnect) return; // no - break out of the loop
+				// Note: the thread can also or hang die, so we also do reconnects from
+				// the AStream.read() method.				
+				// Drop our link -- which will be reset on success.
+				AStream _stream = stream;
+				stream = null;
+				try {
+					_stream.reconnect();
+				} catch (Exception e) {
+					// #fail
+					ex = e;
+					return;
+				}
 			}
-			System.out.println(ioe); //.printStackTrace();
-			ex = ioe;
-			offTime = System.currentTimeMillis();
 		}
 	}
 

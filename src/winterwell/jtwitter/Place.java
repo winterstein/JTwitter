@@ -102,13 +102,13 @@ public class Place implements Serializable {
 		countryCode = InternalUtils.jsonGet("country_code", _place);
 		country = InternalUtils.jsonGet("country", _place);		
 		// bounding box
-		if (_place.has("bounding_box")) {
-			JSONObject bbox = _place.getJSONObject("bounding_box");			
-			this.boundingBox = parseCoords(bbox);
+		Object bbox = _place.opt("bounding_box");
+		if (bbox instanceof JSONObject) {			
+			this.boundingBox = parseCoords((JSONObject) bbox);
 		}
-		if (_place.has("geometry")) {
-			JSONObject bbox = _place.getJSONObject("geometry");
-			this.geometry = parseCoords(bbox);
+		Object geo = _place.opt("geometry");
+		if (geo instanceof JSONObject) {
+			this.geometry = parseCoords((JSONObject) geo);
 		}		
 	}
 	
