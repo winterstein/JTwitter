@@ -26,6 +26,26 @@ public class TwitterStreamTest {
 		ts.close();
 	}
 	
+	@Test
+	public void testBadConnectionFor5Minutes() throws InterruptedException {
+		Twitter jtwit = new TwitterTest().newTestTwitter();
+		BadHttpClient bhc = (BadHttpClient) jtwit.getHttpClient();
+		bhc.MAX_UPTIME = 30*1000;
+		bhc.P_SUCCESS = 0.4;
+		TwitterStream ts = new TwitterStream(jtwit);
+		ts.setAutoReconnect(true);
+		ts.reconnect();
+		for(int i=0; i<5; i++) {
+			Thread.sleep(TUnit.MINUTE.getMillisecs());
+			List<TwitterEvent> events = ts.popEvents();
+			List<ITweet> tweets = ts.popTweets();
+			List<TwitterEvent> sysEvs = ts.popSystemEvents();
+		}
+		assert ts.isAlive();
+		ts.close();				
+		System.out.println(ts.getOutages());
+	}
+	
 	
 	@Test
 	public void testSampler() throws InterruptedException {

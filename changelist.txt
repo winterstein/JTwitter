@@ -3,6 +3,7 @@
 2.3.2 (pending):
  - Improved auto-reconnect behaviour in streams. 
  - Added BadHttpClient for testing.
+ - Improved json parsing to handle issues from Crockford's bad json.org code.
 
 2.3.1:
  - Largely cosmetic edits in streaming

@@ -776,8 +776,18 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 	public static Twitter newTestTwitter() {
-
 		OAuthSignpostClient client = new OAuthSignpostClient(
+				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
+				TEST_ACCESS_TOKEN[0], TEST_ACCESS_TOKEN[1]);
+		return new Twitter(TEST_USER, client);
+	}
+	
+	/**
+	 * Uses a connection client which deliberately breaks!
+	 */
+	public static Twitter newBadTestTwitter() {
+		BadHttpClient client = new BadHttpClient(
 				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
 				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
 				TEST_ACCESS_TOKEN[0], TEST_ACCESS_TOKEN[1]);
