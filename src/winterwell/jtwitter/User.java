@@ -213,6 +213,7 @@ public final class User implements Serializable {
 				followRequestSent = _followRequested;
 			} else { // from a normal User call
 				followedByYou = InternalUtils.getOptBoolean(obj, "following");
+				// Warning: Twitter have stopped sending this in many cases
 				followingYou = InternalUtils.getOptBoolean(obj, "followed_by");
 				followRequestSent = obj.optBoolean("follow_request_sent");
 			}
@@ -481,7 +482,8 @@ public final class User implements Serializable {
 	/**
 	 * Is this person following you?
 	 * 
-	 * @return true if this user is following you. Can return null if unset.
+	 * @return true if this user is following you. Can return null if unset
+	 * -- which is quite common.
 	 */
 	public Boolean isFollowingYou() {
 		return followingYou;
