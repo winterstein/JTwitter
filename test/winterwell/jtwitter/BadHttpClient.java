@@ -2,7 +2,6 @@ package winterwell.jtwitter;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
@@ -10,6 +9,11 @@ import java.util.TimerTask;
 
 import oauth.signpost.exception.OAuthException;
 
+/**
+ * A client that fails a lot -- used to test error handling.
+ * @author daniel
+ *
+ */
 public class BadHttpClient extends OAuthSignpostClient {
 	
 	/**

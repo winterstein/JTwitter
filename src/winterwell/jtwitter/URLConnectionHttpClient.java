@@ -34,9 +34,9 @@ import winterwell.jtwitter.TwitterException.Timeout;
  * TwitterException. Also has a retry-on-error mode which can help smooth out
  * Twitter's sometimes intermittent service. See
  * {@link #setRetryOnError(boolean)}.
- *
+ * 
  * @author Daniel Winterstein
- *
+ * 
  */
 public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		Serializable {
@@ -47,7 +47,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	/**
 	 * Close a reader/writer/stream, ignoring any exceptions that result. Also
 	 * flushes if there is a flush() method.
-	 *
+	 * 
 	 * @param input
 	 *            Can be null
 	 */
@@ -71,6 +71,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private Map<String, List<String>> headers;
 
+	int minRateLimit;
+
 	protected String name;
 
 	private final String password;
@@ -84,8 +86,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	private boolean retryingFlag;
 
 	/**
-	 * If true, will wait 1/2 second and make a 2nd request when presented with a
-	 * server error.
+	 * If true, will wait 1/2 second and make a 2nd request when presented with
+	 * a server error.
 	 */
 	boolean retryOnError;
 
@@ -149,6 +151,15 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		return connection;
 	}
 
+	@Override
+	public IHttpClient copy() {
+		URLConnectionHttpClient c = new URLConnectionHttpClient(name, password);
+		c.setTimeout(timeout);
+		c.setRetryOnError(retryOnError);
+		c.setMinRateLimit(minRateLimit);
+		return c;
+	}
+
 	protected final void disconnect(HttpURLConnection connection) {
 		if (connection == null)
 			return;
@@ -205,7 +216,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	}
 
 	/**
-	 * Should we retry? 
+	 * Should we retry?
+	 * 
 	 * @param url
 	 * @param vars
 	 * @param authenticate
@@ -214,9 +226,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 * @throws originalException
 	 */
 	private String getPage2_retry(String url, Map<String, String> vars,
-			boolean authenticate, TwitterException.E50X originalException) 
-	{
-		if ( ! retryOnError || retryingFlag) throw originalException;
+			boolean authenticate, TwitterException.E50X originalException) {
+		if (!retryOnError || retryingFlag)
+			throw originalException;
 		try {
 			retryingFlag = true;
 			// wait half a second before retrying
@@ -237,15 +249,15 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	@Override
 	public String post(String uri, Map<String, String> vars,
-			boolean authenticate) throws TwitterException 
-	{
+			boolean authenticate) throws TwitterException {
 		HttpURLConnection connection = null;
 		try {
 			connection = post2_connect(uri, vars);
 			// Get the response
 			processError(connection);
 			processHeaders(connection);
-			String response = InternalUtils.toString(connection.getInputStream());
+			String response = InternalUtils.toString(connection
+					.getInputStream());
 			return response;
 		} catch (TwitterException.E50X e) {
 			if (!retryOnError || retryingFlag)
@@ -267,6 +279,30 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		}
 	}
 
+	@Override
+	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
+			throws Exception {
+		InternalUtils.count(uri);
+		HttpURLConnection connection = (HttpURLConnection) new URL(uri)
+				.openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		// post methods are alwasy with authentication
+		setAuthentication(connection, name, password);
+
+		connection.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded");
+		connection.setReadTimeout(timeout);
+		connection.setConnectTimeout(timeout);
+		// build the post body
+		String payload = post2_getPayload(vars);
+		connection.setRequestProperty("Content-Length", "" + payload.length());
+		OutputStream os = connection.getOutputStream();
+		os.write(payload.getBytes());
+		close(os);
+		return connection;
+	}
+
 	protected String post2_getPayload(Map<String, String> vars) {
 		if (vars == null || vars.isEmpty())
 			return "";
@@ -285,7 +321,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	/**
 	 * Throw an exception if the connection failed
-	 *
+	 * 
 	 * @param connection
 	 */
 	void processError(HttpURLConnection connection) {
@@ -326,18 +362,14 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 							+ url);
 				throw new TwitterException.E404(error + "\n" + url);
 			}
-			if (code == 406) {
+			if (code == 406)
 				throw new TwitterException.E406(error + "\n" + url);
-			}
-			if (code == 413) {
+			if (code == 413)
 				throw new TwitterException.E413(error + "\n" + url);
-			}
-			if (code == 416) {
+			if (code == 416)
 				throw new TwitterException.E416(error + "\n" + url);
-			}
-			if (code == 420) {
+			if (code == 420)
 				throw new TwitterException.TooManyLogins(error + "\n" + url);
-			}
 			if (code >= 500 && code < 600)
 				throw new TwitterException.E50X(error + "\n" + url);
 
@@ -382,25 +414,20 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				throw new TwitterException.Repetition(errorPage + "\n" + url);
 			if (errorPage.contains("unable to follow more people"))
 				throw new TwitterException.FollowerLimit(name + " " + errorPage);
-			if (errorPage.contains("application is not allowed to access")) {
-				throw new TwitterException.AccessLevel(name+" "+errorPage);
-			}
+			if (errorPage.contains("application is not allowed to access"))
+				throw new TwitterException.AccessLevel(name + " " + errorPage);
 		}
 		throw new TwitterException.E403(error + "\n" + url + " (" + getName()
 				+ ")");
 	}
 
 	private void processError2_rateLimit(HttpURLConnection connection,
-			int code, String error)
-	{
+			int code, String error) {
 		boolean rateLimitExceeded = error.contains("Rate limit exceeded");
 		if (rateLimitExceeded) {
 			// store the rate limit info
 			processHeaders(connection);
-			for(KRequestType rt : KRequestType.values()) {
-				updateRateLimits(rt);
-			}
-			throw new TwitterException.RateLimit(getName()+": "+error);
+			throw new TwitterException.RateLimit(getName() + ": " + error);
 		}
 		// The Rate limiter can sometimes cause a 400 Bad Request
 		if (code == 400) {
@@ -420,11 +447,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	/**
 	 * Cache headers for {@link #getHeader(String)}
-	 *
+	 * 
 	 * @param connection
 	 */
-	protected void processHeaders(HttpURLConnection connection) {
+	protected final void processHeaders(HttpURLConnection connection) {
 		headers = connection.getHeaderFields();
+		updateRateLimits();
 	}
 
 	private String read(InputStream stream) throws IOException {
@@ -460,6 +488,16 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	}
 
 	/**
+	 * Use this to protect your Twitter API rate-limit. E.g. if you want to keep
+	 * some credit in reserve for core activity. 0 by default. If set above
+	 * zero, this JTwitter object will start pre-emptively throwing rate-limit
+	 * exceptions when it gets down to the specified level.
+	 */
+	public void setMinRateLimit(int minRateLimit) {
+		this.minRateLimit = minRateLimit;
+	}
+
+	/**
 	 * False by default. Setting this to true switches on a robustness
 	 * workaround: when presented with a 50X server error, the system will wait
 	 * 1/2 a second and make a second attempt.
@@ -479,90 +517,25 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				+ (password == null ? "null" : "XXX") + "]";
 	}
 
-	/*
-	 * {@link #processHeaders(HttpURLConnection)} MUST have been
-	 * called first.
-	 */
-	@Override
-	public void updateRateLimits(KRequestType reqType) {
-		// always update NORMAL
-		if (reqType!=KRequestType.NORMAL) {
-			updateRateLimits(KRequestType.NORMAL);
-		}
-		String limit = null, remaining = null, reset = null;
-		switch (reqType) {
-		case NORMAL:
-		case SHOW_USER:
-			limit = getHeader("X-RateLimit-Limit");
-			remaining = getHeader("X-RateLimit-Remaining");
-			reset = getHeader("X-RateLimit-Reset");
-			break;
-		case SEARCH:
-		case SEARCH_USERS:
-			limit = getHeader("X-FeatureRateLimit-Limit");
-			remaining = getHeader("X-FeatureRateLimit-Remaining");
-			reset = getHeader("X-FeatureRateLimit-Reset");
-			break;
-		case UPLOAD_MEDIA:
-			limit = getHeader("X-MediaRateLimit-Limit");
-			remaining = getHeader("X-MediaRateLimit-Remaining");
-			reset = getHeader("X-MediaRateLimit-Reset");
-			break; 
-		}
-		if (limit == null) return;
-		rateLimits.put(reqType, new RateLimit(limit, remaining, reset));		
-		// Stop early to protect limits?
-		if (minRateLimit > 0 && Integer.valueOf(limit) <= minRateLimit) {
-			throw new TwitterException.RateLimit("Pre-emptive rate-limit block."); 
-		}
-	}
-	
-
-	int minRateLimit;
-	
 	/**
-	 * Use this to protect your Twitter API rate-limit.
-	 * E.g. if you want to keep some credit in reserve for core activity.
-	 * 0 by default. If set above zero, this JTwitter object will start pre-emptively
-	 * throwing rate-limit exceptions when it gets down to the specified level.
+	 * {@link #processHeaders(HttpURLConnection)} MUST have been called first.
 	 */
-	public void setMinRateLimit(int minRateLimit) {
-		this.minRateLimit = minRateLimit;
-	}
-	
-
-	@Override
-	public HttpURLConnection post2_connect(String uri, Map<String, String> vars) 
-	throws Exception
-	{
-		InternalUtils.count(uri);
-		HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
-		connection.setRequestMethod("POST");
-		connection.setDoOutput(true);
-		// post methods are alwasy with authentication
-		setAuthentication(connection, name, password);
-		
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded");
-		connection.setReadTimeout(timeout);
-		connection.setConnectTimeout(timeout);
-		// build the post body
-		String payload = post2_getPayload(vars);
-		connection.setRequestProperty("Content-Length",
-				"" + payload.length());
-		OutputStream os = connection.getOutputStream();
-		os.write(payload.getBytes());
-		close(os);
-		return connection;		
-	}
-
-	@Override
-	public IHttpClient copy() {
-		URLConnectionHttpClient c = new URLConnectionHttpClient(name, password);
-		c.setTimeout(timeout);
-		c.setRetryOnError(retryOnError);
-		c.setMinRateLimit(minRateLimit);
-		return c;
+	void updateRateLimits() {
+		for (KRequestType type : KRequestType.values()) {
+			String limit = getHeader("X-" + type.rateLimit + "RateLimit-Limit");
+			if (limit == null) {
+				continue;
+			}
+			String remaining = getHeader("X-" + type.rateLimit
+					+ "RateLimit-Remaining");
+			String reset = getHeader("X-" + type.rateLimit + "RateLimit-Reset");
+			rateLimits.put(type, new RateLimit(limit, remaining, reset));
+			// Stop early to protect limits?
+			// TODO move this code into Twitter so we can do it before a request
+			if (minRateLimit > 0 && Integer.valueOf(limit) <= minRateLimit)
+				throw new TwitterException.RateLimit(
+						"Pre-emptive rate-limit block.");
+		}
 	}
 
 }

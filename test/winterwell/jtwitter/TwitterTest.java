@@ -25,6 +25,7 @@ import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
+import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.utils.Printer;
 import winterwell.utils.time.TUnit;
@@ -138,8 +139,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 		{
 			User bieber = new User("charliesheen");
-			tw.stopFollowing(bieber);
-			User nul = tw.stopFollowing(bieber);
+			tw.users().stopFollowing(bieber);
+			User nul = tw.users().stopFollowing(bieber);
 			assert nul == null : nul;
 		}
 	}
@@ -291,7 +292,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 				"This is a long test status. Sorry if I ramble. But sometimes 140 characters is just too short.\n"
 				+"You know what I mean?\n\n"
 				+"So thank-you to TwitLonger for providing this service.\n"
-				+":)", 0);
+				+":)", null);
 		System.out.println(s);
 	}
 
@@ -346,9 +347,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 		List<Status> rtsByMe = twitter.getRetweetsByMe();
 //		List<Status> rtsOfMe = source.getRetweetsOfMe();
-
-		assert retweet.inReplyToStatusId == original.id;
-		assert retweet.getOriginal().equals(original);
+		assert retweet.getOriginal().equals(original) : retweet.getOriginal();
+		assert retweet.inReplyToStatusId == original.id : retweet.inReplyToStatusId;		
 		assert retweet.getText().startsWith("RT @spoonmcguffin: ");
 		assert ! rtsByMe.isEmpty();
 		assert rtsByMe.contains(retweet);
@@ -569,8 +569,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 			// user id = 33036740 is causing the problem
 			// possibly to do with protected updates?
 			try {
-				assert tw.isFollower(id.toString(), TEST_USER) : id;
+				assert tw.users().isFollower(id.toString(), TEST_USER) : id;
 			} catch (E403 e) {
+				// this seems to be a corner issue with Twitter's API rather than a bug in JTwitter
+				System.out.println(id+" "+e);
+			} catch (E404 e) {
 				// this seems to be a corner issue with Twitter's API rather than a bug in JTwitter
 				System.out.println(id+" "+e);
 			}
@@ -795,15 +798,15 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 	
 	public void testScratch() {
-		OAuthSignpostClient client = new OAuthSignpostClient(
-		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
-		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
-		client.authorizeDesktop();
-		String pin = client.askUser("The Pin?");
-		System.out.println(pin);
-		client.setAuthorizationCode(pin);
-		String[] tokens = client.getAccessToken();
-		System.out.println(tokens[0] + " " + tokens[1]);
+//		OAuthSignpostClient client = new OAuthSignpostClient(
+//		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+//		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
+//		client.authorizeDesktop();
+//		String pin = client.askUser("The Pin?");
+//		System.out.println(pin);
+//		client.setAuthorizationCode(pin);
+//		String[] tokens = client.getAccessToken();
+//		System.out.println(tokens[0] + " " + tokens[1]);
 	}
 	
 	/**
@@ -1071,12 +1074,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testTweetEntities() {
 		Twitter tw = newTestTwitter();
 		tw.setIncludeTweetEntities(true);
-		Status s = null;
-		try {
-			s = tw.setStatus("@jtwit423gg see http://bit.ly/cldEfd #cool :)");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		int salt = new Random().nextInt(1000);
+		Status s = tw.setStatus("@jtwit423gg see http://bit.ly/cldEfd #cool"+salt+" :)");
 		List<Status> statuses = tw.getUserTimeline();
 		System.out.println(statuses);
 	}
@@ -1212,13 +1211,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testShow() {
 		Twitter tw = new Twitter(); //TEST_USER, TEST_PASSWORD);
-		User show = tw.show(TEST_USER);
+		User show = tw.users().show(TEST_USER);
 		assert show != null;
-		User show2 = tw.show("winterstein");
+		User show2 = tw.users().show("winterstein");
 		assert show2 != null;
 
 		// a protected user
-		User ts = tw.show("tassosstevens");
+		User ts = tw.users().show(PROTECTED_USER);
 		assert ts.isProtectedUser() : ts;
 	}
 
@@ -1266,7 +1265,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s.trim()) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.id == s2b.id : s2a.id+" != "+s2b.id;
 		}
 		{	// 130
 			String s = salt;

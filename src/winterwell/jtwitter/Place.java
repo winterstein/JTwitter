@@ -9,123 +9,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import winterwell.jtwitter.Place.LatLong;
-
 /**
  * Support for Twitter's geo location features.
  * <p>
  * Status: experimental & subject to change!
+ * 
  * @author Daniel Winterstein
- *
+ * 
  */
 public class Place implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private String id;
-	private String type;
-	private String countryCode;
-	private String name;
-	private String country;
-	private List<LatLong> boundingBox;
-	private List<LatLong> geometry;
-	
-	/**
-	 * @return list of lat/long pairs. Can be null
-	 */
-	public List<LatLong> getBoundingBox() {
-		return boundingBox;
-	}
-	
-	/**
-	 * @return list of lat/long pairs. Usually null
-	 */
-	public List<LatLong> getGeometry() {
-		return geometry;
-	}
-	
-	@Override
-	public String toString() {
-		return getName();
-	}
-	
-	/**
-	 * Note: this is not a number.
-	 */
-	public String getId() {
-		return id;
-	}
-
-
-	/**
-	 * @return e.g. "city", "admin"
-	 * Often "admin" (which covers anything), so it's not clear how useful this is!
-	 */
-	public String getType() {
-		return type;
-	}	
-
-	public String getCountryCode() {
-		return countryCode;
-	}
-
-
-
-	public String getName() {
-		return name;
-	}
-
-
-
-	public String getCountryName() {
-		return country;
-	}
-
-
-
-	public Place(JSONObject _place) throws JSONException {
-//		e.g. {"id":"0a3e119020705b64","place_type":"city",
-		//"bounding_box":{"type":"Polygon",
-		//"coordinates":[[[-95.519568,37.303542],[-95.227853,37.303542],[-95.227853,37.383978],[-95.519568,37.383978]]]},
-//		"name":"Parsons","attributes":{},
-//		"country_code":"US",
-//		"url":"http://api.twitter.com/1/geo/id/0a3e119020705b64.json",
-//		"full_name":"Parsons, KS","country":"United States"}		
-		id = InternalUtils.jsonGet("id", _place);
-		if (id==null) {	// a Yahoo ID?
-			id = InternalUtils.jsonGet("woeid", _place);
-			// TODO Test Me!
-			// TODO should we have a separate id field for Yahoo?
-		}
-		type = InternalUtils.jsonGet("place_type", _place);
-		// name and full_name seem to be much the same, e.g. "City of Edinburgh"?
-		name = InternalUtils.jsonGet("full_name", _place);
-		if (name==null) name = InternalUtils.jsonGet("name", _place);
-		countryCode = InternalUtils.jsonGet("country_code", _place);
-		country = InternalUtils.jsonGet("country", _place);		
-		// bounding box
-		Object bbox = _place.opt("bounding_box");
-		if (bbox instanceof JSONObject) {			
-			this.boundingBox = parseCoords((JSONObject) bbox);
-		}
-		Object geo = _place.opt("geometry");
-		if (geo instanceof JSONObject) {
-			this.geometry = parseCoords((JSONObject) geo);
-		}		
-	}
-	
-	private List<LatLong> parseCoords(JSONObject bbox) throws JSONException {
-		JSONArray coords = bbox.getJSONArray("coordinates");
-		// pointless nesting?
-		coords = coords.getJSONArray(0);
-		List<LatLong> coordinates = new ArrayList();
-		for(int i=0,n=coords.length(); i<n; i++) {
-			// these are longitude, latitude pairs
-			JSONArray pt = coords.getJSONArray(i);
-			LatLong x = new LatLong(pt.getDouble(1), pt.getDouble(0));
-			coordinates.add(x);
-		}
-		return coordinates;
-	}
-
 	/**
 	 * A latitude-longitude coordinate.
 	 */
@@ -141,13 +33,86 @@ public class Place implements Serializable {
 
 		@Override
 		public Double get(int index) {
-			return index==0? latitude : longitude;
+			return index == 0 ? latitude : longitude;
 		}
 
 		@Override
 		public int size() {
 			return 2;
-		}		
+		}
+	}
+
+	private static final long serialVersionUID = 1L;
+	private List<LatLong> boundingBox;
+	private String country;
+	private String countryCode;
+	private List<LatLong> geometry;
+	private String id;
+	private String name;
+
+	private String type;
+
+	public Place(JSONObject _place) throws JSONException {
+		// e.g. {"id":"0a3e119020705b64","place_type":"city",
+		// "bounding_box":{"type":"Polygon",
+		// "coordinates":[[[-95.519568,37.303542],[-95.227853,37.303542],[-95.227853,37.383978],[-95.519568,37.383978]]]},
+		// "name":"Parsons","attributes":{},
+		// "country_code":"US",
+		// "url":"http://api.twitter.com/1/geo/id/0a3e119020705b64.json",
+		// "full_name":"Parsons, KS","country":"United States"}
+		id = InternalUtils.jsonGet("id", _place);
+		if (id == null) { // a Yahoo ID?
+			id = InternalUtils.jsonGet("woeid", _place);
+			// TODO Test Me!
+			// TODO should we have a separate id field for Yahoo?
+		}
+		type = InternalUtils.jsonGet("place_type", _place);
+		// name and full_name seem to be much the same, e.g.
+		// "City of Edinburgh"?
+		name = InternalUtils.jsonGet("full_name", _place);
+		if (name == null) {
+			name = InternalUtils.jsonGet("name", _place);
+		}
+		countryCode = InternalUtils.jsonGet("country_code", _place);
+		country = InternalUtils.jsonGet("country", _place);
+		// bounding box
+		Object bbox = _place.opt("bounding_box");
+		if (bbox instanceof JSONObject) {
+			this.boundingBox = parseCoords((JSONObject) bbox);
+		}
+		Object geo = _place.opt("geometry");
+		if (geo instanceof JSONObject) {
+			this.geometry = parseCoords((JSONObject) geo);
+		}
+	}
+
+	/**
+	 * @return list of lat/long pairs. Can be null
+	 */
+	public List<LatLong> getBoundingBox() {
+		return boundingBox;
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public String getCountryName() {
+		return country;
+	}
+
+	/**
+	 * @return list of lat/long pairs. Usually null
+	 */
+	public List<LatLong> getGeometry() {
+		return geometry;
+	}
+
+	/**
+	 * Note: this is not a number.
+	 */
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -156,6 +121,37 @@ public class Place implements Serializable {
 	 * TODO wrap this in TwitterPlace
 	 */
 	public String getInfoUrl() {
-		return "http://api.twitter.com/1/geo/id/"+id+".json";
+		return "http://api.twitter.com/1/geo/id/" + id + ".json";
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return e.g. "city", "admin" Often "admin" (which covers anything), so
+	 *         it's not clear how useful this is!
+	 */
+	public String getType() {
+		return type;
+	}
+
+	private List<LatLong> parseCoords(JSONObject bbox) throws JSONException {
+		JSONArray coords = bbox.getJSONArray("coordinates");
+		// pointless nesting?
+		coords = coords.getJSONArray(0);
+		List<LatLong> coordinates = new ArrayList();
+		for (int i = 0, n = coords.length(); i < n; i++) {
+			// these are longitude, latitude pairs
+			JSONArray pt = coords.getJSONArray(i);
+			LatLong x = new LatLong(pt.getDouble(1), pt.getDouble(0));
+			coordinates.add(x);
+		}
+		return coordinates;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 }
