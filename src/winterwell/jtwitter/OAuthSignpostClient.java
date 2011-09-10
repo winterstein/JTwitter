@@ -258,6 +258,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		c.setTimeout(timeout);
 		c.setRetryOnError(retryOnError);
 		c.setMinRateLimit(minRateLimit);
+		c.rateLimits.putAll(rateLimits);
 		return c;
 	}
 

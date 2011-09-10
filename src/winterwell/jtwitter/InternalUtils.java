@@ -128,8 +128,8 @@ public class InternalUtils {
 		}
 		// some calls - eg statuses/show - include the tweet id
 		url = url.replaceAll("\\d+", "");
-		// non-blocking
-		for (int j = 0; j < 100; j++) {
+		// non-blocking (we could just ignore the race condition I suppose)
+		for (int j = 0; j < 100; j++) { // give up if you lose >100 races
 			Long v = usage.get(url);
 			boolean done;
 			if (v == null) {

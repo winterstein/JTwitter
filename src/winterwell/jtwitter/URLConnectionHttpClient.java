@@ -157,6 +157,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		c.setTimeout(timeout);
 		c.setRetryOnError(retryOnError);
 		c.setMinRateLimit(minRateLimit);
+		c.rateLimits.putAll(rateLimits);
 		return c;
 	}
 
