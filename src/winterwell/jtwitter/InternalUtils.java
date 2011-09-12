@@ -146,12 +146,14 @@ public class InternalUtils {
 	}
 
 	static String encode(Object x) {
+		String encd;
 		try {
-			return URLEncoder.encode(String.valueOf(x), "UTF-8");
+			encd = URLEncoder.encode(String.valueOf(x), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// This shouldn't happen as UTF-8 is standard
-			return URLEncoder.encode(String.valueOf(x));
+			encd = URLEncoder.encode(String.valueOf(x));
 		}
+		return encd.replace("+", "%20");
 	}
 
 	/**
