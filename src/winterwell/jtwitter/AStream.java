@@ -283,11 +283,11 @@ public abstract class AStream implements Closeable {
 			return;
 		// close all first
 		close();
-<<<<<<< HEAD
+
 		assert readThread == null || readThread.stream == this : this;
-=======
+
 		HttpURLConnection con = null;
->>>>>>> Some changes to twitter for testing
+
 		try {
 			con = connect2();
 			stream = con.getInputStream();
