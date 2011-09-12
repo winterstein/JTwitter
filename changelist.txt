@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.3.3 (pending):
+ - Fixed encoding issue which affected some TwitterStreams (" " is now encoded as "%20" not "+")
+
 2.3.2:
  - Important Bug-fixes in the Place constructor and TweetEntity.toString()
  - Improved auto-reconnect behaviour in streams. 
