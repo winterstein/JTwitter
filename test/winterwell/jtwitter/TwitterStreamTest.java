@@ -102,6 +102,24 @@ public class TwitterStreamTest {
 		ts.close();
 	}
 	
+	/**
+	 * More difficult searches, things with multiple AND search terms don't work due to encoding
+	 * This test should eventually show they work.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testTrack2() throws InterruptedException {
+		Twitter jtwit = new TwitterTest().newTestTwitter();
+		TwitterStream ts = new TwitterStream(jtwit);
+		ts.setTrackKeywords(Arrays.asList("twitter%2520api"));
+		ts.connect();
+		System.out.println("connect complete, watching");
+		Thread.sleep(20000);
+		List<ITweet> list = ts.popTweets();
+		assert ! list.isEmpty();
+		System.out.println(list);
+		ts.close();
+	}
 	
 	@Test
 	public void testConnectWithTerm() throws InterruptedException {

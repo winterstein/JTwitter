@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -282,9 +283,13 @@ public abstract class AStream implements Closeable {
 			return;
 		// close all first
 		close();
+<<<<<<< HEAD
 		assert readThread == null || readThread.stream == this : this;
+=======
+		HttpURLConnection con = null;
+>>>>>>> Some changes to twitter for testing
 		try {
-			HttpURLConnection con = connect2();
+			con = connect2();
 			stream = con.getInputStream();
 			if (readThread == null) {
 				readThread = new StreamGobbler(this);
@@ -302,8 +307,10 @@ public abstract class AStream implements Closeable {
 			if (!isConnected())
 				throw new TwitterException(readThread.ex);
 		} catch (Exception e) {
+
 			if (e instanceof TwitterException)
 				throw (TwitterException) e;
+
 			throw new TwitterException(e);
 		}
 	}

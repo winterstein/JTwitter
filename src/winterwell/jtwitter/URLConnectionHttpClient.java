@@ -325,7 +325,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 * 
 	 * @param connection
 	 */
-	void processError(HttpURLConnection connection) {
+	 void processError(HttpURLConnection connection) {
 		try {
 			int code = connection.getResponseCode();
 			if (code == 200)
@@ -456,7 +456,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		updateRateLimits();
 	}
 
-	private String read(InputStream stream) throws IOException {
+	static String read(InputStream stream) throws IOException {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					stream));
