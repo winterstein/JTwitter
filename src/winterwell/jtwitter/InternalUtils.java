@@ -333,7 +333,7 @@ public class InternalUtils {
 		text = text.replace("&amp;", "&");
 		text = text.replace("&gt;", ">");
 		text = text.replace("&lt;", "<");
-		// zero-byte chars are a rare but annoying occurence
+		// zero-byte chars are a rare but annoying occurrence
 		if (text.indexOf(0) != -1) {
 			text = text.replace((char) 0, ' ').trim();
 		}

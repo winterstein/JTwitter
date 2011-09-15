@@ -95,7 +95,7 @@ public final class Message implements ITweet {
 			entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(
 					KEntityType.class);
 			for (KEntityType type : KEntityType.values()) {
-				List<TweetEntity> es = TweetEntity.parse(this, type,
+				List<TweetEntity> es = TweetEntity.parse(this, _text, type,
 						jsonEntities);
 				entities.put(type, es);
 			}

@@ -334,14 +334,14 @@ public class Twitter implements Serializable {
 	public final static class TweetEntity implements Serializable {
 		private static final long serialVersionUID = 1L;
 
-		static List<TweetEntity> parse(ITweet tweet, KEntityType type,
+		static List<TweetEntity> parse(ITweet tweet, String rawText, KEntityType type,
 				JSONObject jsonEntities) throws JSONException {
 			JSONArray arr = jsonEntities.optJSONArray(type.toString());
 			ArrayList<TweetEntity> list = new ArrayList<TweetEntity>(
 					arr.length());
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject obj = arr.getJSONObject(i);
-				TweetEntity te = new TweetEntity(tweet, type, obj);
+				TweetEntity te = new TweetEntity(tweet, rawText, type, obj);
 				list.add(te);
 			}
 			// "user_mentions":[{"id":19720954,"name":"Lilly Hunter","indices":[0,10],"screen_name":"LillyLyle"}
@@ -361,12 +361,39 @@ public class Twitter implements Serializable {
 
 		public final KEntityType type;
 
-		TweetEntity(ITweet tweet, KEntityType type, JSONObject obj)
-				throws JSONException {
+		/**
+		 * 
+		 * @param tweet
+		 * @param rawText Needed to undo the indexing errors created by entity encoding
+		 * @param type
+		 * @param obj
+		 * @throws JSONException
+		 */
+		TweetEntity(ITweet tweet, String rawText, KEntityType type, JSONObject obj)
+				throws JSONException {			
 			JSONArray indices = obj.getJSONArray("indices");
-			this.start = indices.getInt(0);
-			this.end = indices.getInt(1);
-			assert start >= 0 && end >= start : obj;
+			int _start = indices.getInt(0);
+			int _end = indices.getInt(1);
+			assert _start >= 0 && _end >= _start : obj;
+			// Sadly, due to entity encoding, start/end may be off!
+			String text = tweet.getText();
+			if (rawText.regionMatches(_start, text, _start, _end - _start)) {
+				// normal case: all OK			
+				start = _start; end = _end;
+			} else { // oh well - let's correct it
+				// Note: This could go wrong in a particular case: 
+				// encoding has messed up the indices & we have a repeated entity.
+				// ??Do we care enough to fix such a rare corner case with moderately harmless side-effects?
+				String entityText = rawText.substring(_start, _end);
+				int i = text.indexOf(entityText);
+				if (i==-1) {
+					// I don't think this can happen, but handle it anyway
+					entityText = InternalUtils.unencode(entityText);
+					i = text.indexOf(entityText);
+				}
+				start = i; 
+				end = start + _end - _start;
+			}
 			this.tweet = tweet;
 			this.type = type;
 			switch (type) {

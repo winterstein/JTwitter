@@ -194,7 +194,7 @@ public final class Status implements ITweet {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
 			String _text = InternalUtils.jsonGet("text", object);
-			text = InternalUtils.unencode(_text);
+			text = InternalUtils.unencode(_text); // bugger - this screws up the indices in tweet entities
 			// date
 			String c = InternalUtils.jsonGet("created_at", object);
 			createdAt = InternalUtils.parseDate(c);
@@ -263,7 +263,7 @@ public final class Status implements ITweet {
 				entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(
 						KEntityType.class);
 				for (KEntityType type : KEntityType.values()) {
-					List<TweetEntity> es = TweetEntity.parse(this, type,
+					List<TweetEntity> es = TweetEntity.parse(this, _text, type,
 							jsonEntities);
 					entities.put(type, es);
 				}
