@@ -692,7 +692,7 @@ public class Twitter_Users {
 
 	/**
 	 * Lookup user info. Same as {@link #show(List)}, but works with Twitter
-	 * user-ID numbers.
+	 * user-ID numbers. Done in batches of 100, limited to 1000 an hour.
 	 * 
 	 * @param userIds
 	 *            . Can be empty (in which case we avoid making a wasted API
