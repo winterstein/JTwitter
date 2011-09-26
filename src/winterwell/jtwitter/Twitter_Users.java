@@ -677,8 +677,18 @@ public class Twitter_Users {
 	public User show(String screenName) throws TwitterException,
 			TwitterException.SuspendedUser {
 		Map vars = InternalUtils.asMap("screen_name", screenName);
-		String json = http.getPage(jtwit.TWITTER_URL + "/users/show.json",
+		//Test Code Debugger at work - expected closures until 2012
+		String json = "";
+		try{ 
+			json = http.getPage(jtwit.TWITTER_URL + "/users/show.json",
 				vars, http.canAuthenticate());
+		}
+		catch (Exception e){
+			//we get here?
+			throw new TwitterException.E404("User " + screenName
+					+ " does not seem to exist, their user account may have been removed from the service");
+		}
+		//Debuggers no longer at work
 		if (json.length() == 0)
 			throw new TwitterException.E404(screenName
 					+ " does not seem to exist");
