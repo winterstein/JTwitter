@@ -334,9 +334,24 @@ public class Twitter implements Serializable {
 	public final static class TweetEntity implements Serializable {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * 
+		 * @param tweet
+		 * @param rawText
+		 * @param type
+		 * @param jsonEntities
+		 * @return Can be null if no entities of this type are specified
+		 * @throws JSONException
+		 */
 		static List<TweetEntity> parse(ITweet tweet, String rawText, KEntityType type,
-				JSONObject jsonEntities) throws JSONException {
+				JSONObject jsonEntities) throws JSONException 
+		{
+			assert type != null && tweet != null && rawText != null && jsonEntities!=null
+							: tweet+"\t"+rawText+"\t"+type+"\t"+jsonEntities;
 			JSONArray arr = jsonEntities.optJSONArray(type.toString());
+			if (arr==null || arr.length()==0) {
+				return null;
+			}
 			ArrayList<TweetEntity> list = new ArrayList<TweetEntity>(
 					arr.length());
 			for (int i = 0; i < arr.length(); i++) {
@@ -426,7 +441,7 @@ public class Twitter implements Serializable {
 		@Override
 		public String toString() {
 			// There is a strange bug where -- rarely -- end > tweet length!
-			// TODO is there a pattern or is it just a random Twitter error?
+			// I think this is now fixed (it was an encoding issue).
 			String text = tweet.getText();
 			int e = Math.min(end, text.length());
 			int s = Math.min(start, e);
@@ -1565,9 +1580,10 @@ public class Twitter implements Serializable {
 			return getStatuses(TWITTER_URL + "/statuses/user_timeline.json",
 					vars, authenticate);
 		} catch (E401 e) {
-			// Bug in Twitter: this can be a suspended user
-			// - in which case this will generate a SuspendedUser exception
-			// isSuspended(userId); // TODO?
+			// Bug in Twitter: this can be a suspended user...
+			// In which case the call below would generate a SuspendedUser exception
+			// ...but do we want to conserve our api limit??
+			// isSuspended(userId);
 			throw e;
 		}
 	}
