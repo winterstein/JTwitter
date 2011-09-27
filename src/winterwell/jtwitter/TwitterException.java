@@ -167,7 +167,7 @@ public class TwitterException extends RuntimeException {
 
 		public E50X(String string) {
 			// sometimes Twitter sends a full web page by mistake
-			super(string.length() > 1000 ? string.substring(0, 1000) + "..."
+			super(string.length() > 280 ? string.substring(0, 280) + "..."
 					: string);
 		}
 	}
