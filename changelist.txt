@@ -3,6 +3,7 @@
 2.3.3 (pending):
  - Fixed encoding issue which affected some TwitterStreams (" " is now encoded as "%20" not "+")
  - Fixed corner case issue in TweetEntity parsing. 
+ - Fixed occasional (rare) null pointer in TweetEntity parsing, arising from a change in Twitter's responses.
  
 2.3.2:
  - Important Bug-fixes in the Place constructor and TweetEntity.toString()
