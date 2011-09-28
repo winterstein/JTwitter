@@ -386,6 +386,7 @@ public class Twitter implements Serializable {
 		 */
 		TweetEntity(ITweet tweet, String rawText, KEntityType type, JSONObject obj)
 				throws JSONException {			
+			// start, end
 			JSONArray indices = obj.getJSONArray("indices");
 			int _start = indices.getInt(0);
 			int _end = indices.getInt(1);
@@ -409,11 +410,12 @@ public class Twitter implements Serializable {
 				start = i; 
 				end = start + _end - _start;
 			}
+
 			this.tweet = tweet;
 			this.type = type;
 			switch (type) {
 			case urls:
-				Object eu = obj.get("expanded_url");
+				Object eu = obj.opt("expanded_url");
 				display = JSONObject.NULL.equals(eu) ? null : (String) eu;
 				break;
 			case user_mentions:

@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.TweetEntity;
@@ -425,5 +424,27 @@ public final class Status implements ITweet {
 	@Override
 	public String toString() {
 		return text;
+	}
+
+	/**
+	 * @return text, with the t.co urls replaced.
+	 * Use-case: for filtering based on text contents, when we want to
+	 * match against the full url.
+	 * Note: this does NOT resolve short urls from bit.ly etc. 
+	 */
+	public String getDisplayText() {
+		List<TweetEntity> es = getTweetEntities(KEntityType.urls);
+		if (es==null || es.isEmpty()) return getText();
+		StringBuilder sb = new StringBuilder(200);
+		int i=0;
+		for (TweetEntity entity : es) {
+			sb.append(text.substring(i, entity.start));
+			sb.append(entity.displayVersion());
+			i = entity.end;
+		}					
+		if (i < text.length()) {
+			sb.append(text.substring(i));
+		}
+		return sb.toString();
 	}
 }

@@ -217,7 +217,23 @@ public class TwitterException extends RuntimeException {
 		}
 
 		public Parsing(String json, JSONException e) {
-			super(clip(json, 280), e);
+			super((json==null? String.valueOf(e) : clip(json, 280))
+					+causeLine(e), e);
+		}
+
+		/**
+		 * Where did this error come from? an ultra mini stack-trace
+		 * @param e
+		 * @return " caused by ..." or ""
+		 */
+		private static String causeLine(JSONException e) {
+			if (e==null) return "";
+			StackTraceElement[] st = e.getStackTrace();
+			for (StackTraceElement ste : st) {
+				if (ste.getClassName().contains("JSON")) continue;
+				return " caused by "+ste;
+			}
+			return "";
 		}
 
 		public Parsing(String date, ParseException e) {
