@@ -27,7 +27,6 @@ import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.utils.Printer;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
 
@@ -899,26 +898,26 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<Status> aList = jtwit.getMentions();
 		for (Status stat : aList) {
 			if (stat.toString().contains("" + salt)) {
-				Printer.out("J1's mentions: ", stat);
+				System.out.println("J1's mentions: "+ stat);
 			}
 		}
 		//Mysteriously, jtwit2 doesn't get recent mentions
 		List<Status> aList2 = jtwit2.getMentions();
 		for (Status stat : aList2){
 			if (stat.toString().contains("" + salt)){
-			Printer.out("J2's mentions: ", stat);
+				System.out.println("J2's mentions: "+ stat);
 			}
 		}
 		//Let's try to get all of the mentions for jtwit2
 		String name = jtwit2.getSelf().screenName;
-		Printer.out("name = " + name);
+		System.out.println("name = " + name);
 		{
 			List<Status> bigList = jtwit2.search(name);
 			int success = 0;
 			for (Status stat : bigList) {
 				if (stat.toString().contains("" + salt)) {
 					success++;
-					Printer.out("J2's biglist: ", stat);
+					System.out.println("J2's biglist: "+ stat);
 				}
 			}
 		//This appears to be successful, both messages received
@@ -932,7 +931,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			for (Status stat : bigList) {
 				if (stat.toString().contains("" + salt)) {
 					success++;
-					Printer.out("J2's biglist: ", stat);
+					System.out.println("J2's biglist: "+ stat);
 				}
 			}
 			// This fails, you can't get mentions this way.
@@ -957,29 +956,29 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<Message> mList1 = jtwit.getDirectMessages();
 		for (Message mess : mList1){
 			if (mess.toString().contains("" + salt)){
-				Printer.out("J1's DMs in : ", mess);
-				}
+				System.out.println("J1's DMs in : "+ mess);
+			}
 		}
 		
 		List<Message> mSentList1 = jtwit.getDirectMessagesSent();
 		for (Message mess : mSentList1){
 			if (mess.toString().contains("" + salt)){
-				Printer.out("J1's DMs sent : ", mess);
-				}
+				System.out.println("J1's DMs sent : "+ mess);
+			}
 		}
 
 		List<Message> mList2 = jtwit2.getDirectMessages();
 		for (Message mess : mList2){
 			if (mess.toString().contains("" + salt)){
-				Printer.out("J2's DMs in : ", mess);
-				}
+				System.out.println("J2's DMs in : "+ mess);
+			}
 		}
 
 		List<Message> mSentList2 = jtwit2.getDirectMessagesSent();
 		for (Message mess : mSentList2){
-			if (mess.toString().contains("" + salt)){
-				Printer.out("J2's DMs sent : ", mess);
-				}
+			if (mess.toString().contains("" + salt)) {
+				System.out.println("J2's DMs sent : "+ mess);
+			}
 		}
 		
 		String placeholder = "";

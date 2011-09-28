@@ -9,7 +9,6 @@ import java.util.Random;
 import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.Printer;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
@@ -36,7 +35,7 @@ public class TwitterStreamTest {
 		ts.setAutoReconnect(true);
 		ts.reconnect();
 		for(int i=0; i<5; i++) {
-			Thread.sleep(TUnit.MINUTE.getMillisecs());
+			Thread.sleep(60*1000);
 			List<TwitterEvent> events = ts.popEvents();
 			List<ITweet> tweets = ts.popTweets();
 			List<TwitterEvent> sysEvs = ts.popSystemEvents();
@@ -149,7 +148,7 @@ public class TwitterStreamTest {
 				String cse = "t:"+(tloc==null)+" u:"+(uloc==null);
 				Containers.plus(infodist, cse, 1);			
 			}
-			Printer.out(infodist);
+			System.out.println(infodist);
 		}
 		ts.close();
 	}

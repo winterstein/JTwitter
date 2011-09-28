@@ -62,7 +62,11 @@ public class BuildJTwitter extends BuildTask {
 			FileUtils.delete(file);
 		}		
 		File zipFile = new File(base, "jtwitter-"+Twitter.version+".zip");
-		List<File> inputFiles = Arrays.asList(jarFile, src, lib, new File(base, "test"));
+		List<File> inputFiles = Arrays.asList(
+				jarFile, 
+				src, 
+				lib);
+//				new File(base, "test"));
 		ZipTask zipTask = new ZipTask(zipFile, inputFiles, base);
 		zipTask.run();
 		
