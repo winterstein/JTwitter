@@ -41,6 +41,12 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {
 	
+	public void testUpdateConfig() {
+		// just a smoke test
+		Twitter jtwit = newTestTwitter();
+		jtwit.updateConfiguration();
+	}
+	
 	/**
 	 * A random user who protects their tweets.
 	 */

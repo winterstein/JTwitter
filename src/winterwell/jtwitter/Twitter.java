@@ -602,7 +602,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Change this to access sites other than Twitter that support the Twitter
-	 * API.
+	 * API. <br>
+	 * Note: Does not include the final "/"
 	 */
 	String TWITTER_URL = "http://api.twitter.com/1";
 
@@ -2357,7 +2358,7 @@ public class Twitter implements Serializable {
 	 * Update info on Twitter's configuration -- such as shortened url lengths.
 	 */
 	public void updateConfiguration() {
-		String json = http.getPage(TWITTER_URL + "help/configuration.format",
+		String json = http.getPage(TWITTER_URL + "/help/configuration.json",
 				null, false);
 		try {
 			JSONObject jo = new JSONObject(json);
