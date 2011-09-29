@@ -2487,14 +2487,30 @@ public class Twitter implements Serializable {
 	 *             may not have worked - wait a bit & check.
 	 */
 	public Status updateStatus(String statusText, Number inReplyToStatusId)
-			throws TwitterException {
-		// should we trim statusText??
-		// TODO support URL shortening
-		if (statusText.length() > 160)
-			throw new IllegalArgumentException(
-					"Status text must be 160 characters or less: "
-							+ statusText.length() + " " + statusText);
+			throws TwitterException 
+	{		
+		// check for length
+		if (statusText.length() > 160) {
+			int shortLength = statusText.length();
+			Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
+			while(m.find()) {
+				shortLength += LINK_LENGTH - m.group().length(); 
+			}
+			if (shortLength > 140) {
+				// bogus - send a helpful error
+				if (statusText.startsWith("RT")) {
+					throw new IllegalArgumentException(
+							"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
+									+ statusText.length() + " " + statusText);
+				}
+				throw new IllegalArgumentException(
+						"Status text must be 140 characters or less: "
+								+ statusText.length() + " " + statusText);
+			}
+		}
+		
 		Map<String, String> vars = InternalUtils.asMap("status", statusText);
+		if (tweetEntities) vars.put("include_entities", "1");
 
 		// add in long/lat if set
 		if (myLatLong != null) {

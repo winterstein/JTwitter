@@ -1073,10 +1073,22 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testTweetEntities() {
 		Twitter tw = newTestTwitter();
 		tw.setIncludeTweetEntities(true);
-		int salt = new Random().nextInt(1000);
-		Status s = tw.setStatus("@jtwit423gg see http://bit.ly/cldEfd #cool"+salt+" :)");
-		List<Status> statuses = tw.getUserTimeline();
-		System.out.println(statuses);
+		{
+			int salt = new Random().nextInt(1000);
+			String raw = "@jtwit423gg see http://bit.ly/cldEfd #cool"+salt+" :)";
+			Status s = tw.setStatus(raw);
+			String dtext = s.getDisplayText();
+			assertEquals(raw, dtext);
+			List<Status> statuses = tw.getUserTimeline();
+			System.out.println(statuses);
+		}
+		{
+			int salt = new Random().nextInt(1000);
+			String raw = "http://bit.ly/cldEfd #test "+salt+" ▢▶ >o< &)  http://soda.sh/xr http://maps.google.co.uk/maps?q=39A+grassmarket+&hl=en&sll=55.947372,-3.19599&sspn=0.006295,0.006295&t=h&z=19&vpsrc=0";
+			Status s = tw.setStatus(raw);
+			String dtext = s.getDisplayText();
+			assertEquals(raw, dtext);
+		}
 	}
 
 	public void testGetUserTimelineWithRetweets() {
