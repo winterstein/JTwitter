@@ -430,7 +430,7 @@ public class Twitter implements Serializable {
 			String entityText = rawText.substring(_start, _end);
 			int i = text.indexOf(entityText);
 			if (i==-1) {
-				// I don't think this can happen, but handle it anyway
+				// This can't legitimately happen, but handle it anyway 'cos it does (rare & random)
 				entityText = InternalUtils.unencode(entityText);
 				i = text.indexOf(entityText);
 				if (i==-1) i = _start; // give up gracefully
