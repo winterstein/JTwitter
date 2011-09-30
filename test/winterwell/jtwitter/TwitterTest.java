@@ -1090,6 +1090,11 @@ extends TestCase // Comment oTut to remove the JUnit dependency
 			System.out.println(s.getDisplayText());			
 		}
 		{
+			BigInteger id = new BigInteger("119673041927159808"); 
+			Status s = tw.getStatus(id); 
+			System.out.println(s.getDisplayText());
+		}
+		{
 			int salt = new Random().nextInt(1000);
 			String raw = "@jtwit423gg see http://bit.ly/cldEfd #cool"+salt+" :)";
 			Status s = tw.setStatus(raw);
