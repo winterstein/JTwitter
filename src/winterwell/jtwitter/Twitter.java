@@ -347,20 +347,25 @@ public class Twitter implements Serializable {
 				JSONObject jsonEntities) throws JSONException 
 		{
 			assert type != null && tweet != null && rawText != null && jsonEntities!=null
-							: tweet+"\t"+rawText+"\t"+type+"\t"+jsonEntities;
-			JSONArray arr = jsonEntities.optJSONArray(type.toString());
-			if (arr==null || arr.length()==0) {
+								: tweet+"\t"+rawText+"\t"+type+"\t"+jsonEntities;
+			try {
+				JSONArray arr = jsonEntities.optJSONArray(type.toString());
+				// e.g. "user_mentions":[{"id":19720954,"name":"Lilly Hunter","indices":[0,10],"screen_name":"LillyLyle"}
+				if (arr==null || arr.length()==0) {
+					return null;
+				}
+				ArrayList<TweetEntity> list = new ArrayList<TweetEntity>(
+						arr.length());
+				for (int i = 0; i < arr.length(); i++) {
+					JSONObject obj = arr.getJSONObject(i);
+					TweetEntity te = new TweetEntity(tweet, rawText, type, obj);
+					list.add(te);
+				}
+				return list;
+			} catch (Throwable e) {
+				// whatever bogus data Twitter send, don't fail
 				return null;
 			}
-			ArrayList<TweetEntity> list = new ArrayList<TweetEntity>(
-					arr.length());
-			for (int i = 0; i < arr.length(); i++) {
-				JSONObject obj = arr.getJSONObject(i);
-				TweetEntity te = new TweetEntity(tweet, rawText, type, obj);
-				list.add(te);
-			}
-			// "user_mentions":[{"id":19720954,"name":"Lilly Hunter","indices":[0,10],"screen_name":"LillyLyle"}
-			return list;
 		}
 
 		private final String display;
