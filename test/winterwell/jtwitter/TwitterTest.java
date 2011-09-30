@@ -38,7 +38,7 @@ import winterwell.utils.time.Time;
  * @author daniel
  */
 public class TwitterTest
-extends TestCase // Comment out to remove the JUnit dependency
+extends TestCase // Comment oTut to remove the JUnit dependency
 {
 	
 	public void testUpdateConfig() {
@@ -1079,10 +1079,15 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testTweetEntities() {
 		Twitter tw = newTestTwitter();
 		tw.setIncludeTweetEntities(true);
-		{
+		{	// both these examples caused (non-repeatable) bugs in the wild
 			BigInteger id = new BigInteger("119509089008095232");
 			Status s = tw.getStatus(id);
 			System.out.println(s.getDisplayText());
+		}
+		{
+			BigInteger id = new BigInteger("119503558465949697");
+			Status s = tw.getStatus(id);
+			System.out.println(s.getDisplayText());			
 		}
 		{
 			int salt = new Random().nextInt(1000);
