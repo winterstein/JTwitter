@@ -1080,6 +1080,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter tw = newTestTwitter();
 		tw.setIncludeTweetEntities(true);
 		{
+			BigInteger id = new BigInteger("119509089008095232");
+			Status s = tw.getStatus(id);
+			System.out.println(s.getDisplayText());
+		}
+		{
 			int salt = new Random().nextInt(1000);
 			String raw = "@jtwit423gg see http://bit.ly/cldEfd #cool"+salt+" :)";
 			Status s = tw.setStatus(raw);

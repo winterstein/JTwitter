@@ -385,32 +385,8 @@ public class Twitter implements Serializable {
 		 * @throws JSONException
 		 */
 		TweetEntity(ITweet tweet, String rawText, KEntityType type, JSONObject obj)
-				throws JSONException {			
-			// start, end
-			JSONArray indices = obj.getJSONArray("indices");
-			int _start = indices.getInt(0);
-			int _end = indices.getInt(1);
-			assert _start >= 0 && _end >= _start : obj;
-			// Sadly, due to entity encoding, start/end may be off!
-			String text = tweet.getText();
-			if (rawText.regionMatches(_start, text, _start, _end - _start)) {
-				// normal case: all OK			
-				start = _start; end = _end;
-			} else { // oh well - let's correct it
-				// Note: This could go wrong in a particular case: 
-				// encoding has messed up the indices & we have a repeated entity.
-				// ??Do we care enough to fix such a rare corner case with moderately harmless side-effects?
-				String entityText = rawText.substring(_start, _end);
-				int i = text.indexOf(entityText);
-				if (i==-1) {
-					// I don't think this can happen, but handle it anyway
-					entityText = InternalUtils.unencode(entityText);
-					i = text.indexOf(entityText);
-				}
-				start = i; 
-				end = start + _end - _start;
-			}
-
+				throws JSONException 
+		{
 			this.tweet = tweet;
 			this.type = type;
 			switch (type) {
@@ -424,6 +400,43 @@ public class Twitter implements Serializable {
 			default:
 				display = null;
 			}
+			
+			// start, end
+			JSONArray indices = obj.getJSONArray("indices");
+			int _start = indices.getInt(0);
+			int _end = indices.getInt(1);
+			assert _start >= 0 && _end >= _start : obj;
+			// Sadly, due to entity encoding, start/end may be off!
+			String text = tweet.getText();
+			if (rawText.regionMatches(_start, text, _start, _end - _start)) {
+				// normal case: all OK			
+				start = _start; end = _end;
+				return;
+			}
+			// oh well - let's correct start/end
+			// Note: This correction go wrong in a particular case: 
+			// encoding has messed up the indices & we have a repeated entity.
+			// ??Do we care enough to fix such a rare corner case with moderately harmless side-effects?
+			
+			// Protect against (rare) dud data from Twitter
+			_end = Math.min(_end, rawText.length());
+			_start = Math.min(_start, _end);
+			if (_start==_end) { // paranoia
+				start = _start; 
+				end = _end;
+				return;
+			}
+				
+			String entityText = rawText.substring(_start, _end);
+			int i = text.indexOf(entityText);
+			if (i==-1) {
+				// I don't think this can happen, but handle it anyway
+				entityText = InternalUtils.unencode(entityText);
+				i = text.indexOf(entityText);
+				if (i==-1) i = _start; // give up gracefully
+			}
+			start = i; 
+			end = start + _end - _start;		
 		}
 
 		/**
