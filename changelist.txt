@@ -3,6 +3,8 @@
 2.3.4:
  - Over-long tweet detection correctly handles t.co shortening of long urls.
  - Fixed bug in Twitter.updateConfiguration()
+ - Added ITweet.getDisplayText() and more defensive coding for random bad data
+ from Twitter
  
 2.3.3:
  - Fixed encoding issue which affected some TwitterStreams (" " is now encoded as "%20" not "+")

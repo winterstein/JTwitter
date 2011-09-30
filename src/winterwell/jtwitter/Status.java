@@ -433,17 +433,22 @@ public final class Status implements ITweet {
 	 * Note: this does NOT resolve short urls from bit.ly etc. 
 	 */
 	public String getDisplayText() {
-		List<TweetEntity> es = getTweetEntities(KEntityType.urls);
-		if (es==null || es.isEmpty()) return getText();
+		return getDisplayText2(this);
+	}
+
+	static String getDisplayText2(ITweet tweet) {
+		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
+		String _text = tweet.getText();
+		if (es==null || es.isEmpty()) return _text;
 		StringBuilder sb = new StringBuilder(200);
 		int i=0;
 		for (TweetEntity entity : es) {
-			sb.append(text.substring(i, entity.start));
+			sb.append(_text.substring(i, entity.start));
 			sb.append(entity.displayVersion());
 			i = entity.end;
 		}					
-		if (i < text.length()) {
-			sb.append(text.substring(i));
+		if (i < _text.length()) {
+			sb.append(_text.substring(i));
 		}
 		return sb.toString();
 	}

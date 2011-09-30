@@ -23,6 +23,12 @@ public final class Message implements ITweet {
 
 	private static final long serialVersionUID = 1L;
 
+	
+	@Override
+	public String getDisplayText() {
+		return Status.getDisplayText2(this);
+	}
+	
 	/**
 	 * 
 	 * @param json

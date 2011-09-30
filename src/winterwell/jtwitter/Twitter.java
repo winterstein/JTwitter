@@ -302,6 +302,14 @@ public class Twitter implements Serializable {
 		/** The User who made the tweet */
 		User getUser();
 
+		/**
+		 * @return text, with the t.co urls replaced.
+		 * Use-case: for filtering based on text contents, when we want to
+		 * match against the full url.
+		 * Note: this does NOT resolve short urls from bit.ly etc. 
+		 */
+		String getDisplayText();
+
 	}
 
 	public static enum KEntityType {
