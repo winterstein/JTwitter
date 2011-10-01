@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -38,8 +39,14 @@ import winterwell.utils.time.Time;
  * @author daniel
  */
 public class TwitterTest
-extends TestCase // Comment oTut to remove the JUnit dependency
+extends TestCase // Comment out to remove the JUnit dependency
 {
+	
+	public void testAPIStatus() throws Exception {
+		// just a smoke test
+		Map<String, Double> map = Twitter.getAPIStatus();
+		System.out.println(map);
+	}
 	
 	public void testUpdateConfig() {
 		// just a smoke test

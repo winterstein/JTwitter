@@ -111,6 +111,36 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * How is the Twitter API today?
+	 * See {@link https://dev.twitter.com/status} for more information. 
+	 * @return map of {method: %uptime in the last 24 hours}
+	 * 
+	 * @throws Exception This method is not officially supported! As such,
+	 * it could break at some future point.
+	 */
+	public static Map<String,Double> getAPIStatus() throws Exception{
+		HashMap<String,Double> map = new HashMap();
+		URLConnectionHttpClient client = new URLConnectionHttpClient();
+		// c.f. https://dev.twitter.com/status & https://status.io.watchmouse.com/7617
+		// https://api.io.watchmouse.com/synth/current/39657/folder/7617/?fields=info;cur;24h.uptime;24h.status;last.date;daily.avg;daily.uptime;daily.status;daily.period
+		String json = client.getPage("https://api.io.watchmouse.com/synth/current/39657/folder/7617/?fields=info;cur;24h.uptime", null, false);
+		try {
+			JSONObject jobj = new JSONObject(json);
+			JSONArray jarr = jobj.getJSONArray("result");
+			for(int i=0; i<jarr.length(); i++) {
+				JSONObject jo = jarr.getJSONObject(i);
+				String name = jo.getJSONObject("info").getString("name");
+				JSONObject h24 = jo.getJSONObject("24h");
+				double value = h24.getDouble("uptime");
+				map.put(name, value);
+			}
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+		return map;
+	}
+	
+	/**
 	 * Interface for an http client - e.g. allows for OAuth to be used instead.
 	 * The standard version is {@link OAuthSignpostClient}.
 	 * <p>
