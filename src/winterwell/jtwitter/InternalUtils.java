@@ -43,6 +43,8 @@ import winterwell.utils.web.WebUtilsTest;
  */
 public class InternalUtils {
 
+	public static final Pattern TAG_REGEX = Pattern.compile("<!?/?[\\[\\-a-zA-Z][^>]*>", Pattern.DOTALL);
+	
 	static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**

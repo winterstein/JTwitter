@@ -166,9 +166,19 @@ public class TwitterException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public E50X(String string) {
-			// sometimes Twitter sends a full web page by mistake
-			super(string.length() > 280 ? string.substring(0, 280) + "..."
-					: string);
+			super(msg(string));
+		}
+		/**
+		 * Sometimes Twitter sends a full web page by mistake.
+		 */
+		static String msg(String msg) {
+			if (msg==null) return null;
+			// strip any html tags
+			// NB: this doesn't clean out script tags
+			msg = InternalUtils.TAG_REGEX.matcher(msg).replaceAll("");
+			msg = msg.replaceAll("\\s+", " ");
+			if (msg.length() > 280) msg = msg.substring(0, 280) + "...";
+			return msg;
 		}
 	}
 
