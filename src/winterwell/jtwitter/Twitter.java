@@ -2235,7 +2235,9 @@ public class Twitter implements Serializable {
 	 * less (since the filtering is done client side).
 	 * 
 	 * @param sinceDate
+	 * @see #setSinceId(Number)
 	 */
+	@Deprecated
 	public void setSinceDate(Date sinceDate) {
 		this.sinceDate = sinceDate;
 	}
@@ -2287,8 +2289,12 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @param untilDate
-	 *            the untilDate to set
+	 *            the untilDate to set. This is NOT
+	 *            properly supported. It operates by post filtering
+	 *            results client-side.
+	 * @see #setUntilId(Number) which is better
 	 */
+	@Deprecated
 	public void setUntilDate(Date untilDate) {
 		this.untilDate = untilDate;
 	}
