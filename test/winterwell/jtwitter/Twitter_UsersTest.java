@@ -10,6 +10,30 @@ public class Twitter_UsersTest {
 
 
 	/**
+	 * Test method for {@link winterwell.jtwitter.Twitter#getFriends()}.
+	 */
+	@Test
+	public void testGetFriends() {
+		Twitter tw = TwitterTest.newTestTwitter();
+		List<User> friends = tw.users().getFriends();
+		assert friends != null && ! friends.isEmpty();
+	}
+
+	@Test
+	public void testGetFriendIDs() {
+		{
+			Twitter tw = TwitterTest.newTestTwitter();
+			List<Number> friends = tw.users().getFriendIDs();
+			assert friends != null && ! friends.isEmpty();
+		}
+		{
+			Twitter tw = new Twitter();
+			List<Number> friends = tw.users().getFriendIDs("winterstein");
+			assert friends != null && ! friends.isEmpty();
+		}
+	}
+
+	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getFollowers()}.
 	 */
 	@Test

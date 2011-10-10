@@ -681,27 +681,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 
 	/**
-	 * Test method for {@link winterwell.jtwitter.Twitter#getFriends()}.
-	 */
-	public void testGetFriends() {
-		Twitter tw = newTestTwitter();
-		List<User> friends = tw.getFriends();
-		assert friends != null && ! friends.isEmpty();
-	}
-
-	public void testGetFriendIDs() {
-		{
-			Twitter tw = newTestTwitter();
-			List<Number> friends = tw.getFriendIDs();
-			assert friends != null && ! friends.isEmpty();
-		}
-		{
-			Twitter tw = new Twitter();
-			List<Number> friends = tw.getFriendIDs("winterstein");
-			assert friends != null && ! friends.isEmpty();
-		}
-	}
-	/**
 	 * Test the cursor-based API for getting many followers.
 	 * Slightly intermittent
 	 */
