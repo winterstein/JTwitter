@@ -221,24 +221,29 @@ extends TestCase // Comment out to remove the JUnit dependency
 		try {
 			tw.show("ykarya35a4wr");
 		} catch (SuspendedUser e) {
+		} catch (E404 e) {
 		}
 		List<User> users = tw.bulkShow(Arrays.asList("winterstein", "ykarya35a4wr"));
 		assert ! users.isEmpty();
 		try {
 			tw.isFollowing("ykarya35a4wr");
 		} catch (SuspendedUser e) {
+		} catch (E404 e) {
 		}
 		try {
 			tw.follow("ykarya35a4wr");
 		} catch (SuspendedUser e) {
+		} catch (E404 e) {
 		}
 		try {
 			tw.stopFollowing("ykarya35a4wr");
 		} catch (SuspendedUser e) {
+		} catch (E404 e) {
 		}
 		try {
 			tw.getUserTimeline("ykarya35a4wr");
 		} catch (SuspendedUser e) {
+		} catch (E404 e) {
 		}
 	}
 
@@ -676,16 +681,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 
 	/**
-	 * Test method for {@link winterwell.jtwitter.Twitter#getFollowers()}.
-	 */
-	public void testGetFollowers() {
-		Twitter tw = newTestTwitter();
-		List<User> f = tw.getFollowers();
-		assert f.size() > 0;
-		assert Twitter.getUser("winterstein", f) != null;
-	}
-
-	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getFriends()}.
 	 */
 	public void testGetFriends() {
@@ -747,7 +742,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			tw.setSinceId(10584958134L);
 			tw.setSearchLocation(55.954151,-3.20277,"18km");
 			List<Status> tweets = tw.search("stuff");
-			assert false;
+			assert false : tweets;
 		} catch (TwitterException.E403 e) {
 			String msg = e.getMessage();
 		}
@@ -1087,15 +1082,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter tw = newTestTwitter();
 		tw.setIncludeTweetEntities(true);
 		{	// both these examples caused (non-repeatable) bugs in the wild
+			// This tweet has now been deleted!
 			BigInteger id = new BigInteger("119509089008095232");
 			Status s = tw.getStatus(id);
 			System.out.println(s.getDisplayText());
-		}
-		{
-			BigInteger id = new BigInteger("119503558465949697");
-			Status s = tw.getStatus(id);
-			System.out.println(s.getDisplayText());			
-		}
+		}		
 		{
 			BigInteger id = new BigInteger("119673041927159808"); 
 			Status s = tw.getStatus(id); 
@@ -1148,17 +1139,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert tw.isFollowing("winterstein");
 	}
 
-	public void testUserFollowingProperty() throws InterruptedException {
-		// test the user property
-		Twitter tw = newTestTwitter();
-		tw.follow("stephenfry");
-		User sf = tw.getUser("stephenfry");
-		assert sf.isFollowedByYou();
-		assert ! sf.isFollowingYou();
-		List<User> followers = tw.getFollowers();
-		List<User> fBy = tw.getFriends();
-		System.out.println(fBy);
-	}
 
 	public void testRetweet() {
 		Twitter tw = newTestTwitter();

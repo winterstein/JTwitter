@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import winterwell.utils.web.WebUtilsTest;
-
 /**
  * Utility methods used in Twitter. This class is public in case anyone else
  * wants to use these methods. WARNING: they don't really form part of the

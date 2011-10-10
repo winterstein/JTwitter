@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
+import winterwell.jtwitter.TwitterException.E50X;
 import winterwell.jtwitter.TwitterException.Timeout;
 
 /**
@@ -79,11 +80,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	final Map<KRequestType, RateLimit> rateLimits = new EnumMap(
 			KRequestType.class);
-
-	/**
-	 * true if we are in the middle of a retry attempt. false normally
-	 */
-	private boolean retryingFlag;
 
 	/**
 	 * If true, will wait 1/2 second and make a 2nd request when presented with
@@ -193,54 +189,73 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	@Override
 	public final String getPage(String url, Map<String, String> vars,
-			boolean authenticate) throws TwitterException {
+			boolean authenticate) throws TwitterException 
+	{		
 		assert url != null;
-		HttpURLConnection connection = null;
 		InternalUtils.count(url);
+		// This method handles the retry behaviour.
 		try {
-			HttpURLConnection con = connect(url, vars, authenticate);
-			InputStream inStream = con.getInputStream();
-			// Read in the web page
-			String page = InternalUtils.toString(inStream);
-			// Done
-			return page;
+			// Do the actual work
+			return getPage2(url, vars, authenticate);
+			
 		} catch (SocketTimeoutException e) {
-			Timeout ex = new TwitterException.Timeout(url);
-			return getPage2_retry(url, vars, authenticate, ex);
+			if ( ! retryOnError) throw getPage2_ex(e, url);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return getPage2(url, vars, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, url);
+			}
+		} catch (TwitterException.E50X e) {
+			if ( ! retryOnError) throw getPage2_ex(e, url);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return getPage2(url, vars, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, url);
+			}
 		} catch (IOException e) {
 			throw new TwitterException.IO(e);
-		} catch (TwitterException.E50X e) {
-			return getPage2_retry(url, vars, authenticate, e);
-		} finally {
-			disconnect(connection);
-		}
+		} 
 	}
 
 	/**
-	 * Should we retry?
+	 * Called on error. What to throw? 
+	 */
+	private TwitterException getPage2_ex(Exception ex, String url) {
+		if (ex instanceof TwitterException) return (TwitterException) ex;
+		if (ex instanceof SocketTimeoutException) {
+			return new TwitterException.Timeout(url);
+		}
+		if (ex instanceof IOException) {
+			return new TwitterException.IO((IOException) ex);
+		}
+		return new TwitterException(ex);
+	}
+	/**
+	 * Does the actual work for {@link #getPage(String, Map, boolean)}
 	 * 
 	 * @param url
 	 * @param vars
 	 * @param authenticate
-	 * @param originalException
 	 * @return page if successful
-	 * @throws originalException
+	 * @throws IOException 
 	 */
-	private String getPage2_retry(String url, Map<String, String> vars,
-			boolean authenticate, TwitterException.E50X originalException) {
-		if (!retryOnError || retryingFlag)
-			throw originalException;
+	private String getPage2(String url, Map<String, String> vars,
+			boolean authenticate) throws IOException {
+		HttpURLConnection connection = null;	
 		try {
-			retryingFlag = true;
-			// wait half a second before retrying
-			Thread.sleep(500);
-			return getPage(url, vars, authenticate);
-		} catch (InterruptedException ex) {
-			// ignore the interruption & just throw the original error
-			throw originalException;
+			connection = connect(url, vars, authenticate);
+			InputStream inStream = connection.getInputStream();
+			// Read in the web page
+			String page = InternalUtils.toString(inStream);
+			// Done
+			return page;
 		} finally {
-			retryingFlag = false;
-		}
+			disconnect(connection);
+		}		
 	}
 
 	@Override
@@ -249,8 +264,38 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	}
 
 	@Override
-	public String post(String uri, Map<String, String> vars,
-			boolean authenticate) throws TwitterException {
+	public final String post(String uri, Map<String, String> vars,
+			boolean authenticate) throws TwitterException {		
+		InternalUtils.count(uri);
+		try {
+			// do the actual work
+			return post2(uri, vars, authenticate);
+		} catch (TwitterException.E50X e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return post2(uri, vars, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (SocketTimeoutException e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return post2(uri, vars, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (Exception e) {
+			throw getPage2_ex(e, uri);
+		}
+	}
+
+	private String post2(String uri, Map<String, String> vars,
+			boolean authenticate) throws Exception 
+	{
 		HttpURLConnection connection = null;
 		try {
 			connection = post2_connect(uri, vars);
@@ -260,21 +305,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			String response = InternalUtils.toString(connection
 					.getInputStream());
 			return response;
-		} catch (TwitterException.E50X e) {
-			if (!retryOnError || retryingFlag)
-				throw e;
-			try {
-				Thread.sleep(1000);
-				retryingFlag = true;
-				return post(uri, vars, authenticate);
-			} catch (InterruptedException ex) {
-				// ignore the interruption & just throw the original error
-				throw e;
-			} finally {
-				retryingFlag = false;
-			}
-		} catch (Exception e) {
-			throw new TwitterException(e);
 		} finally {
 			disconnect(connection);
 		}

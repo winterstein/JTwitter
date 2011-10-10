@@ -21,8 +21,6 @@ import org.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.Utils;
-import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -257,7 +255,11 @@ public abstract class AStream implements Closeable {
 			readThread.pleaseStop();
 			// we mean it!
 			if (readThread.isAlive()) {
-				Utils.sleep(100);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					/// ignore
+				}
 				readThread.interrupt();
 			}
 			readThread = null;
@@ -628,7 +630,7 @@ public abstract class AStream implements Closeable {
 			throw e;
 		} catch (Exception e) {
 			// oh well
-			Log.report("" + e);
+			System.out.println(e);
 		}
 		// 2. Exponential back-off. Wait a random number of seconds between 20
 		// and 40 seconds.
@@ -651,7 +653,7 @@ public abstract class AStream implements Closeable {
 				throw e;
 			} catch (Exception e) {
 				// oh well
-				Log.report("" + e);
+				System.out.println(e);
 			}
 		}
 		throw new TwitterException.E50X("Could not connect to streaming server");

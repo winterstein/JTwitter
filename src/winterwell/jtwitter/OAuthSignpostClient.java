@@ -308,27 +308,6 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	}
 
 	@Override
-	public String post(String uri, Map<String, String> vars,
-			boolean authenticate) throws TwitterException {
-		HttpURLConnection connection = null;
-		try {
-			connection = post2_connect(uri, vars);
-			// Get the response
-			processError(connection);
-			processHeaders(connection);
-			String response = InternalUtils.toString(connection
-					.getInputStream());
-			return response;
-		} catch (IOException e) {
-			throw new TwitterException(e);
-		} catch (OAuthException e) {
-			throw new TwitterException(e);
-		} finally {
-			disconnect(connection);
-		}
-	}
-
-	@Override
 	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
 			throws IOException, OAuthException {
 		HttpURLConnection connection = (HttpURLConnection) new URL(uri)

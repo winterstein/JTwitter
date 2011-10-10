@@ -6,6 +6,7 @@
  - Added ITweet.getDisplayText() and more defensive coding for random bad data
  from Twitter
  - Added Twitter.getAPIStatus() to show how Twitter's servers are behaving.
+ - Removed stray winterwell.utils references
  
 2.3.3:
  - Fixed encoding issue which affected some TwitterStreams (" " is now encoded as "%20" not "+")

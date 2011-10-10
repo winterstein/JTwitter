@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import winterwell.utils.TodoException;
 
 /**
  * Connect to the streaming API.
@@ -164,6 +163,7 @@ public class TwitterStream extends AStream {
 	}
 
 	/**
+	 * TODO This is not implemented yet!
 	 * 25 0.1-360 degree location boxes.
 	 * 
 	 * Only tweets that are both created using the Geotagging API and are placed
@@ -174,10 +174,11 @@ public class TwitterStream extends AStream {
 	 *            Each element consists of longitude/latitude south-west,
 	 *            north-east.
 	 */
+	@Deprecated // TODO
 	public void setLocation(List<double[]> boundingBoxes) {
 		method = KMethod.filter;
 		this.locns = boundingBoxes;
-		throw new TodoException();
+		throw new RuntimeException("TODO! Not implemented yet (sorry)");
 	}
 
 	/**
