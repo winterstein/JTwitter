@@ -2412,10 +2412,6 @@ public class Twitter implements Serializable {
 		return stopFollowing(user.screenName);
 	}
 
-	String stripUrls(String text) {
-		return InternalUtils.URL_REGEX.matcher(text).replaceAll("");
-	}
-
 	/**
 	 * Update info on Twitter's configuration -- such as shortened url lengths.
 	 */
@@ -2603,44 +2599,51 @@ public class Twitter implements Serializable {
 		}
 		try {
 			Status s = new Status(new JSONObject(result), null);
-			// Weird bug: Twitter occasionally rejects tweets?!
-			// TODO does this still happen or have they fixed it? Hard to know
-			// with an intermittent bug!
-			// Sanity check...
-			String targetText = statusText.trim();
-			String returnedStatusText = s.text.trim();
-			// strip the urls to remove the effects of the t.co shortener
-			// (obviously this weakens the safety test, but failure would be
-			// a corner case of a corner case)
-			targetText = stripUrls(targetText);
-			returnedStatusText = stripUrls(returnedStatusText);
-			if (returnedStatusText.equals(targetText))
-				return s;
-			{ // is it a direct message? - which doesn't return the true status
-				String st = statusText.toLowerCase();
-				if (st.startsWith("dm") || st.startsWith("d"))
-					return null;
-			}
-			// try waiting and rechecking - maybe it did work after all
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// igore the interruption & just report the weirdness
-				throw new TwitterException.Unexplained(
-						"Unexplained failure for tweet: expected \""
-								+ statusText + "\" but got "
-								+ returnedStatusText);
-			}
-			Status s2 = getStatus();
-			if (s2 != null && targetText.equals(stripUrls(s2.text.trim())))
-				// Log.report("Weird transitory bug in Twitter update status with "+targetText);
-				return s2;
-			throw new TwitterException.Unexplained(
-					"Unexplained failure for tweet: expected \"" + statusText
-							+ "\" but got " + s2);
+			s = updateStatus2_safetyCheck(statusText, s);
+			return s;
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(result, e);
 		}
+	}
+
+	private Status updateStatus2_safetyCheck(String statusText, Status s) {
+		// Weird bug: Twitter occasionally rejects tweets?!
+		// TODO does this still happen or have they fixed it? Hard to know
+		// with an intermittent bug!
+		// Sanity check...
+		String targetText = statusText.trim();
+		String returnedStatusText = s.text.trim();
+		// strip the urls to remove the effects of the t.co shortener
+		// (obviously this weakens the safety test, but failure would be
+		// a corner case of a corner case).
+		// TODO Twitter also shorten some not-quite-urls, such as "www.google.com", which stripUrls() won't catch.		
+		targetText = InternalUtils.stripUrls(targetText);
+		returnedStatusText = InternalUtils.stripUrls(returnedStatusText);
+		if (returnedStatusText.equals(targetText))
+			return s;
+		{ // is it a direct message? - which doesn't return the true status
+			String st = statusText.toLowerCase();
+			if (st.startsWith("dm") || st.startsWith("d"))
+				return null;
+		}
+		// Assume Twitter have fixed this bug -- TODO check this periodically
+		if (true) return s;
+		// try waiting and rechecking - maybe it did work after all
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// igore the interruption
+		}
+		Status s2 = getStatus();			
+		if (s2 != null) {
+			returnedStatusText = InternalUtils.stripUrls(s2.text.trim());
+			if (targetText.equals(returnedStatusText)) {			
+				return s2;
+			}
+		}
+		throw new TwitterException.Unexplained(
+				"Unexplained failure for tweet: expected \"" + statusText
+						+ "\" but got " + s2);
 	}
 
 	// TODO

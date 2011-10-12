@@ -40,7 +40,7 @@ import winterwell.utils.time.Time;
  */
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
-{
+{	
 	
 	public void testAPIStatus() throws Exception {
 		// just a smoke test

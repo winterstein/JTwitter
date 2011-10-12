@@ -37,10 +37,15 @@ import org.json.JSONObject;
  * winterwell.utils.Utils
  * 
  * @author daniel
- * 
+ * @testedby {@link InternalUtilsTest}
  */
 public class InternalUtils {
 
+
+	public static String stripUrls(String text) {
+		return URL_REGEX.matcher(text).replaceAll("");
+	}
+	
 	public static final Pattern TAG_REGEX = Pattern.compile("<!?/?[\\[\\-a-zA-Z][^>]*>", Pattern.DOTALL);
 	
 	static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
