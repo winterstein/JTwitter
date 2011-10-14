@@ -447,27 +447,30 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private void processError2_403(URL url, String errorPage) {
 		// is this a "too old" exception?
-		if (errorPage != null) {
-			if (errorPage.contains("too old"))
-				throw new TwitterException.BadParameter(errorPage + "\n" + url);
-			// is this a suspended user exception?
-			if (errorPage.contains("suspended"))
-				throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
-			// this can be caused by looking up is-follower wrt a suspended
-			// account
-			if (errorPage.contains("Could not find"))
-				throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
-			if (errorPage.contains("too recent"))
-				throw new TwitterException.TooRecent(errorPage + "\n" + url);
-			if (errorPage.contains("already requested to follow"))
-				throw new TwitterException.Repetition(errorPage + "\n" + url);
-			if (errorPage.contains("unable to follow more people"))
-				throw new TwitterException.FollowerLimit(name + " " + errorPage);
-			if (errorPage.contains("application is not allowed to access"))
-				throw new TwitterException.AccessLevel(name + " " + errorPage);
+		String _name = name==null? "anon" : name;
+		if (errorPage == null) {
+			throw new TwitterException.E403(url + " (" + _name+ ")");
 		}
-		throw new TwitterException.E403(errorPage + "\n" + url + " (" + getName()
-				+ ")");
+		if (errorPage.contains("too old"))
+			throw new TwitterException.BadParameter(errorPage + "\n" + url);
+		// is this a suspended user exception?
+		if (errorPage.contains("suspended"))
+			throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
+		// this can be caused by looking up is-follower wrt a suspended
+		// account
+		if (errorPage.contains("Could not find"))
+			throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
+		if (errorPage.contains("too recent"))
+			throw new TwitterException.TooRecent(errorPage + "\n" + url);
+		if (errorPage.contains("already requested to follow"))
+			throw new TwitterException.Repetition(errorPage + "\n" + url);
+		if (errorPage.contains("duplicate"))
+			throw new TwitterException.Repetition(errorPage);
+		if (errorPage.contains("unable to follow more people"))
+			throw new TwitterException.FollowerLimit(name + " " + errorPage);
+		if (errorPage.contains("application is not allowed to access"))
+			throw new TwitterException.AccessLevel(name + " " + errorPage);
+		throw new TwitterException.E403(errorPage + "\n" + url + " (" + _name+ ")");
 	}
 
 	private void processError2_rateLimit(HttpURLConnection connection,

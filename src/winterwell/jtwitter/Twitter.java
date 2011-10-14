@@ -2590,17 +2590,8 @@ public class Twitter implements Serializable {
 			assert v != 0 && v != -1;
 			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
 		}
-		String result;
-		try {
-			result = http.post(TWITTER_URL + "/statuses/update.json", vars,
+		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
 					true);
-		} catch (E403 e) {
-			// test for repetition (which gets a 403)
-			Status s = getStatus();
-			if (s != null && s.getText().equals(statusText))
-				throw new TwitterException.Repetition(s.getText());
-			throw e;
-		}
 		try {
 			Status s = new Status(new JSONObject(result), null);
 			s = updateStatus2_safetyCheck(statusText, s);
