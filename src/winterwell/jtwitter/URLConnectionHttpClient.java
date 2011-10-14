@@ -355,25 +355,14 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 * 
 	 * @param connection
 	 */
-	 void processError(HttpURLConnection connection) {
+	 final void processError(HttpURLConnection connection) {
 		try {
 			int code = connection.getResponseCode();
 			if (code == 200)
 				return;
 			URL url = connection.getURL();
 			// any explanation?
-			String error = connection.getResponseMessage();
-			Map<String, List<String>> headers = connection.getHeaderFields();
-			List<String> errorMessage = headers.get(null);
-			if (errorMessage != null && !errorMessage.isEmpty()) {
-				error += "\n" + errorMessage.get(0);
-			}
-			InputStream es = connection.getErrorStream();
-			String errorPage = null;
-			if (es != null) {
-				errorPage = read(es);
-				error += "\n" + errorPage;
-			}
+			String error = processError2_reason(connection);
 			// which error?
 			if (code == 401) {
 				if (error.contains("Basic authentication is not supported"))
@@ -383,14 +372,13 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			}
 			if (code == 403) {
 				// separate out the 403 cases
-				processError2_403(url, error, errorPage);
+				processError2_403(url, error);
 			}
 			if (code == 404) {
 				// user deleted?
-				if (errorPage != null && errorPage.contains("deleted"))
+				if (error != null && error.contains("deleted"))
 					// Note: This is a 403 exception
-					throw new TwitterException.SuspendedUser(errorPage + "\n"
-							+ url);
+					throw new TwitterException.SuspendedUser(error+ "\n"+ url);
 				throw new TwitterException.E404(error + "\n" + url);
 			}
 			if (code == 406)
@@ -427,7 +415,37 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		}
 	}
 
-	private void processError2_403(URL url, String error, String errorPage) {
+	private String processError2_reason(HttpURLConnection connection) throws IOException {
+		// Try for a helpful message from Twitter
+		InputStream es = connection.getErrorStream();
+		String errorPage = null;
+		if (es != null) {
+			try {
+				errorPage = read(es);
+				// is it json?			
+				JSONObject je = new JSONObject(errorPage);
+				String error = je.getString("error");
+				if (error!=null && ! error.isEmpty()) {
+					return error;
+				}
+			} catch (Exception e) {
+				// guess not!				
+			}				
+		}
+		// normal error channels
+		String error = connection.getResponseMessage();
+		Map<String, List<String>> headers = connection.getHeaderFields();
+		List<String> errorMessage = headers.get(null);
+		if (errorMessage != null && !errorMessage.isEmpty()) {
+			error += "\n" + errorMessage.get(0);
+		}
+		if (errorPage != null && !errorPage.isEmpty()) {
+			error += "\n" + errorPage;
+		}		
+		return error;
+	}
+
+	private void processError2_403(URL url, String errorPage) {
 		// is this a "too old" exception?
 		if (errorPage != null) {
 			if (errorPage.contains("too old"))
@@ -448,7 +466,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			if (errorPage.contains("application is not allowed to access"))
 				throw new TwitterException.AccessLevel(name + " " + errorPage);
 		}
-		throw new TwitterException.E403(error + "\n" + url + " (" + getName()
+		throw new TwitterException.E403(errorPage + "\n" + url + " (" + getName()
 				+ ")");
 	}
 
