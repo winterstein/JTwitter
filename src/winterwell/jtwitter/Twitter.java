@@ -554,7 +554,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.3.4";
+	public final static String version = "2.3.5";
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the
@@ -1547,7 +1547,7 @@ public class Twitter implements Serializable {
 			// But it fixes a bug whereby retweets aren't counted and can thus
 			// cause
 			// the system to quit early.
-			if (nextpage.isEmpty()) {
+			if (nextpage.size() == 0) {
 				break;
 			}
 			// Next page must start strictly before this one
@@ -2000,7 +2000,7 @@ public class Twitter implements Serializable {
 	 */
 	private String search2_bugHack(String searchTerm) {
 		// zero-length is valid with location
-		if (searchTerm.isEmpty())
+		if (searchTerm.length()==0)
 			return searchTerm;
 		// bug 1: a OR b near X fails
 		if (searchTerm.contains(" OR ") && !searchTerm.contains("-")

@@ -90,7 +90,7 @@ public class Twitter_Users {
 				// Stop here.
 				// Don't normally throw an exception so we don't waste the
 				// results we have.
-				if (users.isEmpty())
+				if (users.size() == 0)
 					throw e;
 				break;
 			}
@@ -306,7 +306,7 @@ public class Twitter_Users {
 	 * @see #getRelationshipInfoById(List)
 	 */
 	public List<User> getRelationshipInfo(List<String> screenNames) {
-		if (screenNames.isEmpty())
+		if (screenNames.size() == 0)
 			return Collections.EMPTY_LIST;
 		List<User> users = bulkShow2("/friendships/lookup.json", String.class,
 				screenNames);
@@ -324,7 +324,7 @@ public class Twitter_Users {
 	 * @see #getRelationshipInfo(List)
 	 */
 	public List<User> getRelationshipInfoById(List<? extends Number> userIDs) {
-		if (userIDs.isEmpty())
+		if (userIDs.size() == 0)
 			return Collections.EMPTY_LIST;
 		List<User> users = bulkShow2("/friendships/lookup.json", Number.class,
 				userIDs);
@@ -636,7 +636,7 @@ public class Twitter_Users {
 	 * @see #showById(List)
 	 */
 	public List<User> show(List<String> screenNames) {
-		if (screenNames.isEmpty())
+		if (screenNames.size() == 0)
 			return Collections.EMPTY_LIST;
 		return bulkShow2("/users/lookup.json", String.class, screenNames);
 	}
@@ -709,7 +709,7 @@ public class Twitter_Users {
 	 *            call).
 	 */
 	public List<User> showById(Collection<? extends Number> userIds) {
-		if (userIds.isEmpty())
+		if (userIds.size() == 0)
 			return Collections.EMPTY_LIST;
 		return bulkShow2("/users/lookup.json", Number.class, userIds);
 	}

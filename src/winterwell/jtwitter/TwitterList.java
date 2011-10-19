@@ -202,7 +202,7 @@ public class TwitterList extends AbstractList<User> {
 	public boolean addAll(Collection<? extends User> newUsers) {
 		List newUsersList = new ArrayList(newUsers);
 		newUsersList.removeAll(users);
-		if (newUsersList.isEmpty())
+		if (newUsersList.size() == 0)
 			return false;
 		String url = jtwit.TWITTER_URL + "/lists/members/create_all.json";
 		Map map = getListVars();

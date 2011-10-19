@@ -79,10 +79,10 @@ public class TwitterStream extends AStream {
 				+ ".json";
 		Map<String, String> vars = new HashMap();
 		vars.put("delimited", "length");
-		if (follow != null && !follow.isEmpty()) {
+		if (follow != null && follow.size() != 0) {
 			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
 		}
-		if (track != null && !track.isEmpty()) {
+		if (track != null && track.size() != 0) {
 			vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));
 		}
 		// use post in case it's a long set of vars
@@ -141,7 +141,7 @@ public class TwitterStream extends AStream {
 			}
 		}
 		// regions?
-		if (locns != null && !locns.isEmpty())
+		if (locns != null && ! locns.isEmpty())
 			throw new UnsupportedOperationException("TODO"); // TODO
 	}
 
@@ -150,9 +150,7 @@ public class TwitterStream extends AStream {
 	}
 
 	/**
-	 * , 5,000 follow userids and
-	 * 
-	 * @param userIds
+	 * @param userIds Upto 5,000 userids to follow
 	 */
 	public void setFollowUsers(List<Long> userIds) {
 		method = KMethod.filter;

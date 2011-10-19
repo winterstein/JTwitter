@@ -1,9 +1,10 @@
 # JTwitter Change list 
 
-2.3.5: (pending)
+2.3.5:
  - Twitter.updateStatus() no longer throws an exception if the returned status
  does not match the update. This was a workaround for an intermittent bug in Twitter -- hopefully they've patched it by now (Twitter have shown their usual awful responsiveness & comms on bugs). Removed because the vagaries of t.co
  being applied can lead to false alarms.
+ - Removed use of String.isEmpty()
 
 2.3.4:
  - Over-long tweet detection correctly handles t.co shortening of long urls.

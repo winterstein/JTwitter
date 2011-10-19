@@ -425,7 +425,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				// is it json?			
 				JSONObject je = new JSONObject(errorPage);
 				String error = je.getString("error");
-				if (error!=null && ! error.isEmpty()) {
+				if (error!=null && error.length() != 0) {
 					return error;
 				}
 			} catch (Exception e) {

@@ -335,7 +335,7 @@ public abstract class AStream implements Closeable {
 	 * </p>
 	 */
 	public final void fillInOutages() throws UnsupportedOperationException {
-		if (outages.isEmpty())
+		if (outages.size() == 0)
 			return;
 		Outage[] outs = outages.toArray(new Outage[0]);
 		// protect our original object from edits and threading-issues
@@ -582,7 +582,7 @@ public abstract class AStream implements Closeable {
 		// This is after a reconnect -- did we miss any follow events?
 		HashSet<Long> friends2 = new HashSet(friends);
 		friends2.removeAll(oldFriends);
-		if (friends2.isEmpty())
+		if (friends2.size() == 0)
 			return;
 		Twitter_Users tu = new Twitter_Users(jtwit);
 		List<User> newFriends = tu.showById(friends2);
@@ -784,7 +784,7 @@ final class StreamGobbler extends Thread {
 	}
 
 	private void readJson2_notifyListeners(String json) {
-		if (stream.listeners.isEmpty())
+		if (stream.listeners.size() == 0)
 			return;
 		synchronized (stream.listeners) {
 			try {

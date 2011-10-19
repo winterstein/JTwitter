@@ -99,7 +99,7 @@ public final class Status implements ITweet {
 	static Object jsonGetLocn(JSONObject object) throws JSONException {
 		String _location = InternalUtils.jsonGet("location", object);
 		// no blank strings
-		if (_location != null && _location.isEmpty()) {
+		if (_location != null && _location.length() == 0) {
 			_location = null;
 		}
 		JSONObject _place = object.optJSONObject("place");
@@ -439,7 +439,7 @@ public final class Status implements ITweet {
 	static String getDisplayText2(ITweet tweet) {
 		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
 		String _text = tweet.getText();
-		if (es==null || es.isEmpty()) return _text;
+		if (es==null || es.size()==0) return _text;
 		StringBuilder sb = new StringBuilder(200);
 		int i=0;
 		for (TweetEntity entity : es) {

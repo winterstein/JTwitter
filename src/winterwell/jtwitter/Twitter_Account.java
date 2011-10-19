@@ -202,7 +202,7 @@ public class Twitter_Account {
 	 * @return updated User object
 	 */
 	public User setProfileColors(Map<String, String> colorName2hexCode) {
-		assert !colorName2hexCode.isEmpty();
+		assert colorName2hexCode.size() != 0;
 		String url = jtwit.TWITTER_URL + "/account/update_profile_colors.json";
 		String json = jtwit.getHttpClient().post(url, colorName2hexCode, true);
 		return InternalUtils.user(json);
