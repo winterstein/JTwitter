@@ -9,6 +9,37 @@ import org.junit.Test;
 public class Twitter_UsersTest {
 
 
+	@Test
+	public void testBlocks() {
+		{
+			String token0 = "61569136-8tdSPEwRbjq1kc6EQSWUBLBQcTG5yiMSp3280IKM7";
+			String token1 = "NFZ8uh1etgd2Y5p9eOirrC9hEVvCMH2YftpAewlSSA";			
+//			OAuthSignpostClient client = new OAuthSignpostClient(
+//			OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+//			OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
+		//	client.authorizeDesktop();
+		//	String pin = client.askUser("The Pin?");
+		//	System.out.println(pin);
+		//	client.setAuthorizationCode(pin);
+		//	String[] tokens = client.getAccessToken();
+		//	System.out.println(tokens[0]+" "+tokens[1]);		
+			
+			OAuthSignpostClient client = new OAuthSignpostClient(
+			OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+			OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
+			token0, token1);
+			Twitter jtwit = new Twitter(null, client);
+			System.out.println(jtwit.getSelf());
+//			Twitter jtwit = TwitterTest.newTestTwitter();
+			Twitter_Users ta = jtwit.users();
+			List<Number> blocked = ta.getBlockedIds();
+			System.out.println(blocked);
+			List<User> users = ta.showById(blocked);
+			System.out.println(users);
+		}
+	}
+	
+
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getFriends()}.
 	 */
