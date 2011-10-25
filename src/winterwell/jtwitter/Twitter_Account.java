@@ -14,13 +14,11 @@ import winterwell.jtwitter.Twitter.ITweet;
 
 /**
  * Access the account methods: e.g. change your profile colours.
- * 
  * <p>
- * NB: These methods are here, rather than in the Twitter class, because the
- * Twitter class is getting crowded.
+ * Note that user blocking/unblocking methods are in 
+ * {@link Twitter_Users} -- see {@link Twitter#users()}
  * 
  * @author Daniel Winterstein
- * 
  */
 public class Twitter_Account {
 
