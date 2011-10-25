@@ -18,7 +18,8 @@ import winterwell.utils.io.FileUtils;
 
 public class BuildJTwitter extends BuildTask {
 
-	@Override	
+
+	@Override
 	public void doTask() throws Exception {
 		// The project directory
 		File base = FileUtils.getWorkingDirectory();
