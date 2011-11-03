@@ -25,8 +25,6 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
-import winterwell.jtwitter.TwitterException.E50X;
-import winterwell.jtwitter.TwitterException.Timeout;
 
 /**
  * A simple http client that uses the built in URLConnection class.
