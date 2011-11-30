@@ -918,6 +918,11 @@ public class Twitter implements Serializable {
 	public User follow(String username) throws TwitterException {
 		return users().follow(username);
 	}
+	
+	@Override
+	public String toString() {
+		return name==null? "Twitter" : "Twitter["+name+"]";
+	}
 
 	/**
 	 * @see Twitter_Users#follow(User)
