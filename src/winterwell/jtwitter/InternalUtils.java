@@ -94,7 +94,7 @@ public class InternalUtils {
 	 * the value is null, the key will not be included.
 	 */
 	@SuppressWarnings("unchecked")
-	static Map asMap(Object... keyValuePairs) {
+	public static Map asMap(Object... keyValuePairs) {
 		assert keyValuePairs.length % 2 == 0;
 		Map m = new HashMap(keyValuePairs.length / 2);
 		for (int i = 0; i < keyValuePairs.length; i += 2) {

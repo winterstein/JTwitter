@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.3.6:
+ - Moved support for third party tools into the "ecosystem" package.
+ - Added support for PeerIndex
+
 2.3.5:
  - Twitter.updateStatus() no longer throws an exception if the returned status
  does not match the update. This was a workaround for an intermittent bug in Twitter -- hopefully they've patched it by now (Twitter have shown their usual awful responsiveness & comms on bugs). Removed because the vagaries of t.co
