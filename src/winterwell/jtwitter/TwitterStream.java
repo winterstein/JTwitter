@@ -11,8 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Connect to the streaming API.
  * <p>
  * Duplicate messages may be delivered when reconnecting to the Streaming API.
- * <p>
- * Status: This class is in an early stage, and may change.
  * 
  * @author Daniel
  */

@@ -305,7 +305,7 @@ public abstract class AStream implements Closeable {
 			if (isConnected())
 				return;
 			Thread.sleep(10);
-			if (!isConnected())
+			if ( ! isConnected())
 				throw new TwitterException(readThread.ex);
 		} catch (Exception e) {
 
@@ -834,12 +834,7 @@ final class StreamGobbler extends Thread {
 
 	@Override
 	public void run() {
-		while (!stopFlag) {
-			// // not started yet?
-			// if (stream.stream==null) {
-			// Utils.sleep(2);
-			// continue;
-			// }
+		while (!stopFlag) {			
 			assert stream.stream != null : stream;
 			try {
 				InputStreamReader isr = new InputStreamReader(stream.stream);
