@@ -4,6 +4,7 @@
  - MINOR BREAKING CHANGE: Moved support for third party tools into the "ecosystem" package.
  - Added support for PeerIndex -- winterwell.jtwitter.ecosystem.PeerIndex
  - Twitter.toString() method
+ - Added support for Topsy -- winterwell.jtwitter.ecosystem.Topsy
  
 2.3.5:
  - Twitter.updateStatus() no longer throws an exception if the returned status
