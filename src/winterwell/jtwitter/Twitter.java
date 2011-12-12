@@ -109,7 +109,22 @@ public class Twitter implements Serializable {
 	public interface ICallback {
 		public boolean process(List<Status> statuses);
 	}
+	
 
+	/** TODO
+	 * 
+	 */
+//	If available, returns an array of replies and mentions related to the 
+//	specified Tweet. There is no guarantee there will be any replies or 
+//	mentions in the response. This method is only available to users who 
+//	have access to #newtwitter.
+	@Deprecated // TODO
+	public List<ITweet> getRelated(ITweet tweet) { 
+		// TODO
+		String url = TWITTER_URL+"/related_results/show/"+tweet.getId()+".json"; 
+		throw new RuntimeException("TODO");
+	}
+			
 	/**
 	 * How is the Twitter API today?
 	 * See {@link https://dev.twitter.com/status} for more information. 
@@ -1079,6 +1094,35 @@ public class Twitter implements Serializable {
 	 */
 	public List<TwitterList> getLists() {
 		return getLists(name);
+	}
+	
+	/**
+	 * 
+		Returns <i>all</i> lists the authenticating or specified user subscribes to, 
+		including their own.
+	   @param user can be null for the authenticating user.
+	   @see #getLists(String)
+	 */
+	public List<TwitterList> getListsAll(User user) {		
+		assert user!=null || http.canAuthenticate() : "No authenticating user";
+		try {
+			String url = TWITTER_URL + "/lists/all.json";
+			Map<String, String> vars = user.screenName==null?
+					InternalUtils.asMap("user_id", user.id)
+					: InternalUtils.asMap("screen_name", user.screenName);
+			String listsJson = http.getPage(url, vars, http.canAuthenticate());
+			JSONObject wrapper = new JSONObject(listsJson);
+			JSONArray jarr = (JSONArray) wrapper.get("lists");
+			List<TwitterList> lists = new ArrayList<TwitterList>();
+			for (int i = 0; i < jarr.length(); i++) {
+				JSONObject li = jarr.getJSONObject(i);
+				TwitterList twList = new TwitterList(li, this);
+				lists.add(twList);
+			}
+			return lists;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(null, e);
+		}
 	}
 
 	/**

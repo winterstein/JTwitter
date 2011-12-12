@@ -252,10 +252,12 @@ public final class Status implements ITweet {
 				place = (Place) _locn;
 			}
 
-			retweetCount = object.optInt("retweet_count", -1);
+			retweetCount = object.optInt("retweet_count", -1);			
+			
 			// ignore this as it can be misleading: true is reliable, false
 			// isn't
 			// retweeted = object.optBoolean("retweeted");
+			
 			// Entities (switched on by Twitter.setIncludeTweetEntities(true))
 			JSONObject jsonEntities = object.optJSONObject("entities");
 			if (jsonEntities != null) {

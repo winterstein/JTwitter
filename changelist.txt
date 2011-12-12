@@ -5,6 +5,7 @@
  - Added support for PeerIndex -- winterwell.jtwitter.ecosystem.PeerIndex
  - Twitter.toString() method
  - Added support for Topsy -- winterwell.jtwitter.ecosystem.Topsy
+ - Added new API features Twitter.getListsAll(User) and Twitter.getRelated(ITweet)
  
 2.3.5:
  - Twitter.updateStatus() no longer throws an exception if the returned status
