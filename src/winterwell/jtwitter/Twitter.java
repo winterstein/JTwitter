@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.MathUtils;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -1276,6 +1277,9 @@ public class Twitter implements Serializable {
 	 * @see #getRateLimit(KRequestType)
 	 */
 	public int getRateLimitStatus() {
+		
+		
+		
 		String json = http.getPage(TWITTER_URL
 				+ "/account/rate_limit_status.json", null,
 				http.canAuthenticate());
