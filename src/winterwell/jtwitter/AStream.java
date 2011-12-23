@@ -761,6 +761,7 @@ final class StreamGobbler extends Thread {
 	}
 
 	private void readJson(BufferedReader br, int len) throws IOException {
+		// Read len chars from the stream
 		assert len > 0;
 		char[] sb = new char[len];
 		int cnt = 0;
@@ -772,6 +773,7 @@ final class StreamGobbler extends Thread {
 			cnt += rd;
 			len -= rd;
 		}
+		
 		String json = new String(sb);
 		synchronized (this) {
 			jsons.add(json);
@@ -811,6 +813,12 @@ final class StreamGobbler extends Thread {
 		}
 	}
 
+	/**
+	 * Read a number from the stream -- which is the length of the next message.
+	 * @param br
+	 * @return
+	 * @throws IOException
+	 */
 	private int readLength(BufferedReader br) throws IOException {
 		StringBuilder numSb = new StringBuilder();
 		while (true) {
@@ -824,9 +832,12 @@ final class StreamGobbler extends Thread {
 				if (numSb.length() == 0) {
 					continue;
 				}
+				// done!
 				break;
 			}
+			// collect digits
 			assert Character.isDigit(ch) : ch;
+			assert numSb.length() < 10 : numSb; // paranoia
 			numSb.append(ch);
 		}
 		return Integer.valueOf(numSb.toString());
