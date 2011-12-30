@@ -91,7 +91,7 @@ public class UserStreamTest {
 		if ( ! tweets.isEmpty()) System.out.println(StrUtils.join(tweets,"\n"));
 		if ( ! evs.isEmpty()) System.out.println(evs);
 		
-		List<TwitterEvent> sys2 = us2.popSystemEvents();
+		List<Object[]> sys2 = us2.popSystemEvents();
 		List<ITweet> tweets2 = us2.popTweets();
 		List<TwitterEvent> evs2 = us2.popEvents();
 		if ( ! tweets2.isEmpty()) System.out.println(StrUtils.join(tweets2,"\n"));

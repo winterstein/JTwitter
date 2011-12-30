@@ -38,7 +38,7 @@ public class TwitterStreamTest {
 			Thread.sleep(60*1000);
 			List<TwitterEvent> events = ts.popEvents();
 			List<ITweet> tweets = ts.popTweets();
-			List<TwitterEvent> sysEvs = ts.popSystemEvents();
+			List<Object[]> sysEvs = ts.popSystemEvents();
 		}
 		assert ts.isAlive();
 		ts.close();				

@@ -570,7 +570,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.3.6";
+	public final static String version = "2.3.7";
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the

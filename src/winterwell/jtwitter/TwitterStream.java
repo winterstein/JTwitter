@@ -126,6 +126,7 @@ public class TwitterStream extends AStream {
 				}
 			}
 		}
+		
 		// users?
 		if (follow != null) {
 			for (Long user : follow) {

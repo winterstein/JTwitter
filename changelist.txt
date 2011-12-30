@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.3.7:
+ - Fixed generic type bug on AStream.getSysEvents()
+ - reconnecting is now a sys-event, reported as ["reconnect", long milliseconds-required]
+
 2.3.6:
  - MINOR BREAKING CHANGE: Moved support for third party tools into the "ecosystem" package.
  - Added support for PeerIndex -- winterwell.jtwitter.ecosystem.PeerIndex

@@ -369,6 +369,9 @@ public abstract class AStream implements Closeable {
 		close();
 	}
 
+	/**
+	 * @return never null
+	 */
 	public final List<TwitterEvent> getEvents() {
 		read();
 		return events;
@@ -450,6 +453,7 @@ public abstract class AStream implements Closeable {
 
 	/**
 	 * @return the recent events. Calling this will clear the list of events.
+	 * never null
 	 */
 	public final List<TwitterEvent> popEvents() {
 		List evs = getEvents();
@@ -460,9 +464,12 @@ public abstract class AStream implements Closeable {
 	/**
 	 * @return the recent system events, such as "delete this status". Calling
 	 *         this will clear the list of system events.
+	 *         <p>
+	 *         This also lists reconnect events, with the number of seconds
+	 *         taken to reconnect.
 	 */
-	public final List<TwitterEvent> popSystemEvents() {
-		List evs = getSystemEvents();
+	public final List<Object[]> popSystemEvents() {
+		List<Object[]> evs = getSystemEvents();
 		sysEvents = new ArrayList();
 		return evs;
 	}
@@ -472,11 +479,13 @@ public abstract class AStream implements Closeable {
 	 */
 	public final List<ITweet> popTweets() {
 		List<ITweet> ts = getTweets();
+		// TODO is there a race condition here? 
+		// Only if two threads are using pop & getTweets
 		tweets = new ArrayList();
 		return ts;
 	}
 
-	final void read() {
+	private final void read() {
 		String[] jsons = readThread.popJsons();
 		for (String json : jsons) {
 			try {
@@ -487,6 +496,7 @@ public abstract class AStream implements Closeable {
 		}
 		if (isConnected())
 			return;
+		// NOT connected?!
 		// orderly shutdown? that's OK
 		if (readThread != null && readThread.stopFlag)
 			return;
@@ -501,23 +511,23 @@ public abstract class AStream implements Closeable {
 	}
 
 	private void read2(String json) throws JSONException {
-		JSONObject jo = new JSONObject(json);
+		JSONObject jobj = new JSONObject(json);
 
 		// the 1st object for a user stream is a list of friend ids
-		JSONArray _friends = jo.optJSONArray("friends");
+		JSONArray _friends = jobj.optJSONArray("friends");
 		if (_friends != null) {
 			read3_friends(_friends);
 			return;
 		}
 
 		// parse the json
-		Object object = read3_parse(jo, jtwit);
+		Object object = read3_parse(jobj, jtwit);
 
 		// tweets
 		// TODO DMs?? They don't seem to get sent!
 		// System.out.println(jo);
-		if (jo.has("text")) {
-			Status tweet = new Status(jo, null);
+		if (object instanceof Status) {
+			Status tweet = (Status) object;
 			// de-duplicate a bit locally (this is rare -- perhaps don't
 			// bother??)
 			if (tweets.contains(tweet))
@@ -532,41 +542,34 @@ public abstract class AStream implements Closeable {
 		}
 
 		// Events
-		String eventType = jo.optString("event");
-		if (eventType != "") {
-			TwitterEvent event = new TwitterEvent(jo, jtwit);
+		if (object instanceof TwitterEvent) {
+			TwitterEvent event = (TwitterEvent) object;
 			events.add(event);
 			forgotten += forgetIfFull(events);
 			return;
 		}
 		// Deletes and other system events, like limits
-		JSONObject del = jo.optJSONObject("delete");
-		if (del != null) {
-			JSONObject s = del.getJSONObject("status");
-			BigInteger id = new BigInteger(s.getString("id_str"));
-			long userId = s.getLong("user_id");
-			Status deadTweet = new Status(null, null, id, null);
-			// prune local (which is unlikely to do much)
-			boolean pruned = tweets.remove(deadTweet);
-			if (!pruned) {
-				sysEvents.add(new Object[] { "delete", deadTweet, userId });
-				forgotten += forgetIfFull(sysEvents);
+		if (object instanceof Object[]) {
+			Object[] sysEvent = (Object[]) object;
+			// delete?
+			if ("delete".equals(sysEvent[0])) {
+				Status deadTweet = (Status) sysEvent[1];
+				// prune local (which is unlikely to do much)
+				boolean pruned = tweets.remove(deadTweet);
+				if (!pruned) {
+					sysEvents.add(sysEvent);
+					forgotten += forgetIfFull(sysEvents);
+				}
+				return;
+			} else if ("limit".equals(sysEvent[0])) {
+				Integer cnt = (Integer) sysEvent[1];				
+				sysEvents.add(sysEvent);
+				forgotten += cnt;
+				return;				
 			}
-			return;
-		}
-		// e.g. {"limit":{"track":1234}}
-		JSONObject limit = jo.optJSONObject("limit");
-		if (limit != null) {
-			int cnt = limit.optInt("track");
-			if (cnt == 0) {
-				System.out.println(jo); // API change :( - a new limit object
-			}
-			sysEvents.add(new Object[] { "limit", cnt });
-			forgotten += cnt;
-			return;
 		}
 		// ??
-		System.out.println(jo);
+		System.out.println(jobj);
 	}
 
 	private void read3_friends(JSONArray _friends) throws JSONException {
@@ -603,7 +606,10 @@ public abstract class AStream implements Closeable {
 	 */
 	synchronized void reconnect() {
 		// do the reconnect (can be slow)
+		long now = System.currentTimeMillis();
 		reconnect2();
+		long dt = System.currentTimeMillis() - now;
+		addSysEvent(new Object[]{"reconnect", dt});
 
 		// store the outage
 		// TODO merge small outages
@@ -616,6 +622,30 @@ public abstract class AStream implements Closeable {
 				}
 				// add an arbitrary number to the forgotten count: 10 per outage
 				forgotten += 10000;
+			}
+		}
+	}
+
+	/**
+	 * Add a sys-event outside of the normal run of events-received-from-Twitter.
+	 * Used for events about the connection (e.g. it's gone down)
+	 * @param sysEvent
+	 */
+	void addSysEvent(Object[] sysEvent) {
+		sysEvents.add(sysEvent);
+		if (listeners.size()==0) return;
+		synchronized (listeners) {
+			try {
+				for (IListen listener : listeners) {
+					boolean carryOn = listener.processSystemEvent(sysEvent);
+					// hide from earlier listeners?
+					if (!carryOn) {
+						break;
+					}
+				}
+			} catch (Exception e) {
+				// swallow it & keep the stream flowing
+				e.printStackTrace();
 			}
 		}
 	}
@@ -719,7 +749,7 @@ final class StreamGobbler extends Thread {
 	 */
 	private ArrayList<String> jsons = new ArrayList();
 
-	long offTime;
+//	long offTime;
 
 	volatile boolean stopFlag;
 
@@ -855,11 +885,14 @@ final class StreamGobbler extends Thread {
 					readJson(br, len);
 				}
 			} catch (Exception ioe) {
-				if (stopFlag)
+				if (stopFlag) {
 					// we were told to stop already so ignore
 					return;
+				}
 				ex = ioe;
-				offTime = System.currentTimeMillis();
+//				offTime = System.currentTimeMillis();
+				// TODO log this as a sys-event
+				stream.addSysEvent(new Object[]{"exception", ex});
 				// try a reconnect?
 				if (!stream.autoReconnect)
 					return; // no - break out of the loop
