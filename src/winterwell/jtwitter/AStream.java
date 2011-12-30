@@ -388,7 +388,7 @@ public abstract class AStream implements Closeable {
 	}
 
 	/**
-	 * @return the list outages so far.
+	 * @return the list outages so far. Hopefully empty, never null.
 	 *         <p>
 	 *         This is the actual list used. You can remove items from this list
 	 *         to quietly forget about them. Use {@link #addOutage(Outage)} to
