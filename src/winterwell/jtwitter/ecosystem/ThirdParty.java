@@ -5,11 +5,10 @@ import org.json.JSONObject;
 
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.URLConnectionHttpClient;
 import winterwell.jtwitter.User;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.TwitterException.Parsing;
 
 /**
  * Status: experimental! Access to 3rd party services:

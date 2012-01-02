@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.utils.MathUtils;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}

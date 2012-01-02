@@ -3,8 +3,6 @@
  */
 package winterwell.jtwitter.ecosystem;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import winterwell.jtwitter.User;

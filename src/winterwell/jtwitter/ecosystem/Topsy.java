@@ -6,9 +6,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import winterwell.jtwitter.InternalUtils;
+import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.URLConnectionHttpClient;
-import winterwell.jtwitter.Twitter.IHttpClient;
 
 /**
  * Use the Topsy Twitter analytics services. 
