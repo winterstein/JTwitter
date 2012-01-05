@@ -195,6 +195,7 @@ public final class Status implements ITweet {
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
 			String _text = InternalUtils.jsonGet("text", object);
 			text = InternalUtils.unencode(_text); // bugger - this screws up the indices in tweet entities
+//			FIXME truncated = object.optBoolean("truncated"); // What to do if true??
 			// date
 			String c = InternalUtils.jsonGet("created_at", object);
 			createdAt = InternalUtils.parseDate(c);
