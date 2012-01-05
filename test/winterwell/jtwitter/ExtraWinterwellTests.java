@@ -15,6 +15,20 @@ import winterwell.utils.io.XStreamBinaryConverter;
 public class ExtraWinterwellTests {
 
 	@Test
+	public void testAuth() throws Exception {
+		OAuthSignpostClient client = new OAuthSignpostClient(
+				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
+				"oob");
+		client.authorizeDesktop();
+		String v = client.askUser("Please enter the verification PIN from Twitter");
+		client.setAuthorizationCode(v);
+		// Optional: store the authorisation token details
+		String[] accessToken = client.getAccessToken();
+		System.out.println(accessToken[0]+" "+accessToken[1]);
+	}
+	
+	@Test
 	public void testLinkTruncation() throws Exception {
 		Twitter tt = TwitterTest.newTestTwitter();
 		Status s = tt.getStatus(new BigInteger("154915377170747392"));
