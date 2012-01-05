@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
@@ -425,7 +426,7 @@ public class Twitter implements Serializable {
 			}
 		}
 
-		private final String display;
+		final String display;
 		/**
 		 * end of the entity in the contents String, exclusive
 		 */
@@ -502,6 +503,17 @@ public class Twitter implements Serializable {
 		}
 
 		/**
+		 * Constructor for when you know exactly what you want (rare).
+		 */
+		TweetEntity(ITweet tweet, KEntityType type, int start, int end, String display) {
+			this.tweet = tweet;
+			this.end = end;
+			this.start = start;
+			this.type = type;			
+			this.display = display;
+		}
+
+		/**
 		 * @return For a url: the expanded version For a user-mention: the
 		 *         user's name
 		 */
@@ -569,7 +581,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.3.7";
+	public final static String version = "2.3.8";
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the

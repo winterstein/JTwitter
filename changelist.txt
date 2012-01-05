@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.3.8:
+ - Twitter have started truncating long RTs (& returning dud tweet-entities to go with them).
+ Fortunately they also return the original RT, so we can correct for this.
+ 
 2.3.7:
  - Fixed generic type bug on AStream.getSysEvents()
  - reconnecting is now a sys-event, reported as ["reconnect", long milliseconds-required]
