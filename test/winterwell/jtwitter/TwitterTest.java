@@ -42,6 +42,7 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
 	
+	
 	public void testAPIStatus() throws Exception {
 		// just a smoke test
 		Map<String, Double> map = Twitter.getAPIStatus();

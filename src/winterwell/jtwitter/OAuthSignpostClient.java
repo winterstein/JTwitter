@@ -48,8 +48,13 @@ import winterwell.jtwitter.Twitter.IHttpClient;
  * 
  * <p>
  * Example Usage #2 (using callbacks):<br>
- * If you can handle callbacks, then this can be streamlined. You need a
- * webserver and a servlet (eg. use Jetty or Tomcat) to handle callbacks.
+ * If you can handle callbacks, then this can be streamlined. 
+ * 
+ * On Android, you can use Intents to launch a web page, & to catch the resulting
+ * callback. 
+ * On a desktop, you need a webserver and a servlet (eg. use Jetty or Tomcat) 
+ * to handle callbacks.
+ * <p>
  * Replace "oob" with your callback url. Direct the user to
  * client.authorizeUrl(). Twitter will then call your callback with the request
  * token and verifier (authorisation code).

@@ -193,8 +193,23 @@ public final class Status implements ITweet {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
+			// retweet?
+			JSONObject retweeted = object.optJSONObject("retweeted_status");
+			if (retweeted != null) {
+				original = new Status(retweeted, null);
+			}
+			// text!
 			String _text = InternalUtils.jsonGet("text", object);
-			text = InternalUtils.unencode(_text); // bugger - this screws up the indices in tweet entities
+			// Twitter have started truncating RTs -- let's fix the text up if we can
+			boolean truncated = object.optBoolean("truncated");
+			String rtStart = null;
+			if (truncated && original!=null && _text.startsWith("RT ")) {
+				rtStart = "RT @"+original.getUser()+": ";
+				_text = rtStart+original.getText();				
+			} else {
+				_text = InternalUtils.unencode(_text); // bugger - this screws up the indices in tweet entities
+			}
+			text = _text; 
 			// date
 			String c = InternalUtils.jsonGet("created_at", object);
 			createdAt = InternalUtils.parseDate(c);
@@ -202,11 +217,7 @@ public final class Status implements ITweet {
 			// (timelines)!
 			String src = InternalUtils.jsonGet("source", object);
 			source = src.contains("&lt;") ? InternalUtils.unencode(src) : src;
-			// retweet?
-			JSONObject retweeted = object.optJSONObject("retweeted_status");
-			if (retweeted != null) {
-				original = new Status(retweeted, null);
-			}
+			// threading
 			String irt = InternalUtils.jsonGet("in_reply_to_status_id", object);
 			if (irt == null) {
 				// Twitter doesn't give in-reply-to for retweets
@@ -254,22 +265,40 @@ public final class Status implements ITweet {
 
 			retweetCount = object.optInt("retweet_count", -1);			
 			
-			// ignore this as it can be misleading: true is reliable, false
-			// isn't
+			// ignore this as it can be misleading: true is reliable, false isn't
 			// retweeted = object.optBoolean("retweeted");
 			
 			// Entities (switched on by Twitter.setIncludeTweetEntities(true))
 			JSONObject jsonEntities = object.optJSONObject("entities");
+			// Note: Twitter filters out dud @names
 			if (jsonEntities != null) {
-				// Note: Twitter filters out dud @names
 				entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(
 						KEntityType.class);
-				for (KEntityType type : KEntityType.values()) {
-					List<TweetEntity> es = TweetEntity.parse(this, _text, type,
-							jsonEntities);
-					entities.put(type, es);
+				if (rtStart!=null) {
+					// truncation! the entities returned are likely to be duds -- adjust from the original instead
+					int rt = rtStart.length();
+					for (KEntityType type : KEntityType.values()) {
+						List<TweetEntity> es = original.getTweetEntities(type);
+						if (es==null) continue;
+						ArrayList rtEs = new ArrayList(es.size());
+						for (TweetEntity e : es) {
+							TweetEntity rte = new TweetEntity(this, e.type, 
+									/* safety checks on length are paranoia (could be removed) */
+									Math.min(rt+e.start, text.length()), Math.min(rt+e.end, text.length()), e.display);
+							rtEs.add(rte);
+						}
+						entities.put(type, rtEs);
+					}					
+				} else {
+					// normal case
+					for (KEntityType type : KEntityType.values()) {
+						List<TweetEntity> es = TweetEntity.parse(this, _text, type,
+								jsonEntities);
+						entities.put(type, es);
+					}
 				}
 			}
+			
 			sensitive = object.optBoolean("possibly_sensitive");
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(null, e);
@@ -380,7 +409,8 @@ public final class Status implements ITweet {
 		return place;
 	}
 
-	/** The actual status text. This is also returned by {@link #toString()} */
+	/** The actual status text. This is also returned by {@link #toString()}.
+	 * NB: This can be longer than 140 chars for a retweet. */
 	@Override
 	public String getText() {
 		return text;
