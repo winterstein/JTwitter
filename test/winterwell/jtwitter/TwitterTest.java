@@ -844,6 +844,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println("Replies "+r);
 	}
 	
+	
 	public void testSendMention() throws InterruptedException {
 		Twitter jtwit = newTestTwitter();
 		int salt = new Random().nextInt(1000);
@@ -1477,6 +1478,19 @@ extends TestCase // Comment out to remove the JUnit dependency
 		String salt = "" + new Random().nextInt(10000);
 		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php"+salt);
 		List<Status> timeline = twitter.getFriendsTimeline();
+	}
+	
+	/**
+	 * Sometimes tweets aren't available for search, but they might show up on mentions. Pass/Fail
+	 * meaningless.
+	 */
+	public void testHiddenTweetScratch() {
+		Twitter tw = newTestTwitter();
+		List<Status> r = tw.search("I genuinely LOVE @virgintrains");
+		for (Status message : r) {
+			List<String> ms = message.getMentions();
+			assert ! ms.isEmpty();
+		}
 	}
 
 }
