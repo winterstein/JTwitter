@@ -28,6 +28,7 @@ import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.Utils;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
 
@@ -483,8 +484,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter tw = newTestTwitter();
 		Status s1 = tw.getStatus();
 		tw.destroyStatus(s1.getId());
+		Utils.sleep(1000);
 		Status s0 = tw.getStatus();
 		assert s0.id != s1.id : "Status id should differ from that of destroyed status";
+
+		// no repeats
+		try {
+			tw.destroyStatus(s1.getId());
+			assert false;
+		} catch(TwitterException.E404 ex) {
+			// good
+		}
 	}
 
 	public void testDestroyStatusBad() {

@@ -14,6 +14,15 @@ import winterwell.utils.io.XStreamBinaryConverter;
 
 public class ExtraWinterwellTests {
 
+//	@Test
+//	public void testWeird() {
+//		Twitter twit = TwitterTest.newTestTwitter();
+//		Status s = twit.getStatus(new BigInteger("1571859190"));
+//		twit.destroyStatus(new BigInteger("1571859190"));
+//		System.out.println(s);
+//	}
+	
+	
 	@Test
 	public void testAuth() throws Exception {
 		OAuthSignpostClient client = new OAuthSignpostClient(
