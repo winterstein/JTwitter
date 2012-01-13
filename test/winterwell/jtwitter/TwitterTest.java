@@ -18,9 +18,9 @@ import java.util.regex.Matcher;
 
 import junit.framework.TestCase;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;

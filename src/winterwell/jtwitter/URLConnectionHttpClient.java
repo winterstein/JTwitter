@@ -21,8 +21,8 @@ import java.util.Map.Entry;
 
 import lgpl.haustein.Base64Encoder;
 
-import org.json.JSONObject;
 
+import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
 

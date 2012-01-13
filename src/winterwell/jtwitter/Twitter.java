@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import winterwell.json.JSONArray;
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -581,7 +581,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.3.8";
+	public final static String version = "2.4";
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the

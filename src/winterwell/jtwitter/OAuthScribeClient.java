@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.scribe.http.Request;
 import org.scribe.http.Request.Verb;
 import org.scribe.http.Response;
 import org.scribe.oauth.Scribe;
 import org.scribe.oauth.Token;
 
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
 

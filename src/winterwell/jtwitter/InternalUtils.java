@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 import winterwell.utils.web.WebUtilsTest;
 
 /**

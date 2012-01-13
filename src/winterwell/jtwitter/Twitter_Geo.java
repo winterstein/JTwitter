@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import winterwell.json.JSONArray;
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 
 /**
  * Twitter's geolocation support. Use {@link Twitter#geo()} to get one of these

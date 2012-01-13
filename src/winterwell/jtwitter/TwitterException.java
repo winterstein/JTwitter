@@ -3,7 +3,7 @@ package winterwell.jtwitter;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.json.JSONException;
+import winterwell.json.JSONException;
 
 /**
  * A runtime exception for when Twitter requests don't work. All {@link Twitter}

@@ -2,8 +2,8 @@ package winterwell.jtwitter;
 
 import java.util.Date;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 
 public class TwitterEvent {
 

@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import winterwell.json.JSONArray;
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
 
 /**
