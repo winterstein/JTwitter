@@ -17,12 +17,33 @@ public class TwitterStreamTest {
 
 	@Test
 	public void testConnect() throws InterruptedException {
-		Twitter jtwit = new TwitterTest().newTestTwitter();
-		TwitterStream ts = new TwitterStream(jtwit);
-		ts.connect();
-		Thread.sleep(5000);
-		System.out.println(ts.popTweets());
-		ts.close();
+		{	// sample
+			Twitter jtwit = new TwitterTest().newTestTwitter();
+			TwitterStream ts = new TwitterStream(jtwit);
+			ts.connect();
+			Thread.sleep(5000);
+			List<ITweet> tweets = ts.popTweets();
+			System.out.println(tweets);
+			for (ITweet iTweet : tweets) {
+				User u = iTweet.getUser();
+				System.out.println(u.screenName+"\t"+u.followersCount+"\t"+u.getLocation());
+			}
+			ts.close();			
+		}
+		{	// search
+			Twitter jtwit = new TwitterTest().newTestTwitter();
+			TwitterStream ts = new TwitterStream(jtwit);
+			ts.setTrackKeywords(Arrays.asList("london"));
+			ts.connect();
+			Thread.sleep(5000);
+			List<ITweet> tweets = ts.popTweets();
+			System.out.println(tweets);
+			for (ITweet iTweet : tweets) {
+				User u = iTweet.getUser();
+				System.out.println(u.screenName+"\t"+u.followersCount+"\t"+u.getLocation());
+			}
+			ts.close();
+		}
 	}
 	
 //	@Test
