@@ -4,7 +4,8 @@
  - Moved org.json files into winterwell.json so they can be edited to
  be a bit less annoying.
  - JSONException tweaked to be RuntimeException so it's a bit less annoying.
-
+ - If Twitter returns html, this is reported as a server error with a TwitterException.E50X
+ 
 2.3.8:
  - Twitter have started truncating long RTs (& returning dud tweet-entities to go with them).
  Fortunately they also return the original RT, so we can correct for this. Which we now do.

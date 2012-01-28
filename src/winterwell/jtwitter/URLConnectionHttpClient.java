@@ -87,6 +87,16 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	protected int timeout = dfltTimeOutMilliSecs;
 
+	private boolean htmlImpliesError = true;
+	
+	/**
+	 * @param htmlImpliesError default is true. If true, an html response will
+	 * be treated as a server error & generate a TwitterException.E50X 
+	 */
+	public void setHtmlImpliesError(boolean htmlImpliesError) {
+		this.htmlImpliesError = htmlImpliesError;
+	}
+
 	public URLConnectionHttpClient() {
 		this(null, null);
 	}
@@ -194,8 +204,14 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		// This method handles the retry behaviour.
 		try {
 			// Do the actual work
-			return getPage2(url, vars, authenticate);
-			
+			String json = getPage2(url, vars, authenticate);
+			// ?? Test for and treat html as an error??
+			if (htmlImpliesError && 
+				(json.startsWith("<!DOCTYPE html") || json.startsWith("<html"))) {
+				String meat = InternalUtils.stripTags(json);
+				throw new TwitterException.E50X(meat);
+			}
+			return json;			
 		} catch (SocketTimeoutException e) {
 			if ( ! retryOnError) throw getPage2_ex(e, url);
 			try {
@@ -267,7 +283,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		InternalUtils.count(uri);
 		try {
 			// do the actual work
-			return post2(uri, vars, authenticate);
+			String json = post2(uri, vars, authenticate);
+			// ?? Test for and treat html as an error??
+			return json;
 		} catch (TwitterException.E50X e) {
 			if ( ! retryOnError) throw getPage2_ex(e, uri);
 			try {

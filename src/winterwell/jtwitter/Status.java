@@ -181,15 +181,16 @@ public final class Status implements ITweet {
 	 */
 	public final User user;
 
-	private String[] withheldIn;
+//	private String[] withheldIn;
 	
-	/**
-	 * @return usually null!
-	 * Otherwise, a list of country codes for where this tweet has been censored.
-	 */
-	public String[] getWithheldIn() {
-		return withheldIn;
-	}
+//	/**
+	// Should we have this??
+//	 * @return usually null!
+//	 * Otherwise, a list of country codes for where this tweet has been censored.
+//	 */
+//	public String[] getWithheldIn() {
+//		return withheldIn;
+//	}
 
 	/**
 	 * @param object
@@ -310,12 +311,12 @@ public final class Status implements ITweet {
 			}
 			
 			// censorship flags
-			String withheld = object.optString("withheld_in_countries");
-			if (withheld!=null && withheld.length()!=0) {
-				withheldIn = withheld.split(", ");
-			}
+			// Should we have this??
+//			String withheld = object.optString("withheld_in_countries");
+//			if (withheld!=null && withheld.length()!=0) {
+//				withheldIn = withheld.split(", ");
+//			}
 //			"withheld_scope": "status" or "user"
-//			 "withheld_in_countries": "JP",
 			sensitive = object.optBoolean("possibly_sensitive");
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(null, e);

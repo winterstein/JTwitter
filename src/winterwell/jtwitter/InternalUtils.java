@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -370,5 +371,45 @@ public class InternalUtils {
 			throw new TwitterException(e);
 		}
 	}
+
+	/**
+	 * Remove xml and html tags, e.g. to safeguard against javascript 
+	 * injection attacks, or to get plain text for NLP.
+	 * @param xml can be null, in which case null will be returned
+	 * @return the text contents - ie input with all tags removed
+	 */
+	public static String stripTags(String xml) {
+		if (xml==null) return null;
+		// short cut if there are no tags
+		if (xml.indexOf('<')==-1) return xml;
+		// first all the scripts (cos we must remove the tag contents too)
+		Matcher m4 = pScriptOrStyle.matcher(xml);
+		xml = m4.replaceAll("");
+		// comments
+		Matcher m2 = pComment.matcher(xml);
+		String txt = m2.replaceAll("");
+		// now the tags
+		Matcher m = TAG_REGEX.matcher(txt);
+		String txt2 = m.replaceAll("");
+		Matcher m3 = pDocType.matcher(txt2);
+		String txt3 = m3.replaceAll("");		
+		return txt3;
+	}
+
+	
+	/**
+	 * Matches an xml comment - including some bad versions
+	 */
+	public static final Pattern pComment = Pattern.compile("<!-*.*?-+>", Pattern.DOTALL);
+	
+	/**
+	 * Used in strip tags to get rid of scripts and css style blocks altogether.
+	 */
+	public static final Pattern pScriptOrStyle = Pattern.compile("<(script|style)[^<>]*>.+?</(script|style)>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	
+	/**
+	 * Matches a doctype element.
+	 */
+	public static final Pattern pDocType = Pattern.compile("<!DOCTYPE.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 }
