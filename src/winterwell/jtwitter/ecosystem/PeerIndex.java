@@ -14,7 +14,7 @@ import winterwell.jtwitter.User;
 /**
  * Access the PeerIndex ranking system
  * @author daniel
- *
+ * @testedby {@link PeerIndexTest}
  */
 public class PeerIndex {
 
@@ -35,7 +35,7 @@ public class PeerIndex {
 				"id", user.screenName==null? user.id : user.screenName,
 				"api_key", API_KEY
 		);
-		String json = client.getPage("http://api.peerindex.net/version/profile/show.json", 
+		String json = client.getPage("http://api.peerindex.net/v2/profile/show.json", 
 				vars, false);
 		try {
 			JSONObject jo = new JSONObject(json);

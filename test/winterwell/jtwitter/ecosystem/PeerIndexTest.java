@@ -25,6 +25,9 @@ public class PeerIndexTest {
 		System.out.println(dan);
 		PeerIndexProfile joe = peerIndex.getProfile(new User("joehalliwell"));
 		System.out.println(joe);
+		
+		PeerIndexProfile cfc = peerIndex.getProfile(new User("cfctruth"));
+		System.out.println(cfc);
 	}
 
 }

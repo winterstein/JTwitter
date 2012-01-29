@@ -232,6 +232,25 @@ public class InternalUtils {
 		}
 		return names.toString();
 	}
+	
+	/**
+	 * Join the list
+	 * 
+	 * @param screenNames
+	 * @return
+	 */
+	public static String join(String[] screenNames) {
+		StringBuilder names = new StringBuilder();
+		for (int si = 0, n = screenNames.length; si < n; si++) {
+			names.append(screenNames[si]);
+			names.append(",");
+		}
+		// pop the final ","
+		if (names.length() != 0) {
+			names.delete(names.length() - 1, names.length());
+		}
+		return names.toString();
+	}
 
 	/**
 	 * Helper method to deal with JSON-in-Java weirdness
