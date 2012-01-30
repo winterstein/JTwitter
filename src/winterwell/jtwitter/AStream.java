@@ -690,7 +690,7 @@ public abstract class AStream implements Closeable {
 	}
 
 	synchronized void reconnectFromGobblerThread() {
-		assert Thread.currentThread() == readThread : this;
+		assert Thread.currentThread() == readThread || readThread==null : this;
 		if (isConnected())
 			return;
 		reconnect();
