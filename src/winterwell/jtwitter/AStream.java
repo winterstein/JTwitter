@@ -184,6 +184,13 @@ public abstract class AStream implements Closeable {
 
 	List<ITweet> tweets = new ArrayList();
 
+	/**
+	 * default: false
+	 * If true, json is only sent to listeners, and polling based access 
+	 * via {@link #getTweets()} will return no results.
+	 */
+	boolean listenersOnly;
+
 	public AStream(Twitter jtwit) {
 		this.client = jtwit.getHttpClient();
 		this.jtwit = jtwit;
@@ -805,10 +812,12 @@ final class StreamGobbler extends Thread {
 		}
 		
 		String json = new String(sb);
-		synchronized (this) {
-			jsons.add(json);
-			// forget a batch?
-			forgotten += AStream.forgetIfFull(jsons);
+		if ( ! stream.listenersOnly) {
+			synchronized (this) {
+				jsons.add(json);
+				// forget a batch?
+				forgotten += AStream.forgetIfFull(jsons);
+			}
 		}
 
 		// push notifications

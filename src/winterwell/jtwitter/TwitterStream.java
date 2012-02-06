@@ -216,4 +216,14 @@ public class TwitterStream extends AStream {
 		return sb.toString();
 	}
 
+	/**
+	 * default: false
+	 * If true, json is only sent to listeners, and polling based access 
+	 * via {@link #getTweets()} will return no results.
+	 * @see #addListener(IListen)
+	 */
+	public void setListenersOnly(boolean listenersOnly) {
+		this.listenersOnly = listenersOnly;
+	}
+
 }
