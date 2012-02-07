@@ -794,16 +794,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 		return new Twitter(TEST_USER, client);
 	}
 	
-	public void testScratch() {
-//		OAuthSignpostClient client = new OAuthSignpostClient(
-//		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
-//		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
-//		client.authorizeDesktop();
-//		String pin = client.askUser("The Pin?");
-//		System.out.println(pin);
-//		client.setAuthorizationCode(pin);
-//		String[] tokens = client.getAccessToken();
-//		System.out.println(tokens[0] + " " + tokens[1]);
+	public void testAuthUser() {
+		OAuthSignpostClient client = new OAuthSignpostClient(
+		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
+		client.authorizeDesktop();
+		String pin = client.askUser("The Pin?");
+		System.out.println(pin);
+		client.setAuthorizationCode(pin);
+		String[] tokens = client.getAccessToken();
+		System.out.println(tokens[0] + " " + tokens[1]);
 	}
 	
 	/**
