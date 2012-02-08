@@ -316,8 +316,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		try {
 			connection = post2_connect(uri, vars);
 			// Get the response
-			processError(connection);
-			processHeaders(connection);
 			String response = InternalUtils.toString(connection
 					.getInputStream());
 			return response;
@@ -347,6 +345,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		OutputStream os = connection.getOutputStream();
 		os.write(payload.getBytes());
 		close(os);
+		// check connection & process the envelope
+		processError(connection);
+		processHeaders(connection);
 		return connection;
 	}
 

@@ -9,12 +9,35 @@ import java.util.Random;
 import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.jtwitter.TwitterException.E413;
+import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
 
 public class TwitterStreamTest {
 
+	@Test
+	public void testTooManyKeywords() throws InterruptedException  {
+		try {
+			Twitter jtwit = new TwitterTest().newTestTwitter();
+			TwitterStream ts = new TwitterStream(jtwit);
+			List<String> terms = new ArrayList();
+			for(int i=0; i<800; i++) {
+				terms.add(Utils.getRandomString(6));
+			}
+			ts.setTrackKeywords(terms);
+			
+			ts.connect();
+			Thread.sleep(5000);
+			List<ITweet> tweets = ts.popTweets();
+		} catch (E413 ex) {
+			// good
+		}
+	}
+
+		
+	
 	@Test
 	public void testConnect() throws InterruptedException {
 		{	// sample

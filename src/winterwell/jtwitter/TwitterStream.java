@@ -190,11 +190,33 @@ public class TwitterStream extends AStream {
 
 	/**
 	 * See https://dev.twitter.com/docs/streaming-api/methods#track
+	 * <p> 
+	 * Terms are exact-matched, and also exact-matched ignoring punctuation. 
+	 * Each term may be up to 60 characters long.
+	 * <p>
+	 * Exact matching on phrases, that is, keywords with spaces, 
+	 * is not supported. Keywords containing punctuation will only exact match 
+	 * tokens and, other than keywords prefixed by # and @, will tend to 
+	 * never match. Non-space separated languages, such as CJK and 
+	 * Arabic, are currently unsupported as tokenization only occurs on 
+	 * whitespace and punctuation. Other UTF-8 phrases should exact match 
+	 * correctly, but will not substitute similar characters to their 
+	 * least-common-denominator. For all these cases, consider falling back 
+	 * to the Search REST API.
 	 * 
 	 * @param keywords
 	 *            The default access level allows up to 400 track keywords.
+	 *            You can also do phrases, separating words with a space.
+	 *          
 	 */
 	public void setTrackKeywords(List<String> keywords) {
+		// check them for length
+		for (String kw : keywords) {
+			if (kw.length() > 60) {
+				throw new IllegalArgumentException("Track term too long: "+kw+" (60 char limit)");
+			}
+		}	
+		// we don't check >400 'cos you might have special access
 		this.track = keywords;
 		method = KMethod.filter;
 	}
