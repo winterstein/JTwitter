@@ -1309,7 +1309,7 @@ public class Twitter implements Serializable {
 	 * Twitter), but the RateLimit object isn't available until after you make a
 	 * call of the right type to Twitter.
 	 * <p>
-	 * Status: Headin towards stable, but still a bit experimental.
+	 * Status: Heading towards stable, but still a bit experimental.
 	 * 
 	 * @param reqType
 	 *            Different methods have separate rate limits.
