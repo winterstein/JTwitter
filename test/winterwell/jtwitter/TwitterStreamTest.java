@@ -151,12 +151,14 @@ public class TwitterStreamTest {
 		Twitter jtwit = new TwitterTest().newTestTwitter();
 		TwitterStream ts = new TwitterStream(jtwit);
 		List<String> blob = new ArrayList<String>();
-		blob.add(jtwit.getSelf().screenName);
+		blob.add("happy");
 		ts.setTrackKeywords(blob);
 		ts.connect();
-		Thread.sleep(10000);
+		Thread.sleep(5000);
 		List<ITweet> list = ts.popTweets();
+		System.out.println(list);
 		ts.close();
+		assert ! list.isEmpty(); // Twitter always has some happiness
 	}
 
 	@Test

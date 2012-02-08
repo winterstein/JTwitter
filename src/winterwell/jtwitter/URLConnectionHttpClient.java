@@ -208,8 +208,13 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			// ?? Test for and treat html as an error??
 			if (htmlImpliesError && 
 				(json.startsWith("<!DOCTYPE html") || json.startsWith("<html"))) {
-				String meat = InternalUtils.stripTags(json);
-				throw new TwitterException.E50X(meat);
+				// whitelist: sometimes we do expect html
+				if (url.startsWith("http://twitter.com")/*used by flush()*/) {
+					// OK
+				} else {
+					String meat = InternalUtils.stripTags(json);
+					throw new TwitterException.E50X(meat);
+				}
 			}
 			return json;			
 		} catch (SocketTimeoutException e) {
