@@ -1972,8 +1972,8 @@ public class Twitter implements Serializable {
 	 * Warning: the User objects returned by a search (as part of the Status
 	 * objects) are dummy-users. The only information that is set is the user's
 	 * screen-name and a profile image url. This reflects the current behaviour
-	 * of the Twitter API. If you need more info, call {@link #show(String)}
-	 * with the screen name.
+	 * of the Twitter API. If you need more info, call users().show()
+	 * with the screen names.
 	 * <p>
 	 * This supports {@link #maxResults} and pagination. A language filter can
 	 * be set via {@link #setLanguage(String)} Location can be set via
