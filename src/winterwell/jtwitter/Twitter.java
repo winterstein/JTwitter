@@ -370,9 +370,12 @@ public class Twitter implements Serializable {
 	 * The different types of API request. These can have different rate limits.
 	 */
 	public static enum KRequestType {
-		NORMAL(""), SEARCH("Feature"),
+		NORMAL(""), 
+		SEARCH("Feature"),
 		/** this is X-Feature Class "namesearch" in the response headers */
-		SEARCH_USERS("Feature"), SHOW_USER(""), UPLOAD_MEDIA("Media");
+		SEARCH_USERS("Feature"), 
+		SHOW_USER(""), 
+		UPLOAD_MEDIA("Media");
 
 		/**
 		 * USed to find the X-?RateLimit header.
