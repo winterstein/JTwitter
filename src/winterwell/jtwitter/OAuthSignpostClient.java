@@ -40,7 +40,7 @@ import winterwell.jtwitter.Twitter.IHttpClient;
  * 	String v = client.askUser("Please enter the verification PIN from Twitter");
  * 	client.setAuthorizationCode(v);
  * 	// Optional: store the authorisation token details
- * 	Object accessToken = client.getAccessToken();
+ * 	String[] accessToken = client.getAccessToken();
  * 	// use the API!
  * 	jtwit.setStatus("Messing about in Java");
  *  	</code>
