@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import org.scribe.oauth.Token;
 
 
+
 public class OAuthScribeClientTest 
 extends TestCase
 {

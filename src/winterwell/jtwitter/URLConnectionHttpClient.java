@@ -2,6 +2,7 @@ package winterwell.jtwitter;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lgpl.haustein.Base64Encoder;
 
 
 import winterwell.json.JSONObject;
-import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KRequestType;
+import winterwell.jtwitter.guts.Base64Encoder;
+import winterwell.jtwitter.guts.ClientHttpRequest;
 
 /**
  * A simple http client that uses the built in URLConnection class.
@@ -160,7 +161,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	}
 
 	@Override
-	public IHttpClient copy() {
+	public Twitter.IHttpClient copy() {
 		URLConnectionHttpClient c = new URLConnectionHttpClient(name, password);
 		c.setTimeout(timeout);
 		c.setRetryOnError(retryOnError);
@@ -289,16 +290,29 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	/**
 	 * @param uri
-	 * @param vars
-	 * @param mediaFile Probably created from a File using {@link FileInputStream}
+	 * @param vars Can include File values
 	 * @return
 	 * @throws TwitterException
 	 */
 	//@Override
-	public final String post(String uri, Map<String, String> vars, InputStream mediaFile) 
+	public final String postMultipartForm(String url, Map<String, ?> vars) 
 			throws TwitterException 
 	{
-		throw new RuntimeException("TODO");
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			
+			// FIXME oauth authenticate!
+			setAuthentication(connection, name, password);
+			
+			ClientHttpRequest req = new ClientHttpRequest(connection);
+			InputStream page = req.post(vars);
+			processError(connection);
+			return InternalUtils.toString(page);
+		} catch (TwitterException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TwitterException(e);
+		}
 	}
 
 	@Override
