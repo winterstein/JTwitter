@@ -584,7 +584,9 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.4";
+	public final static String version = "2.4.1";
+
+	private static final int MAX_CHARS = 140;
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the
@@ -2585,6 +2587,68 @@ public class Twitter implements Serializable {
 	public Status updateStatus(String statusText) {
 		return updateStatus(statusText, null);
 	}
+	
+	
+	
+	/**
+	 * @deprecated Still developing!
+	 * Updates the authenticating user's status with an image (or other media file / attachment).
+	 * 
+	 * @param statusText
+	 * @param mediaFile
+	 * @return The posted status when successful.
+	 */
+	public Status updateStatus(String statusText, File mediaFile, BigInteger inReplyToStatusId) {
+		// check for length
+		if (statusText.length() > 160) {
+			int shortLength = statusText.length();
+			Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
+			while(m.find()) {
+				shortLength += LINK_LENGTH - m.group().length(); 
+			}
+			if (shortLength > MAX_CHARS) {
+				// bogus - send a helpful error
+				throw new IllegalArgumentException(
+						"Status text must be 140 characters or less: "
+								+ statusText.length() + " " + statusText);
+			}
+		}
+		if (mediaFile != null && ! mediaFile.isFile()) {
+			throw new IllegalArgumentException("Not a valid file: "+mediaFile);
+		}
+		
+		Map<String, String> vars = InternalUtils.asMap("status", statusText);
+		if (tweetEntities) vars.put("include_entities", "1");
+
+		// add in long/lat if set
+		if (myLatLong != null) {
+			vars.put("lat", Double.toString(myLatLong[0]));
+			vars.put("long", Double.toString(myLatLong[1]));
+		}
+
+		if (sourceApp != null) {
+			vars.put("source", sourceApp);
+		}
+		if (inReplyToStatusId != null) {
+			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
+		}
+		
+		// FIXME send with image
+		if (true) throw new RuntimeException("TODO");
+//		https://dev.twitter.com/docs/api/1/post/statuses/update_with_media
+		// possibly_sensitive
+		// Your POST request's Content-Type should be set to multipart/form-data
+		// media[] Supported image formats are PNG, JPG and GIF. Animated GIFs are not supported.
+		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
+					true);
+		try {
+			Status s = new Status(new JSONObject(result), null);
+			s = updateStatus2_safetyCheck(statusText, s);
+			return s;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(result, e);
+		}
+	}
 
 	/**
 	 * Updates the authenticating user's status and marks it as a reply to the
@@ -2599,7 +2663,7 @@ public class Twitter implements Serializable {
 	 * @param inReplyToStatusId
 	 *            The ID of the tweet that this tweet is in response to. The
 	 *            statusText must contain the username (with an "@" prefix) of
-	 *            the owner of the tweet being replied to for for Twitter to
+	 *            the owner of the tweet being replied to for Twitter to
 	 *            agree to mark the tweet as a reply. <i>null</i> to leave this
 	 *            unset.
 	 * 
@@ -2626,7 +2690,7 @@ public class Twitter implements Serializable {
 			while(m.find()) {
 				shortLength += LINK_LENGTH - m.group().length(); 
 			}
-			if (shortLength > 140) {
+			if (shortLength > MAX_CHARS) {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
 					throw new IllegalArgumentException(

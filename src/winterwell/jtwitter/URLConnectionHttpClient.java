@@ -2,6 +2,7 @@ package winterwell.jtwitter;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +36,7 @@ import winterwell.jtwitter.Twitter.KRequestType;
  * {@link #setRetryOnError(boolean)}.
  * 
  * @author Daniel Winterstein
+ * Includes code by vlad@myjavatools.com under Apache license version 2.0
  * 
  */
 public class URLConnectionHttpClient implements Twitter.IHttpClient,
@@ -81,7 +83,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	/**
 	 * If true, will wait 1/2 second and make a 2nd request when presented with
-	 * a server error.
+	 * a server error (E50X). Only retries once -- a 2nd fail will throw an exception.
+	 * 
+	 * This policy handles most Twitter server glitches.
 	 */
 	boolean retryOnError;
 
@@ -280,6 +284,21 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	@Override
 	public RateLimit getRateLimit(KRequestType reqType) {
 		return rateLimits.get(reqType);
+	}
+	
+
+	/**
+	 * @param uri
+	 * @param vars
+	 * @param mediaFile Probably created from a File using {@link FileInputStream}
+	 * @return
+	 * @throws TwitterException
+	 */
+	//@Override
+	public final String post(String uri, Map<String, String> vars, InputStream mediaFile) 
+			throws TwitterException 
+	{
+		throw new RuntimeException("TODO");
 	}
 
 	@Override
