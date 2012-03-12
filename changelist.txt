@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.4.1:
+ - Added getScreenNameIfKnown()
+ - Added sketch code for image uploading (not ready for use yet!).
+
 2.4:
  - Moved org.json files into winterwell.json so they can be edited to
  be a bit less annoying.

@@ -1474,6 +1474,16 @@ public class Twitter implements Serializable {
 		getSelf();
 		return name;
 	}
+	
+	/**
+	 * Equivalent to {@link #getScreenName()} except this won't ever do
+	 * an API call.
+	 * @return screenName or null
+	 * @see #getScreenName()
+	 */
+	public String getScreenNameIfKnown() {
+		return name;
+	}
 
 	/**
 	 * @param searchTerm

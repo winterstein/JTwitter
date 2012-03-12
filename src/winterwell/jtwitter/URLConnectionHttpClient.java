@@ -437,6 +437,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				throw new TwitterException.E404(error + "\n" + url);
 			}
 			if (code == 406)
+				// Hm: It might be nice to have info on post variables here 
 				throw new TwitterException.E406(error + "\n" + url);
 			if (code == 413)
 				throw new TwitterException.E413(error + "\n" + url);

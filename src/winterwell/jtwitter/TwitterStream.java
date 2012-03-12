@@ -75,14 +75,18 @@ public class TwitterStream extends AStream {
 
 		String url = "https://stream.twitter.com/1/statuses/" + method
 				+ ".json";
-		Map<String, String> vars = new HashMap();
-		vars.put("delimited", "length");
+		Map<String, String> vars = new HashMap();		
 		if (follow != null && follow.size() != 0) {
 			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
 		}
 		if (track != null && track.size() != 0) {
 			vars.put("track", InternalUtils.join(track, 0, Integer.MAX_VALUE));
 		}
+		// If filtering, check we have a filter
+		if (vars.isEmpty() && method==KMethod.filter) {
+			throw new IllegalStateException("No filters set for "+this);
+		}
+		vars.put("delimited", "length");
 		// use post in case it's a long set of vars
 		HttpURLConnection con = client.post2_connect(url, vars);
 		return con;
@@ -234,6 +238,7 @@ public class TwitterStream extends AStream {
 		if (locns != null) {
 			sb.append(" in:" + InternalUtils.join(locns, 0, 5));
 		}
+		sb.append(" by:" + jtwit.getScreenNameIfKnown());		
 		sb.append("]");
 		return sb.toString();
 	}
