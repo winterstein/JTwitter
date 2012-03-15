@@ -3,6 +3,7 @@
 2.4.1:
  - Added getScreenNameIfKnown()
  - Added sketch code for image uploading (not ready for use yet!).
+ - Added Twitter_Analytics and Twitter.analytics().getUrlCount() Thanks to ottopress.com for the info.
 
 2.4:
  - Moved org.json files into winterwell.json so they can be edited to

@@ -54,6 +54,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		// just a smoke test
 		Twitter jtwit = newTestTwitter();
 		jtwit.updateConfiguration();
+		System.out.println(Twitter.LINK_LENGTH);
 	}
 	
 	/**

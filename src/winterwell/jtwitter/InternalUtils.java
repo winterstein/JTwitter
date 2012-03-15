@@ -82,6 +82,8 @@ public class InternalUtils {
 	/**
 	 * Matches urls. Note: Excludes any trailing .
 	 * 
+	 * TODO Twitter's definition of a url is bit looser!
+	 * 
 	 * @testedy {@link WebUtilsTest#testUrlRegex()}
 	 */
 	static final Pattern URL_REGEX = Pattern

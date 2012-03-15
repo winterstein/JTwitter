@@ -759,6 +759,13 @@ public class Twitter implements Serializable {
 	public Twitter_Account account() {
 		return new Twitter_Account(this);
 	}
+	
+	/**
+	 * API methods for Twitter stats.
+	 */
+	public Twitter_Analytics analytics() {
+		return new Twitter_Analytics(http);
+	}
 
 	/**
 	 * Add in since_id, page and count, if set. This is called by methods that
