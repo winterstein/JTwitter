@@ -1,10 +1,14 @@
 # JTwitter Change list 
 
-2.4.1:
+2.5:
  - Added getScreenNameIfKnown()
  - Added sketch code for image uploading (not ready for use yet!).
  - Added Twitter_Analytics and Twitter.analytics().getUrlCount() Thanks to ottopress.com for the info.
-
+ - Added TwitterAuthActivity for Android users. Removed the now obsolete AndroidJTwitter example file.
+ Note: if you want to edit the JTwitter source code in Eclipse, you'll see error messages for
+ TwitterAuthActivity. If you're doing Android work, add android.jar to the buildpath. Otherwise
+ just ignore them.      
+ 
 2.4:
  - Moved org.json files into winterwell.json so they can be edited to
  be a bit less annoying.
