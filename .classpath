@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="binlocal" path="build"/>
 	<classpathentry kind="src" output="binlocal" path="test"/>
+	<classpathentry kind="src" output="binlocal" path="dummy"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/middleware/jakarta/commons-codec-1.4.jar"/>
