@@ -6,6 +6,7 @@ import winterwell.jtwitter.OAuthSignpostClient;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -44,6 +45,32 @@ public class TwitterAuthActivity extends Activity {
 	
 	private String callbackUrl;
 
+	/**
+	 * Create an Intent for launching this using myActivity.startActivityForResult().
+		@param oauthAppSecret 
+	 * @param calbackUrl 
+	 * @param msg The message that is shown to the user before
+	 * directing them off to Twitter. Can be null for the default, which is 
+	 * "Please authorize with Twitter"
+	 */
+	 public static Intent newIntent(Activity myActivity, 
+			 String oauthAppKey, String oauthAppSecret, String calbackUrl, 
+			 String msg)
+	 {
+		Intent taa = new Intent(myActivity, TwitterAuthActivity.class);
+		Bundle bundle = taa.getExtras();
+		bundle.putString("consumerKey", oauthAppKey);
+		bundle.putString("consumerSecret", oauthAppSecret);
+		bundle.putString("callbackUrl", calbackUrl);			
+		if (msg!=null) {
+			bundle.putString("authoriseMessage", msg);
+		}
+		return taa;
+	}
+	
+	public TwitterAuthActivity() {		
+	}
+	
 	public TwitterAuthActivity(String oauthKey, String oauthSecret, String callbackUrl) {
 		this.callbackUrl = callbackUrl;
 		client = new OAuthSignpostClient(oauthKey, oauthSecret, callbackUrl);
@@ -52,19 +79,24 @@ public class TwitterAuthActivity extends Activity {
 	OAuthSignpostClient client;
 
 	private String authoriseMessage = "Please authorize with Twitter";
+
+	private String consumerSecret;
+
+	private String consumerKey;
 	
-	/**
-	 * @param authoriseMessage The message that is shown to the user before
-	 * directing them off to Twitter. the default is 
-	 * "Please authorize with Twitter"
-	 */
-	public void setAuthoriseMessage(String authoriseMessage) {
-		this.authoriseMessage = authoriseMessage;
-	}
+	
+	@Override
+	public void onCreate(Bundle state) {
+		super.onCreate(state);
+		setup(state);
+	}			
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Bundle b = this.getIntent().getExtras();
+		setup(b);
+		
 		WebView webview = new WebView(this);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.setVisibility(View.VISIBLE);
@@ -95,5 +127,16 @@ public class TwitterAuthActivity extends Activity {
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 		}
+	}
+
+	private void setup(Bundle b) {
+		callbackUrl = b.getString("callbackUrl");		
+		String msg = b.getString("authoriseMessage");
+		if (msg!=null) {
+			authoriseMessage = msg;
+		}
+		consumerKey = b.getString("consumerKey");
+		consumerSecret = b.getString("consumerSecret");
+		client = new OAuthSignpostClient(consumerKey, consumerSecret, callbackUrl);
 	}
 }
