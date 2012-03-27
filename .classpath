@@ -11,6 +11,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
 	<classpathentry kind="lib" path="/middleware/signpost/signpost-core.jar" sourcepath="/middleware/signpost/src.zip"/>
-	<classpathentry kind="lib" path="/middleware/android-sdk-linux/platforms/android-7/android.jar"/>
+	<classpathentry kind="lib" path="/middleware/android-sdk-linux/platforms/android-7/android.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/daniel/winterwell/forest-of-gits/code/middleware/android-sdk-linux/docs/reference/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
