@@ -40,7 +40,6 @@ public class Twitter_Geo implements IGeoCode {
 	 */
 	Twitter_Geo(Twitter jtwit) {
 		assert jtwit != null;
-		assert jtwit.getHttpClient().canAuthenticate();
 		this.jtwit = jtwit;
 	}
 

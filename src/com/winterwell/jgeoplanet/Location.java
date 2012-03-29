@@ -151,7 +151,7 @@ public class Location implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Location (" + latitude + " N, " + longitude + " E)";
+		return "(" + latitude + " N, " + longitude + " E)";
 	}
 
 }

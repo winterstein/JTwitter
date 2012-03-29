@@ -973,6 +973,7 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Geo-location API methods.
+	 * Doesn't require a logged in user.
 	 */
 	public Twitter_Geo geo() {
 		return new Twitter_Geo(this);

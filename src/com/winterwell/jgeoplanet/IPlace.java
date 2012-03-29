@@ -35,5 +35,20 @@ public interface IPlace {
 	 * Can be null.
 	 */
 	String getType();
+
+	/**
+	 * An id which should be unique across services & stable
+	 * across time & servers
+	 * (i.e. the same place will give the same answer tomorrow
+	 * or on a different computer).
+	 * <p>
+	 * No hard guarantees are made for these properties!
+	 * Implementations should make best reasonable efforts.
+	 * 
+	 * @return service-specific-id@service-identifier, where service-identifier
+	 * must not include "@".
+	 * E.g. "54732176@twitter" 
+	 */
+	String getUID();
 	
 }

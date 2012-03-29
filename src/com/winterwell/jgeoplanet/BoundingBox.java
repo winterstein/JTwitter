@@ -25,6 +25,17 @@ public class BoundingBox {
 		this.southWest = southWest;
 	}
 	
+	public Location getCenter() {
+		Location ne = northEast;
+		Location sw = southWest;
+		// FIXME check for wrap-around & pick the smaller slice of the Earth!
+		// e.g. Russia ne.latitude=20, sw.latitude=-170
+		// we should do -170=190, centre = 105 -- but we say -75
+		double lat = 0.5*(ne.latitude+sw.latitude);
+		double lng = 0.5*(ne.longitude+sw.longitude);
+		return new Location(lat,lng);
+	}
+	
 	BoundingBox(JSONObject bbox) throws JSONException {
 		this(	getLocation(bbox.getJSONObject("northEast")), 
 				getLocation(bbox.getJSONObject("southWest")));

@@ -148,13 +148,11 @@ public class Place implements IPlace, Serializable {
 	@Override
 	public Location getCentroid() {
 		if (boundingBox==null) return null;
-		Location ne = boundingBox.getNorthEast();
-		Location sw = boundingBox.getSouthWest();
-		// FIXME check for wrap-around & pick the smaller slice of the Earth!
-		// e.g. Russia ne.latitude=20, sw.latitude=-170
-		// we should do -170=190, centre = 105 -- but we say -75
-		double lat = 0.5*(ne.latitude+sw.latitude);
-		double lng = 0.5*(ne.longitude+sw.longitude);
-		return new Location(lat,lng);
+		return boundingBox.getCenter();
+	}
+
+	@Override
+	public String getUID() {
+		return id+"@twitter";
 	}
 }

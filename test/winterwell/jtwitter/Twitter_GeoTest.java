@@ -10,7 +10,7 @@ public class Twitter_GeoTest {
 
 	@Test
 	public void testGeoSearchString() {
-		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit = new Twitter(); //TwitterTest.newTestTwitter();
 		Twitter_Geo tg = new Twitter_Geo(jtwit);
 		{
 			List<Place> eds = tg.geoSearch("Edinburgh");
