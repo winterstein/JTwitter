@@ -5,6 +5,10 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.winterwell.jgeoplanet.BoundingBox;
+import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.Location;
+
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
@@ -17,36 +21,13 @@ import winterwell.json.JSONObject;
  * @author Daniel Winterstein
  * 
  */
-public class Place implements Serializable {
-	/**
-	 * A latitude-longitude coordinate.
-	 */
-	public static final class LatLong extends AbstractList<Double> {
-
-		public final double latitude;
-		public final double longitude;
-
-		public LatLong(double latitude, double longitude) {
-			this.latitude = latitude;
-			this.longitude = longitude;
-		}
-
-		@Override
-		public Double get(int index) {
-			return index == 0 ? latitude : longitude;
-		}
-
-		@Override
-		public int size() {
-			return 2;
-		}
-	}
+public class Place implements IPlace, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private List<LatLong> boundingBox;
+	private BoundingBox boundingBox;
 	private String country;
 	private String countryCode;
-	private List<LatLong> geometry;
+	private List<Location> geometry;
 	private String id;
 	private String name;
 
@@ -78,7 +59,16 @@ public class Place implements Serializable {
 		// bounding box
 		Object bbox = _place.opt("bounding_box");
 		if (bbox instanceof JSONObject) {
-			this.boundingBox = parseCoords((JSONObject) bbox);
+			// probably the 4 corners of a box
+			List<Location> bb = parseCoords((JSONObject) bbox);
+			double n=-90, e=-180, s=90, w=180;
+			for (Location ll : bb) {
+				n = Math.max(ll.latitude, n);
+				s = Math.min(ll.latitude, s);
+				e = Math.max(ll.longitude, e);
+				w = Math.min(ll.longitude, w);
+			}
+			this.boundingBox = new BoundingBox(new Location(n,e), new Location(s,w));
 		}
 		Object geo = _place.opt("geometry");
 		if (geo instanceof JSONObject) {
@@ -89,7 +79,7 @@ public class Place implements Serializable {
 	/**
 	 * @return list of lat/long pairs. Can be null
 	 */
-	public List<LatLong> getBoundingBox() {
+	public BoundingBox getBoundingBox() {
 		return boundingBox;
 	}
 
@@ -104,12 +94,12 @@ public class Place implements Serializable {
 	/**
 	 * @return list of lat/long pairs. Usually null
 	 */
-	public List<LatLong> getGeometry() {
+	public List<Location> getGeometry() {
 		return geometry;
 	}
 
 	/**
-	 * Note: this is not a number.
+	 * Twitter ID for this place. Note: this is not a number.
 	 */
 	public String getId() {
 		return id;
@@ -136,15 +126,15 @@ public class Place implements Serializable {
 		return type;
 	}
 
-	private List<LatLong> parseCoords(JSONObject bbox) throws JSONException {
+	private List<Location> parseCoords(JSONObject bbox) throws JSONException {
 		JSONArray coords = bbox.getJSONArray("coordinates");
 		// pointless nesting?
 		coords = coords.getJSONArray(0);
-		List<LatLong> coordinates = new ArrayList();
+		List<Location> coordinates = new ArrayList();
 		for (int i = 0, n = coords.length(); i < n; i++) {
 			// these are longitude, latitude pairs
 			JSONArray pt = coords.getJSONArray(i);
-			LatLong x = new LatLong(pt.getDouble(1), pt.getDouble(0));
+			Location x = new Location(pt.getDouble(1), pt.getDouble(0));
 			coordinates.add(x);
 		}
 		return coordinates;
@@ -153,5 +143,22 @@ public class Place implements Serializable {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	@Override
+	public Location getCentroid() {
+		if (boundingBox==null) return null;
+		Location ne = boundingBox.getNorthEast();
+		Location sw = boundingBox.getSouthWest();
+		// check for wrap-around
+		if (ne.latitude<-45 && sw.latitude>45 
+			|| ne.latitude>-45 && sw.latitude<45
+			|| ne.longitude>90 && sw.longitude<-90
+			|| ne.longitude<-90 && sw.longitude>90) {
+			throw new RuntimeException("TODO");
+		}
+		double lat = 0.5*(ne.latitude+sw.latitude);
+		double lng = 0.5*(ne.longitude+sw.longitude);
+		return new Location(lat,lng);
 	}
 }

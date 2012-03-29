@@ -8,6 +8,8 @@
  - Added dummy code for Android to the source-code in git. This handy trick avoids having to include a 
  5mb android.jar. Note: if you want to edit the TwitterAuthActivity source code in Eclipse, you may want 
  to remove the dummy folder from the build-path and replace it with an actual android.jar library.       
+ - *Breaking Change*: LatLong is replaced by Location from jgeoplanet (a sister-project by Winterwell).
+ 
  
 2.4:
  - Moved org.json files into winterwell.json so they can be edited to

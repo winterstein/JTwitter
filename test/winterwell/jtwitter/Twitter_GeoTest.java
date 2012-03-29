@@ -11,8 +11,12 @@ public class Twitter_GeoTest {
 		Twitter jtwit = TwitterTest.newTestTwitter();
 		Twitter_Geo tg = new Twitter_Geo(jtwit);
 		{
-			List eds = tg.geoSearch("Edinburgh");
+			List<Place> eds = tg.geoSearch("Edinburgh");
 			System.out.println(eds);
+			Place ed = eds.get(0);
+			System.out.println(ed.getId());
+			System.out.println(ed.getBoundingBox());
+			System.out.println(ed.getCentroid());
 		}
 	}
 
