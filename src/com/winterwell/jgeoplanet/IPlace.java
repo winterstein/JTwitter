@@ -3,8 +3,16 @@ package com.winterwell.jgeoplanet;
 
 public interface IPlace {
 
-	// TODO id on Yahoo/Twitter?
-//	long getId();
+	/**
+	 * Place-type for cities. Geocoders should try to use this when applicable.
+	 * Users are warned that this is not guaranteed.
+	 */
+	public static final String TYPE_CITY = "city";
+	/**
+	 * Place-type for countries. Geocoders should try to use this when applicable.
+	 * Users are warned that this is not guaranteed.
+	 */
+	public static final String TYPE_COUNTRY = "country";
 	
 	String getName();
 
@@ -20,5 +28,12 @@ public interface IPlace {
 	 * @return the bounding box of this Place. Can be null if unknown.
 	 */
 	BoundingBox getBoundingBox();
+
+	/**
+	 * @return type of place. Values are geocoder specific, though {@link #TYPE_CITY}
+	 * and {@link #TYPE_COUNTRY} should be universal.
+	 * Can be null.
+	 */
+	String getType();
 	
 }

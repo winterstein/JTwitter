@@ -3,6 +3,11 @@ package winterwell.jtwitter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.winterwell.jgeoplanet.IGeoCode;
+import com.winterwell.jgeoplanet.IPlace;
 
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
@@ -22,7 +27,7 @@ import winterwell.json.JSONObject;
  * @author Daniel Winterstein
  * @testedby {@link Twitter_GeoTest}
  */
-public class Twitter_Geo {
+public class Twitter_Geo implements IGeoCode {
 
 	private double accuracy;
 
@@ -98,5 +103,19 @@ public class Twitter_Geo {
 	public void setAccuracy(double metres) {
 		this.accuracy = metres;
 	}
+
+	@Override
+	public IPlace getPlace(String locationDescription, AtomicInteger confidence) {
+		List<Place> places = geoSearch(locationDescription);
+		if (places.size()==0) return null;
+		// a unique answer?
+		if (places.size()==1) {
+			if (confidence!=null) confidence.set(95);
+			return places.get(0);
+		}		
+		return InternalUtils.prefer(places, IPlace.TYPE_CITY, confidence, 95);
+	}
+
+	
 
 }
