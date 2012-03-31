@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.MFloat;
 
 
 import winterwell.json.JSONException;
@@ -58,9 +59,10 @@ public class InternalUtils {
 	 * @return
 	 */
 	public static <P extends IPlace> P prefer(List<P> places, String prefType,
-			AtomicInteger confidence, int baseConfidence) 
+			MFloat confidence, float baseConfidence) 
 	{
 		assert places.size() != 0;
+		assert baseConfidence >= 0 && baseConfidence <= 1;
 		// prefer cities (or whatever)
 		List cities = new ArrayList();
 		for (IPlace place : places) {
@@ -70,8 +72,8 @@ public class InternalUtils {
 		}
 		if (cities.size()!=0 && cities.size()!=places.size()) {			
 			if (confidence!=null) {
-				int conf = (int) ((0.95*baseConfidence)/cities.size());
-				confidence.set(conf);
+				float conf = 0.95f*baseConfidence / cities.size();
+				confidence.value = conf;
 			}
 			places = cities;
 		} else {

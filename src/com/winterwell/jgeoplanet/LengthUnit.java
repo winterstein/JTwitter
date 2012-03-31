@@ -16,7 +16,7 @@ public enum LengthUnit {
 	public final double metres;
 	
 	/**
-	 * The time period for 1 unit. Equivalent to new Dx(1, unit)
+	 * The length period for 1 unit. Equivalent to new Dx(1, unit)
 	 */
 	public final Dx Dx;
 

@@ -31,9 +31,20 @@ public class BoundingBox {
 		// FIXME check for wrap-around & pick the smaller slice of the Earth!
 		// e.g. Russia ne.latitude=20, sw.latitude=-170
 		// we should do -170=190, centre = 105 -- but we say -75
-		double lat = 0.5*(ne.latitude+sw.latitude);
-		double lng = 0.5*(ne.longitude+sw.longitude);
-		return new Location(lat,lng);
+		double tempLat = (ne.latitude + sw.latitude)/2;
+		if (Math.abs(ne.latitude - sw.latitude) > 90) {
+			if (tempLat <= 0){tempLat += 90;}
+			else {tempLat -= 90;}
+		}
+		double tempLong = (ne.longitude + sw.longitude)/2;
+		//Edge case, goes over the +180 / -180 line if the mid point is in the positive#
+		//It should be added to -180, if it's in the negative it should be added to 180
+		if (Math.abs(ne.longitude - sw.longitude) > 180) {
+			if (tempLong <= 0){tempLong += 180;}
+			else {tempLong -= 180;}							
+		}
+		Location tempCentroid= new Location(tempLat,tempLong);
+		return tempCentroid;
 	}
 	
 	BoundingBox(JSONObject bbox) throws JSONException {

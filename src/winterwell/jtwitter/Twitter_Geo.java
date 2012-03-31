@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.MFloat;
 
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
@@ -104,15 +105,15 @@ public class Twitter_Geo implements IGeoCode {
 	}
 
 	@Override
-	public IPlace getPlace(String locationDescription, AtomicInteger confidence) {
+	public IPlace getPlace(String locationDescription, MFloat confidence) {
 		List<Place> places = geoSearch(locationDescription);
 		if (places.size()==0) return null;
 		// a unique answer?
 		if (places.size()==1) {
-			if (confidence!=null) confidence.set(95);
+			if (confidence!=null) confidence.value = 0.95f;
 			return places.get(0);
 		}		
-		return InternalUtils.prefer(places, IPlace.TYPE_CITY, confidence, 95);
+		return InternalUtils.prefer(places, IPlace.TYPE_CITY, confidence, 0.95f);
 	}
 
 	
