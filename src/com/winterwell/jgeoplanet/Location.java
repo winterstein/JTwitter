@@ -36,7 +36,7 @@ public class Location implements Serializable {
 		if (longitude < -180 || longitude > 180) {
 			longitude = longitude % 360;
 			if (longitude > 180) longitude = 360 - longitude;
-			assert longitude < -180 || longitude > 180;
+			assert longitude < -180 || longitude > 180 : longitude;
 		}
 		this.latitude = latitude;
 		this.longitude = longitude;
