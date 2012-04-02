@@ -68,6 +68,17 @@ public final class User implements Serializable {
 	 */
 	public final int friendsCount;
 	public final Long id;
+	
+	String lang;
+	
+	/**
+	 * User's language (2 letter code)
+	 * @return e.g. "en"
+	 */
+	public String getLang() {
+		return lang;
+	}
+	
 	/**
 	 * The number of public lists a user is listed in. -1 if unknown.
 	 */
@@ -150,13 +161,15 @@ public final class User implements Serializable {
 			name = InternalUtils.unencode(InternalUtils.jsonGet("name", obj));
 			String sn = InternalUtils.jsonGet("screen_name", obj);
 			screenName = Twitter.CASE_SENSITIVE_SCREENNAMES ? sn : sn
-					.toLowerCase();
+					.toLowerCase();						
 			// location - normalise a bit
 			Object _locn = Status.jsonGetLocn(obj);
 			location = _locn == null ? null : _locn.toString();
 			if (_locn instanceof Place) {
 				place = (Place) _locn;
 			}
+			// language
+			lang = InternalUtils.jsonGet("lang", obj);
 
 			description = InternalUtils.unencode(InternalUtils.jsonGet(
 					"description", obj));

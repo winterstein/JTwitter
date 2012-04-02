@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -23,8 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.winterwell.jgeoplanet.IGeoCode;
+import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.MFloat;
 
 
 import winterwell.json.JSONException;
@@ -43,6 +49,39 @@ import winterwell.utils.web.WebUtilsTest;
  * @testedby {@link InternalUtilsTest}
  */
 public class InternalUtils {
+
+	/**
+	 * Utility method for {@link IGeoCode}rs
+	 * @param places
+	 * @param prefType
+	 * @param confidence
+	 * @param baseConfidence
+	 * @return
+	 */
+	public static <P extends IPlace> P prefer(List<P> places, String prefType,
+			MFloat confidence, float baseConfidence) 
+	{
+		assert places.size() != 0;
+		assert baseConfidence >= 0 && baseConfidence <= 1;
+		// prefer cities (or whatever)
+		List cities = new ArrayList();
+		for (IPlace place : places) {
+			if (prefType.equals(place.getType())) {
+				cities.add(place);
+			}
+		}
+		if (cities.size()!=0 && cities.size()!=places.size()) {			
+			if (confidence!=null) {
+				float conf = 0.95f*baseConfidence / cities.size();
+				confidence.value = conf;
+			}
+			places = cities;
+		} else {
+			if (confidence!=null) confidence.set(baseConfidence/places.size());
+		}
+		// pick the first
+		return places.get(0);
+	}
 
 
 	public static String stripUrls(String text) {

@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
-
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
@@ -451,6 +449,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			// Over the rate limit?
 			processError2_rateLimit(connection, code, error);
 
+			// redirect??
+			if (code>299 && code<400) {
+				String locn = connection.getHeaderField("Location");
+				throw new TwitterException(code + " " + error + " " + url+" -> "+locn);
+			}
+			
 			// just report it as a vanilla exception
 			throw new TwitterException(code + " " + error + " " + url);
 

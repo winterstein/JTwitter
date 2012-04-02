@@ -584,7 +584,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.4.1";
+	public final static String version = "2.6";
 
 	private static final int MAX_CHARS = 140;
 
@@ -973,6 +973,7 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Geo-location API methods.
+	 * Doesn't require a logged in user.
 	 */
 	public Twitter_Geo geo() {
 		return new Twitter_Geo(this);
