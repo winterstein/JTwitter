@@ -2770,7 +2770,8 @@ public class Twitter implements Serializable {
 				return null;
 		}
 		// Assume Twitter have fixed this bug -- TODO check this periodically
-		if (true) return s;
+		// They haven't! AEN 27/03/12
+		// if (true) return s;
 		// try waiting and rechecking - maybe it did work after all
 		try {
 			Thread.sleep(500);
