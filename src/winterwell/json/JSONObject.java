@@ -329,7 +329,7 @@ public class JSONObject {
             put(key, ((JSONArray)o).put(value));
         } else {
             throw new JSONException("JSONObject[" + key +
-            		"] is not a JSONArray.");
+            		"] is not a JSONArray. "+o.getClass());
         }
         return this;
     }
@@ -398,7 +398,7 @@ public class JSONObject {
             return true;
         }
         throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a Boolean.");
+                "] is not a Boolean. "+o.getClass());
     }
 
 
@@ -417,7 +417,7 @@ public class JSONObject {
                 Double.valueOf((String)o).doubleValue();
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a number.");
+                "] is not a number. "+o.getClass());
         }
     }
 
@@ -452,7 +452,7 @@ public class JSONObject {
             return (JSONArray)o;
         }
         throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a JSONArray.");
+                "] is not a JSONArray. "+o.getClass());
     }
 
 
@@ -470,7 +470,7 @@ public class JSONObject {
             return (JSONObject)o;
         }
         throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a JSONObject.");
+                "] is not a JSONObject. "+o.getClass());
     }
 
 
@@ -774,7 +774,7 @@ public class JSONObject {
     /**
      * Get an optional string associated with a key.
      * It returns an empty string if there is no such key. If the value is not
-     * a string and is not null, then it is coverted to a string.
+     * a string and is not null, then it is converted to a string.
      *
      * @param key   A key string.
      * @return      A string which is the value.
@@ -783,6 +783,12 @@ public class JSONObject {
         return optString(key, "");
     }
 
+    /**
+     * @return access to the underlying map (which has a better interface).
+     */
+    public Map<String,?> getMap() {
+		return myHashMap;
+	}
 
     /**
      * Get an optional string associated with a key.

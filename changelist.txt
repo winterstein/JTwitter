@@ -4,7 +4,8 @@
  - *Breaking Change*: LatLong is replaced by Location from jgeoplanet (a sister-project by Winterwell).
  - New interfaces for geo-location: IPlace & IGeoCode
  - Some JGeoPlanet classes moved into JTwitter so we still have no dependencies beyond Signpost.
-
+ - Minor improvements to JSONObject (error messages, map access)
+ 
 2.5:
  - Added getScreenNameIfKnown()
  - Added sketch code for image uploading (not ready for use yet!).
