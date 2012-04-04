@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -8,6 +9,29 @@ import org.junit.Test;
 
 public class Twitter_UsersTest {
 
+	@Test
+	public void testShowBulk() {
+		{	// a small bulk!
+			Twitter tw = TwitterTest.newTestTwitter();
+			List<User> users = tw.users().show(Arrays.asList("mcfc","winterstein"));
+			for (User user : users) {
+				System.out.println(user.getScreenName()+"\t"+user.getLocation()+"\t"+user.getPlace()+"\t"+user.getId());
+			}
+		}
+	}
+	
+
+	@Test
+	public void testShowById() {
+		{
+			Twitter tw = TwitterTest.newTestTwitter();
+			List<Long> userIds = Arrays.asList(14573900L, 6663112L);
+			List<User> users = tw.users().showById(userIds);
+			for (User user : users) {
+				System.out.println(user.getScreenName()+"\t"+user.getLocation()+"\t"+user.getPlace()+"\t"+user.getId());
+			}
+		}
+	}
 
 	@Test
 	public void testBlocks() {

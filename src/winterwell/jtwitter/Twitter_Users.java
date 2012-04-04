@@ -92,6 +92,7 @@ public class Twitter_Users {
 				// results we have.
 				if (users.size() == 0)
 					throw e;
+				e.printStackTrace();
 				break;
 			}
 		}

@@ -376,6 +376,7 @@ public final class User implements Serializable {
 
 	/**
 	 * @see #location
+	 * @see #getPlace()
 	 */
 	public String getLocation() {
 		return location;
@@ -390,6 +391,10 @@ public final class User implements Serializable {
 		return name;
 	}
 
+	/**
+	 * @return the Place object for this location. 
+	 * This provides more details than {@link #location}, but it is often null!
+	 */
 	public Place getPlace() {
 		return place;
 	}
