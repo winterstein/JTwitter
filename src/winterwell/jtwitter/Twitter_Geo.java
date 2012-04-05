@@ -13,6 +13,7 @@ import com.winterwell.jgeoplanet.MFloat;
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
+import winterwell.jtwitter.Twitter.KRequestType;
 
 /**
  * Twitter's geolocation support. Use {@link Twitter#geo()} to get one of these
@@ -49,6 +50,10 @@ public class Twitter_Geo implements IGeoCode {
 	}
 
 	public List<Place> geoSearch(String query) {
+		// quick-fail if we know we're rate limited??
+//		if (jtwit.isRateLimited(KRequestType.NORMAL, 1)) {
+//			throw new TwitterException.RateLimit("enhance your calm");
+//		}		
 		String url = jtwit.TWITTER_URL + "/geo/search.json";
 		Map vars = InternalUtils.asMap("query", query);
 		if (accuracy != 0) {
@@ -105,7 +110,7 @@ public class Twitter_Geo implements IGeoCode {
 	}
 
 	@Override
-	public IPlace getPlace(String locationDescription, MFloat confidence) {
+	public IPlace getPlace(String locationDescription, MFloat confidence) {				
 		List<Place> places = geoSearch(locationDescription);
 		if (places.size()==0) return null;
 		// a unique answer?

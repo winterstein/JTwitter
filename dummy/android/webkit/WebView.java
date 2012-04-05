@@ -1,10 +1,11 @@
 package android.webkit;
 
-import winterwell.jtwitter.android.TwitterAuthActivity;
+import android.view.View.OnTouchListener;
+
 
 public class WebView {
 
-	public WebView(TwitterAuthActivity twitterAuthActivity) {
+	public WebView(Object twitterAuthActivity) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -34,6 +35,12 @@ public class WebView {
 	public void loadUrl(String string) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void requestFocus(String focusDown) {
+	}
+
+	public void setOnTouchListener(OnTouchListener onTouchListener) {
 	}
 
 }

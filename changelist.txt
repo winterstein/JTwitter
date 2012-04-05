@@ -5,6 +5,8 @@
  - New interfaces for geo-location: IPlace & IGeoCode
  - Some JGeoPlanet classes moved into JTwitter so we still have no dependencies beyond Signpost.
  - Minor improvements to JSONObject (error messages, map access)
+ - Added AndroidTwitterLogin for easy Android Twitter access :)
+ This replaces & improves on the short-lived TwitterAuthActivity of version 2.5.
  
 2.5:
  - Added getScreenNameIfKnown()

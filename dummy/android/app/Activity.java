@@ -1,5 +1,7 @@
 package android.app;
 
+import android.view.ViewGroup;
+
 public class Activity {
 
 	protected void onResume() {
@@ -9,5 +11,9 @@ public class Activity {
 
 	public void setContentView(Object a) {
 		
+	}
+
+	public ViewGroup findViewById(Object content) {
+		return null;
 	}
 }

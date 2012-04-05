@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import winterwell.jtwitter.Twitter.IHttpClient;
+
 import com.winterwell.jgeoplanet.IPlace;
 
 public class Twitter_GeoTest {
@@ -14,6 +16,8 @@ public class Twitter_GeoTest {
 		Twitter_Geo tg = new Twitter_Geo(jtwit);
 		{
 			List<Place> eds = tg.geoSearch("Edinburgh");
+//			URLConnectionHttpClient client = (URLConnectionHttpClient) jtwit.getHttpClient();
+//			System.out.println(client.headers);
 			System.out.println(eds);
 			Place ed = eds.get(0);
 			System.out.println(ed.getId());

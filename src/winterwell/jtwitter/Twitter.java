@@ -1854,12 +1854,14 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * Are we rate-limited, based on cached info from previous requests?
 	 * @param type
 	 * @param minCalls
 	 *            Standard value = 1. The minimum number of calls which should
 	 *            be available.
 	 * @return true if this is currently rate-limited, & should not be used for
 	 *         a while. false = OK
+	 *         
 	 * @see #getRateLimit(KRequestType) for more info
 	 * @see #getRateLimitStatus() for guaranteed up-to-date info
 	 */
