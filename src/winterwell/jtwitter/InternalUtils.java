@@ -106,6 +106,7 @@ public class InternalUtils {
 	 * Weird: I saw this as an address - "ÜT: 25.324488,55.376224t" Is it just a
 	 * one-off typo? Should we match N/S/E/W markers?
 	 */
+	// ?? unify this with Location#parse()?
 	public static final Pattern latLongLocn = Pattern
 			.compile("(\\S+:)?\\s*(-?[\\d\\.]+)\\s*,\\s*(-?[\\d\\.]+)");
 

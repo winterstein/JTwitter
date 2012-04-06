@@ -2,6 +2,8 @@ package com.winterwell.jgeoplanet;
 
 import java.io.Serializable;
 import java.util.AbstractList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A geographical point-location expressed as a latitude and longitude.
@@ -152,6 +154,23 @@ public class Location implements Serializable {
 	@Override
 	public String toString() {
 		return "(" + latitude + " N, " + longitude + " E)";
+	}
+
+	public static final Pattern latLongLocn = Pattern.compile(
+			"\\s*(-?[\\d\\.]+),\\s*(-?[\\d\\.]+)\\s*");
+
+	/**
+	 * Try to parse a string as a latitude/longitude pair.
+	 * @param locnDesc
+	 * @return Location or null on failure
+	 */
+	public static Location parse(String locnDesc) {
+		// Is it a longitude/latitude pair?
+		Matcher m = latLongLocn.matcher(locnDesc);
+		if ( ! m.matches()) return null;
+		String lat = m.group(1);
+		String lng = m.group(2);
+		return new Location(Double.valueOf(lat), Double.valueOf(lng));
 	}
 
 }
