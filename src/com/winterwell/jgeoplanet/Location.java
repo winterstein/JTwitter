@@ -33,7 +33,7 @@ public class Location implements Serializable {
 	public Location(double latitude, double longitude) {
 		// Normalise the lat/long coords
 		if (latitude < -90 || latitude > 90) {
-			throw new IllegalArgumentException("Invalid latitude: " + latitude);
+			throw new IllegalArgumentException("Invalid latitude: " + latitude+", "+longitude);
 		}
 		if (longitude < -180 || longitude > 180) {
 			longitude = longitude % 360;
