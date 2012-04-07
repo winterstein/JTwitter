@@ -107,6 +107,14 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			"http://foursquare.com/oauth/authorize");
 
 	/**
+	 * Use with #setProvider() to make this a LinkedIn OAuth client
+	 */
+	private static final DefaultOAuthProvider LINKEDIN_PROVIDER = new DefaultOAuthProvider(
+			"https://api.linkedin.com/uas/oauth/requestToken",
+			"https://api.linkedin.com/uas/oauth/accessToken",
+			"https://www.linkedin.com/uas/oauth/authorize");
+	
+	/**
 	 * This consumer key (and secret) allows you to get up and running fast.
 	 * However you are strongly advised to register your own app at
 	 * http://dev.twitter.com Then use your own key and secret. This will be
@@ -386,6 +394,10 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	public void setFoursquareProvider() {
 		setProvider(FOURSQUARE_PROVIDER);
 	}
+	
+	public void setLinkedInProvider() {
+		setProvider(LINKEDIN_PROVIDER);
+	}
 
 	/**
 	 * Unlike the base class {@link URLConnectionHttpClient}, this does not set
@@ -401,6 +413,8 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 * Set to Twitter settings by default. This method lets you override that.
 	 * 
 	 * @param provider
+	 * @see #setLinkedInProvider()
+	 * @see #setFoursquareProvider()
 	 */
 	public void setProvider(DefaultOAuthProvider provider) {
 		this.provider = provider;
