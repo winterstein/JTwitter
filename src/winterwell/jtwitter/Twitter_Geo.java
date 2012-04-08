@@ -115,10 +115,10 @@ public class Twitter_Geo implements IGeoCode {
 		if (places.size()==0) return null;
 		// a unique answer?
 		if (places.size()==1) {
-			if (confidence!=null) confidence.value = 0.95f;
+			if (confidence!=null) confidence.value = 0.8f;
 			return places.get(0);
 		}		
-		return InternalUtils.prefer(places, IPlace.TYPE_CITY, confidence, 0.95f);
+		return InternalUtils.prefer(places, IPlace.TYPE_CITY, confidence, 0.8f);
 	}
 
 	
