@@ -9,6 +9,12 @@ public interface android {
 			public static Object content;
 			
 		}
+
+		public static class style {
+
+			public static final String Theme_Black_NoTitleBar_Fullscreen = null;
+			
+		}
 	}
 
 }

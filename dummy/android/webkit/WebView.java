@@ -43,4 +43,9 @@ public class WebView {
 	public void setOnTouchListener(OnTouchListener onTouchListener) {
 	}
 
+	public void setBackgroundColor(String black) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

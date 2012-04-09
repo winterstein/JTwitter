@@ -5,9 +5,12 @@ import java.net.URI;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import android.app.Activity;
-import android.content.Intent;
+import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +22,7 @@ import android.widget.Toast;
 /**
  * A View for easily getting Twitter authorisation or doing login-by-Twitter.
  *	
- * @author John Turner, Daniel Winterstein
+ * @author Daniel Winterstein, John Turner
  */
 public abstract class AndroidTwitterLogin {
 		
@@ -28,24 +31,28 @@ public abstract class AndroidTwitterLogin {
 	private Activity context;
 
 	/**
-		@param oauthAppSecret 
-	 * @param calbackUrl 
-	 * @param msg The message that is shown to the user before
-	 * directing them off to Twitter. Can be null for the default, which is 
+	 * The message that is shown to the user before
+	 * directing them off to Twitter. Default is 
 	 * "Please authorize with Twitter"
 	 */
+	public void setAuthoriseMessage(String authoriseMessage) {
+		this.authoriseMessage = authoriseMessage;
+	}
+	
+	/**
+	 * @param myActivity This will have its conten view set, then reset.
+	 * @param oauthAppKey 
+	 * @param oauthAppSecret 
+	 * @param calbackUrl Not important
+	 */
 	 public AndroidTwitterLogin(Activity myActivity, 
-			 String oauthAppKey, String oauthAppSecret, String calbackUrl, 
-			 String msg)
+			 String oauthAppKey, String oauthAppSecret, String calbackUrl)
 	 {
 		this.context = myActivity;
 		consumerKey =  oauthAppKey;
 		consumerSecret = oauthAppSecret;
-		this.callbackUrl = calbackUrl;			
-		if (msg!=null) {
-			authoriseMessage = msg;
-		}
-		client = new OAuthSignpostClient(consumerKey, consumerSecret, callbackUrl);
+		this.callbackUrl = "http://example.com"; //calbackUrl;					
+		client = new OAuthSignpostClient(consumerKey, consumerSecret, callbackUrl);		
 	}
 	 
 	OAuthSignpostClient client;
@@ -55,38 +62,42 @@ public abstract class AndroidTwitterLogin {
 	private String consumerSecret;
 
 	private String consumerKey;
-	
-	private boolean resetView = true;
-
-	private View oldView;
 			
 	public final void run() {
-		WebView webview = new WebView(context);
-		webview.getSettings().setJavaScriptEnabled(true);
+		Log.i("jtwitter","TwitterAuth run!");		
+		final WebView webview = new WebView(context);
+		webview.setBackgroundColor(Color.BLACK);
 		webview.setVisibility(View.VISIBLE);
-		if (resetView) {
-			oldView = ((ViewGroup)context.findViewById(android.R.id.content)).getChildAt(0);
-		}		
-		context.setContentView(webview);
-				
+		final Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+		dialog.setContentView(webview);
+		dialog.show();
+		
+		webview.getSettings().setJavaScriptEnabled(true);
 		webview.setWebViewClient(new WebViewClient() {
-			@Override public void onPageFinished(WebView view, String url) {
-				Log.i("jtwitter","TwitterAuth url: "+url);
+			
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				Log.d("jtwitter","url: "+url);				
+				if ( ! url.contains(callbackUrl)) return;
 				Uri uri = Uri.parse(url);
-				if (url.contains(callbackUrl)) {
-					uri.getQueryParameter("oauth_token");
-        			String verifier= uri.getQueryParameter("oauth_verifier");
-        			client.setAuthorizationCode(verifier);
-        			String[] tokens = client.getAccessToken();
-        			Twitter jtwitter = new Twitter(null, client);
-        			if (resetView) {
-        				context.setContentView(oldView);
-        			}
-        			onSuccess(jtwitter, tokens);
-        			return;
-				}
-				// TODO onFail
-				System.out.println("Fail?"+url);
+    			String verifier= uri.getQueryParameter("oauth_verifier");
+    			if (verifier==null) {
+    				// denied!
+    				Log.i("jtwitter","Auth-fail: "+url);  			
+    				dialog.dismiss();
+    				onFail(new Exception(url));
+    				return;
+    			}    			
+    			client.setAuthorizationCode(verifier);
+    			String[] tokens = client.getAccessToken();
+    			Twitter jtwitter = new Twitter(null, client);
+    			Log.i("jtwitter","Authorised :)");
+    			dialog.dismiss();
+    			onSuccess(jtwitter, tokens);						
+			}
+			
+			@Override public void onPageFinished(WebView view, String url) {
+				Log.i("jtwitter","url finished: "+url);
 			}
 		});
 		// Workaround for http://code.google.com/p/android/issues/detail?id=7189
@@ -96,8 +107,8 @@ public abstract class AndroidTwitterLogin {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
 				if (e.getAction()==MotionEvent.ACTION_DOWN
-					|| e.getAction()==MotionEvent.ACTION_UP) {
-					if ( ! v.hasFocus()) {
+					|| e.getAction()== MotionEvent.ACTION_UP) {
+					if (!v.hasFocus()) {
 						v.requestFocus();
 					}
 		        }
@@ -105,20 +116,27 @@ public abstract class AndroidTwitterLogin {
 			}
 		});
 		
-		try {
-			URI authUrl =  client.authorizeUrl();
-			Toast.makeText(context, authoriseMessage, Toast.LENGTH_SHORT).show();
-			webview.loadUrl(authUrl.toString());
-		} catch (Exception e) {
-			onFail(e);
-		}
+		// getting the url to load involves a web call -- let the UI update first
+		Toast.makeText(context, authoriseMessage, Toast.LENGTH_SHORT).show();
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				try {			
+					URI authUrl =  client.authorizeUrl();
+					webview.loadUrl(authUrl.toString());
+				} catch (Exception e) {
+					onFail(e);
+				}				
+			}			
+		},10);
 	}
 
 	protected abstract void onSuccess(Twitter jtwitter, String[] tokens);
 
 	protected void onFail(Exception e) {
-		Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		Log.e("jtwitter", e.toString());
+		Toast.makeText(context, "Twitter authorisation failed?!", Toast.LENGTH_LONG).show();
+		Log.w("jtwitter", e.toString());
 	}
 
 }

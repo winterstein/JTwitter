@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.6.1:
+ - Improved AndroidTwitterLogin performance. Added onFail() method. 
+
 2.6: Unifying geo-coding service with JGeoPlanet
  - *Breaking Change*: LatLong is replaced by Location from jgeoplanet (a sister-project by Winterwell).
  - New interfaces for geo-location: IPlace & IGeoCode
