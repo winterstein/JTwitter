@@ -4,6 +4,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public interface IGeoCode {
 
+	
+	// TODO
+//	IPlace getPlace(String locationDescription, extra-info like timezone, some form of hinting system);
+//	List<IPlace> getPlaces(String locationDescription, similar);
+	
 	/**
 	 * Returns the best-guess {@link IPlace} whose name matches the query
 	 * to some extent.
