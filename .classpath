@@ -3,6 +3,7 @@
 	<classpathentry kind="src" output="bin" path="src"/>
 	<classpathentry kind="src" path="build"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="dummy"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/middleware/jakarta/commons-codec-1.4.jar"/>
@@ -11,6 +12,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
 	<classpathentry kind="lib" path="/middleware/signpost/signpost-core.jar" sourcepath="/middleware/signpost/src.zip"/>
-	<classpathentry kind="lib" path="/middleware/android-sdk-linux/platforms/android-7/android.jar"/>
 	<classpathentry kind="output" path="binlocal"/>
 </classpath>
