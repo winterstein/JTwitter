@@ -59,6 +59,12 @@ public class TwitterStream extends AStream {
 	public static final int MAX_KEYWORD_LENGTH = 60;
 
 	/**
+	 * Maximum users who can be tracked.
+	 * @see #setFollowUsers(List)
+	 */
+	public static final int MAX_USERS = 5000;
+
+	/**
 	 * Used to help avoid breaking api limits.
 	 */
 	private static Map<String, AStream> user2stream = new ConcurrentHashMap();
@@ -173,10 +179,17 @@ public class TwitterStream extends AStream {
 	 */
 	public void setFollowUsers(List<Long> userIds) throws IllegalArgumentException {
 		method = KMethod.filter;
-		if (userIds!=null && userIds.size() > 5000) {
+		if (userIds!=null && userIds.size() > MAX_USERS) {
 			throw new IllegalArgumentException("Track upto 5000 users - not "+userIds.size());
 		}
 		follow = userIds;
+	}
+	
+	/**
+	 * @return user-ids which are followed, or null.
+	 */
+	public List<Long> getFollowUsers() {
+		return follow;
 	}
 
 	/**

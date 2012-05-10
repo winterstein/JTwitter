@@ -72,17 +72,17 @@ import winterwell.jtwitter.TwitterException.SuspendedUser;
  * <p>
  * Notes:
  * <ul>
- * <li>This wrapper takes care of all url-encoding/decoding.
- * <li>This wrapper will throw a runtime exception (TwitterException) if a
+ * <li>Takes care of all url-encoding/decoding.
+ * <li>Will throw a runtime exception (TwitterException) if a
  * methods fails, e.g. it cannot connect to Twitter.com or you make a bad
  * request.
  * <li>Note that Twitter treats old-style retweets (those made by sending a
  * normal tweet beginning "RT @whoever") differently from new-style retweets
  * (those made using the retweet API). The differences are documented in various
  * methods.
- * <li>Most methods are available via this class (Twitter), except for list
- * support (in {@link TwitterList} - though {@link #getLists()} is here) and
- * some profile/account settings (in {@link Twitter_Account}).
+ * <li>This class itself holds tweet-related methods.
+ * Also see the "sub-classes" accessed via {@link #users()}, {@link #geo()}, and {@link #account()}. 
+ * For list support see {@link TwitterList} - though {@link #getLists()} is here.
  * <li>This class is NOT thread safe. If you're using multiple threads, it is
  * best to create separate Twitter objects (which is fine).
  * </ul>
