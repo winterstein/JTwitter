@@ -47,6 +47,18 @@ public class TwitterStream extends AStream {
 	}
 
 	/**
+	 * Maximum number of keywords which most of us can track.
+	 * @see #setTrackKeywords(List)
+	 */
+	public static final int MAX_KEYWORDS = 400;
+
+	/**
+	 * Maximum character length of a tracked keyword or phrase.
+	 * @see #setTrackKeywords(List)
+	 */
+	public static final int MAX_KEYWORD_LENGTH = 60;
+
+	/**
 	 * Used to help avoid breaking api limits.
 	 */
 	private static Map<String, AStream> user2stream = new ConcurrentHashMap();
@@ -148,19 +160,23 @@ public class TwitterStream extends AStream {
 			throw new UnsupportedOperationException("TODO"); // TODO
 	}
 
+	/**
+	 * @return Can be null
+	 */
 	public List<String> getTrackKeywords() {
 		return track;
 	}
 
 	/**
 	 * @param userIds Upto 5,000 userids to follow
+	 * @throws IllegalArgumentException if userIds is too big
 	 */
-	public void setFollowUsers(List<Long> userIds) {
+	public void setFollowUsers(List<Long> userIds) throws IllegalArgumentException {
 		method = KMethod.filter;
-		// if (userIds!=null&&! userIds.isEmpty()){
+		if (userIds!=null && userIds.size() > 5000) {
+			throw new IllegalArgumentException("Track upto 5000 users - not "+userIds.size());
+		}
 		follow = userIds;
-		// }
-		// If not, really don't! it screws stuff up.
 	}
 
 	/**
@@ -209,14 +225,16 @@ public class TwitterStream extends AStream {
 	 * to the Search REST API.
 	 * 
 	 * @param keywords
-	 *            The default access level allows up to 400 track keywords.
-	 *            You can also do phrases, separating words with a space.
-	 *          
+	 *            The default access level allows up to 400 track keywords
+	 *            (exceeding this will lead to an exception when you connect).
+	 *            You can include phrases, separating words with a space.
+	 * @see TwitterStream#MAX_KEYWORDS
+	 * @see TwitterStream#MAX_KEYWORD_LENGTH
 	 */
 	public void setTrackKeywords(List<String> keywords) {
 		// check them for length
 		for (String kw : keywords) {
-			if (kw.length() > 60) {
+			if (kw.length() > MAX_KEYWORD_LENGTH) {
 				throw new IllegalArgumentException("Track term too long: "+kw+" (60 char limit)");
 			}
 		}	
