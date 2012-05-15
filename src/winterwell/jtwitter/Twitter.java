@@ -22,6 +22,7 @@ import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.reporting.Log;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -1878,6 +1879,7 @@ public class Twitter implements Serializable {
 		if (rl == null) {
 			if (reqType == KRequestType.NORMAL) {
 				int rls = getRateLimitStatus();
+				Log.d("Twitter", "RatelimitStatus for " + this.getScreenName() + " is...." + rls);
 				return rls >= minCalls;
 			}
 			return false;
