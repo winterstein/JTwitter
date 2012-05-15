@@ -312,13 +312,15 @@ public abstract class AStream implements Closeable {
 			if (isConnected())
 				return;
 			Thread.sleep(10);
-			if ( ! isConnected())
+			if ( ! isConnected()) {
 				throw new TwitterException(readThread.ex);
+			}
 		} catch (Exception e) {
-
 			if (e instanceof TwitterException)
 				throw (TwitterException) e;
-
+//			Doesn't catch anything: if (con!=null && client instanceof URLConnectionHttpClient) {
+//				((URLConnectionHttpClient) client).processError(con);
+//			}						
 			throw new TwitterException(e);
 		}
 	}
@@ -508,11 +510,14 @@ public abstract class AStream implements Closeable {
 		if (readThread != null && readThread.stopFlag)
 			return;
 		// Dead/zombie thread? Clean Up!
+		Exception ex = readThread == null? null : readThread.ex;
 		// close all
 		close();
 		// The connection is down!
-		if (!autoReconnect)
-			throw new TwitterException(readThread.ex);
+		if ( ! autoReconnect) {
+			if (ex instanceof TwitterException) throw (TwitterException)ex;
+			throw new TwitterException(ex);
+		}
 		// reconnect using a different thread
 		reconnect();
 	}

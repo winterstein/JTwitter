@@ -36,6 +36,44 @@ public class TwitterStreamTest {
 		}
 	}
 
+
+	/**
+	 * Starting 2 streams leads to 
+	 * winterwell.jtwitter.TwitterException: java.io.IOException: end of stream
+	 */
+	@Test
+	public void testTooManyStreams2() {		
+		try {
+			Twitter jtwit = new TwitterTest().newTestTwitter();
+			TwitterStream ts = new TwitterStream(jtwit);
+			ts.setTrackKeywords(Arrays.asList("hello"));
+			ts.connect();
+			Utils.sleep(500);
+			assert ts.isAlive();
+			
+			// Let's see what Twitter themselves say
+			TwitterStream.user2stream.clear();
+			
+			Twitter jtwit2 = new TwitterTest().newTestTwitter();
+			TwitterStream ts2 = new TwitterStream(jtwit2);
+			ts2.setTrackKeywords(Arrays.asList("world"));
+			ts2.connect();
+			
+			Utils.sleep(1000);			
+			
+			System.out.println(ts.getTweets());
+			System.out.println(ts2.getTweets());
+		} catch(TwitterException ex) {
+			System.out.println(ex);
+			return;
+		} catch (Exception e) {
+			System.out.println(e);
+			return;
+		}
+		
+		assert false;
+	}
+
 		
 	
 	@Test
@@ -121,6 +159,7 @@ public class TwitterStreamTest {
 			assert false;
 		} catch (Exception e) {
 			// good
+			System.out.println(e);
 		}
 		Thread.sleep(500);
 		sampler.close();

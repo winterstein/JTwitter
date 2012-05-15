@@ -67,7 +67,7 @@ public class TwitterStream extends AStream {
 	/**
 	 * Used to help avoid breaking api limits.
 	 */
-	private static Map<String, AStream> user2stream = new ConcurrentHashMap();
+	static Map<String, AStream> user2stream = new ConcurrentHashMap();
 
 	private List<Long> follow;
 
