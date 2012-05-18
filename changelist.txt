@@ -3,7 +3,8 @@
 2.6.2:
  - Added more Android dummy classes to allow compilation without android.jar
  - Minor early safety checks in TwitterStream
- 
+ - More documentation for the AndroidTwitterLogin class 
+  
 2.6.1:
  - Improved AndroidTwitterLogin performance. Added onFail() method. 
 
