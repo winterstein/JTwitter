@@ -8,7 +8,6 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.URLConnectionHttpClient;
 import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.utils.TodoException;
 
 public class Klout {
 

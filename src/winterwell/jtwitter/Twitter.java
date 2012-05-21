@@ -22,6 +22,7 @@ import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.jtwitter.TwitterException.Unexplained;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -587,6 +588,11 @@ public class Twitter implements Serializable {
 	public final static String version = "2.6.2";
 
 	private static final int MAX_CHARS = 140;
+
+	/**
+	 * Set to true to perform extra error-handling & correction.
+	 */
+	public static boolean WORRIED_ABOUT_TWITTER = false;
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the
@@ -2752,10 +2758,30 @@ public class Twitter implements Serializable {
 		}
 	}
 
+	/**
+	 * Test that the updateState worked -- throw TwitterException.Unexplained
+	 * if it didn't.<br>
+	 * By default, this only filters DMs.<br>
+	 * Serious checking is switched on via the {@link #WORRIED_ABOUT_TWITTER} flag.
+	 * @param statusText
+	 * @param s
+	 * @return s, or null for DMs
+	 * @throws TwitterException#Unexplained 
+	 */
 	private Status updateStatus2_safetyCheck(String statusText, Status s) {
+		// is it a direct message? - which doesn't return the true status
+		String st = statusText.toLowerCase();
+		if (st.startsWith("dm") || st.startsWith("d")) {
+			return null;
+		}
+		if ( ! WORRIED_ABOUT_TWITTER) {
+			return s;
+		}
 		// Weird bug: Twitter occasionally rejects tweets?!
-		// TODO does this still happen or have they fixed it? Hard to know
-		// with an intermittent bug!
+		// Sightings...
+		// 21/05/12 (spotter: Alex Nuttgens)
+		// 27/03/12 (spotter: Alex Nuttgens)
+		// + other earlier sightings
 		// Sanity check...
 		String targetText = statusText.trim();
 		String returnedStatusText = s.text.trim();
@@ -2765,17 +2791,10 @@ public class Twitter implements Serializable {
 		// TODO Twitter also shorten some not-quite-urls, such as "www.google.com", which stripUrls() won't catch.		
 		targetText = InternalUtils.stripUrls(targetText);
 		returnedStatusText = InternalUtils.stripUrls(returnedStatusText);
-		if (returnedStatusText.equals(targetText))
+		if (returnedStatusText.equals(targetText)) {
+			// All OK
 			return s;
-		{ // is it a direct message? - which doesn't return the true status
-			String st = statusText.toLowerCase();
-			if (st.startsWith("dm") || st.startsWith("d"))
-				return null;
 		}
-		// Assume Twitter have fixed this bug -- TODO check this periodically
-		// They haven't! AEN 27/03/12
-		// if (true) return s;
-		// try waiting and rechecking - maybe it did work after all
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {

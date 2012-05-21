@@ -35,7 +35,6 @@ import com.winterwell.jgeoplanet.MFloat;
 
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
-import winterwell.utils.web.WebUtilsTest;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else

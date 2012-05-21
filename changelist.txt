@@ -4,7 +4,8 @@
  - Added more Android dummy classes to allow compilation without android.jar
  - Minor early safety checks in TwitterStream
  - More documentation for the AndroidTwitterLogin class 
-  
+ - The slightly paranoid safety checking of Twitter.updateStatus() is now _off_ by default. Switch it on if desired with the Twitter.WORRIED_ABOUT_TWITTER flag.
+ 
 2.6.1:
  - Improved AndroidTwitterLogin performance. Added onFail() method. 
 

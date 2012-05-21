@@ -32,6 +32,7 @@ public class BuildJTwitter extends BuildTask {
 		// Compile
 		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
 		compile.setTargetVersion("1.5");
+		compile.setSourceVersion("1.5");
 		compile.run();
 		// Jar
 		File jarFile = new File(base, "jtwitter.jar");
