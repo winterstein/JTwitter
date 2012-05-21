@@ -309,6 +309,9 @@ public class TwitterException extends RuntimeException {
 	 * banned from User Streams for an excessive login rate. The user should be
 	 * advised to shut down extra copies of the application, perhaps instances
 	 * running on another device, to restore streaming access.
+	 * <p>
+	 * Note: You may also see an IOException wrapped in a TwitterException for
+	 * this case.
 	 */
 	public static class TooManyLogins extends E40X {
 		private static final long serialVersionUID = 1L;

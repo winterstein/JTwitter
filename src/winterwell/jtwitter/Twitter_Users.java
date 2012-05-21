@@ -284,8 +284,8 @@ public class Twitter_Users {
 
 	/**
 	 * 
-	 * Returns the (latest 100) given user's friends, each with current status
-	 * inline. Occasionally contains duplicates.
+	 * Returns the (latest 100) given user's friends (people *they* follow), 
+	 * each with current status inline. Occasionally contains duplicates.
 	 * 
 	 * @param username
 	 *            The screen name of the user for whom to request a list of

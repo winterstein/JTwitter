@@ -21,7 +21,20 @@ import android.widget.Toast;
 
 /**
  * A View for easily getting Twitter authorisation or doing login-by-Twitter.
- *	
+ * 
+ * <h3>Example</h3>
+ * <code><pre>
+ * AndroidTwitterLogin atl = new AndroidTwitterLogin(myApp, 
+				MY_TWITTER_KEY,MY_TWITTER_SECRET,MY_TWITTER_CALLBACK) {					
+
+	protected void onSuccess(Twitter jtwitter, String[] tokens) {
+		jtwitter.setStatus("I can now post to Twitter!");
+		// Recommended: store tokens in your app for future use
+		// with the constructor OAuthSignpostClient(String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret)
+	}
+ * };
+ * atl.run();
+ *	</pre></code>
  * @author Daniel Winterstein, John Turner
  */
 public abstract class AndroidTwitterLogin {
