@@ -55,7 +55,7 @@ public final class Message implements ITweet {
 	private final Date createdAt;
 	private EnumMap<KEntityType, List<TweetEntity>> entities;
 
-	final Long id;
+	public final Long id;
 
 	/**
 	 * Equivalent to {@link Status#inReplyToStatusId} *but null by default*. If
@@ -71,6 +71,7 @@ public final class Message implements ITweet {
 	private final User recipient;
 	private final User sender;
 	public final String text;
+	public String source;
 
 	/**
 	 * @param obj
@@ -87,6 +88,12 @@ public final class Message implements ITweet {
 		String c = InternalUtils.jsonGet("created_at", obj);
 		createdAt = InternalUtils.parseDate(c);
 		sender = new User(obj.getJSONObject("sender"), null);
+		
+		// source - sometimes encoded (search), sometimes not
+		// (timelines)!
+		String src = InternalUtils.jsonGet("source", obj);
+		source = src!=null&&src.contains("&lt;") ? InternalUtils.unencode(src) : src;
+		
 		// recipient - for messages you sent
 		Object recip = obj.opt("recipient");
 		if (recip instanceof JSONObject) { // Note JSONObject.has is dangerously

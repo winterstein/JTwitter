@@ -1356,9 +1356,6 @@ public class Twitter implements Serializable {
 	 * @see #getRateLimit(KRequestType)
 	 */
 	public int getRateLimitStatus() {
-		
-		
-		
 		String json = http.getPage(TWITTER_URL
 				+ "/account/rate_limit_status.json", null,
 				http.canAuthenticate());
