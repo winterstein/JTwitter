@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.6.3:
+ - Bugfix for a v2.6.2 bug where updateStatus mistook "do ..." for a dm. 
+
 2.6.2:
  - Added more Android dummy classes to allow compilation without android.jar
  - Minor early safety checks in TwitterStream
