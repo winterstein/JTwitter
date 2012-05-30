@@ -2768,7 +2768,7 @@ public class Twitter implements Serializable {
 	private Status updateStatus2_safetyCheck(String statusText, Status s) {
 		// is it a direct message? - which doesn't return the true status
 		String st = statusText.toLowerCase();
-		if (st.startsWith("dm") || st.startsWith("d")) {
+		if (st.startsWith("dm ") || st.startsWith("d ")) {
 			return null;
 		}
 		if ( ! WORRIED_ABOUT_TWITTER) {

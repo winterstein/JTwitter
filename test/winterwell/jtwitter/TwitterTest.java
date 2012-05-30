@@ -407,7 +407,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	
 
-	public static void main2(String[] args) {
+	public static void main(String[] args) {
 		TwitterTest tt = new TwitterTest();
 		Method[] meths = TwitterTest.class.getMethods();
 		for(Method m : meths) {
@@ -1238,22 +1238,20 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(trends);
 		assert trends.size() > 0;
 	}
-
-	public static void main(String[] args) {
-		new TwitterTest().testUpdateStatus();
-	}
+	
 	
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#updateStatus(java.lang.String)}.
 	 */
 	public void testUpdateStatus() {		
 		Twitter tw = newTestTwitter();
+		int salt = new Random().nextInt(1000);
 		
-		Status notNull = tw.updateStatus("Do you agree with @winterwellassoc that Twitter is cool?");
+		// a bug from May 2012, now fixed
+		Status notNull = tw.updateStatus("Do you agree with @spoonmcguffin that Twitter is great? "+salt);
 		assert notNull != null;
 		System.out.println(notNull);
-		
-		int salt = new Random().nextInt(1000);
+				
 		String s = "Experimenting "+salt+" (http://winterwell.com at "+new Date().toString()+")";
 		Status s2a = tw.updateStatus(s);
 		Status s2b = tw.getStatus();
