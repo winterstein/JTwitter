@@ -587,7 +587,10 @@ public class Twitter implements Serializable {
 	 */
 	public final static String version = "2.6.3";
 
-	private static final int MAX_CHARS = 140;
+	/**
+	 * The maximum number of characters that a tweet can contain.
+	 */
+	public final static int MAX_CHARS = 140;
 
 	/**
 	 * Set to true to perform extra error-handling & correction.
@@ -2674,6 +2677,22 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * Compute the effective size of a message, given that Twitter treat things that
+	 * smell like a URL as 20 characters.
+	 * 
+	 * @param message
+	 * @return the effective message length in characters
+	 */
+	public static int countCharacters(String statusText) {
+		int shortLength = statusText.length();
+		Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
+		while(m.find()) {
+			shortLength += LINK_LENGTH - m.group().length(); 
+		}
+		return shortLength;
+	}
+	
+	/**
 	 * Updates the authenticating user's status and marks it as a reply to the
 	 * tweet with the given ID.
 	 * 
@@ -2707,12 +2726,9 @@ public class Twitter implements Serializable {
 			throws TwitterException 
 	{		
 		// check for length
+		// FIXME: Should this be MAX_CHARS??
 		if (statusText.length() > 160) {
-			int shortLength = statusText.length();
-			Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
-			while(m.find()) {
-				shortLength += LINK_LENGTH - m.group().length(); 
-			}
+			int shortLength = countCharacters(statusText);
 			if (shortLength > MAX_CHARS) {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
