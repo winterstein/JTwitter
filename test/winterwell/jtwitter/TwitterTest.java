@@ -465,15 +465,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 //	}
 
 	/**
-	 * Check that you can send 160 chars if you wants
+	 * Check that you can send 160 chars if you wants.
+	 * Nope: it's 140 now
 	 */
-	public void canSend160() {
+	public void testCanSend160() {
 		String s = "";
-		for(int i=0; i<15; i++) {
-			s += i+"23456789 ";
-		}
-		Twitter tw = newTestTwitter();
-		tw.setStatus(s);
+		Twitter tw = newTestTwitter();		
+		for(int i=0; i<14; i++) {
+			s += (i%10)+"23456789 ";			
+			tw.setStatus(s);
+			System.out.println("SENT "+s.length());
+		}				
 	}
 
 
