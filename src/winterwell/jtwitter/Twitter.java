@@ -2615,11 +2615,13 @@ public class Twitter implements Serializable {
 	
 	
 	/**
-	 * Compute the effective size of a message, given that Twitter treat things that
+	 * Compute the effective size of a message, given that Twitter treats things that
 	 * smell like a URL as 20 characters.
 	 * 
-	 * @param message
-	 * @return the effective message length in characters
+	 * @param statusText
+	 * 			The status to check 
+	 * @return 
+	 * 			The effective message length in characters
 	 */
 	public static int countCharacters(String statusText) {
 		int shortLength = statusText.length();
