@@ -29,10 +29,11 @@ public class BuildJTwitter extends BuildTask {
 		File src = new File(base, "src");
 		File lib = new File(base, "lib");
 		assert src.isDirectory();
-		// Compile
-		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
-		compile.setTargetVersion("1.5");
-		compile.run();
+//		// Compile
+//		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
+//		compile.setTargetVersion("1.5");
+//		compile.setSourceVersion("1.5");
+//		compile.run();
 		// Jar
 		File jarFile = new File(base, "jtwitter.jar");
 //		File oauth = new File("OAuthHttpClient.java");

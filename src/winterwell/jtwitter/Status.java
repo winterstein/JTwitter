@@ -227,7 +227,7 @@ public final class Status implements ITweet {
 			// source - sometimes encoded (search), sometimes not
 			// (timelines)!
 			String src = InternalUtils.jsonGet("source", object);
-			source = src.contains("&lt;") ? InternalUtils.unencode(src) : src;
+			source = src!=null&&src.contains("&lt;") ? InternalUtils.unencode(src) : src;
 			// threading
 			String irt = InternalUtils.jsonGet("in_reply_to_status_id", object);
 			if (irt == null) {

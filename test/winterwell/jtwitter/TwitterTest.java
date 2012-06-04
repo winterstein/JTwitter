@@ -465,15 +465,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 //	}
 
 	/**
-	 * Check that you can send 160 chars if you wants
+	 * Check that you can send 160 chars if you wants.
+	 * Nope: it's 140 now
 	 */
-	public void canSend160() {
+	public void testCanSend160() {
 		String s = "";
-		for(int i=0; i<15; i++) {
-			s += i+"23456789 ";
-		}
-		Twitter tw = newTestTwitter();
-		tw.setStatus(s);
+		Twitter tw = newTestTwitter();		
+		for(int i=0; i<14; i++) {
+			s += (i%10)+"23456789 ";			
+			tw.setStatus(s);
+			System.out.println("SENT "+s.length());
+		}				
 	}
 
 
@@ -1238,13 +1240,20 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(trends);
 		assert trends.size() > 0;
 	}
-
+	
+	
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#updateStatus(java.lang.String)}.
 	 */
-	public void testUpdateStatus() {
+	public void testUpdateStatus() {		
 		Twitter tw = newTestTwitter();
 		int salt = new Random().nextInt(1000);
+		
+		// a bug from May 2012, now fixed
+		Status notNull = tw.updateStatus("Do you agree with @spoonmcguffin that Twitter is great? "+salt);
+		assert notNull != null;
+		System.out.println(notNull);
+				
 		String s = "Experimenting "+salt+" (http://winterwell.com at "+new Date().toString()+")";
 		Status s2a = tw.updateStatus(s);
 		Status s2b = tw.getStatus();

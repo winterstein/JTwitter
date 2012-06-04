@@ -585,9 +585,17 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.6.2";
+	public final static String version = "2.6.3";
 
-	private static final int MAX_CHARS = 140;
+	/**
+	 * The maximum number of characters that a tweet can contain.
+	 */
+	public final static int MAX_CHARS = 140;
+
+	/**
+	 * Set to true to perform extra error-handling & correction.
+	 */
+	public static boolean WORRIED_ABOUT_TWITTER = false;
 
 	/**
 	 * Convenience method: Finds a user with the given screen-name from the
@@ -1351,9 +1359,6 @@ public class Twitter implements Serializable {
 	 * @see #getRateLimit(KRequestType)
 	 */
 	public int getRateLimitStatus() {
-		
-		
-		
 		String json = http.getPage(TWITTER_URL
 				+ "/account/rate_limit_status.json", null,
 				http.canAuthenticate());
@@ -2373,9 +2378,8 @@ public class Twitter implements Serializable {
 	 * (updateStatus is the Twitter API name for this method).
 	 * 
 	 * @param statusText
-	 *            The text of your status update. Must not be more than 160
-	 *            characters and should not be more than 140 characters to
-	 *            ensure optimal display.
+	 *            The text of your status update. Must not be more than 140
+	 *            characters.
 	 * @return The posted status when successful.
 	 */
 	public Status setStatus(String statusText) throws TwitterException {
@@ -2601,9 +2605,7 @@ public class Twitter implements Serializable {
 	 * Updates the authenticating user's status.
 	 * 
 	 * @param statusText
-	 *            The text of your status update. Must not be more than 160
-	 *            characters and should not be more than 140 characters to
-	 *            ensure optimal display.
+	 *            The text of your status update. Must not be more than 140 characters.
 	 * @return The posted status when successful.
 	 */
 	public Status updateStatus(String statusText) {
@@ -2613,73 +2615,28 @@ public class Twitter implements Serializable {
 	
 	
 	/**
-	 * @deprecated Still developing!
-	 * Updates the authenticating user's status with an image (or other media file / attachment).
+	 * Compute the effective size of a message, given that Twitter treat things that
+	 * smell like a URL as 20 characters.
 	 * 
-	 * @param statusText
-	 * @param mediaFile
-	 * @return The posted status when successful.
+	 * @param message
+	 * @return the effective message length in characters
 	 */
-	public Status updateStatus(String statusText, File mediaFile, BigInteger inReplyToStatusId) {
-		// check for length
-		if (statusText.length() > 160) {
-			int shortLength = statusText.length();
-			Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
-			while(m.find()) {
-				shortLength += LINK_LENGTH - m.group().length(); 
-			}
-			if (shortLength > MAX_CHARS) {
-				// bogus - send a helpful error
-				throw new IllegalArgumentException(
-						"Status text must be 140 characters or less: "
-								+ statusText.length() + " " + statusText);
-			}
+	public static int countCharacters(String statusText) {
+		int shortLength = statusText.length();
+		Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
+		while(m.find()) {
+			shortLength += LINK_LENGTH - m.group().length(); 
 		}
-		if (mediaFile != null && ! mediaFile.isFile()) {
-			throw new IllegalArgumentException("Not a valid file: "+mediaFile);
-		}
-		
-		Map<String, String> vars = InternalUtils.asMap("status", statusText);
-		if (tweetEntities) vars.put("include_entities", "1");
-
-		// add in long/lat if set
-		if (myLatLong != null) {
-			vars.put("lat", Double.toString(myLatLong[0]));
-			vars.put("long", Double.toString(myLatLong[1]));
-		}
-
-		if (sourceApp != null) {
-			vars.put("source", sourceApp);
-		}
-		if (inReplyToStatusId != null) {
-			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
-		}
-		
-		// FIXME send with image
-		if (true) throw new RuntimeException("TODO");
-//		https://dev.twitter.com/docs/api/1/post/statuses/update_with_media
-		// possibly_sensitive
-		// Your POST request's Content-Type should be set to multipart/form-data
-		// media[] Supported image formats are PNG, JPG and GIF. Animated GIFs are not supported.
-		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
-					true);
-		try {
-			Status s = new Status(new JSONObject(result), null);
-			s = updateStatus2_safetyCheck(statusText, s);
-			return s;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(result, e);
-		}
+		return shortLength;
 	}
-
+	
 	/**
 	 * Updates the authenticating user's status and marks it as a reply to the
 	 * tweet with the given ID.
 	 * 
 	 * @param statusText
-	 *            The text of your status update. Must not be more than 160
-	 *            characters and should not be more than 140 characters to
-	 *            ensure optimal display.
+	 *            The text of your status update. Must not be more than 140
+	 *            characters (with urls counting as 20 or 21 for https).
 	 * 
 	 * 
 	 * @param inReplyToStatusId
@@ -2706,12 +2663,8 @@ public class Twitter implements Serializable {
 			throws TwitterException 
 	{		
 		// check for length
-		if (statusText.length() > 160) {
-			int shortLength = statusText.length();
-			Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
-			while(m.find()) {
-				shortLength += LINK_LENGTH - m.group().length(); 
-			}
+		if (statusText.length() > MAX_CHARS) {
+			int shortLength = countCharacters(statusText);
 			if (shortLength > MAX_CHARS) {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
@@ -2754,10 +2707,30 @@ public class Twitter implements Serializable {
 		}
 	}
 
+	/**
+	 * Test that the updateState worked -- throw TwitterException.Unexplained
+	 * if it didn't.<br>
+	 * By default, this only filters DMs.<br>
+	 * Serious checking is switched on via the {@link #WORRIED_ABOUT_TWITTER} flag.
+	 * @param statusText
+	 * @param s
+	 * @return s, or null for DMs
+	 * @throws TwitterException#Unexplained 
+	 */
 	private Status updateStatus2_safetyCheck(String statusText, Status s) {
+		// is it a direct message? - which doesn't return the true status
+		String st = statusText.toLowerCase();
+		if (st.startsWith("dm ") || st.startsWith("d ")) {
+			return null;
+		}
+		if ( ! WORRIED_ABOUT_TWITTER) {
+			return s;
+		}
 		// Weird bug: Twitter occasionally rejects tweets?!
-		// TODO does this still happen or have they fixed it? Hard to know
-		// with an intermittent bug!
+		// Sightings...
+		// 21/05/12 (spotter: Alex Nuttgens)
+		// 27/03/12 (spotter: Alex Nuttgens)
+		// + other earlier sightings
 		// Sanity check...
 		String targetText = statusText.trim();
 		String returnedStatusText = s.text.trim();
@@ -2767,17 +2740,10 @@ public class Twitter implements Serializable {
 		// TODO Twitter also shorten some not-quite-urls, such as "www.google.com", which stripUrls() won't catch.		
 		targetText = InternalUtils.stripUrls(targetText);
 		returnedStatusText = InternalUtils.stripUrls(returnedStatusText);
-		if (returnedStatusText.equals(targetText))
+		if (returnedStatusText.equals(targetText)) {
+			// All OK
 			return s;
-		{ // is it a direct message? - which doesn't return the true status
-			String st = statusText.toLowerCase();
-			if (st.startsWith("dm") || st.startsWith("d"))
-				return null;
 		}
-		// Assume Twitter have fixed this bug -- TODO check this periodically
-		// They haven't! AEN 27/03/12
-		// if (true) return s;
-		// try waiting and rechecking - maybe it did work after all
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
@@ -2795,19 +2761,35 @@ public class Twitter implements Serializable {
 						+ "\" but got " + s2);
 	}
 
+
+	/**
+	 * @deprecated Still developing!
+	 * Updates the authenticating user's status with an image (or other media file / attachment).
+	 * 
+	 * @param statusText
+	 * @param mediaFile
+	 * @return The posted status when successful.
+	 */
+	// c.f. 	// c.f. https://dev.twitter.com/discussions/1059
 	// TODO
-	// c.f. https://dev.twitter.com/discussions/1059
 	Status updateStatusWithMedia(String statusText, Number inReplyToStatusId,
-			File media) {
+			File mediaFile) {
 
 		// should we trim statusText??
 		// TODO support URL shortening
-		if (statusText.length() > 160)
+		if (statusText.length() > MAX_CHARS && countCharacters(statusText) > MAX_CHARS) {			
 			throw new IllegalArgumentException(
-					"Status text must be 160 characters or less: "
+					"Status text must be "+MAX_CHARS+" characters or less: "
 							+ statusText.length() + " " + statusText);
-		Map<String, String> vars = InternalUtils.asMap("status", statusText);
+		}
+		if (mediaFile != null && ! mediaFile.isFile()) {
+			throw new IllegalArgumentException("Not a valid file: "+mediaFile);
+		}
 
+		Map<String, String> vars = InternalUtils.asMap("status", statusText);
+		
+		if (tweetEntities) vars.put("include_entities", "1");
+		
 		// add in long/lat if set
 		if (myLatLong != null) {
 			vars.put("lat", Double.toString(myLatLong[0]));
