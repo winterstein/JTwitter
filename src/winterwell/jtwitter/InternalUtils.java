@@ -328,6 +328,7 @@ public class InternalUtils {
 	}
 
 	/**
+	 * Note: this is a JVM wide setting, intended for debugging.
 	 * @param on
 	 *            true to activate {@link #getAPIUsageStats()}. false to switch
 	 *            stats off. false by default
