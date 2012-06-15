@@ -585,7 +585,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.6.3";
+	public final static String version = "2.6.4";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.

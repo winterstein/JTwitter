@@ -209,8 +209,10 @@ public final class Status implements ITweet {
 			if (retweeted != null) {
 				original = new Status(retweeted, null);
 			}
+			
 			// text!
-			String _text = InternalUtils.jsonGet("text", object);
+			String _rawtext = InternalUtils.jsonGet("text", object);
+			String _text = _rawtext;
 			// Twitter have started truncating RTs -- let's fix the text up if we can
 			boolean truncated = object.optBoolean("truncated");
 			String rtStart = null;
@@ -221,6 +223,7 @@ public final class Status implements ITweet {
 				_text = InternalUtils.unencode(_text); // bugger - this screws up the indices in tweet entities
 			}
 			text = _text; 
+			
 			// date
 			String c = InternalUtils.jsonGet("created_at", object);
 			createdAt = InternalUtils.parseDate(c);
@@ -303,7 +306,7 @@ public final class Status implements ITweet {
 				} else {
 					// normal case
 					for (KEntityType type : KEntityType.values()) {
-						List<TweetEntity> es = TweetEntity.parse(this, _text, type,
+						List<TweetEntity> es = TweetEntity.parse(this, _rawtext, type,
 								jsonEntities);
 						entities.put(type, es);
 					}

@@ -43,6 +43,16 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
 	
+	public void testHttpHttp() {
+		Twitter jtwit = new Twitter();
+		BigInteger id = new BigInteger("213657059722407936");;
+		Status s = jtwit.getStatus(id);
+//		assert s.getText().equals(tweet) : s.getText();
+		String sdt = s.getDisplayText();
+		System.out.println(sdt);
+		s.getDisplayText();
+		assert sdt.equals("Good for M&S -- they've become carbon neutral http://soda.sh/xVJ @guardian");
+	}
 	
 	public void testAPIStatus() throws Exception {
 		// just a smoke test
@@ -179,18 +189,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
-	public void testDeletedUser() {
-		Twitter tw = newTestTwitter();
-		// NB Once Twitter delete an account, it will 404 (rather than 403)
-		try {
-			tw.show("radio_kulmbach");
-			assert false;
-		} catch (TwitterException.SuspendedUser ex) {
-			// OK
-		} catch (TwitterException.E404 ex) {
-			// OK
-		}
-	}
 
 	public void testNewestFirstSorting() {
 		Twitter tw = newTestTwitter();
@@ -211,72 +209,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		tw.setMaxResults(30);
 		List<Status> tweets = tw.getUserTimeline();
 		assert tweets.size() != 0;
-	}
-
-	public void testSuspendedAccounts() throws JSONException {
-		Twitter tw = newTestTwitter();
-		try {
-			User leo = tw.show("lottoeurooffers");
-			System.out.println(leo);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
-			tw.show("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
-		}
-		List<User> users = tw.bulkShow(Arrays.asList("winterstein", "ykarya35a4wr"));
-		assert ! users.isEmpty();
-		try {
-			tw.isFollowing("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
-		}
-		try {
-			tw.follow("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
-		}
-		try {
-			tw.stopFollowing("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
-		}
-		try {
-			tw.getUserTimeline("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
-		}
-	}
-
-	public void testProtectedAccounts() {
-		Twitter tw = newTestTwitter();
-		try {
-			tw.show("acwright");
-		} catch (SuspendedUser e) {
-			assert false;
-		} catch (E403 e) {
-		}
-		try {
-			tw.isFollowing("acwright");
-		} catch (SuspendedUser e) {
-			assert false;
-		} catch (E403 e) {
-		}
-		try {
-			tw.isFollower("acwright", "stephenfry");
-		} catch (SuspendedUser e) {
-			assert false;
-		} catch (E403 e) {
-		}
-		try {
-			tw.getUserTimeline("acwright");
-		} catch (SuspendedUser e) {
-			assert false;
-		} catch (E403 e) {
-		} catch (E401 e) {
-		}
 	}
 
 	public void testJSON() throws JSONException {
@@ -368,7 +300,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<Status> rtsByMe = twitter.getRetweetsByMe();
 //		List<Status> rtsOfMe = source.getRetweetsOfMe();
 		assert retweet.getOriginal().equals(original) : retweet.getOriginal();
-		assert retweet.inReplyToStatusId == original.id : retweet.inReplyToStatusId;		
+		assert retweet.inReplyToStatusId == original.id : retweet.inReplyToStatusId +" vs "+original.id;		
 		assert retweet.getText().startsWith("RT @spoonmcguffin: ");
 		assert ! rtsByMe.isEmpty();
 		assert rtsByMe.contains(retweet);
@@ -427,43 +359,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
-	public void testSearchUsers() {
-		Twitter tw = newTestTwitter();
-
-		List<User> users = tw.searchUsers("Nigel Griffiths");
-		System.out.println(users);
-
-		// AND Doesn't work!
-		List<User> users2 = tw.searchUsers("Fred near:Scotland");
-		assert ! users.isEmpty();
-	}
-
-	public void testBulkShow() {
-		Twitter tw = newTestTwitter();
-		List<User> users = tw.bulkShow(Arrays.asList("winterstein", "joehalliwell", "annettemees"));
-		assert users.size() == 3 : users;
-		assert users.get(1).description != null;
-	}
-
-	public void testBulkShowById() {
-		Twitter tw = newTestTwitter();
-		List<Long> userIds = Arrays.asList(32L, 34L, 45L, 12435562L);
-		List<User> users = tw.bulkShowById(userIds);
-		assert users.size() == 2 : users;
-	}
-
-	// slow, as we have to wade through a lot of misses
-//	public void testBulkShowById2() {
-//		Twitter tw = newTestTwitter();
-//		List<Long> userIds = new ArrayList<Long>();
-//		for(int i=0; i<5000; i++) {
-//			userIds.add(12435562L + i);
-//		}
-//		List<User> users = tw.bulkShowById(userIds);
-//		System.out.println(users.size());
-//		assert users.size() > 100 : users;
-//	}
-
 	/**
 	 * Check that you can send 160 chars if you wants.
 	 * Nope: it's 140 now
@@ -512,63 +407,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
-	/**
-	 * This tested a bug in {@link OAuthSignpostClient}
-	 * @throws InterruptedException
-	 */
-	public void tstFollowFollow() throws InterruptedException {
-		int lag = 2000; //300000;
-		OAuthSignpostClient client = new OAuthSignpostClient(
-				OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthSignpostClient.JTWITTER_OAUTH_SECRET, "oob");
-		Twitter tw = new Twitter("forkmcguffin", client);
-		// open the authorisation page in the user's browser
-		client.authorizeDesktop();
-		// get the pin
-		String v = client.askUser("Please enter the verification PIN from Twitter");
-		client.setAuthorizationCode(v);
-
-		User u = tw.follow("winterstein");
-
-		Thread.sleep(lag);
-
-		User u2 = tw.follow("winterstein");
-	}
-
-	/**
-	 * Test method for {@link winterwell.jtwitter.Twitter#follow(java.lang.String)}.
-	 */
-	public void testFollowAndStopFollowing() throws InterruptedException {
-		int lag = 1000; //300000;
-		Twitter tw = newTestTwitter();
-		tw.flush();
-		List<User> friends = tw.getFriends();
-		if ( ! tw.isFollowing("winterstein")) {
-			tw.follow("winterstein");
-			Thread.sleep(lag);
-		}
-		assert tw.isFollowing("winterstein") : friends;
-
-		// Stop
-		User h = tw.stopFollowing("winterstein");
-		assert h != null;
-		Thread.sleep(lag);
-		assert ! tw.isFollowing("winterstein") : friends;
-
-		// break where no friendship exists
-		User h2 = tw.stopFollowing("winterstein");
-		assert h2==null;
-
-		// Follow
-		tw.follow("winterstein");
-		Thread.sleep(lag);
-		assert tw.isFollowing("winterstein") : friends;
-
-		try {
-			User suspended = tw.follow("Alysha6822");
-			assert false : "Trying to follow a suspended user should throw an exception";
-		} catch (TwitterException e) {
-		}
-	}
 
 	public void testIdenticaAccess() throws InterruptedException {
 		Twitter jtwit = new Twitter(TEST_USER, TEST_PASSWORD);
@@ -693,41 +531,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert f.get(0).status != null;
 	}
 
-
-	/**
-	 * Test the cursor-based API for getting many followers.
-	 * Slightly intermittent
-	 */
-	public void testGetManyFollowers() {
-		Twitter tw = newTestTwitter();
-		tw.setMaxResults(10000); // we don't want to run the test for ever.
-		String victim = "psychovertical";
-		User user = tw.getUser(victim);
-		assertFalse("More than 10000 followers; choose a different victim or increase the maximum results",
-				user.followersCount > 10000);
-		Set<User> followers = new HashSet(tw.getFollowers(victim));
-		Set<Long> followerIDs = new HashSet(tw.getFollowerIDs(victim));
-		// psychovertical has about 600 followers, as of 14/12/09
-		assertEquals(user.followersCount, followers.size());
-		assertEquals(user.followersCount, followerIDs.size());
-	}
-
-	/**
-	 * Test method for {@link winterwell.jtwitter.Twitter#getFriends(java.lang.String)}.
-	 */
-	public void testGetFriendsString() {
-		Twitter tw = newTestTwitter();
-		List<User> friends = tw.getFriends("winterstein");
-		assert friends != null;
-	}
-	/**
-	 * Test method for {@link winterwell.jtwitter.Twitter#getFriendsTimeline()}.
-	 */
-	public void testGetFriendsTimeline() {
-		Twitter tw = newTestTwitter();
-		List<Status> ft = tw.getFriendsTimeline();
-		assert ft.size() > 0;
-	}
 
 	public void testTooOld() {
 		Twitter tw = newTestTwitter();
