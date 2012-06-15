@@ -48,13 +48,6 @@ public class BuildJTwitter extends BuildTask {
 		
 		if (true) return; // FIXME
 		
-		// src is now in the zip instead
-//		JarTask jar2 = new JarTask(new File(base, "jtwitter.jar"), src);
-//		jar2.setAppend(true);
-//		jar2.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, Twitter.version);
-//		jar2.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, Twitter.class.getCanonicalName());
-//		jar2.run();
-		
 		// Doc
 		File doc = new File(base, "doc");
 		JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);
@@ -123,6 +116,7 @@ public class BuildJTwitter extends BuildTask {
 		Twitter twitter = new Twitter("jtwit", client);
 		twitter.setStatus("Released a new version of JTwitter Java library: v"+Twitter.version
 				+" http://winterwell.com/software/jtwitter.php");
+		twitter.setStatus("Thanks to jake & Vicent @GitHub for awesome-grade customer service :)");
 
 		Twitter identica = new Twitter("jtwit", TwitterTest.TEST_PASSWORD);
 		identica.setAPIRootUrl("http://identi.ca/api");
