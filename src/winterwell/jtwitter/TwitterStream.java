@@ -268,7 +268,7 @@ public class TwitterStream extends AStream {
 		if (track != null) {
 			sb.append(" track:" + InternalUtils.join(track, 0, 5));
 		}
-		if (follow != null) {
+		if (follow != null && follow.size() > 0) {
 			sb.append(" follow:" + InternalUtils.join(follow, 0, 5));
 		}
 		if (locns != null) {
