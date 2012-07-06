@@ -28,9 +28,11 @@ import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.Printer;
 import winterwell.utils.Utils;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
+import winterwell.utils.web.XStreamUtils;
 
 /**
  * Unit tests for JTwitter.
@@ -263,7 +265,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert s2.isFavorite();
 	}
 
-
+	
 
 	public void testRepetitionSetStatus() {
 		Twitter twitter = newTestTwitter();
@@ -292,6 +294,26 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
+	public void testGetDupeLinks(){
+		// Hopefully this one will keep on existing. Twitter prune these a bit.
+		// The raw text is: "RT: Stomach bugs to rise during Olympics: scientists - http://t.co/juz2kA1L">http://t.co/juz2kA1L http://t.... http://t.co/6q3iWaCf"
+		BigInteger bi = new BigInteger("220406085545242624");
+		Twitter twitter = newTestTwitter();
+		Status badStatus = twitter.getStatus(bi);
+		List<TweetEntity> urlInfo = badStatus.getTweetEntities(KEntityType.urls);
+		int lastEntityEnd = 0;
+		for (TweetEntity entity : urlInfo) {
+			// FIXME
+			if (lastEntityEnd>entity.start) {						
+				System.out.println("end of the one entity occurs before the start of another!:" + lastEntityEnd + " vs " + entity.start);
+				fail();
+			} else {
+				//All's well!
+			}
+			lastEntityEnd = entity.end;
+		}
+	}
+	
 	public void testRetweetsByMe() {
 		Twitter twitter = newTestTwitter();
 		Status original = twitter.getStatus("stephenfry");

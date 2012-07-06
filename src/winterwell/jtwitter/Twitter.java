@@ -21,6 +21,7 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
+import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.utils.reporting.Log;
 
@@ -1780,12 +1781,16 @@ public class Twitter implements Serializable {
 		try {
 			return getStatuses(TWITTER_URL + "/statuses/user_timeline.json",
 					vars, authenticate);
-		} catch (E401 e) {
-			// Bug in Twitter: this can be a suspended user
+		} catch (E404 e){
+			throw new TwitterException.E404("Twitter does not return any information for " + screenName + 
+					". They may have been deleted long ago.");
+		}
+		catch (E401 e) {
+			// Bug in Twitter: this can be a suspended user 
 			// - in which case this will generate a SuspendedUser exception
 			isSuspended(screenName);
 			throw e;
-		}
+		} 
 	}
 
 	/**
