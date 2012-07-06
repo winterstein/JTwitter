@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import winterwell.utils.reporting.Log;
+
 
 /**
  * Connect to the streaming API.
@@ -125,8 +127,11 @@ public class TwitterStream extends AStream {
 							+ "; trying to run"
 							+ this
 							+ ").\n	But streams OR their filter parameters, so one stream can do a lot.");
+		
 		// memory paranoia
 		if (user2stream.size() > 1000) {
+			// FIXME: Should this be an exception? The remedy looks a little severe!
+			Log.w("Twitter", "User to stream map too big! Killing it");
 			user2stream = new ConcurrentHashMap<String, AStream>();
 		}
 		user2stream.put(jtwit.getScreenName(), this);
@@ -263,7 +268,7 @@ public class TwitterStream extends AStream {
 		if (track != null) {
 			sb.append(" track:" + InternalUtils.join(track, 0, 5));
 		}
-		if (follow != null) {
+		if (follow != null && follow.size() > 0) {
 			sb.append(" follow:" + InternalUtils.join(follow, 0, 5));
 		}
 		if (locns != null) {
