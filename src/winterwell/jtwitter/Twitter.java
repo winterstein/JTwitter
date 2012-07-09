@@ -421,7 +421,7 @@ public class Twitter implements Serializable {
 						arr.length());
 				for (int i = 0; i < arr.length(); i++) {
 					JSONObject obj = arr.getJSONObject(i);
-					TweetEntity te = new TweetEntity(tweet, rawText, type, obj);
+					TweetEntity te = new TweetEntity(tweet, rawText, type, obj, list);
 					list.add(te);
 				}
 				return list;
@@ -450,9 +450,10 @@ public class Twitter implements Serializable {
 		 * @param rawText Needed to undo the indexing errors created by entity encoding
 		 * @param type
 		 * @param obj
+		 * @param previous Used to handle repeated entities
 		 * @throws JSONException
 		 */
-		TweetEntity(ITweet tweet, String rawText, KEntityType type, JSONObject obj)
+		TweetEntity(ITweet tweet, String rawText, KEntityType type, JSONObject obj, ArrayList<TweetEntity> previous)
 				throws JSONException 
 		{
 			this.tweet = tweet;
@@ -482,7 +483,7 @@ public class Twitter implements Serializable {
 				return;
 			}
 			// oh well - let's correct start/end
-			// Note: This correction go wrong in a particular case: 
+			// Note: This correction can go wrong in a particular case: 
 			// encoding has messed up the indices & we have a repeated entity.
 			// ??Do we care enough to fix such a rare corner case with moderately harmless side-effects?
 			
@@ -496,7 +497,15 @@ public class Twitter implements Serializable {
 			}
 				
 			String entityText = rawText.substring(_start, _end);
-			int i = text.indexOf(entityText);
+			// Handle repeated entities -- eg same url / @name twice at different positions
+			int from = 0;
+			for(TweetEntity prev : previous) {
+				if (tweet.getText().regionMatches(prev.start, entityText, 0, entityText.length())) {
+					from = prev.end;
+				}
+			}
+			// Find where the referenced text is in the un-encoded version
+			int i = text.indexOf(entityText, from);
 			if (i==-1) {
 				// This can't legitimately happen, but handle it anyway 'cos it does (rare & random)
 				entityText = InternalUtils.unencode(entityText);

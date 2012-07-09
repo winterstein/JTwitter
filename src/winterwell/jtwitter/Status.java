@@ -288,29 +288,7 @@ public final class Status implements ITweet {
 			if (jsonEntities != null) {
 				entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(
 						KEntityType.class);
-				if (rtStart!=null) {
-					// truncation! the entities returned are likely to be duds -- adjust from the original instead
-					int rt = rtStart.length();
-					for (KEntityType type : KEntityType.values()) {
-						List<TweetEntity> es = original.getTweetEntities(type);
-						if (es==null) continue;
-						ArrayList rtEs = new ArrayList(es.size());
-						for (TweetEntity e : es) {
-							TweetEntity rte = new TweetEntity(this, e.type, 
-									/* safety checks on length are paranoia (could be removed) */
-									Math.min(rt+e.start, text.length()), Math.min(rt+e.end, text.length()), e.display);
-							rtEs.add(rte);
-						}
-						entities.put(type, rtEs);
-					}					
-				} else {
-					// normal case
-					for (KEntityType type : KEntityType.values()) {
-						List<TweetEntity> es = TweetEntity.parse(this, _rawtext, type,
-								jsonEntities);
-						entities.put(type, es);
-					}
-				}								
+				setupEntities(_rawtext, rtStart, jsonEntities);								
 			}
 			
 			// censorship flags
@@ -324,6 +302,33 @@ public final class Status implements ITweet {
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(null, e);
 		}
+	}
+
+	private void setupEntities(String _rawtext, String rtStart,
+			JSONObject jsonEntities) {
+		if (rtStart!=null) {
+			// truncation! the entities returned are likely to be duds -- adjust from the original instead
+			int rt = rtStart.length();
+			for (KEntityType type : KEntityType.values()) {
+				List<TweetEntity> es = original.getTweetEntities(type);
+				if (es==null) continue;
+				ArrayList rtEs = new ArrayList(es.size());
+				for (TweetEntity e : es) {
+					TweetEntity rte = new TweetEntity(this, e.type, 
+							/* safety checks on length are paranoia (could be removed) */
+							Math.min(rt+e.start, text.length()), Math.min(rt+e.end, text.length()), e.display);
+					rtEs.add(rte);
+				}
+				entities.put(type, rtEs);
+			}	
+			return;
+		}
+		// normal case
+		for (KEntityType type : KEntityType.values()) {
+			List<TweetEntity> es = TweetEntity.parse(this, _rawtext, type,
+					jsonEntities);
+			entities.put(type, es);
+		}		
 	}
 
 	/**

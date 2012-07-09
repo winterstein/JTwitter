@@ -295,22 +295,43 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 	public void testGetDupeLinks(){
-		// Hopefully this one will keep on existing. Twitter prune these a bit.
-		// The raw text is: "RT: Stomach bugs to rise during Olympics: scientists - http://t.co/juz2kA1L">http://t.co/juz2kA1L http://t.... http://t.co/6q3iWaCf"
-		BigInteger bi = new BigInteger("220406085545242624");
-		Twitter twitter = newTestTwitter();
-		Status badStatus = twitter.getStatus(bi);
-		List<TweetEntity> urlInfo = badStatus.getTweetEntities(KEntityType.urls);
-		int lastEntityEnd = 0;
-		for (TweetEntity entity : urlInfo) {
-			// FIXME
-			if (lastEntityEnd>entity.start) {						
-				System.out.println("end of the one entity occurs before the start of another!:" + lastEntityEnd + " vs " + entity.start);
-				fail();
-			} else {
-				//All's well!
+		{	// canned json
+			String json = "{\"created_at\":\"Wed Jul 04 06:38:00 +0000 2012\",\"id\":220406085545242624,\"id_str\":\"220406085545242624\",\"text\":\"RT: Stomach bugs to rise during Olympics: scientists - http:\\/\\/t.co\\/juz2kA1L\\\"&gt;http:\\/\\/t.co\\/juz2kA1L http:\\/\\/t.... http:\\/\\/t.co\\/6q3iWaCf\",\"source\":\"\\u003ca href=\\\"http:\\/\\/twitterfeed.com\\\" rel=\\\"nofollow\\\"\\u003etwitterfeed\\u003c\\/a\\u003e\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":372713961,\"id_str\":\"372713961\",\"name\":\"HarpendenRetweet\",\"screen_name\":\"RTHarpenden\",\"location\":\"AL5\",\"description\":\"Retweeting to Harpenden. Do you have a question or a message for Harpenden tweeters? Tweet us for a retweet to our Harpenden followers.\",\"url\":null,\"protected\":false,\"followers_count\":263,\"friends_count\":228,\"listed_count\":2,\"created_at\":\"Tue Sep 13 08:42:43 +0000 2011\",\"favourites_count\":0,\"utc_offset\":null,\"time_zone\":null,\"geo_enabled\":false,\"verified\":false,\"statuses_count\":10872,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"C0DEED\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_images\\/1540869827\\/Harpendedn_normal.jpg\",\"profile_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_images\\/1540869827\\/Harpendedn_normal.jpg\",\"profile_link_color\":\"0084B4\",\"profile_sidebar_border_color\":\"C0DEED\",\"profile_sidebar_fill_color\":\"DDEEF6\",\"profile_text_color\":\"333333\",\"profile_use_background_image\":true,\"show_all_inline_media\":false,\"default_profile\":true,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":0,\"entities\":{\"hashtags\":[],\"urls\":[{\"url\":\"http:\\/\\/t.co\\/juz2kA1L\",\"expanded_url\":\"http:\\/\\/Telegraph.co.uk\",\"display_url\":\"Telegraph.co.uk\",\"indices\":[55,75]},{\"url\":\"http:\\/\\/t.co\\/juz2kA1L\",\"expanded_url\":\"http:\\/\\/Telegraph.co.uk\",\"display_url\":\"Telegraph.co.uk\",\"indices\":[80,100]},{\"url\":\"http:\\/\\/t.co\\/6q3iWaCf\",\"expanded_url\":\"http:\\/\\/bit.ly\\/R8Qsxg\",\"display_url\":\"bit.ly\\/R8Qsxg\",\"indices\":[114,134]}],\"user_mentions\":[]},\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false}";
+			JSONObject jobj = new JSONObject(json);
+			Status s = new Status(jobj, null);
+			System.out.println(s.getText());
+			System.out.println(s.getDisplayText());			
+			List<TweetEntity> urlInfo = s.getTweetEntities(KEntityType.urls);
+			int lastEntityEnd = 0;
+			for (TweetEntity entity : urlInfo) {
+				// FIXME
+				if (lastEntityEnd>entity.start) {						
+					System.out.println("end of the one entity occurs before the start of another!:" + lastEntityEnd + " vs " + entity.start);
+					fail();
+				} else {
+					//All's well!
+				}
+				lastEntityEnd = entity.end;
 			}
-			lastEntityEnd = entity.end;
+		}
+		{
+			// Hopefully this one will keep on existing. Twitter prune these a bit.
+			// The raw text is: "RT: Stomach bugs to rise during Olympics: scientists - http://t.co/juz2kA1L">http://t.co/juz2kA1L http://t.... http://t.co/6q3iWaCf"
+			BigInteger bi = new BigInteger("220406085545242624");
+			Twitter twitter = newTestTwitter();
+			Status badStatus = twitter.getStatus(bi);
+			List<TweetEntity> urlInfo = badStatus.getTweetEntities(KEntityType.urls);
+			int lastEntityEnd = 0;
+			for (TweetEntity entity : urlInfo) {
+				// FIXME
+				if (lastEntityEnd>entity.start) {						
+					System.out.println("end of the one entity occurs before the start of another!:" + lastEntityEnd + " vs " + entity.start);
+					fail();
+				} else {
+					//All's well!
+				}
+				lastEntityEnd = entity.end;
+			}
 		}
 	}
 	
