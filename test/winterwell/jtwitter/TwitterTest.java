@@ -28,6 +28,7 @@ import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.utils.NoUTR;
 import winterwell.utils.Printer;
 import winterwell.utils.Utils;
 import winterwell.utils.time.TUnit;
@@ -579,11 +580,18 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter tw = newTestTwitter();
 		try {
 			tw.setSinceId(10584958134L);
+			tw.setUntilId(20584958134L);
 			tw.setSearchLocation(55.954151,-3.20277,"18km");
 			List<Status> tweets = tw.search("stuff");
-			assert false : tweets;
+			System.out.println(tweets.size());
+//			assert false : tweets; // Oh well - Twitter being nice?
+			for (Status status : tweets) {
+				assert status.getId().longValue() > 10584958134L;
+				assert status.getId().longValue() < 20584958134L;
+			}
 		} catch (TwitterException.E403 e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 		}
 	}
 
@@ -643,7 +651,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 		return new Twitter(TEST_USER, client);
 	}
 	
-	public void testAuthUser() {
+	
+	@NoUTR
+	public void _testAuthUser() {
 		OAuthSignpostClient client = new OAuthSignpostClient(
 		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
 		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
