@@ -156,6 +156,14 @@ public class Location implements Serializable {
 		return "(" + latitude + " N, " + longitude + " E)";
 	}
 
+	/** 
+	 * 
+	 * @returns say 12.5343,-45.43434
+	 */
+	public String toSimpleCoords(){
+		return latitude + "," + longitude;
+	}
+	
 	public static final Pattern latLongLocn = Pattern.compile(
 			"\\s*(-?[\\d\\.]+),\\s*(-?[\\d\\.]+)\\s*");
 
