@@ -67,11 +67,11 @@ public class BoundingBox {
 	}
 	
 	public Location getNorthWest() {
-		return new Location(southWest.longitude, northEast.latitude);
+		return new Location(northEast.latitude, southWest.longitude);
 	}
 	
 	public Location getSouthEast() {
-		return new Location(northEast.longitude, southWest.latitude);
+		return new Location(southWest.latitude, northEast.longitude);
 	}
 	
 	/**
