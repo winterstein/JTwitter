@@ -162,12 +162,16 @@ public final class Status implements ITweet {
 	boolean sensitive;
 
 	/**
-	 * E.g. "web" vs. "im"
+	 * E.g. "web" vs. "im"<br>
+	 * For apps this will return an a-tag, e.g. 
+	 * "<a href="http://blackberry.com/twitter" rel="nofollow">Twitter for BlackBerry®</a>"
+	 * You'll probably want to discard the wrapper.
 	 * <p>
 	 * "fake" if this Status was made locally or from an RSS feed rather than
 	 * retrieved from Twitter json (as normal).
 	 */
 	public final String source;
+	
 	/** The actual status text. */
 	public final String text;
 
