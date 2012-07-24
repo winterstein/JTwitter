@@ -2,7 +2,8 @@
 
 2.6.4
  - Bugfix where some entities could throw Status.getDisplayText() 
- 
+ - Minor bugfix for TwitterException.Parsing -- the message clip now clips to the first part of the json.
+
 2.6.3:
  - Bugfix for a v2.6.2 bug where updateStatus mistook "do ..." for a dm. 
  - Twitter.countCharacters() is now available as a method for url-sensitive counting.

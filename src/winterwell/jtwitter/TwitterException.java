@@ -223,7 +223,7 @@ public class TwitterException extends RuntimeException {
 		 */
 		private static String clip(String json, int len) {
 			return json == null ? null : json.length() <= len ? json : json
-					.substring(len) + "...";
+					.substring(0, len) + "...";
 		}
 
 		public Parsing(String json, JSONException e) {

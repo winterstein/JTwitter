@@ -2326,6 +2326,13 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @return latitude,longitude,radius
+	 */
+	public String getSearchLocation() {
+		return geocode;
+	}
+	
+	/**
 	 * Optional. Specifies what type of search results you would prefer to
 	 * receive. The current default is "mixed." Valid values:<br>
 	 * {@link #SEARCH_MIXED}: Include both popular and real time results in the
