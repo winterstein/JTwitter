@@ -131,7 +131,7 @@ public class JSONObject {
     /**
      * The hash map where the JSONObject's properties are kept.
      */
-    private HashMap myHashMap;
+    private final HashMap myHashMap;
 
 
     /**

@@ -86,8 +86,14 @@ public class JSONArray {
     /**
      * The arrayList where the JSONArray's properties are kept.
      */
-    private ArrayList myArrayList;
+    private final ArrayList myArrayList;
 
+    /**
+     * @return access to the much more convenient List interface
+     */
+    public ArrayList getList() {
+		return myArrayList;
+	}
 
     /**
      * Construct an empty JSONArray.

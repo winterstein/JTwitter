@@ -1,5 +1,7 @@
 package winterwell.json;
 
+import winterwell.jtwitter.InternalUtils;
+
 /*
 Copyright (c) 2002 JSON.org
 
