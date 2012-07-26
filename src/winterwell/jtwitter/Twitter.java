@@ -280,6 +280,14 @@ public class Twitter implements Serializable {
 		 */
 		void setTimeout(int millisecs);
 
+		/**
+		 * If true, will wait 1/2 second and make a 2nd request when presented with
+		 * a server error (E50X). Only retries once -- a 2nd fail will throw an exception.
+		 * 
+		 * This policy handles most Twitter server glitches.
+		 */
+		boolean isRetryOnError();
+
 	}
 
 	/**
@@ -1631,8 +1639,21 @@ public class Twitter implements Serializable {
 			boolean authenticate) {
 		// Default: 1 page
 		if (maxResults < 1) {
-			List<Status> msgs = Status.getStatuses(http.getPage(url, var,
-					authenticate));
+			List<Status> msgs ;
+			try {
+				msgs = Status.getStatuses(http.getPage(url, var,
+						authenticate));
+			} catch (TwitterException.Parsing pex) {
+				// Twitter bug, July 2012: malformed responses -- end is chopped off ~1 time in 20
+				// TODO remove when Twitter fix this!
+				if (http.isRetryOnError()) {
+					InternalUtils.sleep(250);
+					String json = http.getPage(url, var, authenticate);
+					msgs = Status.getStatuses(json);
+				} else {
+					throw pex;
+				}
+			}
 			msgs = dateFilter(msgs);
 			return msgs;
 		}
@@ -2068,8 +2089,21 @@ public class Twitter implements Serializable {
 		do {
 			pageNumber = localPageNumber;
 			vars.put("page", Integer.toString(pageNumber));
-			String json = http.getPage(url, vars, false);
-			List<Status> stati = Status.getStatusesFromSearch(this, json);
+			List<Status> stati;
+			try {
+				String json = http.getPage(url, vars, false);
+				stati = Status.getStatusesFromSearch(this, json);
+			} catch (TwitterException.Parsing pex) {
+				// Twitter bug, July 2012: malformed responses -- end is chopped off ~1 time in 20
+				// TODO remove when Twitter fix this!
+				if (http.isRetryOnError()) {
+					InternalUtils.sleep(250);
+					String json = http.getPage(url, vars, false);
+					stati = Status.getStatusesFromSearch(this, json);
+				} else {
+					throw pex;
+				}
+			}
 			int numResults = stati.size();
 			stati = dateFilter(stati);
 			allResults.addAll(stati);

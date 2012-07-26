@@ -473,4 +473,12 @@ public class InternalUtils {
 	 */
 	public static final Pattern pDocType = Pattern.compile("<!DOCTYPE.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
+	public static void sleep(long msecs) {
+		try {
+			Thread.sleep(msecs);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}		
+	}
+
 }

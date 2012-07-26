@@ -53,6 +53,10 @@ import winterwell.jtwitter.Twitter.KRequestType;
  */
 public class OAuthScribeClient implements IHttpClient {
 
+	@Override
+	public boolean isRetryOnError() {
+		return false;
+	}
 	/**
 	 * This consumer key (and secret) allows you to get up and running fast.
 	 * However you are strongly advised to register your own app at
