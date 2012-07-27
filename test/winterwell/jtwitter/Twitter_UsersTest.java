@@ -238,6 +238,13 @@ public class Twitter_UsersTest {
 				System.out.println(user.getScreenName()+"\t"+user.getLocation()+"\t"+user.getPlace()+"\t"+user.getId());
 			}
 		}
+		{	// anonymous
+			Twitter tw = new Twitter();
+			List<User> users = tw.users().show(Arrays.asList("joehalliwell","winterstein"));
+			for (User user : users) {
+				System.out.println(user.getScreenName()+"\t"+user.getLocation()+"\t"+user.getPlace()+"\t"+user.getId());
+			}
+		}
 	}
 	
 
