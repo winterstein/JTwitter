@@ -636,7 +636,7 @@ public class Twitter_Users {
 	 *         different from the screenNames parameter
 	 * @see #showById(List)
 	 */
-	public List<User> show(List<String> screenNames) {
+	public List<User> show(Collection<String> screenNames) {
 		if (screenNames.size() == 0)
 			return Collections.EMPTY_LIST;
 		return bulkShow2("/users/lookup.json", String.class, screenNames);

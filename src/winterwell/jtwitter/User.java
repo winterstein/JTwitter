@@ -51,6 +51,9 @@ public final class User implements Serializable {
 	public final int favoritesCount;
 
 	private final Boolean followedByYou;
+	/**
+	 * The number of people who follow this user.
+	 */
 	public int followersCount;
 	private final Boolean followingYou;
 	/**
