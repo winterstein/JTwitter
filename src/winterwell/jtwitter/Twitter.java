@@ -288,6 +288,8 @@ public class Twitter implements Serializable {
 		 */
 		boolean isRetryOnError();
 
+		void setRetryOnError(boolean retryOnError);
+
 	}
 
 	/**
