@@ -86,6 +86,9 @@ public class Twitter_Users {
 						http.canAuthenticate());
 				List<User> usersi = User.getUsers(json);
 				users.addAll(usersi);
+			} catch (TwitterException.E404 e) {
+				// All names were bogus or deleted users!
+				// Oh well
 			} catch (TwitterException e) {
 				// Stop here.
 				// Don't normally throw an exception so we don't waste the
@@ -629,7 +632,8 @@ public class Twitter_Users {
 	 * most 1000 users in an hour.
 	 * 
 	 * @param screenNames
-	 *            Can be empty (in which case we avoid wasting an API call)
+	 *            Can be empty (in which case we avoid wasting an API call).
+	 *            Bogus names & deleted users will be quietly filtered out.
 	 * @return user objects for screenNames. Warning 1: This may be less than
 	 *         the full set if Twitter returns an error part-way through (e.g.
 	 *         you hit your rate limit). Warning 2: the ordering may be

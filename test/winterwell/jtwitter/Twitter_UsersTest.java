@@ -215,9 +215,24 @@ public class Twitter_UsersTest {
 	@Test
 	public void testBulkShow() {
 		Twitter tw = TwitterTest.newTestTwitter();
-		List<User> users = tw.bulkShow(Arrays.asList("winterstein", "joehalliwell", "annettemees"));
-		assert users.size() == 3 : users;
-		assert users.get(1).description != null;
+		List<User> users = tw.users().show(Arrays.asList(
+				"winterstein", "joehalliwell", "annettemees", "bogus1yudsah"));
+		System.out.println(users);
+		assert users.size() == 3 : users; // no bogus user
+		assert users.get(1).description != null;		
+	}
+	
+	@Test
+	public void testBulkShowAllBogus() {
+		Twitter tw = TwitterTest.newTestTwitter();
+		List<User> users = tw.users().show(Arrays.asList(
+				"bogus1gyuvjwu", "bogus2yudsah"));
+		System.out.println(users);
+		assert users.isEmpty() : users; // no bogus user		
+		
+		List<User> users2 = tw.users().showById(Arrays.asList(1, 2));
+		System.out.println(users2);
+		assert users2.isEmpty() : users2; // no bogus user
 	}
 
 	@Test
