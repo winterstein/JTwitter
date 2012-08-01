@@ -1666,9 +1666,22 @@ public class Twitter implements Serializable {
 		maxId = null;
 		// pageNumber = 1;
 		List<Status> msgs = new ArrayList<Status>();
-		while (msgs.size() <= maxResults) {
-			String json = http.getPage(url, var, authenticate);
-			List<Status> nextpage = Status.getStatuses(json);
+		while (msgs.size() <= maxResults) {			
+			List<Status> nextpage; 
+			try {
+				String json = http.getPage(url, var, authenticate);
+				nextpage = Status.getStatuses(json);
+			} catch (TwitterException.Parsing pex) {
+				// Twitter bug, July 2012: malformed responses -- end is chopped off ~1 time in 20
+				// TODO remove when Twitter fix this!
+				if (http.isRetryOnError()) {
+					InternalUtils.sleep(250);
+					String json = http.getPage(url, var, authenticate);
+					nextpage = Status.getStatuses(json);
+				} else {
+					throw pex;
+				}
+			}
 			// This test replaces size<20. It requires an extra call to Twitter.
 			// But it fixes a bug whereby retweets aren't counted and can thus
 			// cause
@@ -1683,7 +1696,7 @@ public class Twitter implements Serializable {
 
 			msgs.addAll(dateFilter(nextpage));
 			// pageNumber++;
-			var.put("max_id", maxId.toString());
+			var.put("max_id", maxId.toString());			
 		}
 		return msgs;
 	}
