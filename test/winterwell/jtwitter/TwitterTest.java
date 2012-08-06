@@ -1076,6 +1076,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 	/**
+	 * Twitter bug :( -- https://dev.twitter.com/issues/461
+	 */
+	public void testDateAnomaly() {
+		Twitter tw = new Twitter();
+		Status tweet = tw.getStatus(new BigInteger("230092369926692864"));
+		System.out.println(tweet);
+		System.out.println(tweet.createdAt);
+		System.out.println(tweet.createdAt.getTime());
+	}
+	
+	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#show(java.lang.String)}.
 	 */
 	public void testShow() {
