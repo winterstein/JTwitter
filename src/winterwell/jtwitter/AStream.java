@@ -75,10 +75,20 @@ public abstract class AStream implements Closeable {
 		boolean processTweet(ITweet tweet);
 	}
 
+	/**
+	 * What, Twitter had an outage? Here are the details.
+	 * @author daniel
+	 */
 	public static final class Outage implements Serializable {
 		private static final long serialVersionUID = 1L;
-		final BigInteger sinceId;
-		final long untilTime;
+		/**
+		 * The id received just before the outage. i.e. start
+		 */
+		public final BigInteger sinceId;
+		/**
+		 * The Java timecode when the stream went back online. i.e. end
+		 */
+		public final long untilTime;
 
 		public Outage(BigInteger sinceId, long untilTime) {
 			super();
@@ -88,7 +98,7 @@ public abstract class AStream implements Closeable {
 
 		@Override
 		public String toString() {
-			return "[id:" + sinceId + " to time:" + untilTime + "]";
+			return "Outage[id:" + sinceId + " to time:" + untilTime + "]";
 		}
 	}
 
