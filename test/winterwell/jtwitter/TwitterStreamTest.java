@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.TwitterException.E413;
+import winterwell.utils.Printer;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
@@ -31,9 +32,29 @@ public class TwitterStreamTest {
 			ts.connect();
 			Thread.sleep(5000);
 			List<ITweet> tweets = ts.popTweets();
+			assert false : tweets.size();
 		} catch (E413 ex) {
 			// good
 		}
+	}
+	
+
+	@Test
+	public void testMegaData() throws InterruptedException  {
+		Twitter jtwit = new TwitterTest().newTestTwitter();
+		TwitterStream ts = new TwitterStream(jtwit);
+		// let's get some data
+		List<String> terms = Arrays.asList(
+			"football", "justin", "sex", "america", "ball", " drink", "hello", "sport", "game", "twitter", "lol",
+			"justinbieber", "lady", "ladygaga", "rock", "good");
+		ts.setTrackKeywords(terms);			
+		ts.connect();
+		Thread.sleep(2000);
+		List<ITweet> tweets = ts.popTweets();
+		List<TwitterEvent> events = ts.popEvents();
+		List<Object[]> sys = ts.popSystemEvents();		
+		System.out.println(tweets.size()+"\t"+events.size()+"\t"+sys.size());
+		Printer.out(sys);
 	}
 
 
