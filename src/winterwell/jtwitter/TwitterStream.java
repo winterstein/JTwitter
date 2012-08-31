@@ -52,7 +52,7 @@ public class TwitterStream extends AStream {
 	 * Maximum number of keywords which most of us can track.
 	 * @see #setTrackKeywords(List)
 	 */
-	public static final int MAX_KEYWORDS = 400;
+	public static int MAX_KEYWORDS = 400;
 
 	/**
 	 * Maximum character length of a tracked keyword or phrase.
@@ -244,12 +244,16 @@ public class TwitterStream extends AStream {
 	 * 
 	 * @param keywords
 	 *            The default access level allows up to 400 track keywords
-	 *            (exceeding this will lead to an exception when you connect).
+	 *            (exceeding this will give an exception -- adjust {@link #MAX_KEYWORDS} if you
+	 *            have special privileges).
 	 *            You can include phrases, separating words with a space.
 	 * @see TwitterStream#MAX_KEYWORDS
 	 * @see TwitterStream#MAX_KEYWORD_LENGTH
 	 */
 	public void setTrackKeywords(List<String> keywords) {
+		if (keywords.size() > MAX_KEYWORDS) {
+			throw new IllegalArgumentException("Too many tracked terms: "+keywords.size()+" ("+MAX_KEYWORDS+" limit)");
+		}
 		// check them for length
 		for (String kw : keywords) {
 			if (kw.length() > MAX_KEYWORD_LENGTH) {

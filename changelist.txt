@@ -3,6 +3,7 @@
 2.6.5:
  - Twitter_Users.show() handles the 404 which you get if all the usernames are deleted
  users.
+ - TwitterStream now guards against too many keywords, avoiding Twitter getting invalid requests.
  
 2.6.4:
  - Bugfix where some entities could throw Status.getDisplayText() 
