@@ -330,7 +330,7 @@ public abstract class AStream implements Closeable {
 				throw (TwitterException) e;
 //			Doesn't catch anything: if (con!=null && client instanceof URLConnectionHttpClient) {
 //				((URLConnectionHttpClient) client).processError(con);
-//			}						
+//			}			
 			throw new TwitterException(e);
 		}
 	}
