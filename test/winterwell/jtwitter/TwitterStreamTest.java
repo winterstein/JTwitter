@@ -15,7 +15,6 @@ import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.TwitterException.E413;
 import winterwell.utils.Printer;
 import winterwell.utils.NoUTR;
-import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
