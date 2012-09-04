@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="build"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="dummy"/>
+	<classpathentry kind="src" path="src-extra"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/middleware/jakarta/commons-codec-1.4.jar"/>
