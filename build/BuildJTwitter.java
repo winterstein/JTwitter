@@ -46,8 +46,6 @@ public class BuildJTwitter extends BuildTask {
 		jar.setManifestProperty(JarTask.MANIFEST_TITLE, "JTwitter client library by Winterwell");
 		jar.run();
 		
-		if (true) return; // FIXME
-		
 		// Doc
 		File doc = new File(base, "doc");
 		JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);

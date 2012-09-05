@@ -18,18 +18,18 @@ public enum LengthUnit {
 	/**
 	 * The length period for 1 unit. Equivalent to new Dx(1, unit)
 	 */
-	public final Dx Dx;
+	public final Dx dx;
 
 	private LengthUnit(double metres) {
 		this.metres = metres;
-		this.Dx = new Dx(1, this);
+		this.dx = new Dx(1, this);
 	}
 
 	/**
 	 * @return The time period for 1 unit. Equivalent to new Dx(1, unit)
 	 */
 	public Dx getDx() {
-		return Dx;
+		return dx;
 	}
 
 
