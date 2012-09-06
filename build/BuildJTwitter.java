@@ -27,6 +27,7 @@ public class BuildJTwitter extends BuildTask {
 		System.out.println(base.getAbsolutePath());
 		File bin = new File(base, "bin");
 		File src = new File(base, "src");
+		File srcExtra = new File(base, "src-extra");
 		File lib = new File(base, "lib");
 		assert src.isDirectory();
 //		// Compile
@@ -61,7 +62,7 @@ public class BuildJTwitter extends BuildTask {
 		List<File> inputFiles = Arrays.asList(
 				jarFile, 
 				src, 
-				lib);
+				lib, srcExtra);
 //				new File(base, "test"));
 		ZipTask zipTask = new ZipTask(zipFile, inputFiles, base);
 		zipTask.run();
