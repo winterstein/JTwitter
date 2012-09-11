@@ -27,7 +27,7 @@ public class Location implements Serializable {
 	 * Construct a new location object. Handy for computing distances.
 	 * 
 	 * @param latitude the latitiude of the location. Must be >-90 and <90
-	 * @param longitude the longitude of the location. Must be >-180 and <180
+	 * @param longitude the longitude of the location. Will be normalised to between >-180 and <180
 	 * @throws IllegalArgumentException if the co-ordinates aren't valid
 	 */
 	public Location(double latitude, double longitude) {
@@ -38,6 +38,7 @@ public class Location implements Serializable {
 		if (longitude < -180 || longitude > 180) {
 			longitude = longitude % 360;
 			if (longitude > 180) longitude = 360 - longitude;
+			else if (longitude < -180) longitude = longitude + 360;
 			assert longitude >= -180 || longitude <= 180 : longitude;
 		}
 		this.latitude = latitude;

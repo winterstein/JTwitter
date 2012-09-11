@@ -120,7 +120,7 @@ public final class Dx implements Comparable<Dx> {
 	 * @return
 	 */
 	public Dx convertTo(LengthUnit unit) {
-		double n2 = divide(unit.Dx);
+		double n2 = divide(unit.dx);
 		return new Dx(n2, unit);
 	}
 
