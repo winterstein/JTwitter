@@ -690,6 +690,7 @@ public abstract class AStream implements Closeable {
 			connect();
 			return;
 		} catch (TwitterException.E40X e) {
+			// User error (e.g. TooManyLogins) -- don't keep trying
 			throw e;
 		} catch (Exception e) {
 			// oh well
