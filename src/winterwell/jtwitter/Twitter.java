@@ -732,6 +732,17 @@ public class Twitter implements Serializable {
 
 	private Number untilId;
 
+	private Long placeId;
+	
+	/**
+	 * If set, this will place-id be sent with status-updates to geo-tag your tweets.
+	 * @param placeId Can be null (which is the default)
+	 * @see #setMyLocation(double[])
+	 */
+	public void setMyPlace(Long placeId) {
+		this.placeId = placeId;
+	}
+
 	/**
 	 * Create a Twitter client without specifying a user. This is an easy way to
 	 * access public posts. But you can't post of course.
@@ -2734,6 +2745,26 @@ public class Twitter implements Serializable {
 	public Status updateStatus(String statusText, Number inReplyToStatusId)
 			throws TwitterException 
 	{		
+		Map<String, String> vars = updateStatus2_vars(statusText, inReplyToStatusId);
+		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
+					true);
+		try {
+			Status s = new Status(new JSONObject(result), null);
+			s = updateStatus2_safetyCheck(statusText, s);
+			return s;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(result, e);
+		}
+	}
+
+	/**
+	 * Check statusText & prep the parameters
+	 * @param statusText
+	 * @param inReplyToStatusId
+	 * @return The vars to send
+	 */
+	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId) 
+	{
 		// check for length
 		if (statusText.length() > MAX_CHARS) {
 			int shortLength = countCharacters(statusText);
@@ -2758,6 +2789,9 @@ public class Twitter implements Serializable {
 			vars.put("lat", Double.toString(myLatLong[0]));
 			vars.put("long", Double.toString(myLatLong[1]));
 		}
+		if (placeId != null) {
+			vars.put("place_id", Long.toString(placeId));
+		}
 
 		if (sourceApp != null) {
 			vars.put("source", sourceApp);
@@ -2768,15 +2802,7 @@ public class Twitter implements Serializable {
 			assert v != 0 && v != -1;
 			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
 		}
-		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
-					true);
-		try {
-			Status s = new Status(new JSONObject(result), null);
-			s = updateStatus2_safetyCheck(statusText, s);
-			return s;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(result, e);
-		}
+		return vars;
 	}
 
 	/**
@@ -2844,48 +2870,19 @@ public class Twitter implements Serializable {
 	 */
 	// c.f. 	// c.f. https://dev.twitter.com/discussions/1059
 	// TODO
-	Status updateStatusWithMedia(String statusText, Number inReplyToStatusId,
-			File mediaFile) {
-
-		// should we trim statusText??
-		// TODO support URL shortening
-		if (statusText.length() > MAX_CHARS && countCharacters(statusText) > MAX_CHARS) {			
-			throw new IllegalArgumentException(
-					"Status text must be "+MAX_CHARS+" characters or less: "
-							+ statusText.length() + " " + statusText);
+	Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
+		if (mediaFile==null || ! mediaFile.isFile()) {
+			throw new IllegalArgumentException("Invalid file: "+mediaFile);
 		}
-		if (mediaFile != null && ! mediaFile.isFile()) {
-			throw new IllegalArgumentException("Not a valid file: "+mediaFile);
-		}
-
-		Map<String, String> vars = InternalUtils.asMap("status", statusText);
-		
-		if (tweetEntities) vars.put("include_entities", "1");
-		
-		// add in long/lat if set
-		if (myLatLong != null) {
-			vars.put("lat", Double.toString(myLatLong[0]));
-			vars.put("long", Double.toString(myLatLong[1]));
-		}
-
-		if (sourceApp != null) {
-			vars.put("source", sourceApp);
-		}
-		if (inReplyToStatusId != null) {
-			// TODO remove this legacy check
-			double v = inReplyToStatusId.doubleValue();
-			assert v != 0 && v != -1;
-			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
-		}
+		Map vars = updateStatus2_vars(statusText, inReplyToStatusId);
 		// media[]
 		// possibly_sensitive
-		// place_id
 		// display_coordinates
 		String result = null;
 		try {
+			// TODO attach the image!!!
 			result = http
-					.post( // WithMedia
-					// TWITTER_URL +
+					.post(
 					"http://upload.twitter.com/1/statuses/update_with_media.json",
 							vars, true);
 			Status s = new Status(new JSONObject(result), null);

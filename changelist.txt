@@ -5,6 +5,7 @@
  into a separate source code folder, src-extra, and EXCLUDED them from jtwitter.jar.
  This fixes a Proguard issue reported by Ben Randall. 
  You can still compile and use them.
+ - Added setMyPlace() to complement setMyLocation()
  
 2.6.5:
  - Twitter_Users.show() handles the 404 which you get if all the usernames are deleted
