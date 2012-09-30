@@ -116,12 +116,15 @@ public final class Dx implements Comparable<Dx> {
 	 * Convert this Dx to a different unit.
 	 * <p>
 	 * Uses {@link #divide(Dx)}
-	 * @param unit
+	 * @param unit2
 	 * @return
 	 */
-	public Dx convertTo(LengthUnit unit) {
-		double n2 = divide(unit.dx);
-		return new Dx(n2, unit);
+	public Dx convertTo(LengthUnit unit2) {
+		if (this.unit==unit2) {
+			return this;
+		}
+		double n2 = divide(unit2.dx);
+		return new Dx(n2, unit2);
 	}
 
 	/**

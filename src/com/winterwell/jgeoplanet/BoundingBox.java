@@ -154,5 +154,9 @@ public class BoundingBox {
 		return new Location(
 				jo.getDouble("latitude"), jo.getDouble("longitude"));
 	}
+
+	public boolean isPoint() {
+		return northEast.equals(southWest);
+	}
 	
 }
