@@ -165,12 +165,12 @@ public final class Status implements ITweet {
 	 * E.g. "web" vs. "im"<br>
 	 * For apps this will return an a-tag, e.g. 
 	 * "&lt;a href="http://blackberry.com/twitter" rel="nofollow"&gt;Twitter for BlackBerry®&lt;/a&gt;"
-	 * You'll probably want to discard the a-tag wrapper.
+	 * You'll probably want to discard the a-tag wrapper by using {@link #getSource()} instead.
 	 * <p>
 	 * "fake" if this Status was made locally or from an RSS feed rather than
 	 * retrieved from Twitter json (as normal).
 	 */
-	public final String source;
+	public final String source;	
 	
 	/** The actual status text. */
 	public final String text;
@@ -437,6 +437,18 @@ public final class Status implements ITweet {
 	@Override
 	public Place getPlace() {
 		return place;
+	}
+	
+
+	/**
+	 * E.g. "web" vs. "im"<br>
+	 * WARNING: this is different from {@link #source}. This method will remove the wrapping a-tag.
+	 * <p>
+	 * "fake" if this Status was made locally or from an RSS feed rather than
+	 * retrieved from Twitter json (as normal).
+	 */
+	public String getSource() {
+		return InternalUtils.stripTags(source);
 	}
 
 	/** The actual status text. This is also returned by {@link #toString()}.

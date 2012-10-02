@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,10 @@ import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.utils.NoUTR;
 import winterwell.utils.Printer;
 import winterwell.utils.Utils;
+import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
+import winterwell.utils.web.WebUtils;
 import winterwell.utils.web.XStreamUtils;
 
 /**
@@ -45,6 +48,26 @@ import winterwell.utils.web.XStreamUtils;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	public void testSource() {
+		Twitter jtwit = new Twitter();
+		HashMap<String,Integer> distro = new HashMap();
+		try {
+			for(int i=0; i<25; i++) {
+				List<Status> statuses = jtwit.getPublicTimeline();
+				for (Status status : statuses) {
+					String s = status.getSource();
+					Containers.plus(distro, s, 1);
+				}
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		assert ! distro.isEmpty();
+		List<String> keys = Containers.getSortedKeys(distro);
+		for (String app : keys) {
+			System.out.println(app+"\t"+distro.get(app));
+		}
+	}
 	
 	public void testHttpHttp() {
 		Twitter jtwit = new Twitter();
