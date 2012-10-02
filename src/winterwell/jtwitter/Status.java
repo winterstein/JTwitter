@@ -237,7 +237,7 @@ public final class Status implements ITweet {
 			source = src!=null&&src.contains("&lt;") ? InternalUtils.unencode(src) : src;
 			// threading
 			String irt = InternalUtils.jsonGet("in_reply_to_status_id", object);
-			if (irt == null) {
+			if (irt == null || irt.length()==0) {
 				// Twitter doesn't give in-reply-to for retweets
 				// - but since we have the info, let's make it available
 				inReplyToStatusId = original == null ? null : original.getId();

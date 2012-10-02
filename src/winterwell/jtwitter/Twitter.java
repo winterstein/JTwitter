@@ -1589,6 +1589,7 @@ public class Twitter implements Serializable {
 	 * @return The current status of the user. Warning: this is null if (a)
 	 *         unset (ie if this user has never tweeted), or (b) their last six
 	 *         tweets were all new-style retweets!
+	 * @see #getUserTimeline()
 	 */
 	public Status getStatus() throws TwitterException {
 		Map<String, String> vars = InternalUtils.asMap("count", 6);
@@ -2240,10 +2241,10 @@ public class Twitter implements Serializable {
 	 * 
 	 * @param url
 	 *            Format: "http://domain-name", e.g. "http://twitter.com" by
-	 *            default.
+	 *            default. Or https
 	 */
 	public void setAPIRootUrl(String url) {
-		assert url.startsWith("http://") || url.startsWith("https://");
+		assert url.startsWith("http://") || url.startsWith("https://") : url;
 		assert !url.endsWith("/") : "Please remove the trailing / from " + url;
 		TWITTER_URL = url;
 	}
@@ -2766,7 +2767,9 @@ public class Twitter implements Serializable {
 	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId) 
 	{
 		// check for length
-		if (statusText.length() > MAX_CHARS) {
+		if (statusText.length() > MAX_CHARS 
+				&& ! TWITTER_URL.contains("wordpress")) // Hack: allow long posts to WordPress 
+		{
 			int shortLength = countCharacters(statusText);
 			if (shortLength > MAX_CHARS) {
 				// bogus - send a helpful error

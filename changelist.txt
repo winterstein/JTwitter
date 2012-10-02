@@ -7,6 +7,7 @@
  You can still compile and use them.
  - Added setMyPlace() to complement setMyLocation()
  - Added BoundingBox.isPoint()
+ - Allow long posts to WordPress.
  
 2.6.5:
  - Twitter_Users.show() handles the 404 which you get if all the usernames are deleted

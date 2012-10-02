@@ -235,20 +235,34 @@ public class InternalUtils {
 		}
 	}
 
+	/**
+	 * A very tolerant boolean reader 
+	 * @param obj
+	 * @param key
+	 * @return
+	 * @throws JSONException
+	 */
 	static Boolean getOptBoolean(JSONObject obj, String key)
 			throws JSONException {
 		Object o = obj.opt(key);
 		if (o == null || o.equals(JSONObject.NULL))
 			return null;
-		if (o.equals(Boolean.FALSE)
-				|| (o instanceof String && ((String) o)
-						.equalsIgnoreCase("false")))
-			return false;
-		else if (o.equals(Boolean.TRUE)
-				|| (o instanceof String && ((String) o)
-						.equalsIgnoreCase("true")))
-			return true;
-		throw new JSONException(o + " (" + key + ") is not boolean");
+		if (o instanceof Boolean) {
+			return (Boolean) o;
+		}
+		if (o instanceof String) {
+			String os = (String) o;		
+			if (os.equalsIgnoreCase("true")) return true;		
+			if (os.equalsIgnoreCase("false")) return false;
+		}
+		// Wordpress returns some random shite :(
+		if (o instanceof Integer) {
+			int oi = (Integer)o;
+			if (oi==1) return true;
+			if (oi==0 || oi==-1) return false;
+		}
+		System.err.println("JSON parse fail: "+o + " (" + key + ") is not boolean");
+		return null;
 	}
 
 	/**
