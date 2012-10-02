@@ -36,7 +36,7 @@ import winterwell.utils.time.Time;
 import winterwell.utils.web.XStreamUtils;
 
 /**
- * Unit tests for JTwitter used with WordPress.
+ * Unit tests for JTwitter used with wordpress.com.
  *
  * @author daniel
  */
