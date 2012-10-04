@@ -9,6 +9,11 @@ import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.URLConnectionHttpClient;
 import winterwell.jtwitter.Twitter.IHttpClient;
 
+/**
+ * Klout influence scores -- not very reliable, but then what is?
+ * @author daniel
+ * @testedby {@link KloutTest}
+ */
 public class Klout {
 
 	final String API_KEY;
