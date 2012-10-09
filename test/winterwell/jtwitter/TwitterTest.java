@@ -48,6 +48,27 @@ import winterwell.utils.web.XStreamUtils;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	
+	public void testDisplayTextBug() {
+		Twitter jtwit = newTestTwitter();
+		
+		Status _tweet = jtwit.getStatus(new BigInteger("255592522955505665"));
+		System.out.println(_tweet.getId());
+		System.out.println(_tweet.getText());
+		System.out.println(_tweet.getTweetEntities(KEntityType.urls));
+		System.out.println(_tweet.getDisplayText());
+		System.out.println();
+		
+		List<Status> tweets = jtwit.search("USEFUL Printable diary calendar decluttering lists Village Voices");
+		for (Status tweet : tweets) {
+			System.out.println(tweet.getId());
+			System.out.println(tweet.getText());
+			System.out.println(tweet.getTweetEntities(KEntityType.urls));
+			System.out.println(tweet.getDisplayText());
+			System.out.println();
+		}
+	}
+	
 	public void testSource() {
 		Twitter jtwit = new Twitter();
 		HashMap<String,Integer> distro = new HashMap();
@@ -281,7 +302,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		if (s.isFavorite()) {
 			twitter.setFavorite(s, false);
 			Thread.sleep(5000);
-			assert !s.isFavorite();
+			assert ! s.isFavorite();
 		}
 		twitter.setFavorite(s, true);
 		Thread.sleep(5000);
@@ -367,7 +388,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<Status> rtsByMe = twitter.getRetweetsByMe();
 //		List<Status> rtsOfMe = source.getRetweetsOfMe();
 		assert retweet.getOriginal().equals(original) : retweet.getOriginal();
-		assert retweet.inReplyToStatusId == original.id : retweet.inReplyToStatusId +" vs "+original.id;		
+		assert retweet.inReplyToStatusId.equals(original.id) : retweet.inReplyToStatusId +" vs "+original.id;		
 		assert retweet.getText().startsWith("RT @spoonmcguffin: ");
 		assert ! rtsByMe.isEmpty();
 		assert rtsByMe.contains(retweet);

@@ -500,9 +500,25 @@ public class Twitter implements Serializable {
 			// Protect against (rare) dud data from Twitter
 			_end = Math.min(_end, rawText.length());
 			_start = Math.min(_start, _end);
-			if (_start==_end) { // paranoia
-				start = _start; 
-				end = _end;
+			if (_start==_end) { // paranoia -- but it happens (last seen Oct 2012; see TwitterTest)
+				// Guess blindly by type!
+				switch(type) {
+				case hashtags:
+					break;
+				case urls:
+					Matcher m = InternalUtils.URL_REGEX.matcher(text);
+					if (m.find()) {
+						start = m.start();
+						end = m.end();
+						return;
+					}
+					break;
+				case user_mentions:
+					break;
+				}
+				// Fail
+				end = Math.min(_end, text.length());
+				start = Math.min(_start, end);
 				return;
 			}
 				
@@ -605,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.6.6";
+	public final static String version = "2.6.7";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.

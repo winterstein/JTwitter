@@ -9,6 +9,7 @@
  - Added BoundingBox.isPoint()
  - Support for some odd WordPress return values.
  - Allow long posts to WordPress.
+ - Fixes a bug in Twitter where short urls lead to bogus TweetEntity offsets.
  
 2.6.5:
  - Twitter_Users.show() handles the 404 which you get if all the usernames are deleted
