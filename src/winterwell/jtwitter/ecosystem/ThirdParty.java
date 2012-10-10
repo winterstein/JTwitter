@@ -13,8 +13,8 @@ import winterwell.jtwitter.User;
 /**
  * Status: experimental! Access to 3rd party services:
  * 
- * - Infochimp Trust Rank scores - Twitlonger: Actually, this is done via
- * {@link Twitter#updateLongStatus(String, long)}
+ * - Infochimp Trust Rank scores
+ * - Twitlonger: Actually, this is done via {@link Twitter#updateLongStatus(String, long)}
  * 
  * Note: These services typically require their own api-keys and may have there
  * own terms and conditions of use.
