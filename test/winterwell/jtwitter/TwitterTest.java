@@ -249,6 +249,39 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
+	public void testIdFilteredSearch() {
+		Twitter tw = newTestTwitter();
+		tw.setSinceId(new BigInteger("255406480277262336")); // 8th Oct 9:37pm
+		tw.setUntilId(new BigInteger("255773053018054657")); // 9th Oct 9:53pm
+		tw.setMaxResults(100);		
+		List<Status> tweets = tw.search("\"british gas\" lang:en");
+		assert ! tweets.isEmpty();
+		System.out.println(tweets.size());
+		for (Status status : tweets) {
+			Time time = new Time(status.getCreatedAt());
+			System.out.println(time);
+		}
+	}
+	
+	
+	public void testDateFilteredSearch() {
+		Twitter tw = newTestTwitter();
+		Time s = new Time().minus(5, TUnit.DAY);
+		Time e = new Time().minus(1, TUnit.DAY);
+		tw.setSinceDate(s.getDate());
+		tw.setUntilDate(e.getDate());
+		tw.setUntilId(new BigInteger("255780110832107520"));
+		tw.setMaxResults(100);		
+		List<Status> tweets = tw.search("edinburgh tech");
+		assert ! tweets.isEmpty();
+		System.out.println(tweets.size());
+		for (Status status : tweets) {
+			Time time = new Time(status.getCreatedAt());
+			assert time.isAfter(s) : time;
+			assert time.isBefore(e) : time;
+		}
+	}
+	
 	public void testSinceId() {
 //		investigating URI uri = new URI("http://api.twitter.com/1/statuses/replies.json?since_id=22090245178&?since_id=22090245178&");
 		Twitter tw = newTestTwitter();

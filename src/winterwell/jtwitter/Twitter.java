@@ -2427,6 +2427,7 @@ public class Twitter implements Serializable {
 	 * Date based filter on statuses and messages. This is done client-side as
 	 * Twitter have - for their own inscrutable reasons - pulled support for
 	 * this feature. Use {@link #setSinceId(Number)} for preference.
+	 * You can use both constraints together.
 	 * <p>
 	 * If using this, you probably also want to increase
 	 * {@link #setMaxResults(int)} - otherwise you get at most 20, and possibly
@@ -2442,13 +2443,16 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Narrows the returned results to just those statuses created after the
-	 * specified status id. This will be used until it is set to null. Default
+	 * specified status id. This will be used until it is set to null. The default
 	 * is null.
 	 * <p>
-	 * If using this, you probably also want to increase
-	 * {@link #setMaxResults(int)} (otherwise you just get the most recent 20).
+	 * If using this, you probably also want to use {@link #setUntilId(Number)}.
+	 * Twitter returns the most recent results, so this has little effect unless 
+	 * used with setUntilId().
+	 * You may also want to increase {@link #setMaxResults(int)}.
 	 * 
 	 * @param statusId
+	 * @see #setSinceDate(Date)
 	 */
 	public void setSinceId(Number statusId) {
 		sinceId = statusId;
