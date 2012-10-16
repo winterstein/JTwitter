@@ -40,7 +40,8 @@ public interface IPlace {
 	 * An id which should be unique across services & stable
 	 * across time & servers
 	 * (i.e. the same place will give the same answer tomorrow
-	 * or on a different computer).
+	 * or on a different computer).<br>
+	 * In Winterwell projects, we usually call this an XId (eXternal-Id).
 	 * <p>
 	 * No hard guarantees are made for these properties!
 	 * Implementations should make best reasonable efforts.
