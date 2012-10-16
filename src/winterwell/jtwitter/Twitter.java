@@ -2509,6 +2509,14 @@ public class Twitter implements Serializable {
 	public void setUntilId(Number untilId) {
 		this.untilId = untilId;
 	}
+	
+	public Number getUntilId() {
+		return untilId;
+	}
+	
+	public Number getSinceId() {
+		return sinceId;
+	}
 
 	/**
 	 * Set this to allow the use of twitlonger via

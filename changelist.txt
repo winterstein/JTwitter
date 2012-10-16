@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.6.7:
+ - Added Twitter.getSinceId() and Twitter.getUntilId()
+
 2.6.6:
  - Moved the support for deprecated oauth libraries, OAuthHttpClient.java and OAuthScribeClient.java, 
  into a separate source code folder, src-extra, and EXCLUDED them from jtwitter.jar.

@@ -656,8 +656,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testTooOld() {
 		Twitter tw = newTestTwitter();
 		try {
-			tw.setSinceId(10584958134L);
-			tw.setUntilId(20584958134L);
+			tw.setSinceId(new BigInteger("10584958134"));
+			tw.setUntilId(new BigInteger("20584958134"));
 			tw.setSearchLocation(55.954151,-3.20277,"18km");
 			List<Status> tweets = tw.search("stuff");
 			System.out.println(tweets.size());
