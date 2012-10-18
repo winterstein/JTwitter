@@ -428,6 +428,10 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				throw new TwitterException.E401(error + "\n" + url + " ("
 						+ (name == null ? "anonymous" : name) + ")");
 			}
+			if (code == 400 && error.contains("215")) {
+				// Twitter-error-code 215 "Bad Authentication data" uses http-code 400, though 401 makes more sense.
+				throw new TwitterException.E401(error);
+			}
 			if (code == 403) {
 				// separate out the 403 cases
 				processError2_403(url, error);
@@ -598,7 +602,10 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 */
 	protected void setAuthentication(URLConnection connection, String name,
 			String password) {
-		assert name != null && password != null : "Authentication requested but no login details are set!";
+		if (name==null || password==null) {
+			// You probably want to use OAuthSignpostClient!
+			throw new TwitterException.E401("Authentication requested but no authorisation details are set!");
+		}
 		String token = name + ":" + password;
 		String encoding = Base64Encoder.encode(token);
 		connection.setRequestProperty("Authorization", "Basic " + encoding);

@@ -111,8 +111,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 //			new TwitterList("testlist", jtwit, true, "test list");
 			new TwitterList(TwitterTest.TEST_USER, "testlist", jtwit);		
 		List<User> subs = list.getSubscribers();
-		assert subs.size() > 0;
-		assert list.size() > 0;
+		assert subs.size() > 0 : subs;
+		assert list.size() > 0 : list;
 	}
 
 }

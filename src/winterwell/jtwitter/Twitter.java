@@ -589,6 +589,18 @@ public class Twitter implements Serializable {
 	 */
 	public static boolean CASE_SENSITIVE_SCREENNAMES;
 
+	/**
+	 * This global toggle switches on/off length-checking for tweets.
+	 * <p>
+	 * To avoid wasting time or API rate-limit usage, JTwitter can check that outgoing
+	 * tweets meet the maximum-length restriction. Set this to false to disable that
+	 * check (Twitter will still apply their own check!). 
+	 * <p>
+	 * true by default.
+	 * @see #countCharacters(String)
+	 */
+	public static boolean CHECK_TWEET_LENGTH = true;
+	
 	static final Pattern contentTag = Pattern.compile(
 			"<content>(.+?)<\\/content>", Pattern.DOTALL);
 
@@ -621,7 +633,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.6.7";
+	public final static String version = "2.6.8";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -739,8 +751,14 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Change this to access sites other than Twitter that support the Twitter
-	 * API. <br>
-	 * Note: Does not include the final "/"
+	 * API, or to set which version of the API you want to use.<br>
+	 * Note: Does not include the final "/"<br>
+	 * 
+	 * <h3>Which API version to use?</h3>
+	 * Twitter have decided that API version 1.0 will switch off on <b>March 5th, 2013</b>.<br>
+	 * Version 1.1 is stricter about authentication, and has removed some methods.<br>
+	 * We are keeping v1.0 as the default until 2013.
+	 * See https://dev.twitter.com/docs/api/1.1/overview#Deprecation_of_v1.0_of_the_API
 	 */
 	String TWITTER_URL = "http://api.twitter.com/1";
 
@@ -1357,17 +1375,15 @@ public class Twitter implements Serializable {
 		return msgs;
 	}
 
-	/**
-	 * Returns the 20 most recent statuses from non-protected users who have set
-	 * a custom user icon. Does not require authentication.
-	 * <p>
-	 * Note: Twitter cache-and-refresh this every 60 seconds, so there is little
-	 * point calling it more frequently than that.
-	 */
-	public List<Status> getPublicTimeline() throws TwitterException {
-		return getStatuses(TWITTER_URL + "/statuses/public_timeline.json",
-				standardishParameters(), false);
-	}
+//	/**
+//	 * Removed from Twitter :(
+//	 * Use TwitterStream instead to get a sample.
+//	 */
+	// Note: we don't wrap TwitterStream here, because TwitterStreams are restricted to 1 at a time.  
+//	public List<Status> getPublicTimeline() throws TwitterException {
+//		return getStatuses(TWITTER_URL + "/statuses/public_timeline.json",
+//				standardishParameters(), false);
+//	}
 
 	/**
 	 * What is the current rate limit status? Do we need to throttle back our
@@ -1606,6 +1622,10 @@ public class Twitter implements Serializable {
 	 *         unset (ie if this user has never tweeted), or (b) their last six
 	 *         tweets were all new-style retweets!
 	 * @see #getUserTimeline()
+	 * <p>
+	 * Minor Warning: There can be a very slight delay in Twitter for a status-update 
+	 * to take effect (i.e. for the tweet to become visible). Which means if you have
+	 * *just* called updateStatus(), then getStatus() may not match.  
 	 */
 	public Status getStatus() throws TwitterException {
 		Map<String, String> vars = InternalUtils.asMap("count", 6);
@@ -1625,10 +1645,11 @@ public class Twitter implements Serializable {
 	 *            The numerical ID of the status you're trying to retrieve.
 	 */
 	public Status getStatus(Number id) throws TwitterException {
+		boolean auth = InternalUtils.authoriseIn11(this);
 		Map vars = tweetEntities ? InternalUtils.asMap("include_entities", "1")
 				: null;
 		String json = http.getPage(TWITTER_URL + "/statuses/show/" + id
-				+ ".json", vars, http.canAuthenticate());
+				+ ".json", vars, auth);
 		try {
 			return new Status(new JSONObject(json), null);
 		} catch (JSONException e) {
@@ -2796,7 +2817,8 @@ public class Twitter implements Serializable {
 	{
 		// check for length
 		if (statusText.length() > MAX_CHARS 
-				&& ! TWITTER_URL.contains("wordpress")) // Hack: allow long posts to WordPress 
+				&& TWITTER_URL.contains("twitter") // Hack: allow long posts to WordPress
+				&& CHECK_TWEET_LENGTH)  
 		{
 			int shortLength = countCharacters(statusText);
 			if (shortLength > MAX_CHARS) {

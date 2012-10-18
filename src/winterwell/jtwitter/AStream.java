@@ -126,10 +126,14 @@ public abstract class AStream implements Closeable {
 	static Object read3_parse(JSONObject jo, Twitter jtwitr)
 			throws JSONException {
 		// tweets
-		// TODO DMs?? They don't seem to get sent!
 		if (jo.has("text")) {
 			Status tweet = new Status(jo, null);
 			return tweet;
+		}
+		// DMs
+		if (jo.has("direct_message")) {
+			Message dm = new Message(jo.getJSONObject("direct_message"));
+			return dm;
 		}
 
 		// Events
@@ -556,19 +560,21 @@ public abstract class AStream implements Closeable {
 		// parse the json
 		Object object = read3_parse(jobj, jtwit);
 
-		// tweets
-		// TODO DMs?? They don't seem to get sent!
-		// System.out.println(jo);
-		if (object instanceof Status) {
-			Status tweet = (Status) object;
+		// tweets & DMs
+		if (object instanceof ITweet) {
+			ITweet tweet = (ITweet) object;
 			// de-duplicate a bit locally (this is rare -- perhaps don't
 			// bother??)
 			if (tweets.contains(tweet))
 				return;
 			tweets.add(tweet);
-			// track the last id for tracking outages
-			if (tweet.id.compareTo(lastId) > 0) {
-				lastId = tweet.id;
+			// track the last Status id for tracking outages 
+			// (NB: Message ids are different & less generally useful)
+			if (tweet instanceof Status) {
+				BigInteger id = ((Status) tweet).id;
+				if (id.compareTo(lastId) > 0) {
+					lastId = id;
+				}
 			}
 			forgotten += forgetIfFull(tweets);
 			return;

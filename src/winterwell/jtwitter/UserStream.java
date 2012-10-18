@@ -9,10 +9,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import winterwell.jtwitter.Twitter.ITweet;
+
 /**
  * @deprecated There are bugs on Twitter's end -- the messages returned by this
  *             stream may not include all the messages to a user. The results
- *             vary from user to user!
+ *             vary from user to user!<br>
+ *             Recommendation: Use {@link TwitterStream} with the keyword filter "@screenname" to get messages to you.
  *             <p>
  *             Connect to the streaming API.
  *             <p>
@@ -22,6 +25,7 @@ import java.util.Map;
  *             - Tweets that mention you <br>
  *             - Tweets by people you follow IF
  *             {@link #setWithFollowings(boolean)} is true. <br>
+ *             - Direct messages (DMs) to you<nr>
  *             - Retweets of your messages. <br>
  *             - Retweets made by you.
  * 
@@ -87,6 +91,13 @@ public class UserStream extends AStream {
 				continue;
 			}
 			tweets.add(status);
+		}
+		List<Message> dms = jtwit2.getDirectMessages();
+		for (ITweet dm : dms) {
+			if (tweets.contains(dm)) {
+				continue;
+			}
+			tweets.add(dm);
 		}
 		// Missed follow events are sort of OK: the reconnect will update
 		// friends

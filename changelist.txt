@@ -1,8 +1,16 @@
 # JTwitter Change list 
 
+2.6.8:
+ - Started coding around the 1.0 / 1.1 switch. API version 1.0 will remain valid until March 5th, 2013.
+ - Removed methods switched off by Twitter: 
+	Twitter.getPublicTimeline()
+	Twitter_Users.getFeatured()
+ - Added Twitter.CHECK_TWEET_LENGTH to allow disabling of length-checking.
+ - Twitter now send DMs as part of a UserStream. Hurrah! It only took them a year to catch up with their documentation. UserStream is still deprecated, because Twitter still have bugs & the returned results are unreliable.
+ 
 2.6.7:
  - Added Twitter.getSinceId() and Twitter.getUntilId()
-
+ 
 2.6.6:
  - Moved the support for deprecated oauth libraries, OAuthHttpClient.java and OAuthScribeClient.java, 
  into a separate source code folder, src-extra, and EXCLUDED them from jtwitter.jar.

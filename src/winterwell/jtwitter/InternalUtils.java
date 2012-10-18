@@ -342,7 +342,7 @@ public class InternalUtils {
 	}
 
 	/**
-	 * Note: this is a JVM wide setting, intended for debugging.
+	 * Note: this is a global JVM wide setting, intended for debugging.
 	 * @param on
 	 *            true to activate {@link #getAPIUsageStats()}. false to switch
 	 *            stats off. false by default
@@ -493,6 +493,17 @@ public class InternalUtils {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}		
+	}
+
+
+	/**
+	 * Several methods require authorisation in API v1.1, but not in v1.0
+	 * @param jtwit
+	 * @return true if jtwit can authorise, or if the API v is 1.1
+	 */
+	static boolean authoriseIn11(Twitter jtwit) {
+		return jtwit.getHttpClient().canAuthenticate() 
+				|| jtwit.TWITTER_URL.endsWith("1.1");
 	}
 
 }

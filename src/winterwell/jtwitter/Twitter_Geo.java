@@ -59,8 +59,8 @@ public class Twitter_Geo implements IGeoCode {
 		if (accuracy != 0) {
 			vars.put("accuracy", String.valueOf(accuracy));
 		}
-		String json = jtwit.getHttpClient().getPage(url, vars,
-				jtwit.getHttpClient().canAuthenticate());
+		boolean auth = InternalUtils.authoriseIn11(jtwit);
+		String json = jtwit.getHttpClient().getPage(url, vars, auth);
 		try {
 			JSONObject jo = new JSONObject(json);
 			JSONObject jo2 = jo.getJSONObject("result");
