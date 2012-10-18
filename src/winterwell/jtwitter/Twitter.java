@@ -756,9 +756,12 @@ public class Twitter implements Serializable {
 	 * 
 	 * <h3>Which API version to use?</h3>
 	 * Twitter have decided that API version 1.0 will switch off on <b>March 5th, 2013</b>.<br>
-	 * Version 1.1 is stricter about authentication, and has removed some methods.<br>
-	 * We are keeping v1.0 as the default until 2013.
-	 * See https://dev.twitter.com/docs/api/1.1/overview#Deprecation_of_v1.0_of_the_API
+	 * Version 1.1 is stricter about authentication, and has removed some methods :(
+	 * <p>
+	 * In JTwitter, we will keep v1.0 as the default until 2013, then make 1.1 the default.
+	 * You can take matters into your own hands if you like by setting this field.
+	 * <p>
+	 * Ref: https://dev.twitter.com/docs/api/1.1/overview#Deprecation_of_v1.0_of_the_API
 	 */
 	String TWITTER_URL = "http://api.twitter.com/1";
 
