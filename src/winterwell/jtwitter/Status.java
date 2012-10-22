@@ -442,7 +442,7 @@ public final class Status implements ITweet {
 
 	/**
 	 * E.g. "web" vs. "im"<br>
-	 * WARNING: this is different from {@link #source}. This method will remove the wrapping a-tag.
+	 * WARNING: this is different from the field {@link #source}. This method will remove the wrapping a-tag.
 	 * <p>
 	 * "fake" if this Status was made locally or from an RSS feed rather than
 	 * retrieved from Twitter json (as normal).
