@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -186,7 +187,7 @@ public abstract class AStream implements Closeable {
 
 	final List<IListen> listeners = new ArrayList(0);
 
-	final List<Outage> outages = new ArrayList();
+	final List<Outage> outages = Collections.synchronizedList(new ArrayList());
 
 	int previousCount;
 
@@ -368,13 +369,19 @@ public abstract class AStream implements Closeable {
 			if (System.currentTimeMillis() - outage.untilTime < 60000) {
 				continue;
 			}
-			jtwit2.setSinceId(outage.sinceId);
-			jtwit2.setUntilDate(new Date(outage.untilTime));
-			jtwit2.setMaxResults(100000); // hopefully not needed!
-			// fetch
-			fillInOutages2(jtwit2, outage);
-			// success
-			outages.remove(outage);
+			boolean ok = outages.remove(outage);
+			if ( ! ok) continue; // already done or dropped
+			try {						
+				jtwit2.setSinceId(outage.sinceId);
+				jtwit2.setUntilDate(new Date(outage.untilTime));
+				jtwit2.setMaxResults(100000); // hopefully not needed!
+				// fetch
+				fillInOutages2(jtwit2, outage);
+				// success
+			} catch(Throwable ex) {
+				// fail -- put it back on the queue
+				outages.add(outage);
+			}			
 		}
 	}
 
