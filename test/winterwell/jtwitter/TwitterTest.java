@@ -52,7 +52,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	public void testDisplayTextBug() {
 		Twitter jtwit = newTestTwitter();
-		
+				
 		Status _tweet = jtwit.getStatus(new BigInteger("255592522955505665"));
 		System.out.println(_tweet.getId());
 		System.out.println(_tweet.getText());
@@ -72,6 +72,12 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	public void testSource() {
 		Twitter jtwit = newTestTwitter();
+
+		List<Status> tweets = jtwit.getUserTimeline("skynews");
+		for (Status status : tweets) {
+			System.out.println(status.getSource());
+		}
+		
 		HashMap<String,Integer> distro = new HashMap();
 		TwitterStream ts = null;
 		try {
