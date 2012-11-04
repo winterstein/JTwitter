@@ -19,6 +19,7 @@ import oauth.signpost.basic.HttpURLConnectionRequestAdapter;
 import oauth.signpost.exception.OAuthException;
 import oauth.signpost.http.HttpRequest;
 import winterwell.jtwitter.Twitter.IHttpClient;
+import winterwell.jtwitter.guts.ClientHttpRequest;
 
 /**
  * OAuth based login using Signpost (http://code.google.com/p/oauth-signpost/).
@@ -97,6 +98,31 @@ import winterwell.jtwitter.Twitter.IHttpClient;
  */
 public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		IHttpClient, Serializable {
+
+	
+	/**
+	 * @param uri
+	 * @param vars Can include File values
+	 * @return
+	 * @throws TwitterException
+	 */
+	//@Override
+	public final String postMultipartForm(String url, Map<String, ?> vars) 
+			throws TwitterException 
+	{
+		try {			
+			HttpURLConnection con = null; // TODO			
+			ClientHttpRequest req = new ClientHttpRequest(con);
+			InputStream page = req.post(vars);
+			processError(con);
+			return InternalUtils.toString(page);
+		} catch (TwitterException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TwitterException(e);
+		}
+	}
+	
 
 	/**
 	 * Use with #setProvider() to make this a foursquare OAuth client

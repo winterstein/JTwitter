@@ -25,6 +25,7 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
 import winterwell.jtwitter.guts.ClientHttpRequest;
+import winterwell.utils.containers.ArrayMap;
 
 /**
  * A simple http client that uses the built in URLConnection class.
@@ -291,32 +292,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	}
 	
 
-	/**
-	 * @param uri
-	 * @param vars Can include File values
-	 * @return
-	 * @throws TwitterException
-	 */
-	//@Override
-	public final String postMultipartForm(String url, Map<String, ?> vars) 
-			throws TwitterException 
-	{
-		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			
-			// FIXME oauth authenticate!
-			setAuthentication(connection, name, password);
-			
-			ClientHttpRequest req = new ClientHttpRequest(connection);
-			InputStream page = req.post(vars);
-			processError(connection);
-			return InternalUtils.toString(page);
-		} catch (TwitterException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new TwitterException(e);
-		}
-	}
+
+
 
 	@Override
 	public final String post(String uri, Map<String, String> vars,
