@@ -18,8 +18,11 @@ import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.HttpURLConnectionRequestAdapter;
 import oauth.signpost.exception.OAuthException;
 import oauth.signpost.http.HttpRequest;
+import oauth.signpost.signature.AuthorizationHeaderSigningStrategy;
+import oauth.signpost.signature.SigningStrategy;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.guts.ClientHttpRequest;
+import winterwell.utils.containers.ArrayMap;
 
 /**
  * OAuth based login using Signpost (http://code.google.com/p/oauth-signpost/).
@@ -111,10 +114,38 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			throws TwitterException 
 	{
 		try {			
-			HttpURLConnection con = null; // TODO			
-			ClientHttpRequest req = new ClientHttpRequest(con);
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("POST");
+			connection.setReadTimeout(timeout);
+			connection.setConnectTimeout(timeout);
+			
+			Map<String, String> vars2 = new ArrayMap();
+			// TODO copy in the oauth suff??
+			final String payload = post2_getPayload(vars2);
+			
+			// needed for OAuthConsumer.collectBodyParameters() not to get upset
+			HttpURLConnectionRequestAdapter wrapped = new HttpURLConnectionRequestAdapter(
+					connection) {
+				@Override
+				public InputStream getMessagePayload() throws IOException {
+					// SHould we use ByteArrayInputStream instead? With what
+					// encoding?
+					return new StringBufferInputStream(payload);
+				}
+			};
+			
+			// ??Don't alter the normal consumer's signing strategy
+			SimpleOAuthConsumer _consumer = new SimpleOAuthConsumer(consumerKey, consumerSecret);
+			_consumer.setTokenWithSecret(accessToken, accessTokenSecret);
+			SigningStrategy ss = new AuthorizationHeaderSigningStrategy();
+			_consumer.setSigningStrategy(ss);
+			_consumer.sign(wrapped);
+
+			ClientHttpRequest req = new ClientHttpRequest(connection);
 			InputStream page = req.post(vars);
-			processError(con);
+			// check connection & process the envelope
+			processError(connection);
+			processHeaders(connection);
 			return InternalUtils.toString(page);
 		} catch (TwitterException e) {
 			throw e;
@@ -320,23 +351,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	}
 
 	private void init() {
-		// The default consumer can't do post requests!
-		// TODO override AbstractAuthConsumer.collectBodyParameters() which
-		// would be more efficient
-		consumer = new AbstractOAuthConsumer(consumerKey, consumerSecret) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected HttpRequest wrap(final Object request) {
-				if (request instanceof HttpRequest)
-					return (HttpRequest) request;
-				return new HttpURLConnectionRequestAdapter(
-						(HttpURLConnection) request);
-			}
-		};
+		consumer = new SimpleOAuthConsumer(consumerKey, consumerSecret);
 		if (accessToken != null) {
 			consumer.setTokenWithSecret(accessToken, accessTokenSecret);
 		}
@@ -446,4 +461,28 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		this.provider = provider;
 	}
 
+}
+
+/**
+ * The default consumer can't do post requests!
+		// TODO override AbstractAuthConsumer.collectBodyParameters() which
+		// would be more efficient
+ * @author daniel
+ */
+class SimpleOAuthConsumer extends AbstractOAuthConsumer {
+	
+	public SimpleOAuthConsumer(String consumerKey, String consumerSecret) {
+		super(consumerKey, consumerSecret);
+	}
+
+	private static final long serialVersionUID = 1L;
+	
+
+	@Override
+	protected HttpRequest wrap(final Object request) {
+		if (request instanceof HttpRequest)
+			return (HttpRequest) request;
+		return new HttpURLConnectionRequestAdapter(
+				(HttpURLConnection) request);
+	}
 }
