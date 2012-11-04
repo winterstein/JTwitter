@@ -2210,6 +2210,7 @@ public class Twitter implements Serializable {
 	 *         "apples OR pears -kfz" (near Edinburgh)
 	 */
 	private String search2_bugHack(String searchTerm) {
+//		if (true) return searchTerm; TODO Looks like this is no longer needed (quick test, 4th Nov 2012)
 		// zero-length is valid with location
 		if (searchTerm.length()==0)
 			return searchTerm;

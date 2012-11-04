@@ -153,11 +153,15 @@ extends TestCase // Comment out to remove the JUnit dependency
 		
 		// this will contain gibberish if we don't have Twitter.search2_bugHack enabled
 		List<Status> tweets = ts.search("apple OR pear");
+		for (Status status : tweets) {
+			String text = status.getDisplayText().toLowerCase()+" "+status.getUser().screenName.toLowerCase();
+			assert text.contains("apple") || text.contains("pear") || text.contains("http") : text;
+		}
 		
 		List<Status> tweets2 = ts.search("apple OR pear -kxq -http");
 		for (Status status : tweets2) {
-			String text = status.getText().toLowerCase();
-			assert text.contains("apple") || text.contains("pear");
+			String text = status.getDisplayText().toLowerCase()+" "+status.getUser().screenName.toLowerCase();
+			assert text.contains("apple") || text.contains("pear") || text.contains("http") : text;
 		}
 	}
 	
