@@ -2925,23 +2925,23 @@ public class Twitter implements Serializable {
 	 * @param mediaFile
 	 * @return The posted status when successful.
 	 */
-	// c.f. 	// c.f. https://dev.twitter.com/discussions/1059
+	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
+	// c.f. https://dev.twitter.com/discussions/1059
 	// TODO
 	Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
 		if (mediaFile==null || ! mediaFile.isFile()) {
 			throw new IllegalArgumentException("Invalid file: "+mediaFile);
 		}
 		Map vars = updateStatus2_vars(statusText, inReplyToStatusId);
-		// media[]
-		// possibly_sensitive
-		// display_coordinates
+		vars.put("media[]", mediaFile);
+		// TODO possibly_sensitive
+		// TODO display_coordinates
 		String result = null;
-		try {
-			// TODO attach the image!!!
-			result = http
-					.post(
-					"http://upload.twitter.com/1/statuses/update_with_media.json",
-							vars, true);
+		try {			
+			result = ((OAuthSignpostClient)http)
+					.postMultipartForm(
+					"https://upload.twitter.com/1/statuses/update_with_media.json",
+							vars);
 			Status s = new Status(new JSONObject(result), null);
 			return s;
 		} catch (E403 e) {
