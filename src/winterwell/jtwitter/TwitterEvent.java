@@ -5,6 +5,11 @@ import java.util.Date;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 
+/**
+ * User events, like following someone or being added to a list.
+ * @author daniel
+ *
+ */
 public class TwitterEvent {
 
 	public static interface Type {
