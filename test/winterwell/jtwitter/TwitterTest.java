@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +35,7 @@ import winterwell.utils.NoUTR;
 import winterwell.utils.Printer;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
+import winterwell.utils.io.FileUtils;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
 import winterwell.utils.web.WebUtils;
@@ -1468,5 +1470,23 @@ extends TestCase // Comment out to remove the JUnit dependency
 			assert ! ms.isEmpty();
 		}
 	}
+	
+	public void testPostToTwitterWithMedia(){
+		{
+			Twitter tw = newTestTwitter();
+			File t = new File("test/winterwell/jtwitter/samplejpg.jpg");
+			Printer.out(t.getAbsolutePath());
+			tw.updateStatusWithMedia(
+					"A test tweet " + Utils.getRandomString(5), null, t);
+		}
+		{
+			Twitter tw = newTestTwitter();
+			File t = new File("test/winterwell/jtwitter/samplepng.png");
+			Printer.out(t.getAbsolutePath());
+			tw.updateStatusWithMedia(
+					"A test tweet " + Utils.getRandomString(5), null, t);
+		}
 
+		
+	}
 }

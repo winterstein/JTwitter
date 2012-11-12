@@ -2928,7 +2928,7 @@ public class Twitter implements Serializable {
 	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
 	// c.f. https://dev.twitter.com/discussions/1059
 	// TODO
-	Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
+	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
 		if (mediaFile==null || ! mediaFile.isFile()) {
 			throw new IllegalArgumentException("Invalid file: "+mediaFile);
 		}
