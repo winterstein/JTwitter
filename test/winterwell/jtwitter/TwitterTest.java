@@ -75,10 +75,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testSource() {
 		Twitter jtwit = newTestTwitter();
 
-		List<Status> tweets = jtwit.getUserTimeline("skynews");
+		List<Status> tweets = jtwit.getUserTimeline("joehalliwell");
 		for (Status status : tweets) {
 			System.out.println(status.getSource());
 		}
+		if (true) return;
 		
 		HashMap<String,Integer> distro = new HashMap();
 		TwitterStream ts = null;

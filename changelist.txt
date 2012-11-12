@@ -6,7 +6,10 @@
 	Twitter.getPublicTimeline()
 	Twitter_Users.getFeatured()
  - Added Twitter.CHECK_TWEET_LENGTH to allow disabling of length-checking.
- - Twitter now send DMs as part of a UserStream. Hurrah! It only took them a year to catch up with their documentation. UserStream is still deprecated, because Twitter still have bugs & the returned results are unreliable.
+ - Twitter now send DMs as part of a UserStream. Hurrah! It only took them a year to catch up with their documentation. 
+ UserStream is still deprecated, because Twitter still have bugs & the returned results are unreliable.
+ - Added the disconnect event to the system events handled by AStream
+ - AStream handles unknown system events gracefully.
  
 2.6.7:
  - Added Twitter.getSinceId() and Twitter.getUntilId()

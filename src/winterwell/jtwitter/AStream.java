@@ -161,9 +161,14 @@ public abstract class AStream implements Closeable {
 			}
 			return new Object[] { "limit", cnt };
 		}
+		// e.g. "disconnect":{"code":7,"stream_name":"XXXX-userstreamxxxx","reason":"admin logout"}		
+		JSONObject disconnect = jo.optJSONObject("disconnect");
+		if (disconnect != null) {			
+			return new Object[] { "disconnect", disconnect};
+		}
 		// ??
 		System.out.println(jo);
-		return jo;
+		return new Object[]{"unknown", jo};
 	}
 
 	boolean autoReconnect;
@@ -174,6 +179,10 @@ public abstract class AStream implements Closeable {
 
 	boolean fillInFollows = true;
 
+	/**
+	 * The number of messages (which could be tweets, events, or system
+	 * events) which the stream has dropped to stay within it's bounds.
+	 */
 	private int forgotten;
 
 	List<Long> friends;
@@ -500,7 +509,8 @@ public abstract class AStream implements Closeable {
 	 * ["delete", Status] This tweet has been deleted from Twitter<br>
 	 * ["limit", int skipped_tweets] See https://dev.twitter.com/discussions/2655<br>
 	 * ["exception", Exception]<br>
-	 * ["reconnect", milliseconds_offline]
+	 * ["reconnect", milliseconds_offline]<br>
+	 * ["disconnect", JSONObject e.g. {"reason":"admin logout","stream_name":"mystream","code":7}]<br>
 	 * 
 	 * @return the recent system events. Calling this will clear the list of system events.
 	 * <p>
@@ -597,22 +607,22 @@ public abstract class AStream implements Closeable {
 		// Deletes and other system events, like limits
 		if (object instanceof Object[]) {
 			Object[] sysEvent = (Object[]) object;
-			// delete?
+			// process it...
+			// ...delete?
 			if ("delete".equals(sysEvent[0])) {
 				Status deadTweet = (Status) sysEvent[1];
 				// prune local (which is unlikely to do much)
 				boolean pruned = tweets.remove(deadTweet);
-				if (!pruned) {
-					sysEvents.add(sysEvent);
-					forgotten += forgetIfFull(sysEvents);
-				}
-				return;
+				if (pruned) return; // No need to keep this event around
 			} else if ("limit".equals(sysEvent[0])) {
+				// ...we got rate-limited?
 				Integer cnt = (Integer) sysEvent[1];				
-				sysEvents.add(sysEvent);
 				forgotten += cnt;
-				return;				
 			}
+			// store the sys-event
+			sysEvents.add(sysEvent);
+			forgotten += forgetIfFull(sysEvents);
+			return;
 		}
 		// ??
 		System.out.println(jobj);
