@@ -28,9 +28,9 @@ public class Location implements Serializable {
 	 * 
 	 * @param latitude the latitiude of the location. Must be >-90 and <90
 	 * @param longitude the longitude of the location. Will be normalised to between >-180 and <180
-	 * @throws IllegalArgumentException if the co-ordinates aren't valid
+	 * @throws IllegalArgumentException if the co-ordinates aren't valid (i.e. bad latitude)
 	 */
-	public Location(double latitude, double longitude) {
+	public Location(double latitude, double longitude) throws IllegalArgumentException {
 		// Normalise the lat/long coords
 		if (latitude < -90 || latitude > 90) {
 			throw new IllegalArgumentException("Invalid latitude: " + latitude+", "+longitude);
@@ -103,7 +103,8 @@ public class Location implements Serializable {
 		// 1 = north pole to south pole
 		double fracNorth = metresNorth / (500*DIAMETER_OF_EARTH*Math.PI);
 		double lat = latitude + fracNorth*180;
-		// TODO is [90, -90] the preferred range? 
+		// Latitude: [90, -90] is the preferred range.
+		// HACK: Cap at the poles!
 		if (lat>90) lat = 90;
 		else if (lat<-90) lat = -90;
 		// TODO East/West
@@ -180,7 +181,13 @@ public class Location implements Serializable {
 		if ( ! m.matches()) return null;
 		String lat = m.group(1);
 		String lng = m.group(2);
-		return new Location(Double.valueOf(lat), Double.valueOf(lng));
+		double _lat = Double.valueOf(lat);
+		if (Math.abs(_lat) > 90) {
+			// Bogus latitude -- beyond a pole!
+			// NB: longitude we allow to loop.
+			return null;
+		}
+		return new Location(_lat, Double.valueOf(lng));
 	}
 
 }
