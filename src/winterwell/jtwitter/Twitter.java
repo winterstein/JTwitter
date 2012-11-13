@@ -2918,16 +2918,15 @@ public class Twitter implements Serializable {
 
 
 	/**
-	 * @deprecated Still developing!
 	 * Updates the authenticating user's status with an image (or other media file / attachment).
 	 * 
 	 * @param statusText
+	 * @param inReplyToStatusId Can be null.
 	 * @param mediaFile
 	 * @return The posted status when successful.
 	 */
 	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
 	// c.f. https://dev.twitter.com/discussions/1059
-	// TODO
 	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
 		if (mediaFile==null || ! mediaFile.isFile()) {
 			throw new IllegalArgumentException("Invalid file: "+mediaFile);

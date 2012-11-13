@@ -1,6 +1,7 @@
 # JTwitter Change list 
 
 2.6.8:
+ - Image upload! See Twitter.updateStatusWithMedia()
  - Started coding around the 1.0 / 1.1 switch. API version 1.0 will remain valid until March 5th, 2013.
  - Removed methods switched off by Twitter: 
 	Twitter.getPublicTimeline()
@@ -10,6 +11,7 @@
  UserStream is still deprecated, because Twitter still have bugs & the returned results are unreliable.
  - Added the disconnect event to the system events handled by AStream
  - AStream handles unknown system events gracefully.
+ - Location.parse() is more robust around bad-coordinates.
  
 2.6.7:
  - Added Twitter.getSinceId() and Twitter.getUntilId()
