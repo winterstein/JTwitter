@@ -615,7 +615,7 @@ public class Twitter implements Serializable {
 	 */
 	public static int LINK_LENGTH = 20;
 
-	public static long PHOTO_SIZE_LIMIT;
+	public static long PHOTO_SIZE_LIMIT = 3145728L; // 3mb
 
 	public static final String SEARCH_MIXED = "mixed";
 

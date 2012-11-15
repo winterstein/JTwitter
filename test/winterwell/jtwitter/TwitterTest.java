@@ -137,6 +137,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter jtwit = newTestTwitter();
 		jtwit.updateConfiguration();
 		System.out.println(Twitter.LINK_LENGTH);
+		System.out.println("Photo limit: "+Twitter.PHOTO_SIZE_LIMIT);
 	}
 	
 	/**
