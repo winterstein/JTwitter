@@ -364,15 +364,20 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter twitter = newTestTwitter();
 		int salt = new Random().nextInt(100);
 		Status s = twitter.getStatus("winterstein");
-		if (s.isFavorite()) {
-			twitter.setFavorite(s, false);
-			Thread.sleep(5000);
-			assert ! s.isFavorite();
-		}
-		twitter.setFavorite(s, true);
+//		if (s.isFavorite()) {
+		Status s2 = twitter.setFavorite(s, false);
+		assert ! s2.isFavorite();
+		Thread.sleep(1000);
+		// repeated false is fine
+		twitter.setFavorite(s, false);
+//		}
 		Thread.sleep(5000);
-		Status s2 = twitter.getStatus("winterstein");
-		assert s2.isFavorite();
+		Status s3 = twitter.setFavorite(s, true);
+		assert s3.isFavorite();
+		Thread.sleep(5000);
+//		twitter.setFavorite(s, true); // repeated true throws exception
+		Status s4 = twitter.getStatus("winterstein");
+		assert s4.isFavorite();
 	}
 
 	

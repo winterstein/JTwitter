@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.6.9:
+ - Repeated favorite (star) does not generate an error. Instead the Twitter.setFavorite() return value is null.
+
 2.6.8:
  - Image upload! See Twitter.updateStatusWithMedia()
  - Started coding around the 1.0 / 1.1 switch. API version 1.0 will remain valid until March 5th, 2013.

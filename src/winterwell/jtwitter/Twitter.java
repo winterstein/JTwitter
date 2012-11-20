@@ -2302,18 +2302,25 @@ public class Twitter implements Serializable {
 		this.count = count;
 	}
 
-	public void setFavorite(Status status, boolean isFavorite) {
+	/**
+	 * 
+	 * @param status The status to favorite. Technical note: Only the ID is needed, so you can use a "fake" Status object here. 
+	 * @param isFavorite
+	 * @return updated Status, or null if you'd already starred this status. 
+	 */
+	public Status setFavorite(Status status, boolean isFavorite) {
 		try {
 			String uri = isFavorite ? TWITTER_URL + "/favorites/create/"
 					+ status.id + ".json" : TWITTER_URL + "/favorites/destroy/"
 					+ status.id + ".json";
-			http.post(uri, null, true);
+			String json = http.post(uri, null, true);
+			return new Status(new JSONObject(json), null);
 		} catch (E403 e) {
 			// already a favorite?
 			if (e.getMessage() != null
-					&& e.getMessage().contains("already favorited"))
-				throw new TwitterException.Repetition(
-						"You have already favorited this status.");
+					&& e.getMessage().contains("already favorited")) {
+				return null;
+			}
 			// just a normal 403
 			throw e;
 		}
