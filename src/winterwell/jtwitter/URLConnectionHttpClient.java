@@ -369,10 +369,25 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		return connection;
 	}
 
+	/**
+	 * 
+	 * @param vars Keys & values will be url-encoded. 
+	 * Special case: if there is 1 key "", then just the value is returned (url-encoded).
+	 * @return
+	 */
 	protected String post2_getPayload(Map<String, String> vars) {
 		if (vars == null || vars.isEmpty())
 			return "";
 		StringBuilder encodedData = new StringBuilder();
+		
+		// Special case: Just send a body (no key-value encoding)?
+		if (vars.size()==1) {
+			String key = vars.keySet().iterator().next();
+			if ("".equals(key)) {
+				String val = InternalUtils.encode(vars.get(key));
+				return val;
+			}
+		}
 
 		for (String key : vars.keySet()) {
 			String val = InternalUtils.encode(vars.get(key));
