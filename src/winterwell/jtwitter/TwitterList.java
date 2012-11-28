@@ -58,6 +58,21 @@ public class TwitterList extends AbstractList<User> {
 			Twitter jtwit) {
 		return new TwitterList(ownerScreenName, slug, jtwit);
 	}
+	
+	/**
+	 * A lazy-loading list viewer. This will fetch details from Twitter when you
+	 * call it's methods. This is for access to an existing list - it does NOT
+	 * create a new list on Twitter.
+	 * 
+	 * @param id
+	 * @param jtwit
+	 *            a JTwitter object (this must be able to authenticate).
+	 * @throws Twitter.Exception.E404
+	 *             if the list does not exist
+	 */
+	public static TwitterList get(Number id, Twitter jtwit) {
+		return new TwitterList(id, jtwit);
+	}
 
 	private boolean _private;
 
@@ -173,6 +188,14 @@ public class TwitterList extends AbstractList<User> {
 		}
 	}
 
+	public TwitterList(Number id, Twitter jtwit) {
+		assert id != null && jtwit != null;
+		this.jtwit = jtwit;
+		this.id = id;
+		this.http = jtwit.getHttpClient();
+		init();
+	}
+
 	/**
 	 * Add a user to the list. List size is limited to 500 users.
 	 * 
@@ -279,6 +302,10 @@ public class TwitterList extends AbstractList<User> {
 		vars.put("slug", slug);
 		return vars;
 	}
+	
+	public Number getId() {
+		return id;
+	}
 
 	public String getName() {
 		return name;
@@ -328,11 +355,6 @@ public class TwitterList extends AbstractList<User> {
 		} catch (JSONException e) {
 			throw new TwitterException("Could not parse response: " + e);
 		}
-	}
-
-	private String idOrSlug() {
-		// TODO encode slugs here?
-		return id != null ? id.toString() : slug;
 	}
 
 	/**
