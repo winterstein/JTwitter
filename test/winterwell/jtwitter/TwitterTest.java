@@ -1000,6 +1000,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testGetStatusLong() {
 		Twitter tw = newTestTwitter();
+		{	// Test a specific tweet ("How are you Ntwanano? RT @Reg_Lulekz: Hello Dakalo @DakaloM_: Hello tweeps..." by dakalom_)
+			BigInteger bi = new BigInteger("236109584417292288");
+			Status toreg = tw.getStatus(bi);
+			System.out.println(toreg.text+" by "+toreg.user);
+		}
 		Status s = tw.getStatus();
 		Status s2 = tw.getStatus(s.getId());
 		assert s.text.equals(s2.text) : "Fetching a status by id should yield correct text";
