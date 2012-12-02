@@ -22,6 +22,7 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -353,7 +354,8 @@ public abstract class AStream implements Closeable {
 
 	/**
 	 * Use the REST API to fill in outages when possible. Filled-in outages will
-	 * be removed from the list.
+	 * be removed from the list. 
+	 * WARNING: This swallows exceptions! (but check the return value)
 	 * <p>
 	 * In accordance with best-practice, this method will skip over very recent
 	 * outages (which will be picked up by subsequent calls to
@@ -366,13 +368,15 @@ public abstract class AStream implements Closeable {
 	 * API polling. This delay is crucial to prevent dog-piling the REST API in
 	 * the event of a minor hiccup on the streaming API.
 	 * </p>
+	 * @return null if all OK, the Exception raised otherwise.
 	 */
-	public final void fillInOutages() throws UnsupportedOperationException {
+	public final Exception fillInOutages() throws UnsupportedOperationException {
 		if (outages.size() == 0)
-			return;
+			return null;
 		Outage[] outs = outages.toArray(new Outage[0]);
 		// protect our original object from edits and threading-issues
-		Twitter jtwit2 = new Twitter(jtwit);
+		Twitter jtwit2 = new Twitter(jtwit);		
+		Exception ex = null;
 		for (Outage outage : outs) {
 			// too recent? wait at least 1 minute
 			if (System.currentTimeMillis() - outage.untilTime < 60000) {
@@ -387,11 +391,15 @@ public abstract class AStream implements Closeable {
 				// fetch
 				fillInOutages2(jtwit2, outage);
 				// success
-			} catch(Throwable ex) {
-				// fail -- put it back on the queue
+			} catch(Throwable e) {
+				// fail -- put it back on the queue				
 				outages.add(outage);
+				if (e instanceof Exception) {
+					ex = (Exception) e;
+				}
 			}			
 		}
+		return ex;
 	}
 
 	/**
