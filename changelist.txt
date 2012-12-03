@@ -2,6 +2,7 @@
 
 2.6.9:
  - Repeated favorite (star) does not generate an error. Instead the Twitter.setFavorite() return value is null.
+ - STREAM is a request type (for completeness + convenience of some use-cases).
 
 2.6.8:
  - Image upload! See Twitter.updateStatusWithMedia()

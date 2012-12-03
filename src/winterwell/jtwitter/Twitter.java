@@ -387,7 +387,8 @@ public class Twitter implements Serializable {
 		/** this is X-Feature Class "namesearch" in the response headers */
 		SEARCH_USERS("Feature"), 
 		SHOW_USER(""), 
-		UPLOAD_MEDIA("Media");
+		UPLOAD_MEDIA("Media"),
+		STREAM("");
 
 		/**
 		 * USed to find the X-?RateLimit header.
