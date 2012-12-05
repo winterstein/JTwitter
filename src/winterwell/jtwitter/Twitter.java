@@ -388,7 +388,8 @@ public class Twitter implements Serializable {
 		SEARCH_USERS("Feature"), 
 		SHOW_USER(""), 
 		UPLOAD_MEDIA("Media"),
-		STREAM("");
+		STREAM_KEYWORD(""),
+		STREAM_USER("");
 
 		/**
 		 * USed to find the X-?RateLimit header.
@@ -1938,9 +1939,9 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated 
 	 * @see Twitter_Users#isFollower(String, String)
 	 */
-	@Deprecated
 	public boolean isFollower(String followerScreenName,
 			String followedScreenName) {
 		return users().isFollower(followerScreenName, followedScreenName);
