@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
@@ -16,6 +17,7 @@ import winterwell.utils.time.Time;
 
 public class UserStreamTest {
 
+	
 	/**
 	 * ARGH! 
 	 * This picks up mentions fine here in the test.
@@ -26,12 +28,35 @@ public class UserStreamTest {
 	@Test
 	public void testRead() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter jtwit2 = TwitterTest.newTestTwitter2();
+		jtwit2.users().stopFollowing(jtwit.getSelf());
+		Utils.sleep(200);
+		
 		UserStream us = new UserStream(jtwit);
 		us.setPreviousCount(100);
 		us.setWithFollowings(false); // no need to hear what JTwitTest2 has to say		
 		// -- unless it's too us
 		us.setAutoReconnect(true);
 		us.connect();
+		us.addListener(new IListen() {			
+			@Override
+			public boolean processTweet(ITweet tweet) {
+				Printer.out("Heard: "+tweet);
+				return true;
+			}
+			
+			@Override
+			public boolean processSystemEvent(Object[] obj) {
+				Printer.out("Heard", obj);
+				return true;
+			}
+			
+			@Override
+			public boolean processEvent(TwitterEvent event) {
+				Printer.out("Heard: "+event);
+				return true;
+			}
+		});
 		
 		// let's also try with a TwitterStream
 		TwitterStream us2 = new TwitterStream(jtwit);
@@ -42,13 +67,12 @@ public class UserStreamTest {
 		us2.connect();
 		
 		// Do some stuff		
-		int salt = new Random().nextInt(1000);
-		Twitter jtwit2 = TwitterTest.newTestTwitter2();
+		int salt = new Random().nextInt(1000);		
 		if ( ! jtwit.isFollowing(jtwit2.getScreenName())) {
-			jtwit.follow(jtwit2.getScreenName());
+			jtwit.users().follow(jtwit2.getScreenName());
 		}
 		if ( ! jtwit2.isFollowing("jtwit")) {
-			jtwit2.follow("jtwit");
+			jtwit2.users().follow("jtwit");
 		}
 		jtwit2.setStatus("Public hello to @jtwit "+salt);
 		jtwit2.setStatus("@jtwit Public hello v2 "+salt);
@@ -204,8 +228,8 @@ public class UserStreamTest {
 		String timeStr = (time.getHour()+1) + " " + time.getMinutes() + " " + time.getSeconds();
 		int salt = new Random().nextInt(100000);
 		String messageText = "Dee EMM UStream!" + salt;
-		jtwit.sendMessage("@"+jtwit2.getSelf().screenName, messageText + " I'm jtwit " + time);
-		jtwit2.sendMessage("@"+jtwit.getSelf().screenName, messageText + " I'm jtwittest2 " + time);
+		jtwit.sendMessage(jtwit2.getSelf().screenName, messageText + " I'm jtwit " + time);
+		jtwit2.sendMessage(jtwit.getSelf().screenName, messageText + " I'm jtwittest2 " + time);
 		Thread.sleep(10000);
 		
 		

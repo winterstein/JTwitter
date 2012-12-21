@@ -2241,7 +2241,7 @@ public class Twitter implements Serializable {
 	 * authenticating user. This is a private message!
 	 * 
 	 * @param recipient
-	 *            Required. The screen name of the recipient user.
+	 *            Required. The screen name of the recipient user. This does *not* start with an "@".
 	 * @param text
 	 *            Required. The text of your direct message. Keep it under 140
 	 *            characters! This should *not* include the "d username" portion
@@ -2250,10 +2250,10 @@ public class Twitter implements Serializable {
 	 *             if the recipient is not following you. (you can \@mention
 	 *             anyone but you can only dm people who follow you).
 	 */
-	public Message sendMessage(String recipient, String text)
-			throws TwitterException {
+	public Message sendMessage(String recipient, String text) throws TwitterException {
 		assert recipient != null && text != null : recipient + " " + text;
-		assert !text.startsWith("d " + recipient) : recipient + " " + text;
+		assert ! text.startsWith("d " + recipient) : recipient + " " + text;
+		assert ! recipient.startsWith("@") : recipient + " " + text;
 		if (text.length() > 140)
 			throw new IllegalArgumentException("Message is too long.");
 		Map<String, String> vars = InternalUtils.asMap("user", recipient,
