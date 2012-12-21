@@ -545,12 +545,14 @@ public abstract class AStream implements Closeable {
 	}
 
 	private final void read() {
-		String[] jsons = readThread.popJsons();
-		for (String json : jsons) {
-			try {
-				read2(json);
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(json, e);
+		if (readThread!=null) {
+			String[] jsons = readThread.popJsons();
+			for (String json : jsons) {
+				try {
+					read2(json);
+				} catch (JSONException e) {
+					throw new TwitterException.Parsing(json, e);
+				}
 			}
 		}
 		if (isConnected())
