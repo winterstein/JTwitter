@@ -12,42 +12,40 @@ import java.util.Map;
 import winterwell.jtwitter.Twitter.ITweet;
 
 /**
- * @deprecated There are bugs on Twitter's end -- the messages returned by this
- *             stream may not include all the messages to a user. The results
- *             vary from user to user!<br>
- *             Recommendation: Use {@link TwitterStream} with the keyword filter "@screenname" to get messages to you.
- *             <p>
- *             Connect to the streaming API.
- *             <p>
- *             This class picks up the following tweets: <br>
+ * @WARNING There are bugs on Twitter's end -- the messages returned by this
+ *          stream may not include all the messages to a user. The results vary
+ *          from user to user!<br>
+ *          Recommendation: Use {@link TwitterStream} with the keyword filter
+ *          "@screenname" to get messages to you.
+ *          <p>
+ *          Connect to the streaming API.
+ *          <p>
+ *          This class picks up the following tweets: <br>
  * 
- *             - Tweets by you <br>
- *             - Tweets that mention you <br>
- *             - Tweets by people you follow IF
- *             {@link #setWithFollowings(boolean)} is true. <br>
- *             - Direct messages (DMs) to you<nr>
- *             - Retweets of your messages. <br>
- *             - Retweets made by you.
+ *          - Tweets by you <br>
+ *          - Tweets that mention you <br>
+ *          - Tweets by people you follow IF {@link #setWithFollowings(boolean)}
+ *          is true. <br>
+ *          - Direct messages (DMs) to you<nr> - Retweets of your messages. <br>
+ *          - Retweets made by you.
  * 
- *             <p>
- *             Duplicate messages may be delivered when reconnecting to the
- *             Streaming API.
+ *          <p>
+ *          Duplicate messages may be delivered when reconnecting to the
+ *          Streaming API.
  * 
- *             TODO test out url-signing over header-signing -- c.f.
- *             http://groups
- *             .google.com/group/twitter-development-talk/browse_thread
- *             /thread/420c4b555198aa6c/f85e2507b7f65e39?pli=1
+ *          TODO test out url-signing over header-signing -- c.f. http://groups
+ *          .google.com/group/twitter-development-talk/browse_thread
+ *          /thread/420c4b555198aa6c/f85e2507b7f65e39?pli=1
  * 
- *             "figured it out on my own. must use HTTP GET with OAuth params
- *             passed in URI string. Not mentioned in the documentation. Wasted
- *             many hours figuring out this stuff would be clarified if someone
- *             updated the docs and made some examples."
+ *          "figured it out on my own. must use HTTP GET with OAuth params
+ *          passed in URI string. Not mentioned in the documentation. Wasted
+ *          many hours figuring out this stuff would be clarified if someone
+ *          updated the docs and made some examples."
  * 
  * 
  * @author Daniel
  * @testedby {@link UserStreamTest}
  */
-@Deprecated
 public class UserStream extends AStream {
 
 	boolean withFollowings;
