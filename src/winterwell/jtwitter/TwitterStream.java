@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import winterwell.utils.reporting.Log;
 
 
 /**
@@ -130,8 +129,7 @@ public class TwitterStream extends AStream {
 		
 		// memory paranoia
 		if (user2stream.size() > 1000) {
-			// FIXME: Should this be an exception? The remedy looks a little severe!
-			Log.w("Twitter", "User to stream map too big! Killing it");
+			// oh well -- forget stuff (this Map is just a safety check)
 			user2stream = new ConcurrentHashMap<String, AStream>();
 		}
 		user2stream.put(jtwit.getScreenName(), this);

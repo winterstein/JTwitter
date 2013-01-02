@@ -15,14 +15,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.

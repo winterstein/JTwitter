@@ -127,6 +127,11 @@ public class BuildJTwitter extends BuildTask {
 			// oh well
 			Log.e("build", ex);
 		}
+		
+//		// copy in utils lib		??
+//		utils = new File(FileUtils.getWinterwellDir(), "code/lib/winterwell.utils.jar")
+//		FileUtils.copy(utils, 
+//				new File("winterwell.utils.jar"));
 	}
 
 

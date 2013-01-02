@@ -2,8 +2,6 @@ package winterwell.jtwitter;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,8 +22,6 @@ import java.util.Map.Entry;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
-import winterwell.jtwitter.guts.ClientHttpRequest;
-import winterwell.utils.containers.ArrayMap;
 
 /**
  * A simple http client that uses the built in URLConnection class.

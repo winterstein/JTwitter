@@ -1,7 +1,6 @@
 package com.winterwell.jgeoplanet;
 
 import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -2,7 +2,6 @@ package winterwell.jtwitter.ecosystem;
 
 import java.util.Map;
 
-
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.InternalUtils;
