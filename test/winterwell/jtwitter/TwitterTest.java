@@ -172,11 +172,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testCornerCaseNastiness(){
 		Twitter ts = new Twitter();
 		
-		List<Status> tweets = ts.search("\"Justin Beiber\" or \"solar energy\"");
-		assert tweets.isEmpty()==true;
+		List<Status> tweets = ts.search("\"Justin Beiber\" OR \"solar energy\"");
+		assert tweets.isEmpty()==false;
 		
 		List<Status> tweets2 = ts.search("\"Justin Beiber\" OR \"solar energy\" -kxq");
 		assert tweets2.isEmpty()==false;
+		
+		assert tweets.size() == tweets2.size();
 	}
 	
 	/**

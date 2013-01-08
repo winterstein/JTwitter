@@ -2141,7 +2141,7 @@ public class Twitter implements Serializable {
 			throw new IllegalArgumentException(
 					"You need to switch on paging to fetch more than 100 search results. First call setMaxResults() to raise the limit above "
 							+ rpp);
-		searchTerm = search2_bugHack(searchTerm);
+//		searchTerm = search2_bugHack(searchTerm);
 		Map<String, String> vars;
 		if (maxResults < 100 && maxResults > 0) {
 			// Default: 1 page
@@ -2193,7 +2193,8 @@ public class Twitter implements Serializable {
 		return allResults;
 	}
 
-	/**
+	/* DISABLED, but kept in code, just in case.
+	 * 
 	 * This fixes a couple of bugs in Twitter's search API:
 	 * 
 	 * 1. Searches using OR and a location return gibberish, unless they also
@@ -2210,7 +2211,7 @@ public class Twitter implements Serializable {
 	 * @param searchTerm
 	 * @return e.g. "apples OR pears" (near Edinburgh) goes to
 	 *         "apples OR pears -kfz" (near Edinburgh)
-	 */
+	 
 	private String search2_bugHack(String searchTerm) {
 //		if (true) return searchTerm; TODO Looks like this is no longer needed (quick test, 4th Nov 2012)
 		// zero-length is valid with location
@@ -2227,7 +2228,7 @@ public class Twitter implements Serializable {
 		// hopefully fine as-is
 		return searchTerm;
 	}
-
+*/
 	/**
 	 * @see Twitter_Users#searchUsers(String)
 	 */
