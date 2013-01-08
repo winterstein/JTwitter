@@ -24,17 +24,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import winterwell.json.JSONException;
+import winterwell.json.JSONObject;
 
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.MFloat;
-
-
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else

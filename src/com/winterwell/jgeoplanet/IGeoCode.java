@@ -1,6 +1,5 @@
 package com.winterwell.jgeoplanet;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 public interface IGeoCode {
 

@@ -1,17 +1,16 @@
 package winterwell.jtwitter;
 
 import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.winterwell.jgeoplanet.BoundingBox;
-import com.winterwell.jgeoplanet.IPlace;
-import com.winterwell.jgeoplanet.Location;
 
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
+
+import com.winterwell.jgeoplanet.BoundingBox;
+import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.Location;
 
 /**
  * Support for Twitter's geo location features.
