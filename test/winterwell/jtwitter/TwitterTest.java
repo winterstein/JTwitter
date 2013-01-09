@@ -1007,6 +1007,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status toreg = tw.getStatus(bi);
 			System.out.println(toreg.text+" by "+toreg.user);
 		}
+		{	// Test with a twitter image
+			BigInteger bi = new BigInteger("230445874193518592"); //"273012511874363392");
+			Status toreg = tw.getStatus(bi);
+			System.out.println(toreg.text+" by "+toreg.user);
+			System.out.println(toreg.getDisplayText());
+			Printer.out(toreg.getTweetEntities(KEntityType.urls));
+		}
 		Status s = tw.getStatus();
 		Status s2 = tw.getStatus(s.getId());
 		assert s.text.equals(s2.text) : "Fetching a status by id should yield correct text";
