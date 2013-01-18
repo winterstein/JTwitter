@@ -28,10 +28,9 @@ import winterwell.jtwitter.guts.ClientHttpRequest;
  * OAuth based login using Signpost (http://code.google.com/p/oauth-signpost/).
  * This is the "official" JTwitter OAuth support.
  * <p>
- * First download the Signpost jar and add it to your classpath, as it isn't
- * included in the JTwitter download.
+ * The Signpost jar is included in the JTwitter download.
  * <p>
- * Example Usage #1 (out-of-bounds, desktop based):
+ * Example Usage #1 (out-of-bounds, desktop based -- _not_ for Android):
  * 
  * <pre>
  * <code>
@@ -51,7 +50,7 @@ import winterwell.jtwitter.guts.ClientHttpRequest;
  * </pre>
  * 
  * <p>
- * Example Usage #2 (using callbacks):<br>
+ * Example Usage #2 (using callbacks, works on Android):<br>
  * If you can handle callbacks, then this can be streamlined. 
  * 
  * On Android, you can use Intents to launch a web page, & to catch the resulting
@@ -442,6 +441,9 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		setProvider(FOURSQUARE_PROVIDER);
 	}
 	
+	/**
+	 * Replace the default Twitter urls with the LinkedIn urls.
+	 */
 	public void setLinkedInProvider() {
 		setProvider(LINKEDIN_PROVIDER);
 	}
