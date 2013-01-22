@@ -11,9 +11,8 @@ import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.URLConnectionHttpClient;
 
 /**
- * 
+ * Client for the twittercounter.com service
  * @author daniel
- *
  */
 public class TwitterCounter {
 
