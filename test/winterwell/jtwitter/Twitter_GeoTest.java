@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import winterwell.jtwitter.Twitter.IHttpClient;
-
-import com.winterwell.jgeoplanet.IPlace;
-
 public class Twitter_GeoTest {
 
 	@Test

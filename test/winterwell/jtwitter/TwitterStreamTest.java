@@ -1,8 +1,6 @@
 package winterwell.jtwitter;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,8 +11,8 @@ import org.junit.Test;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.TwitterException.E413;
-import winterwell.utils.Printer;
 import winterwell.utils.NoUTR;
+import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;

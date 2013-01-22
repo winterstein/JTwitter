@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import winterwell.bob.BuildTask;
-import winterwell.bob.tasks.CompileTask;
 import winterwell.bob.tasks.CopyTask;
 import winterwell.bob.tasks.GitTask;
 import winterwell.bob.tasks.JarTask;

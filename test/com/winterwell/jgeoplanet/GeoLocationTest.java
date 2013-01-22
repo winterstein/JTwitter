@@ -1,7 +1,5 @@
 package com.winterwell.jgeoplanet;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class GeoLocationTest {

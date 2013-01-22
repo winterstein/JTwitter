@@ -2,7 +2,6 @@ package winterwell.jtwitter;
 
 import java.util.List;
 
-
 import junit.framework.TestCase;
 
 public class OAuthSignpostClientTest 
