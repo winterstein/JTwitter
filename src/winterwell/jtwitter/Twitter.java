@@ -21,6 +21,7 @@ import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.jtwitter.ecosystem.TwitLonger;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -599,12 +600,6 @@ public class Twitter implements Serializable {
 	 * @see #countCharacters(String)
 	 */
 	public static boolean CHECK_TWEET_LENGTH = true;
-	
-	static final Pattern contentTag = Pattern.compile(
-			"<content>(.+?)<\\/content>", Pattern.DOTALL);
-
-	static final Pattern idTag = Pattern.compile("<id>(.+?)<\\/id>",
-			Pattern.DOTALL);
 
 	/**
 	 * The length of a url after t.co shortening. Currently 20 characters.
@@ -744,9 +739,11 @@ public class Twitter implements Serializable {
 
 	boolean tweetEntities = true;
 
-	private String twitlongerApiKey;
+	@Deprecated // Keeping for backwards compatibility of serialised form until Q2 2013
+	private transient String twitlongerApiKey;
 
-	private String twitlongerAppName;
+	@Deprecated // Keeping for backwards compatibility of serialised form until Q2 2013
+	private transient String twitlongerAppName;
 
 	/**
 	 * Change this to access sites other than Twitter that support the Twitter
@@ -1293,6 +1290,7 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated Use {@link TwitLonger}
 	 * @param truncatedStatus
 	 *            If this is a twitlonger.com truncated status, then call
 	 *            twitlonger to fetch the full text.
@@ -1301,20 +1299,8 @@ public class Twitter implements Serializable {
 	 * @see #updateLongStatus(String, long)
 	 */
 	public String getLongStatus(Status truncatedStatus) {
-		// regex for http://tl.gd/ID
-		int i = truncatedStatus.text.indexOf("http://tl.gd/");
-		if (i == -1)
-			return truncatedStatus.text;
-		String id = truncatedStatus.text.substring(i + 13).trim();
-		String response = http.getPage("http://www.twitlonger.com/api_read/"
-				+ id, null, false);
-		Matcher m = contentTag.matcher(response);
-		boolean ok = m.find();
-		if (!ok)
-			throw new TwitterException.TwitLongerException(
-					"TwitLonger call failed", response);
-		String longMsg = m.group(1).trim();
-		return longMsg;
+		TwitLonger tl = new TwitLonger();
+		return tl.getLongStatus(truncatedStatus);
 	}
 
 	/**
@@ -2011,10 +1997,13 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated Use {@link TwitLonger}
+	 * Keeping for backwards compatibility until Q2 2013
+	 * 
 	 * @return true if {@link #setupTwitlonger(String, String)} has been used to
 	 *         provide twitlonger.com details.
 	 * @see #updateLongStatus(String, long)
-	 */
+	 */	
 	public boolean isTwitlongerSetup() {
 		return twitlongerApiKey != null && twitlongerAppName != null;
 	}
@@ -2550,6 +2539,9 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated User {@link TwitLonger}
+	 * Keeping for backwards compatibility until Q2 2013
+	 *  
 	 * Set this to allow the use of twitlonger via
 	 * {@link #updateLongStatus(String, long)}. To get an api-key for your app,
 	 * contact twitlonger as described here: http://www.twitlonger.com/api
@@ -2674,6 +2666,9 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated Use {@link TwitLonger}  
+	 * Keeping for backwards compatibility until Q2 2013
+	 * 
 	 * Use twitlonger.com to post a lengthy tweet. See twitlonger.com for more
 	 * details on their service.
 	 * <p>
@@ -2688,58 +2683,8 @@ public class Twitter implements Serializable {
 	 * @see #setupTwitlonger(String, String)
 	 */
 	public Status updateLongStatus(String message, Number inReplyToStatusId) {
-		if (twitlongerApiKey == null || twitlongerAppName == null)
-			throw new IllegalStateException(
-					"Twitlonger api details have not been set! Call #setupTwitlonger() first.");
-		if (message.length() < 141)
-			throw new IllegalArgumentException("Message too short ("
-					+ inReplyToStatusId
-					+ " chars). Just post a normal Twitter status. ");
-		String url = "http://www.twitlonger.com/api_post";
-		Map<String, String> vars = InternalUtils.asMap("application",
-				twitlongerAppName, "api_key", twitlongerApiKey, "username",
-				name, "message", message);
-		if (inReplyToStatusId != null && inReplyToStatusId.doubleValue() != 0) {
-			vars.put("in_reply", inReplyToStatusId.toString());
-		}
-		// ?? set direct_message 0/1 as appropriate if allowing long DMs
-		String response = http.post(url, vars, false);
-		Matcher m = contentTag.matcher(response);
-		boolean ok = m.find();
-		if (!ok)
-			throw new TwitterException.TwitLongerException(
-					"TwitLonger call failed", response);
-		String shortMsg = m.group(1).trim();
-
-		// Post to Twitter
-		Status s = updateStatus(shortMsg, inReplyToStatusId);
-
-		m = idTag.matcher(response);
-		ok = m.find();
-		if (!ok)
-			// weird - but oh well
-			return s;
-		String id = m.group(1);
-
-		// Once a message has been successfully posted to Twitlonger and
-		// Twitter, it would be really useful to send back the Twitter ID for
-		// the message. This will allow users to manage their Twitlonger posts
-		// and delete not only the Twitlonger post, but also the Twitter post
-		// associated with it. It will also makes replies much more effective.
-		try {
-			url = "http://www.twitlonger.com/api_set_id";
-			vars.remove("message");
-			vars.remove("in_reply");
-			vars.remove("username");
-			vars.put("message_id", "" + id);
-			vars.put("twitter_id", "" + s.getId());
-			http.post(url, vars, false);
-		} catch (Exception e) {
-			// oh well
-		}
-
-		// done
-		return s;
+		TwitLonger tl = new TwitLonger(this, twitlongerApiKey, twitlongerAppName);
+		return tl.updateLongStatus(message, inReplyToStatusId);
 	}
 
 	/**
