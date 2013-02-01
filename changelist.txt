@@ -4,6 +4,7 @@
  - Repeated favorite (star) does not generate an error. Instead the Twitter.setFavorite() return value is null.
  - STREAM is a request type (for completeness + convenience of some use-cases).
  - TwitLonger support refactored into a separate class.
+ - Catch Twitter-is-completely-hosed error pages & throw an E50X instead of a ParsingException
  
 2.6.8:
  - Image upload! See Twitter.updateStatusWithMedia()

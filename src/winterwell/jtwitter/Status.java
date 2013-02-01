@@ -57,6 +57,10 @@ public final class Status implements ITweet {
 			}
 			return tweets;
 		} catch (JSONException e) {
+			// Is it an html error page? E.g. when Twitter is really hosed
+			if (json.startsWith("<")) {
+				throw new TwitterException.E50X(InternalUtils.stripTags(json));
+			}
 			throw new TwitterException.Parsing(json, e);
 		}
 	}
