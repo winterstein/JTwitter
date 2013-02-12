@@ -65,9 +65,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testSource() {
 		Twitter jtwit = newTestTwitter();
 
-		List<Status> tweets = jtwit.getUserTimeline("joehalliwell");
+		List<Status> tweets = jtwit.getUserTimeline("johnnieingram");
 		for (Status status : tweets) {
-			System.out.println(status.getSource());
+			System.out.println(status.getSource()+"\t"+status.getCreatedAt());
 		}
 		if (true) return;
 		
@@ -1474,8 +1474,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Printer.out(t.getAbsolutePath());
 			tw.updateStatusWithMedia(
 					"A test tweet " + Utils.getRandomString(5), null, t);
-		}
-
-		
+		}		
 	}
+	
 }
