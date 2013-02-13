@@ -596,6 +596,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		}
 		String token = name + ":" + password;
 		String encoding = Base64Encoder.encode(token);
+		// Hack for http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6459815
+		encoding = encoding.replace("\r\n", "");
 		connection.setRequestProperty("Authorization", "Basic " + encoding);
 	}
 
