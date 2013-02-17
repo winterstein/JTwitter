@@ -62,7 +62,7 @@ public abstract class AndroidTwitterLogin {
 		this.context = myActivity;
 		consumerKey =  oauthAppKey;
 		consumerSecret = oauthAppSecret;
-		this.callbackUrl = "http://example.com"; //calbackUrl;					
+		this.callbackUrl = calbackUrl;					
 		client = new OAuthSignpostClient(consumerKey, consumerSecret, callbackUrl);		
 	}
 	 
