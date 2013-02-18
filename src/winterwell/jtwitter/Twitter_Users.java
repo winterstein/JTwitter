@@ -197,19 +197,31 @@ public class Twitter_Users {
 	 * @throws TwitterException
 	 */
 	public List<Number> getFollowerIDs() throws TwitterException {
-		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", null);
+		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", null, null);
 	}
 
 	/**
 	 * Returns the IDs of the specified user's followers.
 	 * 
-	 * @param The
-	 *            screen name of the user whose followers are to be fetched.
+	 * @param screenName
+	 *            The screen name of the user whose followers are to be fetched.
 	 * @throws TwitterException
 	 */
 	public List<Number> getFollowerIDs(String screenName)
 			throws TwitterException {
-		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", screenName);
+		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", screenName, null);
+	}
+
+	/**
+	 * Returns the IDs of the specified user's followers.
+	 * 
+	 * @param userId
+	 *            The id of the user whose followers are to be fetched.
+	 * @throws TwitterException
+	 */
+	public List<Number> getFollowerIDs(long userId)
+			throws TwitterException {
+		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", null, userId);
 	}
 
 	/**
@@ -247,19 +259,31 @@ public class Twitter_Users {
 	 * @throws TwitterException
 	 */
 	public List<Number> getFriendIDs() throws TwitterException {
-		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", null);
+		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", null, null);
 	}
 
 	/**
 	 * Returns the IDs of the specified user's friends. Occasionally contains
 	 * duplicates.
 	 * 
-	 * @param The
-	 *            screen name of the user whose friends are to be fetched.
+	 * @param screenName
+	 *            The screen name of the user whose friends are to be fetched.
 	 * @throws TwitterException
 	 */
 	public List<Number> getFriendIDs(String screenName) throws TwitterException {
-		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", screenName);
+		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", screenName, null);
+	}
+	
+	/**
+	 * Returns the IDs of the specified user's friends. Occasionally contains
+	 * duplicates.
+	 * 
+	 * @param userId
+	 *            The id of the user whose friends are to be fetched.
+	 * @throws TwitterException
+	 */
+	public List<Number> getFriendIDs(long userId) throws TwitterException {
+		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", null, userId);
 	}
 
 	/**
@@ -362,14 +386,16 @@ public class Twitter_Users {
 	 * @param url
 	 *            API method to call
 	 * @param screenName
-	 * @return twitter-id numbers for friends/followers of screenName Is
+	 * @param userId
+	 * @return twitter-id numbers for friends/followers of screenName or userId Is
 	 *         affected by {@link #maxResults}
 	 */
-	private List<Number> getUserIDs(String url, String screenName) {
+	private List<Number> getUserIDs(String url, String screenName, Long userId) {
 		Long cursor = -1L;
 		List<Number> ids = new ArrayList<Number>();
+		if (screenName != null && userId != null) throw new IllegalArgumentException("cannot use both screen_name and user_id when fetching user_ids");
 		Map<String, String> vars = InternalUtils.asMap("screen_name",
-				screenName);
+				screenName, "user_id", userId);
 		while (cursor != 0 && !jtwit.enoughResults(ids)) {
 			vars.put("cursor", String.valueOf(cursor));
 			String json = http.getPage(url, vars, http.canAuthenticate());
