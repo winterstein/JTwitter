@@ -418,8 +418,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 *             throws an exception if the verifier is invalid
 	 */
 	public void setAuthorizationCode(String verifier) throws TwitterException {
-		// Why not allow reset? It causes an exception below :(
-//		assert accessToken == null : "This JTwitter already has an access token and is ready for use.";
+		// Lets allow reset (but we need fresh signpost objects)
 		if (accessToken!=null) {
 			// Create fresh consumer & provider objects
 			accessToken=null;

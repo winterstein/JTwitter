@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.6.10:
+ - Use the callback url in AndroidTwitterLogin
+ - Twitter.users().getFriends() can work by user-id as well as by screenname
+ 
 2.6.9:
  - Repeated favorite (star) does not generate an error. Instead the Twitter.setFavorite() return value is null.
  - STREAM is a request type (for completeness + convenience of some use-cases).
