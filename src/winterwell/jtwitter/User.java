@@ -76,7 +76,7 @@ public final class User implements Serializable {
 	
 	/**
 	 * User's language (2 letter code)
-	 * @return e.g. "en"
+	 * @return e.g. "en" Can occasionally be a more complex code, e.g. "zh-cn"
 	 */
 	public String getLang() {
 		return lang;
