@@ -39,24 +39,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	public void testGetLists() {
 		Twitter jtwit = TwitterTest.newTestTwitter();		
-		List<TwitterList> lists = jtwit.getLists("tweetminster");
+		List<TwitterList> lists = jtwit.lists().getListsAll("tweetminster");
 		assert ! lists.isEmpty();
 	}
 
 	public void testTwitterList() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
-		TwitterList list = new TwitterList("tweetminster", "guardian", jtwit);
-		assert list.size() > 0;
+		TwitterList list = jtwit.lists().show("tweetminster", "guardian");
+		assert list.getMemberCount() > 0;
 	}
 
-	public void testGetInt() {
-		Twitter jtwit = TwitterTest.newTestTwitter();
-		TwitterList list = new TwitterList("tweetminster", "guardian", jtwit);
-		User user0 = list.get(0);
-		User user25 = list.get(25);
-		assert user25 != null;
-	}
-	
 	/**
 	 * WARNING: this deletes all the test users' lists!!
 	 */
@@ -64,55 +56,56 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter jtwit = TwitterTest.newTestTwitter();
 		List<TwitterList> myLists = jtwit.getLists();
 		for (TwitterList twitterList : myLists) {
-			twitterList.delete();
+			// AZ: getLists now returns ALL lists the user is subscribed to, including his own, so need to test for ownership here...
+			if (twitterList.getOwner().getName().equals(TwitterTest.TEST_USER))
+				jtwit.lists().delete(twitterList.getId());
 		}
 	}
 	
 	public void testMakeList() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
 		int salt = new Random().nextInt(1000);
-		TwitterList list = new TwitterList("testlist"+salt, jtwit, 
-				true, "This is a test of the JTwitter library");		
-		List<Status> ss = list.getStatuses();
+		Twitter_Lists lists = jtwit.lists();
+		TwitterList list = lists.create("testlist"+salt, true, "This is a test of the JTwitter library");		
+		List<Status> ss = lists.getListTimeline(list.getId());
 		assert ss != null;
-		list.delete();
+		lists.delete(list.getId());
 	}
 	
 	public void testEditList() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
-		List<TwitterList> lists = jtwit.getLists();
-		TwitterList list =
-			new TwitterList("testlist", jtwit, true, "test list"); // create
-//			new TwitterList(TwitterTest.TEST_USER, "testlist", jtwit); // access existing		
-		list.add(new User("winterstein"));
-		assert list.size() > 0;
+		Twitter_Lists lists = jtwit.lists();
+		TwitterList list = lists.create("testlist", true, "test list"); // create
+//		TwitterList list = lists.show(TwitterTest.TEST_USER, "testlist"); // access existing
+		list = lists.addMember(list.getId(), "winterstein");
+		assert list.getMemberCount() > 0;
 	}
 	
 	public void testAdd() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter_Lists lists = jtwit.lists();
 		String sn = jtwit.getScreenName();
 		assert sn != null;
 		TwitterList twitterList;
 		try {
-			twitterList = TwitterList.get(sn, "just-added", jtwit);
+			twitterList = lists.show(sn, "just-added");
 		} catch (E404 e) {
-			twitterList = new TwitterList("just-added", jtwit, true, "list test");
+			twitterList = lists.create("just-added", true, "list test");
 		}
-		twitterList.add(new User("apigee"));
-		twitterList.add(new User("docusign"));
+		twitterList = lists.addMember(twitterList.getId(), "apigee");
+		twitterList = lists.addMember(twitterList.getId(), "docusign");
 		// fetch
-		TwitterList list2 = TwitterList.get(sn, "just-added", jtwit);
-		assert list2.size() > 0;
+		TwitterList list2 = lists.show(sn, "just-added");
+		assert list2.getMemberCount() == twitterList.getMemberCount();
 	}
 	
 	public void testSubscribers() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
-		TwitterList list =
-//			new TwitterList("testlist", jtwit, true, "test list");
-			new TwitterList(TwitterTest.TEST_USER, "testlist", jtwit);		
-		List<User> subs = list.getSubscribers();
+		Twitter_Lists lists = jtwit.lists();
+		TwitterList list = lists.show(TwitterTest.TEST_USER, "testlist");
+		List<User> subs = lists.getListSubscribers(list.getId());
 		assert subs.size() > 0 : subs;
-		assert list.size() > 0 : list;
+		assert list.getMemberCount() > 0 : list;
 	}
 
 }

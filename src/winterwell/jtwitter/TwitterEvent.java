@@ -68,7 +68,7 @@ public class TwitterEvent {
 		if (to == null)
 			return;
 		if (to.has("member_count")) {
-			targetObject = new TwitterList(to, jtwit);
+			targetObject = new TwitterList(to);
 		} else {
 			targetObject = to;
 		}
