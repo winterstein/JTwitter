@@ -20,7 +20,7 @@ extends TestCase
 		// open the authorisation page in the user's browser
 		client.authorizeDesktop();
 		// get the pin
-		String v = client.askUser("Please enter the verification PIN from Twitter");
+		String v = OAuthScribeClient.askUser("Please enter the verification PIN from Twitter");
 		client.setAuthorizationCode(v);	
 		// use the API!
 		// This works
@@ -33,17 +33,16 @@ extends TestCase
 	
 	public void testRecreatingScribe() {
 		OAuthScribeClient client = new OAuthScribeClient(OAuthScribeClient.JTWITTER_OAUTH_KEY, OAuthScribeClient.JTWITTER_OAUTH_SECRET, "oob");
-		Twitter jtwit = new Twitter(TwitterTest.TEST_USER, client);
 		// open the authorisation page in the user's browser
 		client.authorizeDesktop();
 		// get the pin
-		String v = client.askUser("Please enter the verification PIN from Twitter");
+		String v = OAuthScribeClient.askUser("Please enter the verification PIN from Twitter");
 		client.setAuthorizationCode(v);		
 		Token token = client.getAccessToken();
 		
 		// remake client
 		OAuthScribeClient client2 = new OAuthScribeClient(OAuthScribeClient.JTWITTER_OAUTH_KEY, OAuthScribeClient.JTWITTER_OAUTH_SECRET, token);		
-		Twitter jtwit2 = new Twitter(TwitterTest.TEST_USER, client);
+		Twitter jtwit2 = new Twitter(TwitterTest.TEST_USER, client2);
 		
 		// use the API!
 		assert jtwit2.isValidLogin();
