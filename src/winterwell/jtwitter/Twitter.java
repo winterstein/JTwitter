@@ -847,7 +847,7 @@ public class Twitter implements Serializable {
 	 * @param vars
 	 * @return vars
 	 */
-	private Map<String, String> addStandardishParameters(
+	Map<String, String> addStandardishParameters(
 			Map<String, String> vars) {
 		if (sinceId != null) {
 			vars.put("since_id", sinceId.toString());
@@ -1188,62 +1188,27 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * @return your lists, ie. the one's you made.
+	 * @deprecated use {@link Twitter_Lists#getLists(String)} or {@link Twitter_Lists#getLists(Long)}
 	 */
+	@Deprecated
 	public List<TwitterList> getLists() {
-		return getLists(name);
+		return lists().getLists(name);
 	}
 	
 	/**
-	 * 
-		Returns <i>all</i> lists the authenticating or specified user subscribes to, 
-		including their own.
-	   @param user can be null for the authenticating user.
-	   @see #getLists(String)
+	 * @deprecated use {@link Twitter_Lists#getListsAll(String)} or {@link Twitter_Lists#getListsAll(Long)}
 	 */
-	public List<TwitterList> getListsAll(User user) {		
-		assert user!=null || http.canAuthenticate() : "No authenticating user";
-		try {
-			String url = TWITTER_URL + "/lists/all.json";
-			Map<String, String> vars = user.screenName==null?
-					InternalUtils.asMap("user_id", user.id)
-					: InternalUtils.asMap("screen_name", user.screenName);
-			String listsJson = http.getPage(url, vars, http.canAuthenticate());
-			JSONObject wrapper = new JSONObject(listsJson);
-			JSONArray jarr = (JSONArray) wrapper.get("lists");
-			List<TwitterList> lists = new ArrayList<TwitterList>();
-			for (int i = 0; i < jarr.length(); i++) {
-				JSONObject li = jarr.getJSONObject(i);
-				TwitterList twList = new TwitterList(li, this);
-				lists.add(twList);
-			}
-			return lists;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(null, e);
-		}
+	@Deprecated
+	public List<TwitterList> getListsAll(User user) {
+		return user.screenName==null? lists().getListsAll(user.id) : lists().getListsAll(user.screenName);
 	}
 
 	/**
-	 * @param screenName
-	 * @return the (first 20) lists created by the given user
+	 * @deprecated use {@link Twitter_Lists#getLists(String)} or {@link Twitter_Lists#getLists(Long)}
 	 */
+	@Deprecated
 	public List<TwitterList> getLists(String screenName) {
-		assert screenName != null;
-		try {
-			String url = TWITTER_URL + "/" + screenName + "/lists.json";
-			String listsJson = http.getPage(url, null, true);
-			JSONObject wrapper = new JSONObject(listsJson);
-			JSONArray jarr = (JSONArray) wrapper.get("lists");
-			List<TwitterList> lists = new ArrayList<TwitterList>();
-			for (int i = 0; i < jarr.length(); i++) {
-				JSONObject li = jarr.getJSONObject(i);
-				TwitterList twList = new TwitterList(li, this);
-				lists.add(twList);
-			}
-			return lists;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(null, e);
-		}
+		return lists().getLists(screenName);
 	}
 
 	/**
@@ -1253,6 +1218,7 @@ public class Twitter implements Serializable {
 	 * @return lists of which screenName is a member. NOTE: currently limited to
 	 *         a maximum of 20 lists!
 	 */
+	// TODO: move to Twitter_Lists!
 	public List<TwitterList> getListsContaining(String screenName,
 			boolean filterToOwned) {
 		assert screenName != null;
@@ -1270,7 +1236,7 @@ public class Twitter implements Serializable {
 			List<TwitterList> lists = new ArrayList<TwitterList>();
 			for (int i = 0; i < jarr.length(); i++) {
 				JSONObject li = jarr.getJSONObject(i);
-				TwitterList twList = new TwitterList(li, this);
+				TwitterList twList = new TwitterList(li);
 				lists.add(twList);
 			}
 			return lists;
@@ -1285,6 +1251,7 @@ public class Twitter implements Serializable {
 	 * @return lists that you are a member of. Warning: currently limited to a
 	 *         maximum of 20 results.
 	 */
+	// TODO: move to Twitter_Lists!
 	public List<TwitterList> getListsContainingMe() {
 		return getListsContaining(name, false);
 	}
@@ -1674,7 +1641,7 @@ public class Twitter implements Serializable {
 	 * @param authenticate
 	 * @return
 	 */
-	private List<Status> getStatuses(final String url, Map<String, String> var,
+	List<Status> getStatuses(final String url, Map<String, String> var,
 			boolean authenticate) {
 		// Default: 1 page
 		if (maxResults < 1) {
@@ -2910,6 +2877,13 @@ public class Twitter implements Serializable {
 	 */
 	public Twitter_Users users() {
 		return new Twitter_Users(this);
+	}
+
+	/**
+	 * List and membership/subscription related API methods.
+	 */
+	public Twitter_Lists lists() {
+		return new Twitter_Lists(this);
 	}
 
 }
