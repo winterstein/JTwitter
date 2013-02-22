@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.7:
+ - IMPORTANT: Bugfix for change in Twitter's oauth urls
+
 2.6.10:
  - Use the callback url in AndroidTwitterLogin
  - Twitter.users().getFriends() can work by user-id as well as by screenname
