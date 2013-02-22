@@ -2,9 +2,11 @@ package winterwell.jtwitter;
 
 import java.util.List;
 
+import org.scribe.model.Token;
+
 import junit.framework.TestCase;
 
-import org.scribe.oauth.Token;
+
 
 
 
