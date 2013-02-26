@@ -9,13 +9,15 @@ import java.net.URLEncoder;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 
-import org.scribe.http.Request;
-import org.scribe.http.Request.Verb;
-import org.scribe.http.Response;
-import org.scribe.oauth.Scribe;
-import org.scribe.oauth.Token;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.TwitterApi;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
@@ -25,7 +27,7 @@ import winterwell.jtwitter.Twitter.KRequestType;
 /**
  * It is recommended that you use {@link OAuthSignpostClient} instead. OAuth
  * based login using Scribe (http://github.com/fernandezpablo85/scribe). <i>You
- * need version 0.6.6 of Scribe (or above)!</i>
+ * need version 1.x of Scribe!</i>
  * <p>
  * Example Usage (desktop based):
  * 
@@ -116,12 +118,11 @@ public class OAuthScribeClient implements IHttpClient {
 
 	private String consumerKey;
 	private String consumerSecret;
-	private final Map<KRequestType, RateLimit> rateLimits = new EnumMap(
-			KRequestType.class);
+	private final Map<KRequestType, RateLimit> rateLimits = new EnumMap<KRequestType, RateLimit>(KRequestType.class);
 	private Token requestToken;
 	private boolean retryingFlag;
 	private boolean retryOnError;
-	private Scribe scribe;
+	private OAuthService scribe;
 	// TODO use this!
 	private int timeout;
 
@@ -185,8 +186,8 @@ public class OAuthScribeClient implements IHttpClient {
 			// -- but will allow the rest of the class to be used.
 			// Desktop d = Desktop.getDesktop();
 			Class<?> desktopClass = Class.forName("java.awt.Desktop");
-			Method getDesktop = desktopClass.getMethod("getDesktop", null);
-			Object d = getDesktop.invoke(null, null);
+			Method getDesktop = desktopClass.getMethod("getDesktop");
+			Object d = getDesktop.invoke(null);
 			// d.browse(uri);
 			Method browse = desktopClass.getMethod("browse", URI.class);
 			browse.invoke(d, uri);
@@ -263,9 +264,9 @@ public class OAuthScribeClient implements IHttpClient {
 							+ "&";
 				}
 			}
-			Request request = new Request(Verb.GET, uri);
+			OAuthRequest request = new OAuthRequest(Verb.GET, uri);
 			// request.setTimeout(timeout);
-			scribe.signRequest(request, accessToken);
+			scribe.signRequest(accessToken, request);
 			Response response = request.send();
 			processError(response);
 			return response.getBody();
@@ -300,6 +301,7 @@ public class OAuthScribeClient implements IHttpClient {
 	}
 
 	private void init() {
+		/*
 		Properties props = new Properties();
 		// hard coded for efficiency & why not?
 		// props.load(YahooEqualizer.class.getResourceAsStream("twitter.properties"));
@@ -312,7 +314,12 @@ public class OAuthScribeClient implements IHttpClient {
 		if (callbackUrl != null) {
 			props.put("callback.url", callbackUrl);
 		}
-		scribe = new Scribe(props);
+		 */
+		ServiceBuilder serviceBuilder = new ServiceBuilder().apiKey(consumerKey).apiSecret(consumerSecret).provider(TwitterApi.class);
+		if (callbackUrl != null) {
+			serviceBuilder.callback(callbackUrl);
+		}
+		scribe = serviceBuilder.build();
 	}
 
 	@Override
@@ -321,7 +328,7 @@ public class OAuthScribeClient implements IHttpClient {
 		try {
 
 			assert canAuthenticate();
-			Request request = new Request(Verb.POST, uri);
+			OAuthRequest request = new OAuthRequest(Verb.POST, uri);
 			if (vars != null && vars.size() != 0) {
 				for (Entry<String, String> e : vars.entrySet()) {
 					if (e.getValue() == null) {
@@ -331,7 +338,7 @@ public class OAuthScribeClient implements IHttpClient {
 				}
 			}
 			// request.setTimeout(timeout);
-			scribe.signRequest(request, accessToken);
+			scribe.signRequest(accessToken, request);
 			Response response = request.send();
 			processError(response);
 			return response.getBody();
@@ -408,7 +415,7 @@ public class OAuthScribeClient implements IHttpClient {
 	 *             Scribe throws an exception if the verifier is invalid
 	 */
 	public void setAuthorizationCode(String verifier) throws RuntimeException {
-		accessToken = scribe.getAccessToken(requestToken, verifier);
+		accessToken = scribe.getAccessToken(requestToken, new Verifier(verifier));
 	}
 
 	/**
@@ -416,6 +423,7 @@ public class OAuthScribeClient implements IHttpClient {
 	 * workaround: when presented with a 50X server error, the system will wait
 	 * 1 second and make a second attempt. This is NOT thread safe.
 	 */
+	@Override
 	public void setRetryOnError(boolean retryOnError) {
 		this.retryOnError = retryOnError;
 	}
