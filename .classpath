@@ -8,7 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/middleware/jakarta/commons-codec-1.4.jar"/>
-	<classpathentry kind="lib" path="/middleware/scribe/scribe.jar" sourcepath="/middleware/scribe/src.zip"/>
 	<classpathentry kind="lib" path="/middleware/oauth/oauth-consumer.jar"/>
 	<classpathentry kind="lib" path="/middleware/signpost/signpost-core.jar" sourcepath="/middleware/signpost/src.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>

@@ -68,6 +68,16 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	protected int timeout = dfltTimeOutMilliSecs;
 
 	private boolean htmlImpliesError = true;
+
+	private boolean gzip = true;
+	
+	/**
+	 * Set whether or not to request gzipped responses.
+	 * The default is true.
+	 */
+	public void setGzip(boolean gzip) {
+		this.gzip = gzip;
+	}
 	
 	/**
 	 * @param htmlImpliesError default is true. If true, an html response will
@@ -126,7 +136,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		// AZ: User-Agent and Host are required for getting gzipped responses  
 		connection.setRequestProperty("User-Agent", "JTwitter/" + Twitter.version);
 		connection.setRequestProperty("Host", "api.twitter.com");
-		connection.setRequestProperty("Accept-Encoding", "gzip");
+		if (gzip) {
+			connection.setRequestProperty("Accept-Encoding", "gzip");
+		}
 		connection.setDoInput(true);
 		connection.setConnectTimeout(timeout);
 		connection.setReadTimeout(timeout);

@@ -2,7 +2,8 @@
 
 2.7.1:
  - Signpost oauth jar: Minor version upgrade (1.2.1.1 -> 1.2.1.2)
-
+ - Improvements by Azonli (https://github.com/azonli): gzip encoding & Scribe client update. 
+ 
 2.7:
  - IMPORTANT: Bugfix for change in Twitter's oauth urls
  
