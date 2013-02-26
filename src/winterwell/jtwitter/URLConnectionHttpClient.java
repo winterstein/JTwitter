@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
+import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
@@ -455,25 +456,22 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private String processError2_reason(HttpURLConnection connection) throws IOException {
 		// Try for a helpful message from Twitter
-		InputStream es = connection.getErrorStream();
-		String errorPage = null;
-		if (es != null) {
-			try {
-				errorPage = read(es);
-				// is it json?			
+		String errorPage = readErrorPage(connection);
+		if (errorPage != null) {
+			try {			
 				JSONObject je = new JSONObject(errorPage);
 				String error = je.getString("error");
 				if (error!=null && error.length() != 0) {
 					return error;
 				}
-			} catch (Exception e) {
+			} catch (JSONException e) {
 				// guess not!				
 			}				
 		}
 		// normal error channels
 		String error = connection.getResponseMessage();
-		Map<String, List<String>> headers = connection.getHeaderFields();
-		List<String> errorMessage = headers.get(null);
+		Map<String, List<String>> connHeaders = connection.getHeaderFields();
+		List<String> errorMessage = connHeaders.get(null);
 		if (errorMessage != null && !errorMessage.isEmpty()) {
 			error += "\n" + errorMessage.get(0);
 		}
@@ -545,8 +543,16 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		updateRateLimits();
 	}
 
-	static String read(InputStream stream) throws IOException {
+	static String readErrorPage(HttpURLConnection connection) {
+		InputStream stream = connection.getErrorStream();
+		if (stream == null) {
+			return null;
+		}
 		try {
+			// gunzip the page if twitter indicates it
+			if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
+				stream = new GZIPInputStream(stream);
+			}
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					stream));
 			final int bufSize = 8192; // this is the default BufferredReader
@@ -554,15 +560,26 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			StringBuilder sb = new StringBuilder(bufSize);
 			char[] cbuf = new char[bufSize];
 			while (true) {
-				int chars = reader.read(cbuf);
-				if (chars == -1) {
-					break;
+				try {
+					int chars = reader.read(cbuf);
+					if (chars == -1) {
+						break;
+					}
+					sb.append(cbuf, 0, chars);
+				} catch (IOException e) {
+					// when i/o error occurs, simply return intermediate result if any
+					if (sb.length()== 0) {
+						return null;
+					}
+					return sb.toString();
 				}
-				sb.append(cbuf, 0, chars);
 			}
 			return sb.toString();
+		} catch (IOException e) {
+			// oh well, simply discard it
+			return null;
 		} finally {
-			stream.close();
+			InternalUtils.close(stream);
 		}
 	}
 
