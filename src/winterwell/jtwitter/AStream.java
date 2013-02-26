@@ -294,7 +294,7 @@ public abstract class AStream implements Closeable {
 			}
 			readThread = null;
 		}
-		URLConnectionHttpClient.close(stream);
+		InternalUtils.close(stream);
 		stream = null;
 	}
 
@@ -838,7 +838,7 @@ final class StreamGobbler extends Thread {
 	 */
 	public void pleaseStop() {
 		if (stream != null) {
-			URLConnectionHttpClient.close(stream.stream);
+			InternalUtils.close(stream.stream);
 		}
 		stopFlag = true;
 	}

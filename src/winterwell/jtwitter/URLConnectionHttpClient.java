@@ -1,13 +1,11 @@
 package winterwell.jtwitter;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
@@ -18,7 +16,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 
+import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
@@ -40,31 +40,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	private static final int dfltTimeOutMilliSecs = 10 * 1000;
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Close a reader/writer/stream, ignoring any exceptions that result. Also
-	 * flushes if there is a flush() method.
-	 * 
-	 * @param input
-	 *            Can be null
-	 */
-	protected static void close(Closeable input) {
-		if (input == null)
-			return;
-		// Flush (annoying that this is not part of Closeable)
-		try {
-			Method m = input.getClass().getMethod("flush");
-			m.invoke(input);
-		} catch (Exception e) {
-			// Ignore
-		}
-		// Close
-		try {
-			input.close();
-		} catch (IOException e) {
-			// Ignore
-		}
-	}
 
 	private Map<String, List<String>> headers;
 
@@ -148,8 +123,10 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		}
 		// To keep the search API happy - which wants either a referrer or a
 		// user agent
-		connection.setRequestProperty("User-Agent", "JTwitter/"
-				+ Twitter.version);
+		// AZ: User-Agent and Host are required for getting gzipped responses  
+		connection.setRequestProperty("User-Agent", "JTwitter/" + Twitter.version);
+		connection.setRequestProperty("Host", "api.twitter.com");
+		connection.setRequestProperty("Accept-Encoding", "gzip");
 		connection.setDoInput(true);
 		connection.setConnectTimeout(timeout);
 		connection.setReadTimeout(timeout);
@@ -269,10 +246,15 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 */
 	private String getPage2(String url, Map<String, String> vars,
 			boolean authenticate) throws IOException {
-		HttpURLConnection connection = null;	
+		HttpURLConnection connection = null;
 		try {
 			connection = connect(url, vars, authenticate);
 			InputStream inStream = connection.getInputStream();
+			// AZ: gunzip if twitter indicates it's gzipped content
+			String contentEncoding = getHeader("Content-Encoding");
+			if ("gzip".equals(contentEncoding)) {
+				inStream = new GZIPInputStream(inStream);
+			}
 			// Read in the web page
 			String page = InternalUtils.toString(inStream);
 			// Done
@@ -358,7 +340,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		connection.setRequestProperty("Content-Length", "" + payload.length());
 		OutputStream os = connection.getOutputStream();
 		os.write(payload.getBytes());
-		close(os);
+		InternalUtils.close(os);
 		// check connection & process the envelope
 		processError(connection);
 		processHeaders(connection);
@@ -474,25 +456,22 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private String processError2_reason(HttpURLConnection connection) throws IOException {
 		// Try for a helpful message from Twitter
-		InputStream es = connection.getErrorStream();
-		String errorPage = null;
-		if (es != null) {
-			try {
-				errorPage = read(es);
-				// is it json?			
+		String errorPage = readErrorPage(connection);
+		if (errorPage != null) {
+			try {			
 				JSONObject je = new JSONObject(errorPage);
 				String error = je.getString("error");
 				if (error!=null && error.length() != 0) {
 					return error;
 				}
-			} catch (Exception e) {
+			} catch (JSONException e) {
 				// guess not!				
 			}				
 		}
 		// normal error channels
 		String error = connection.getResponseMessage();
-		Map<String, List<String>> headers = connection.getHeaderFields();
-		List<String> errorMessage = headers.get(null);
+		Map<String, List<String>> connHeaders = connection.getHeaderFields();
+		List<String> errorMessage = connHeaders.get(null);
 		if (errorMessage != null && !errorMessage.isEmpty()) {
 			error += "\n" + errorMessage.get(0);
 		}
@@ -564,8 +543,16 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		updateRateLimits();
 	}
 
-	static String read(InputStream stream) throws IOException {
+	static String readErrorPage(HttpURLConnection connection) {
+		InputStream stream = connection.getErrorStream();
+		if (stream == null) {
+			return null;
+		}
 		try {
+			// gunzip the page if twitter indicates it
+			if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
+				stream = new GZIPInputStream(stream);
+			}
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					stream));
 			final int bufSize = 8192; // this is the default BufferredReader
@@ -573,15 +560,26 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			StringBuilder sb = new StringBuilder(bufSize);
 			char[] cbuf = new char[bufSize];
 			while (true) {
-				int chars = reader.read(cbuf);
-				if (chars == -1) {
-					break;
+				try {
+					int chars = reader.read(cbuf);
+					if (chars == -1) {
+						break;
+					}
+					sb.append(cbuf, 0, chars);
+				} catch (IOException e) {
+					// when i/o error occurs, simply return intermediate result if any
+					if (sb.length()== 0) {
+						return null;
+					}
+					return sb.toString();
 				}
-				sb.append(cbuf, 0, chars);
 			}
 			return sb.toString();
+		} catch (IOException e) {
+			// oh well, simply discard it
+			return null;
 		} finally {
-			stream.close();
+			InternalUtils.close(stream);
 		}
 	}
 

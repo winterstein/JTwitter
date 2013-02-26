@@ -1,16 +1,17 @@
 package winterwell.jtwitter;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +30,6 @@ import java.util.regex.Pattern;
 
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
-import winterwell.utils.web.WebUtilsTest;
 
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
@@ -148,11 +148,32 @@ public class InternalUtils {
 		return m;
 	}
 
-	public static void close(Closeable strm) {
+	public static void close(OutputStream output) {
+		if (output == null)
+			return;
+		// Flush (annoying that this is not part of Closeable)
 		try {
-			strm.close();
+			output.flush();
+		} catch (Exception e) {
+			// Ignore
+		} finally {
+		// Close
+		try {
+			output.close();
 		} catch (IOException e) {
-			// ignore
+			// Ignore
+		}
+		}
+	}
+	
+	public static void close(InputStream input) {
+		if (input == null)
+			return;
+		// Close
+		try {
+			input.close();
+		} catch (IOException e) {
+			// Ignore
 		}
 	}
 
@@ -355,6 +376,8 @@ public class InternalUtils {
 			return;
 		usage = new ConcurrentHashMap<String, Long>();
 	}
+	
+	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	/**
 	 * Use a bufferred reader (preferably UTF-8) to extract the contents of the
@@ -362,26 +385,9 @@ public class InternalUtils {
 	 * {@link InternalUtils#toString(Reader)}.
 	 */
 	protected static String toString(InputStream inputStream) {
-		InputStreamReader reader;
 		try {
-			reader = new InputStreamReader(inputStream, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			reader = new InputStreamReader(inputStream);
-		}
-		return InternalUtils.toString(reader);
-	}
-
-	/**
-	 * Use a buffered reader to extract the contents of the given reader.
-	 * 
-	 * @param reader
-	 * @return The contents of this reader.
-	 */
-	static String toString(Reader reader) throws RuntimeException {
-		try {
-			// Buffer if not already buffered
-			reader = reader instanceof BufferedReader ? (BufferedReader) reader
-					: new BufferedReader(reader);
+			Reader reader = new InputStreamReader(inputStream, UTF_8.newDecoder());
+			reader = new BufferedReader(reader);
 			StringBuilder output = new StringBuilder();
 			while (true) {
 				int c = reader.read();
@@ -391,10 +397,10 @@ public class InternalUtils {
 				output.append((char) c);
 			}
 			return output.toString();
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		} finally {
-			URLConnectionHttpClient.close(reader);
+			close(inputStream);
 		}
 	}
 

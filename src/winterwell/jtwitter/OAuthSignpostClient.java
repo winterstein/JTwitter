@@ -388,7 +388,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		// add the payload
 		OutputStream os = connection.getOutputStream();
 		os.write(payload.getBytes());
-		close(os);
+		InternalUtils.close(os);
 		// check connection & process the envelope
 		processError(connection);
 		processHeaders(connection);
