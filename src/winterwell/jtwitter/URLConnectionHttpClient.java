@@ -1,13 +1,11 @@
 package winterwell.jtwitter;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
@@ -40,31 +38,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	private static final int dfltTimeOutMilliSecs = 10 * 1000;
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Close a reader/writer/stream, ignoring any exceptions that result. Also
-	 * flushes if there is a flush() method.
-	 * 
-	 * @param input
-	 *            Can be null
-	 */
-	protected static void close(Closeable input) {
-		if (input == null)
-			return;
-		// Flush (annoying that this is not part of Closeable)
-		try {
-			Method m = input.getClass().getMethod("flush");
-			m.invoke(input);
-		} catch (Exception e) {
-			// Ignore
-		}
-		// Close
-		try {
-			input.close();
-		} catch (IOException e) {
-			// Ignore
-		}
-	}
 
 	private Map<String, List<String>> headers;
 
@@ -358,7 +331,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		connection.setRequestProperty("Content-Length", "" + payload.length());
 		OutputStream os = connection.getOutputStream();
 		os.write(payload.getBytes());
-		close(os);
+		InternalUtils.close(os);
 		// check connection & process the envelope
 		processError(connection);
 		processHeaders(connection);
