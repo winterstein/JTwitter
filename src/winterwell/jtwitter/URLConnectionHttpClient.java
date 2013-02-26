@@ -16,6 +16,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
@@ -121,8 +122,10 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		}
 		// To keep the search API happy - which wants either a referrer or a
 		// user agent
-		connection.setRequestProperty("User-Agent", "JTwitter/"
-				+ Twitter.version);
+		// AZ: User-Agent and Host are required for getting gzipped responses  
+		connection.setRequestProperty("User-Agent", "JTwitter/" + Twitter.version);
+		connection.setRequestProperty("Host", "api.twitter.com");
+		connection.setRequestProperty("Accept-Encoding", "gzip");
 		connection.setDoInput(true);
 		connection.setConnectTimeout(timeout);
 		connection.setReadTimeout(timeout);
@@ -242,10 +245,15 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 */
 	private String getPage2(String url, Map<String, String> vars,
 			boolean authenticate) throws IOException {
-		HttpURLConnection connection = null;	
+		HttpURLConnection connection = null;
 		try {
 			connection = connect(url, vars, authenticate);
 			InputStream inStream = connection.getInputStream();
+			// AZ: gunzip if twitter indicates it's gzipped content
+			String contentEncoding = getHeader("Content-Encoding");
+			if ("gzip".equals(contentEncoding)) {
+				inStream = new GZIPInputStream(inStream);
+			}
 			// Read in the web page
 			String page = InternalUtils.toString(inStream);
 			// Done
