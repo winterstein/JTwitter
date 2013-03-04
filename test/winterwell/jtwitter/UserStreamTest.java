@@ -252,4 +252,49 @@ public class UserStreamTest {
 	public void scratch(){
 		assert ("@bob bob".contains("@ob"));
 	}
+	
+	
+
+
+	@Test
+	public void testUserStreamAndTwitterStream() {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		
+		UserStream us = new UserStream(jtwit);
+		TwitterStream ts = new TwitterStream(jtwit);
+		ts.setTrackKeywords(Arrays.asList("@"+jtwit.getScreenName()));
+		
+		us.connect();
+		
+		Utils.sleep(800);
+		assert us.isConnected();
+		assert us.isAlive();
+		
+		ts.connect();
+		
+		Utils.sleep(800);
+		assert ts.isConnected();
+		assert ts.isAlive();
+		assert us.isConnected();
+		assert us.isAlive();
+		
+		Twitter jtwit2 = TwitterTest.newTestTwitter();
+		int salt = new Random().nextInt(1000);
+		Status s = jtwit2.updateStatus("@"+jtwit.getScreenName()+" wotcha "+salt+" :)");
+		System.out.println(s);
+		
+		Utils.sleep(1000);
+		
+		List<ITweet> tweets = us.getTweets();
+		List<ITweet> tweets2 = ts.getTweets();
+		
+		assert ts.isConnected();
+		assert ts.isAlive();
+		assert us.isConnected();
+		assert us.isAlive();
+		
+		// Pick up is failing?! But that's not what we're testing here
+		System.out.println(tweets);
+		System.out.println(tweets2);
+	}
 }

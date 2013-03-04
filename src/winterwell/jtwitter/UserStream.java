@@ -119,4 +119,12 @@ public class UserStream extends AStream {
 		this.withFollowings = withFollowings;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("UserStream");
+		sb.append("["+jtwit.getScreenNameIfKnown());
+		if (withFollowings) sb.append(" +followings");
+		sb.append("]");
+		return sb.toString();
+	}
 }
