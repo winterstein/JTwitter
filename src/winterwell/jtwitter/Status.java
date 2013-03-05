@@ -162,6 +162,7 @@ public final class Status implements ITweet {
 	 * _new-style_ retweets. -1 if unknown.
 	 */
 	public final int retweetCount;
+	
 	boolean sensitive;
 
 	/**
@@ -248,7 +249,7 @@ public final class Status implements ITweet {
 				inReplyToStatusId = new BigInteger(irt);
 			}
 			favorited = object.optBoolean("favorited");
-
+			
 			// set user
 			if (user != null) {
 				this.user = user;

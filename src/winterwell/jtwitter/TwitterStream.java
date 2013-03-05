@@ -128,7 +128,7 @@ public class TwitterStream extends AStream {
 							+ ").\n	But streams OR their filter parameters, so one stream can do a lot.");
 		
 		// memory paranoia
-		if (user2stream.size() > 1000) {
+		if (user2stream.size() > 500) {
 			// oh well -- forget stuff (this Map is just a safety check)
 			user2stream = new ConcurrentHashMap<String, AStream>();
 		}
