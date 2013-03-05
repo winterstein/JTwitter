@@ -105,7 +105,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			assert sdt.equals("Good for M&S -- they've become carbon neutral http://soda.sh/xVJ @guardian");			
 		}
 		{
-			Twitter jtwit = new Twitter();
+			Twitter jtwit = newTestTwitter();
 			BigInteger id = new BigInteger("213657059722407936");;
 			Status s = jtwit.getStatus(id);
 	//		assert s.getText().equals(tweet) : s.getText();
@@ -124,7 +124,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	public void testUpdateConfig() {
 		// just a smoke test
-		Twitter jtwit = newTestTwitter();
+		Twitter jtwit = newTestTwitter();		
 		jtwit.updateConfiguration();
 		System.out.println(Twitter.LINK_LENGTH);
 		System.out.println("Photo limit: "+Twitter.PHOTO_SIZE_LIMIT);
@@ -141,7 +141,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 * Strange.
 	 */
 	public void testSearchBug() {
-		Twitter ts = new Twitter();
+		Twitter ts = newTestTwitter();
 		// London
 		ts.setSearchLocation(51.506321, 0, "50km");
 		
@@ -160,7 +160,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 	
 	public void testCornerCaseNastiness(){
-		Twitter ts = new Twitter();
+		Twitter ts = newTestTwitter();
 		
 		List<Status> tweets = ts.search("\"Justin Beiber\" OR \"solar energy\"");
 		assert tweets.isEmpty()==false;
@@ -175,7 +175,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 * "apples" OR "pears" = Twitter API fail -- 24th AUgust 2011
 	 */
 	public void testSearchBug2() {
-		Twitter ts = new Twitter();
+		Twitter ts = newTestTwitter();
 		// this will work
 		List<Status> tweets1 = ts.search("apple OR pear");
 		// this will only have apples AND or AND pear! (without the search2_bugHack in 
@@ -231,9 +231,10 @@ extends TestCase // Comment out to remove the JUnit dependency
 			tw.follow(bieber);
 			tw.stopFollowing(bieber);
 		}
-		{
+		{	// Test return null for no-op
 			User bieber = new User("charliesheen");
 			tw.users().stopFollowing(bieber);
+			Utils.sleep(10);
 			User nul = tw.users().stopFollowing(bieber);
 			assert nul == null : nul;
 		}
@@ -334,6 +335,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter twitter = newTestTwitter();
 		int salt = new Random().nextInt(100);
 		Status s = twitter.getStatus("winterstein");
+		System.out.println(s);
 //		if (s.isFavorite()) {
 		Status s2 = twitter.setFavorite(s, false);
 		assert ! s2.isFavorite();
@@ -429,7 +431,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 //		List<Status> rtsOfMe = source.getRetweetsOfMe();
 		assert retweet.getOriginal().equals(original) : retweet.getOriginal();
 		assert retweet.inReplyToStatusId.equals(original.id) : retweet.inReplyToStatusId +" vs "+original.id;		
-		assert retweet.getText().startsWith("RT @spoonmcguffin: ");
+		assert retweet.getText().startsWith("RT @spoonmcguffin: ") : retweet;
 		assert ! rtsByMe.isEmpty();
 		assert rtsByMe.contains(retweet);
 //		assert ! rtsOfMe.isEmpty();
@@ -446,7 +448,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testOldSearch() {
 		try {
-			Twitter twitter = new Twitter();
+			Twitter twitter = newTestTwitter();
 			twitter.setSinceId(13415168197L);
 			List<Status> results = twitter.search("dinosaurs");
 		} catch (TwitterException.BadParameter e) {
@@ -508,7 +510,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testDestroyStatus() throws InterruptedException {
 		Twitter tw = newTestTwitter();
+		tw.setStatus("This wont last long! "+new Random().nextInt(1000));
 		Status s1 = tw.getStatus();
+		System.out.println(s1);
 		tw.destroyStatus(s1.getId());
 		Utils.sleep(1000);
 		Status s0 = tw.getStatus();
@@ -685,7 +689,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			assert i - 1 == i2;
 		}
 		{
-			Twitter tw = new Twitter();
+			Twitter tw = newTestTwitter();
 			int i = tw.getRateLimitStatus();
 		}
 //		{
@@ -1113,13 +1117,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 //			assert javaTweets.size() != 0;
 //		}
 		{	// few results
-			Twitter tw = new Twitter();
+			Twitter tw = newTestTwitter();
 			tw.setMaxResults(10);
 			List<Status> tweets = tw.search(":)");
 			assert tweets.size() == 10;
 		}
 		{	// Lots of results
-			Twitter tw = new Twitter();
+			Twitter tw = newTestTwitter();
 			tw.setMaxResults(300);
 			List<Status> tweets = tw.search(":)");
 			assert tweets.size() > 100 : tweets.size();
@@ -1128,7 +1132,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testSearchWithLocation() {
 		{	// location
-			Twitter tw = new Twitter();
+			Twitter tw = newTestTwitter();
 			tw.setSearchLocation(51.5, 0, "20km");
 			List<Status> tweets = tw.search("the");
 			assert tweets.size() > 10 : tweets.size();
@@ -1157,7 +1161,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 * Twitter bug :( -- https://dev.twitter.com/issues/461
 	 */
 	public void testDateAnomaly() {
-		Twitter tw = new Twitter();
+		Twitter tw = newTestTwitter();
 		Status tweet = tw.getStatus(new BigInteger("230092369926692864"));
 		System.out.println(tweet);
 		System.out.println(tweet.createdAt);
@@ -1168,7 +1172,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 * Test method for {@link winterwell.jtwitter.Twitter#show(java.lang.String)}.
 	 */
 	public void testShow() {
-		Twitter tw = new Twitter(); //TEST_USER, TEST_PASSWORD);
+		Twitter tw = newTestTwitter(); //TEST_USER, TEST_PASSWORD);
 		User show = tw.users().show(TEST_USER);
 		assert show != null;
 		User show2 = tw.users().show("winterstein");
@@ -1181,6 +1185,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testTrends() {
 		Twitter tw = newTestTwitter();
+//		String page = tw.getHttpClient().getPage("https://api.twitter.com/1.1/trends/available.json", null, true);
+//		System.out.println(page);
 		List<String> trends = tw.getTrends();
 		System.out.println(trends);
 		assert trends.size() > 0;

@@ -58,7 +58,7 @@ public class UserStream extends AStream {
 	@Override
 	HttpURLConnection connect2() throws IOException {
 		connect3_rateLimit();
-		
+		// API version 2?! Yes, this is right.
 		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
 		Map<String, String> vars = InternalUtils.asMap("with",
 				(withFollowings ? "followings" : "user"));

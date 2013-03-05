@@ -165,7 +165,7 @@ public class Twitter_Users {
 	 */
 	public List<Number> getBlockedIds() {
 		String json = http.getPage(jtwit.TWITTER_URL
-				+ "/blocks/blocking/ids.json", null, true);
+				+ "/blocks/ids.json", null, true);
 		try {
 			JSONArray arr = new JSONArray(json);
 			List<Number> ids = new ArrayList(arr.length());
@@ -233,7 +233,9 @@ public class Twitter_Users {
 	 */
 	@Deprecated
 	public List<User> getFollowers() throws TwitterException {
-		return getUsers(jtwit.TWITTER_URL + "/statuses/followers.json", null);
+		// Simulate the old v1.0 method with v1.1 methods
+		List<Number> ids = getFollowerIDs();
+		return getTweeps2(ids);
 	}
 
 	/**
@@ -248,8 +250,9 @@ public class Twitter_Users {
 	 * @throws TwitterException
 	 */
 	public List<User> getFollowers(String username) throws TwitterException {
-		return getUsers(jtwit.TWITTER_URL + "/statuses/followers.json",
-				username);
+		// Simulate the old v1.0 method with v1.1 methods
+		List<Number> ids = getFollowerIDs(username);
+		return getTweeps2(ids);
 	}
 
 	/**
@@ -268,6 +271,10 @@ public class Twitter_Users {
 	 * 
 	 * @param screenName
 	 *            The screen name of the user whose friends are to be fetched.
+	 * @return 5,000 ids. Results are ordered with the most recent following first - 
+	 * however, this ordering is subject to unannounced change and eventual consistency issues.
+	 * Suspended users will be screened out, so there may be less than 5,000.
+	 * 
 	 * @throws TwitterException
 	 */
 	public List<Number> getFriendIDs(String screenName) throws TwitterException {
@@ -302,7 +309,9 @@ public class Twitter_Users {
 	 */
 	@Deprecated
 	public List<User> getFriends() throws TwitterException {
-		return getUsers(jtwit.TWITTER_URL + "/statuses/friends.json", null);
+		// Simulate the old v1.0 method with v1.1 methods
+		List<Number> ids = getFriendIDs();
+		return getTweeps2(ids);
 	}
 
 	/**
@@ -317,11 +326,25 @@ public class Twitter_Users {
 	 * @throws TwitterException
 	 */
 	public List<User> getFriends(String username) throws TwitterException {
-		return getUsers(jtwit.TWITTER_URL + "/statuses/friends.json", username);
+		// Simulate the old v1.0 method with v1.1 methods
+		List<Number> ids = getFriendIDs(username);
+		return getTweeps2(ids);
 	}
 
 	/**
-	 * Bulk-fetch relationship info by screen-name.
+	 * @deprecated Workaround for providing v1.0 methods in v1.1
+	 */
+	private List<User> getTweeps2(List<Number> ids) {
+		if (ids.size() > 100) {
+			ids = ids.subList(0, 100);
+		}
+		List<User> users = showById(ids);
+		return users;
+	}
+
+	/**
+	 * Bulk-fetch relationship info by screen-name. 
+	 * This is the most efficient way to get follower/following info.
 	 * 
 	 * @param screenNames
 	 *            Can be empty
@@ -340,6 +363,7 @@ public class Twitter_Users {
 
 	/**
 	 * Bulk-fetch relationship info by user-id.
+	 * This is the most efficient way to get follower/following info.
 	 * 
 	 * @param userIDs
 	 *            Can be empty
@@ -382,6 +406,8 @@ public class Twitter_Users {
 	}
 
 	/**
+	 * Use cursors to fetch upto jtwit.maxResults
+	 * TODO More controlled paging??
 	 * 
 	 * @param url
 	 *            API method to call
@@ -396,7 +422,7 @@ public class Twitter_Users {
 		if (screenName != null && userId != null) throw new IllegalArgumentException("cannot use both screen_name and user_id when fetching user_ids");
 		Map<String, String> vars = InternalUtils.asMap("screen_name",
 				screenName, "user_id", userId);
-		while (cursor != 0 && !jtwit.enoughResults(ids)) {
+		while (cursor != 0 && ! jtwit.enoughResults(ids)) {
 			vars.put("cursor", String.valueOf(cursor));
 			String json = http.getPage(url, vars, http.canAuthenticate());
 			try {
@@ -412,6 +438,10 @@ public class Twitter_Users {
 				}
 				for (int i = 0; i < jarr.length(); i++) {
 					ids.add(jarr.getLong(i));
+				}
+				if (jarr.length()==0) {
+					// No more
+					break;
 				}
 			} catch (JSONException e) {
 				throw new TwitterException.Parsing(json, e);
@@ -507,11 +537,15 @@ public class Twitter_Users {
 			String followedScreenName) {
 		assert followerScreenName != null && followedScreenName != null;
 		try {
-			Map vars = InternalUtils.asMap("user_a", followerScreenName,
-					"user_b", followedScreenName);
+			Map vars = InternalUtils.asMap(
+					"source_screen_name", followerScreenName,
+					"target_screen_name", followedScreenName);
 			String page = http.getPage(jtwit.TWITTER_URL
-					+ "/friendships/exists.json", vars, http.canAuthenticate());
-			return Boolean.valueOf(page);
+					+ "/friendships/show.json", vars, http.canAuthenticate());
+			JSONObject jo = new JSONObject(page);
+			JSONObject trgt = jo.getJSONObject("relationship").getJSONObject("target");
+			boolean fby = trgt.getBoolean("followed_by");
+			return fby;
 		} catch (TwitterException.E403 e) {
 			if (e instanceof SuspendedUser)
 				throw e;
@@ -567,6 +601,9 @@ public class Twitter_Users {
 	}
 
 	/**
+	 * @deprecated v1.0 method, now simulated
+	 * @see #setNotifications(String, Boolean, Boolean)
+	 * 
 	 * Switches off notifications for updates from the specified user <i>who
 	 * must already be a friend</i>.
 	 * 
@@ -574,19 +611,36 @@ public class Twitter_Users {
 	 *            Stop getting notifications from this user, who must already be
 	 *            one of your friends.
 	 * @return the specified user
-	 */
+	 */	
 	public User leaveNotifications(String screenName) {
-		Map<String, String> vars = InternalUtils.asMap("screen_name",
-				screenName);
-		String page = http.getPage(jtwit.TWITTER_URL
-				+ "/notifications/leave.json", vars, true);
-		try {
-			return new User(new JSONObject(page), null);
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(page, e);
-		}
+		return setNotifications(screenName, false, null);
 	}
 
+	/**
+	 * 
+	 * @param screenName
+	 * @param device Can be null (for do not change)
+	 * @param retweets Can be null (for do not change)
+	 * @return User object for screenName. This does not hold much info, and it can have bogus
+	 * relationship (follower/following) info (bugs seen March 2013).
+	 */
+	public User setNotifications(String screenName, Boolean device, Boolean retweets) {
+		if (device==null && retweets==null) {
+			return null; // no-op
+		}
+		Map<String, String> vars = InternalUtils.asMap(
+				"screen_name", screenName, 
+				"device", device, "retweets", retweets);
+		String page = http.post(jtwit.TWITTER_URL
+				+ "/friendships/update.json", vars, true);
+		try {
+			JSONObject jo = new JSONObject(page).getJSONObject("relationship").getJSONObject("target");
+			return new User(jo, null);
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(page, e);
+		}		
+	}
+	
 	/**
 	 * Enables notifications for updates from the specified user <i>who must
 	 * already be a friend</i>.
@@ -783,7 +837,8 @@ public class Twitter_Users {
 	 * Convenience for {@link #stopFollowing(String)}
 	 * 
 	 * @param user
-	 * @return
+	 * @return the un-friended user (if they were a friend), or null if the
+	 *         method fails because the specified user was not a friend.
 	 */
 	public User stopFollowing(User user) {
 		return stopFollowing(user.screenName);

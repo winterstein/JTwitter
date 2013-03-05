@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 
 
 public class OAuthScribeClientTest 
-extends TestCase
+//extends TestCase
 {
 
 	public void testSimple() {

@@ -30,11 +30,6 @@ import winterwell.jtwitter.ecosystem.TwitLonger;
  * First, you should get the user to authorise access via OAuth. There are a
  * couple of ways of doing this -- we show one below -- see
  * {@link OAuthSignpostClient} for more details.
- * <p>
- * Note that you don't need to do this for some operations - e.g. you can look
- * up public posts without logging in (use the {@link #Twitter()} constructor.
- * You can also - for now! - use username and password to login, but Twitter
- * plan to switch this off soon.
  * 
  * <code><pre>
 	// First, OAuth to login: Make an oauth client
@@ -627,12 +622,16 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.7.1";
+	public final static String version = "2.8.0";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
 	 */
 	public final static int MAX_CHARS = 140;
+
+	/** Which version of Twitter API?
+	 * The upgrade to v1.1 implemented here is necessary as of March 2013 */
+	static final String API_VERSION = "1.1";
 
 	/**
 	 * Set to true to perform extra error-handling & correction.
@@ -746,20 +745,13 @@ public class Twitter implements Serializable {
 	private transient String twitlongerAppName;
 
 	/**
+	 * E.g. "https://api.twitter.com/1.1"<br>
+	 * 
 	 * Change this to access sites other than Twitter that support the Twitter
 	 * API, or to set which version of the API you want to use.<br>
-	 * Note: Does not include the final "/"<br>
-	 * 
-	 * <h3>Which API version to use?</h3>
-	 * Twitter have decided that API version 1.0 will switch off on <b>March 5th, 2013</b>.<br>
-	 * Version 1.1 is stricter about authentication, and has removed some methods :(
-	 * <p>
-	 * In JTwitter, we will keep v1.0 as the default until 2013, then make 1.1 the default.
-	 * You can take matters into your own hands if you like by setting this field.
-	 * <p>
-	 * Ref: https://dev.twitter.com/docs/api/1.1/overview#Deprecation_of_v1.0_of_the_API
+	 * Note: Does not include the final "/"
 	 */
-	String TWITTER_URL = "http://api.twitter.com/1";
+	String TWITTER_URL = "https://api.twitter.com/"+API_VERSION;
 
 	private Date untilDate;
 
@@ -777,8 +769,10 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Create a Twitter client without specifying a user. This is an easy way to
-	 * access public posts. But you can't post of course.
+	 * @deprecated ALL twitter.com endpoints now require authentication.
+	 * This method is kept for use with other services (e.g. identi.ca). 
+	 * <p>
+	 * Create a Twitter client without specifying a user.
 	 */
 	public Twitter() {
 		this(null, new URLConnectionHttpClient());
@@ -847,7 +841,7 @@ public class Twitter implements Serializable {
 	 * @param vars
 	 * @return vars
 	 */
-	private Map<String, String> addStandardishParameters(
+	Map<String, String> addStandardishParameters(
 			Map<String, String> vars) {
 		if (sinceId != null) {
 			vars.put("since_id", sinceId.toString());
@@ -864,10 +858,14 @@ public class Twitter implements Serializable {
 			vars.put("count", count.toString());
 		}
 		if (tweetEntities) {
-			vars.put("include_entities", "1");
+			vars.put("include_entities", "1"); // TODO remove soon -- this is the new default
+		} else {
+			vars.put("include_entities", "0");
 		}
 		if (includeRTs) {
-			vars.put("include_rts", "1");
+			vars.put("include_rts", "1"); // TODO remove soon -- this is the new default
+		} else {
+			vars.put("include_rts", "0");
 		}
 		return vars;
 	}
@@ -985,7 +983,7 @@ public class Twitter implements Serializable {
 	 */
 	public void destroyStatus(Number id) throws TwitterException {
 		String page = post(TWITTER_URL + "/statuses/destroy/" + id + ".json",
-				null, true);
+				null, true);				
 		// Note: Sends two HTTP requests to Twitter rather than one: Twitter
 		// appears
 		// not to make deletions visible until the user's status page is
@@ -1018,9 +1016,10 @@ public class Twitter implements Serializable {
 		return (maxResults != -1 && list.size() >= maxResults);
 	}
 
+	// TODO is this still needed??
 	void flush() {
 		// This seems to prompt twitter to update in some cases!
-		http.getPage("http://twitter.com/" + name, null, true);
+		http.getPage("https://twitter.com/" + name, null, true);
 	}
 
 	/**
@@ -1230,10 +1229,12 @@ public class Twitter implements Serializable {
 	public List<TwitterList> getLists(String screenName) {
 		assert screenName != null;
 		try {
-			String url = TWITTER_URL + "/" + screenName + "/lists.json";
-			String listsJson = http.getPage(url, null, true);
-			JSONObject wrapper = new JSONObject(listsJson);
-			JSONArray jarr = (JSONArray) wrapper.get("lists");
+			String url = TWITTER_URL + "/lists/list.json";
+			Map<String, String> vars = InternalUtils.asMap(
+					"screen_name", screenName);
+			String listsJson = http.getPage(url, vars, true);
+//			JSONObject wrapper = new JSONObject(listsJson);
+			JSONArray jarr = new JSONArray(listsJson); // wrapper.get("lists");
 			List<TwitterList> lists = new ArrayList<TwitterList>();
 			for (int i = 0; i < jarr.length(); i++) {
 				JSONObject li = jarr.getJSONObject(i);
@@ -1659,7 +1660,7 @@ public class Twitter implements Serializable {
 		Map<String, String> vars = InternalUtils.asMap("id", username, "count",
 				6);
 		String json = http.getPage(
-				TWITTER_URL + "/statuses/user_timeline.json", vars, false);
+				TWITTER_URL + "/statuses/user_timeline.json", vars, http.canAuthenticate());
 		List<Status> statuses = Status.getStatuses(json);
 		if (statuses.size() == 0)
 			return null;
@@ -1674,8 +1675,9 @@ public class Twitter implements Serializable {
 	 * @param authenticate
 	 * @return
 	 */
-	private List<Status> getStatuses(final String url, Map<String, String> var,
-			boolean authenticate) {
+	List<Status> getStatuses(final String url, Map<String, String> var,
+			boolean authenticate) 
+	{
 		// Default: 1 page
 		if (maxResults < 1) {
 			List<Status> msgs ;
@@ -1753,8 +1755,8 @@ public class Twitter implements Serializable {
 	 * @see Twitter_Geo#getTrendRegions()
 	 */
 	public List<String> getTrends(Number woeid) {
-		String jsonTrends = http.getPage(TWITTER_URL + "/trends/" + woeid
-				+ ".json", null, false);
+		String jsonTrends = http.getPage(TWITTER_URL + "/trends/place.json", 
+				InternalUtils.asMap("id", woeid), true);
 		try {
 			JSONArray jarr = new JSONArray(jsonTrends);
 			JSONObject json1 = jarr.getJSONObject(0);
@@ -2145,14 +2147,14 @@ public class Twitter implements Serializable {
 			vars.put("page", Integer.toString(pageNumber));
 			List<Status> stati;
 			try {
-				String json = http.getPage(url, vars, false);
+				String json = http.getPage(url, vars, true);
 				stati = Status.getStatusesFromSearch(this, json);
 			} catch (TwitterException.Parsing pex) {
 				// Twitter bug, July 2012: malformed responses -- end is chopped off ~1 time in 20
 				// TODO remove when Twitter fix this!
 				if (http.isRetryOnError()) {
 					InternalUtils.sleep(250);
-					String json = http.getPage(url, vars, false);
+					String json = http.getPage(url, vars, true);
 					stati = Status.getStatusesFromSearch(this, json);
 				} else {
 					throw pex;
@@ -2298,10 +2300,9 @@ public class Twitter implements Serializable {
 	 */
 	public Status setFavorite(Status status, boolean isFavorite) {
 		try {
-			String uri = isFavorite ? TWITTER_URL + "/favorites/create/"
-					+ status.id + ".json" : TWITTER_URL + "/favorites/destroy/"
-					+ status.id + ".json";
-			String json = http.post(uri, null, true);
+			String uri = isFavorite ? TWITTER_URL + "/favorites/create.json" 
+					: TWITTER_URL + "/favorites/destroy.json";
+			String json = http.post(uri, InternalUtils.asMap("id", status.id), true);
 			return new Status(new JSONObject(json), null);
 		} catch (E403 e) {
 			// already a favorite?
@@ -2649,7 +2650,7 @@ public class Twitter implements Serializable {
 	 */
 	public void updateConfiguration() {
 		String json = http.getPage(TWITTER_URL + "/help/configuration.json",
-				null, false);
+				null, true);
 		try {
 			JSONObject jo = new JSONObject(json);
 			LINK_LENGTH = jo.getInt("short_url_length");
@@ -2888,10 +2889,9 @@ public class Twitter implements Serializable {
 		// TODO display_coordinates
 		String result = null;
 		try {			
-			result = ((OAuthSignpostClient)http)
-					.postMultipartForm(
-					"https://upload.twitter.com/1/statuses/update_with_media.json",
-							vars);
+			// Breaking change from v1.0, which went to upload.twitter.com
+			String url = TWITTER_URL+"/statuses/update_with_media.json";
+			result = ((OAuthSignpostClient)http).postMultipartForm(url, vars);
 			Status s = new Status(new JSONObject(result), null);
 			return s;
 		} catch (E403 e) {

@@ -190,6 +190,15 @@ public class Twitter_UsersTest {
 		List<User> users2 = tw.searchUsers("Fred near:Scotland");
 		assert ! users.isEmpty();
 	}
+	
+
+	@Test
+	public void testNotifications() {
+		Twitter tw = TwitterTest.newTestTwitter();
+		User user = tw.users().leaveNotifications("jtwit2");
+		System.out.println(user);
+	}
+
 
 	@Test
 	public void testBulkShow() {
@@ -341,30 +350,39 @@ public class Twitter_UsersTest {
 	}
 	
 	@Test
+	public void testIsFollower() {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter_Users tu = new Twitter_Users(jtwit);
+		boolean jtwit_follows_fry = tu.isFollowing("stephenfry");
+		boolean fry_follows_jtwit = tu.isFollower("stephenfry");
+		assert ! fry_follows_jtwit;
+		assert jtwit_follows_fry;
+	}
+	
+	@Test
 	public void testGetRelationshipInfo() {
 		Twitter jtwit = TwitterTest.newTestTwitter();
 		Twitter_Users tu = new Twitter_Users(jtwit);
 		List<User> users = tu.getRelationshipInfo(Arrays.asList("winterstein", "spoonmcguffin", "stephenfry", "jtwittest2"));
-		User w = users.get(users.indexOf(new User("winterstein")));
-		assert w.isFollowingYou();		
-		User jtwit2 = users.get(users.indexOf(new User("jtwittest2")));
-		User fry = users.get(users.indexOf(new User("stephenfry")));
+		assert ! users.isEmpty();
 		
+		User w = users.get(users.indexOf(new User("winterstein")));		
+		assert w.isFollowingYou();		
 		boolean jtwitFollowsWinterstein = jtwit.isFollowing("winterstein");
+		
+		User jtwit2 = users.get(users.indexOf(new User("jtwittest2")));
+		
+		User fry = users.get(users.indexOf(new User("stephenfry")));				
 		boolean jtwitFollowsFry = jtwit.isFollowing("stephenfry");
-		if (!jtwitFollowsFry) {
+		if ( ! jtwitFollowsFry) {
 			jtwit.follow("stephenfry");
 		}
 		User fryb = jtwit.users().show("stephenfry");
 
-//		boolean isf = jtwit.users().isFollower("winterstein", jtwit.getScreenName());
-//		assert isf;
-//		User w2 = jtwit.users().show("winterstein");
-//		assert w2.isFollowingYou(); comes back null?!
-
 		assert fry.isFollowedByYou();
 		assert fryb.isFollowedByYou();
 		assert ! fry.isFollowingYou();
+		
 		// this now returns null a lot!
 		assert fryb.isFollowingYou()==null || ! fryb.isFollowingYou();		
 	}

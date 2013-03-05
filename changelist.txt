@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8:
+ - IMPORTANT: Enforced switch to API v1.1, in line with twitter.com
+ 
 2.7.1:
  - Signpost oauth jar: Minor version upgrade (1.2.1.1 -> 1.2.1.2)
  - Improvements by Azonli (https://github.com/azonli): gzip encoding (off by default) & Scribe client update. 
