@@ -1323,19 +1323,18 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Returns the 20 most recent replies/mentions (status updates with
-	 * 
-	 * @username) to the authenticating user. Replies are only available to the
-	 *            authenticating user; you can not request a list of replies to
-	 *            another user whether public or protected.
-	 *            <p>
-	 *            This is exactly the same as {@link #getReplies()}
-	 *            <p>
-	 *            When paging, this method can only go back up to 800 statuses.
-	 *            <p>
-	 *            Does not include new-style retweets.
+	 * \@username) to the authenticating user. Replies are only available to the
+	 * authenticating user; you cannot request a list of replies to another
+	 * user whether public or protected.
+	 * <p>
+	 * This is exactly the same as {@link #getReplies()}
+	 * <p>
+	 * When paging, this method can only go back up to 800 statuses.
+	 * <p>
+	 * Does not include new-style retweets.
 	 */
 	public List<Status> getMentions() {
-		return getStatuses(TWITTER_URL + "/statuses/mentions.json",
+		return getStatuses(TWITTER_URL + "/statuses/mentions_timeline.json",
 				standardishParameters(), true);
 	}
 
@@ -1435,7 +1434,7 @@ public class Twitter implements Serializable {
 	 *            When paging, this method can only go back up to 800 statuses.
 	 *            <p>
 	 *            Does not include new-style retweets.
-	 * @deprecated Use #getMentions() for preference
+	 * @deprecated Use #getMentions() for preference. This method will be removed June 2013.
 	 */
 	public List<Status> getReplies() throws TwitterException {
 		return getMentions();
@@ -1693,7 +1692,6 @@ public class Twitter implements Serializable {
 		// Use status ids for paging, rather than page number, because this
 		// allows for "drift" when new tweets are posted during the paging.
 		BigInteger maxId = untilId;
-		// pageNumber = 1;
 		List<Status> msgs = new ArrayList<Status>();
 		while (msgs.size() <= maxResults) {			
 			List<Status> nextpage; 
