@@ -4,9 +4,11 @@ package winterwell.jtwitter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.utils.NoUTR;
 import winterwell.utils.Printer;
+import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
@@ -1149,10 +1152,20 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 	public void testSearchWithLocation() {
-		{	// location
+		{	// location = London
 			Twitter tw = newTestTwitter();
 			tw.setSearchLocation(51.5, 0, "20km");
+			int londonCnt=0, cnt=0;
 			List<Status> tweets = tw.search("the");
+			for (Status status : tweets) {
+				cnt++;
+				Serializable locn = Utils.or(status.getLocation(), status.getPlace(), status.getUser().getLocation(), status.getUser().getPlace());
+				String s = StrUtils.join(Arrays.asList(status.getLocation(), status.getPlace(), status.getUser().getLocation(), status.getUser().getPlace()), ", ");
+				s = StrUtils.compactWhitespace(s);
+				if (s.toLowerCase().contains("london")) londonCnt++;
+				System.out.println(s);
+			}
+			System.out.println(londonCnt+" out of "+cnt);
 			assert tweets.size() > 10 : tweets.size();
 		}
 
