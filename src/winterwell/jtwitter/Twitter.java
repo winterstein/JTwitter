@@ -381,11 +381,11 @@ public class Twitter implements Serializable {
 	 * Will be removed: June 2013!
 	 */
 	public static enum KRequestType {
-		NORMAL("statuses/user_timeline"), 
-		SEARCH("search/tweets"),
+		NORMAL(RateLimit.RES_USER_TIMELINE), 
+		SEARCH(RateLimit.RES_SEARCH),
 		/** this is X-Feature Class "namesearch" in the response headers */
-		SEARCH_USERS("users/search"), 
-		SHOW_USER("users/show"), 
+		SEARCH_USERS("/users/search"), 
+		SHOW_USER(RateLimit.RES_USERS_SHOW), 
 		UPLOAD_MEDIA("Media"),
 		STREAM_KEYWORD(""),
 		STREAM_USER("");
@@ -1084,8 +1084,7 @@ public class Twitter implements Serializable {
 	 * only - to fetch older favourites).
 	 */
 	public List<Status> getFavorites() {
-		return getStatuses(TWITTER_URL + "/favorites.json",
-				standardishParameters(), true);
+		return getFavorites(null);
 	}
 
 	/**
@@ -1098,7 +1097,7 @@ public class Twitter implements Serializable {
 	public List<Status> getFavorites(String screenName) {
 		Map<String, String> vars = InternalUtils.asMap("screen_name",
 				screenName);
-		return getStatuses(TWITTER_URL + "/favorites.json",
+		return getStatuses(TWITTER_URL + "/favorites/list.json",
 				addStandardishParameters(vars), http.canAuthenticate());
 	}
 
@@ -1935,6 +1934,7 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated
 	 * Are we rate-limited, based on cached info from previous requests?
 	 * @param type
 	 * @param minCalls
@@ -1947,27 +1947,16 @@ public class Twitter implements Serializable {
 	 * @see #getRateLimitStatus() for guaranteed up-to-date info
 	 */
 	public boolean isRateLimited(KRequestType reqType, int minCalls) {
-		// Check NORMAL first
-		if (reqType != KRequestType.NORMAL) {
-			boolean isLimited = isRateLimited(KRequestType.NORMAL, minCalls);
-			if (isLimited)
-				return true;
-		}
-		RateLimit rl = getRateLimit(reqType);
-		// assume things are OK (except for NORMAL which we quickly check by
-		// calling Twitter)
+		RateLimit rl = getRateLimit(reqType);		
+		// assume things are OK
 		if (rl == null) {
-			if (reqType == KRequestType.NORMAL) {
-				int rls = getRateLimitStatus();
-				return rls >= minCalls;
-			}
 			return false;
 		}
 		// in credit?
 		if (rl.getRemaining() >= minCalls)
 			return false;
 		// out of date?
-		if (rl.getReset().getTime() < System.currentTimeMillis())
+		if (rl.isOutOfDate())
 			return false;
 		// nope - you're over the limit
 		return true;

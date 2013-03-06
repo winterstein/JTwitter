@@ -11,11 +11,28 @@ import winterwell.json.JSONObject;
  * @author daniel
  */
 public final class RateLimit {
+	
+	/**
+	 * Pseudo value
+	 */
+	public static final String RES_STREAM_USER = "/stream/user";
+	/**
+	 * Pseudo value
+	 */
+	public static final String RES_STREAM_KEYWORD = "/stream/keyword";
+	
+	public static final String RES_USERS_SHOW = "/users/show";
+	public static final String RES_USER_TIMELINE = "/statuses/user_timeline";
+	public static final String RES_SEARCH = "/search/tweets";
+	public static final String RES_STATUS_SHOW = "/statuses/show";
+	public static final String RES_USERS_SEARCH = "/users/search";
+	public static final String RES_FRIENDSHIPS_SHOW = "/friendships/show";
+	public static final String RES_TRENDS = "/trends/place";
+
 	/*
 	 * We use lazy parsing for efficiency (most of these objects will never be
 	 * examined).
-	 */
-
+	 */	
 	private String limit;
 	private String remaining;
 	private String reset;

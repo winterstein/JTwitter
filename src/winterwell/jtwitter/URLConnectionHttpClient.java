@@ -209,6 +209,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		Collection<JSONObject> families = (Collection<JSONObject>) jo.getMap().values();
 		for (JSONObject family : families) {
 			for(String res : family.getMap().keySet()) {
+				// FIXME remove any :id :slug stuff from res
 				JSONObject jrl = (JSONObject) family.getMap().get(res);
 				RateLimit rl = new RateLimit(jrl);
 				rateLimits.put(res, rl);
@@ -397,7 +398,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	protected String checkRateLimit(String url) {
 		String resource = RateLimit.getResource(url);
 		RateLimit limit = rateLimits.get(resource);
-		if (limit != null && minRateLimit > 0 && limit.getRemaining() <= minRateLimit) {
+		if (limit != null && limit.getRemaining() <= minRateLimit
+			&& ! limit.isOutOfDate()) 
+		{
 			throw new TwitterException.RateLimit(
 					"Pre-emptive rate-limit block for "+limit+" for "+url);
 		}
@@ -669,8 +672,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	/**
 	 * Use this to protect your Twitter API rate-limit. E.g. if you want to keep
-	 * some credit in reserve for core activity. 0 by default. If set above
-	 * zero, this JTwitter object will start pre-emptively throwing rate-limit
+	 * some credit in reserve for core activity. 0 by default. 
+	 * this http client object will start pre-emptively throwing rate-limit
 	 * exceptions when it gets down to the specified level.
 	 */
 	public void setMinRateLimit(int minRateLimit) {

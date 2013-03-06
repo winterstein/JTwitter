@@ -337,6 +337,18 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 
+	public void testGetFavorites() throws InterruptedException {
+		Twitter twitter = newTestTwitter();
+		{
+			List<Status> fs = twitter.getFavorites();
+			System.out.println(fs);
+		}
+		{
+			List<Status> fs = twitter.getFavorites("winterstein");
+			System.out.println(fs);
+		}
+	}
+	
 	public void testGetSetFavorite() throws InterruptedException {
 		Twitter twitter = newTestTwitter();
 		int salt = new Random().nextInt(100);

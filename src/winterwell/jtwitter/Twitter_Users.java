@@ -167,7 +167,8 @@ public class Twitter_Users {
 		String json = http.getPage(jtwit.TWITTER_URL
 				+ "/blocks/ids.json", null, true);
 		try {
-			JSONArray arr = new JSONArray(json);
+			JSONArray arr = json.startsWith("[")? new JSONArray(json) 
+							: new JSONObject(json).getJSONArray("ids");
 			List<Number> ids = new ArrayList(arr.length());
 			for (int i = 0, n = arr.length(); i < n; i++) {
 				ids.add(arr.getLong(i));

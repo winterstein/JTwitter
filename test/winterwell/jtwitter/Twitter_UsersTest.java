@@ -305,13 +305,12 @@ public class Twitter_UsersTest {
 
 	@Test
 	public void testGetFriendIDs() {
+		Twitter tw = TwitterTest.newTestTwitter();
 		{
-			Twitter tw = TwitterTest.newTestTwitter();
 			List<Number> friends = tw.users().getFriendIDs();
 			assert friends != null && ! friends.isEmpty();
 		}
 		{
-			Twitter tw = new Twitter();
 			List<Number> friends = tw.users().getFriendIDs("winterstein");
 			assert friends != null && ! friends.isEmpty();
 		}
