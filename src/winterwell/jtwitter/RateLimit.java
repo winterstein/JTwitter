@@ -28,6 +28,7 @@ public final class RateLimit {
 	public static final String RES_USERS_SEARCH = "/users/search";
 	public static final String RES_FRIENDSHIPS_SHOW = "/friendships/show";
 	public static final String RES_TRENDS = "/trends/place";
+	public static final String RES_LISTS_SHOW = "/lists/show";
 
 	/*
 	 * We use lazy parsing for efficiency (most of these objects will never be
