@@ -240,6 +240,12 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
+	public void testgetRateLimitStatus() {
+		Twitter tw = newTestTwitter();
+		int i = tw.getRateLimitStatus();
+		System.out.println(i);
+	}
+	
 	public void testRateLimits() {
 		Twitter tw = newTestTwitter();
 		{

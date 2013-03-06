@@ -1,5 +1,6 @@
 package winterwell.jtwitter;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -54,7 +55,7 @@ public final class Message implements ITweet {
 	private final Date createdAt;
 	private EnumMap<KEntityType, List<TweetEntity>> entities;
 
-	public final Long id;
+	public final Number id;
 
 	/**
 	 * Equivalent to {@link Status#inReplyToStatusId} *but null by default*. If
@@ -135,15 +136,13 @@ public final class Message implements ITweet {
 
 	/**
 	 * @return The Twitter id for this post. This is used by some API methods.
-	 *         <p>
-	 *         Note: this may switch to BigInteger in the future, if Twitter
-	 *         change their id numbering scheme. Use Number (which is a
-	 *         super-class for both Long and BigInteger) if you wish to
-	 *         future-proof your code.
 	 */
 	@Override
-	public Long getId() {
-		return id;
+	public BigInteger getId() {
+		if (id instanceof Long) {
+			return BigInteger.valueOf(id.longValue());
+		}
+		return (BigInteger) id;
 	}
 
 	@Override

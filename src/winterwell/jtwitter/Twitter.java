@@ -6,8 +6,10 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,11 +231,12 @@ public class Twitter implements Serializable {
 				boolean authenticate) throws TwitterException;
 
 		/**
+		 * @deprecated
 		 * @see Twitter#getRateLimit(KRequestType) This is where the Twitter
 		 *      method is implemented.
 		 */
 		RateLimit getRateLimit(KRequestType reqType);
-
+		
 		/**
 		 * Send an HTTP POST request and return the response body.
 		 * 
@@ -301,9 +304,9 @@ public class Twitter implements Serializable {
 		 * signed long.
 		 * 
 		 * @return The Twitter id for this post. This is used by some API
-		 *         methods. This may be a Long or a BigInteger.
+		 *         methods.
 		 */
-		Number getId();
+		BigInteger getId();
 
 		/**
 		 * @return the location of this tweet. Can be null, never blank. This
@@ -372,14 +375,17 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * The different types of API request. These can have different rate limits.
+	 * @deprecated Replaced in 1.1 with a more flexible family of resources.
+	 * 
+	 * Kept here for backwards compatibility only.
+	 * Will be removed: June 2013!
 	 */
 	public static enum KRequestType {
-		NORMAL(""), 
-		SEARCH("Feature"),
+		NORMAL("statuses/user_timeline"), 
+		SEARCH("search/tweets"),
 		/** this is X-Feature Class "namesearch" in the response headers */
-		SEARCH_USERS("Feature"), 
-		SHOW_USER(""), 
+		SEARCH_USERS("users/search"), 
+		SHOW_USER("users/show"), 
 		UPLOAD_MEDIA("Media"),
 		STREAM_KEYWORD(""),
 		STREAM_USER("");
@@ -610,19 +616,22 @@ public class Twitter implements Serializable {
 
 	public static final String SEARCH_POPULAR = "popular";
 
+	/**
+	 * return the most recent results in the response
+	 */
 	public static final String SEARCH_RECENT = "recent";
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Search has to go through a separate url (Twitter's decision, June 2010).
-	 */
-	private static final String TWITTER_SEARCH_URL = "http://search.twitter.com";
+//	/**
+//	 * Search has to go through a separate url (Twitter's decision, June 2010).
+//	 */
+//	private static final String TWITTER_SEARCH_URL = "http://search.twitter.com";
 
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.8.0";
+	public final static String version = "2.8.1";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -632,6 +641,8 @@ public class Twitter implements Serializable {
 	/** Which version of Twitter API?
 	 * The upgrade to v1.1 implemented here is necessary as of March 2013 */
 	static final String API_VERSION = "1.1";
+
+	static final String DEFAULT_TWITTER_URL = "https://api.twitter.com/"+API_VERSION;
 
 	/**
 	 * Set to true to perform extra error-handling & correction.
@@ -701,7 +712,6 @@ public class Twitter implements Serializable {
 
 	private String lang;
 
-	private BigInteger maxId;
 
 	/**
 	 * Provides support for fetching many pages
@@ -716,12 +726,12 @@ public class Twitter implements Serializable {
 	 */
 	private String name;
 
-	/**
-	 * Gets used once then reset to null by
-	 * {@link #addStandardishParameters(Map)}. Gets updated in the while loops
-	 * of methods doing a get-all-pages.
-	 */
-	Integer pageNumber;
+//	/**
+//	 * Gets used once then reset to null by
+//	 * {@link #addStandardishParameters(Map)}. Gets updated in the while loops
+//	 * of methods doing a get-all-pages.
+//	 */
+//	Integer pageNumber;
 
 	private String resultType;
 
@@ -751,11 +761,11 @@ public class Twitter implements Serializable {
 	 * API, or to set which version of the API you want to use.<br>
 	 * Note: Does not include the final "/"
 	 */
-	String TWITTER_URL = "https://api.twitter.com/"+API_VERSION;
+	String TWITTER_URL = DEFAULT_TWITTER_URL;
 
 	private Date untilDate;
 
-	private Number untilId;
+	private BigInteger untilId;
 
 	private Long placeId;
 	
@@ -849,11 +859,11 @@ public class Twitter implements Serializable {
 		if (untilId != null) {
 			vars.put("max_id", untilId.toString());
 		}
-		if (pageNumber != null) {
-			vars.put("page", pageNumber.toString());
-			// this is used once only
-			pageNumber = null;
-		}
+//		if (pageNumber != null) {
+//			vars.put("page", pageNumber.toString());
+//			// this is used once only
+//			pageNumber = null;
+//		}
 		if (count != null) {
 			vars.put("count", count.toString());
 		}
@@ -1348,33 +1358,28 @@ public class Twitter implements Serializable {
 		}
 		// Fetch all pages until we run out
 		// -- or Twitter complains in which case you'll get an exception
-		pageNumber = 1;
+		BigInteger maxId = untilId;
 		List<Message> msgs = new ArrayList<Message>();
 		while (msgs.size() <= maxResults) {
 			String p = http.getPage(url, var, true);
 			List<Message> nextpage = Message.getMessages(p);
+			// Next page must start strictly before this one
+			maxId = InternalUtils.getMinId(maxId, nextpage);
+						
 			nextpage = dateFilter(nextpage);
 			msgs.addAll(nextpage);
+			
 			if (nextpage.size() < 20) {
 				break;
 			}
-			pageNumber++;
-			var.put("page", Integer.toString(pageNumber));
+			
+			var.put("max_id", maxId.toString());
 		}
 		return msgs;
 	}
 
-//	/**
-//	 * Removed from Twitter :(
-//	 * Use TwitterStream instead to get a sample.
-//	 */
-	// Note: we don't wrap TwitterStream here, because TwitterStreams are restricted to 1 at a time.  
-//	public List<Status> getPublicTimeline() throws TwitterException {
-//		return getStatuses(TWITTER_URL + "/statuses/public_timeline.json",
-//				standardishParameters(), false);
-//	}
-
 	/**
+	 * @deprecated
 	 * What is the current rate limit status? Do we need to throttle back our
 	 * usage? This is the cached info from the last call of that type.
 	 * <p>
@@ -1393,8 +1398,10 @@ public class Twitter implements Serializable {
 	public RateLimit getRateLimit(KRequestType reqType) {
 		return http.getRateLimit(reqType);
 	}
-
+	
 	/**
+	 * @deprecated Not in v1.1
+	 * 
 	 * How many normal rate limit calls do you have left? This calls Twitter,
 	 * which makes it slower than {@link #getRateLimit(KRequestType)} but it's
 	 * up-to-date and safe against threads and other-programs using the same
@@ -1411,25 +1418,8 @@ public class Twitter implements Serializable {
 	 * @see #getRateLimit(KRequestType)
 	 */
 	public int getRateLimitStatus() {
-		String json = http.getPage(TWITTER_URL
-				+ "/account/rate_limit_status.json", null,
-				http.canAuthenticate());
-		try {
-			JSONObject obj = new JSONObject(json);
-			int hits = obj.getInt("remaining_hits");
-			// Update the RateLimit objects
-			// http.updateRateLimits(KRequestType.NORMAL); no header info sent!
-			if (http instanceof URLConnectionHttpClient) {
-				URLConnectionHttpClient _http = (URLConnectionHttpClient) http;
-				RateLimit rateLimit = new RateLimit(
-						obj.getString("hourly_limit"), Integer.toString(hits),
-						obj.getString("reset_time"));
-				_http.rateLimits.put(KRequestType.NORMAL, rateLimit);
-			}
-			return hits;
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(json, e);
-		}
+		RateLimit rl = ((URLConnectionHttpClient)http).updateRateLimits().get(KRequestType.NORMAL.rateLimit);
+		return rl==null? 90 : rl.getRemaining();
 	}
 
 	/**
@@ -1702,7 +1692,7 @@ public class Twitter implements Serializable {
 		// -- or Twitter complains in which case you'll get an exception
 		// Use status ids for paging, rather than page number, because this
 		// allows for "drift" when new tweets are posted during the paging.
-		maxId = null;
+		BigInteger maxId = untilId;
 		// pageNumber = 1;
 		List<Status> msgs = new ArrayList<Status>();
 		while (msgs.size() <= maxResults) {			
@@ -1723,18 +1713,14 @@ public class Twitter implements Serializable {
 			}
 			// This test replaces size<20. It requires an extra call to Twitter.
 			// But it fixes a bug whereby retweets aren't counted and can thus
-			// cause
-			// the system to quit early.
+			// cause the system to quit early.
 			if (nextpage.size() == 0) {
 				break;
-			}
+			}			
 			// Next page must start strictly before this one
-			maxId = nextpage.get(nextpage.size() - 1).id
-					.subtract(BigInteger.ONE);
-			// System.out.println(maxId + " -> " + nextpage.get(0).id);
-
+			maxId = InternalUtils.getMinId(maxId, nextpage);
+			
 			msgs.addAll(dateFilter(nextpage));
-			// pageNumber++;
 			var.put("max_id", maxId.toString());			
 		}
 		return msgs;
@@ -2129,7 +2115,7 @@ public class Twitter implements Serializable {
 					"You need to switch on paging to fetch more than 100 search results. First call setMaxResults() to raise the limit above "
 							+ rpp);
 //		searchTerm = search2_bugHack(searchTerm);
-		Map<String, String> vars;
+		Map vars;
 		if (maxResults < 100 && maxResults > 0) {
 			// Default: 1 page
 			vars = getSearchParams(searchTerm, maxResults);
@@ -2140,11 +2126,10 @@ public class Twitter implements Serializable {
 		// -- or Twitter complains in which case you'll get an exception
 		List<Status> allResults = new ArrayList<Status>(Math.max(maxResults,
 				rpp));
-		String url = TWITTER_SEARCH_URL + "/search.json";
-		int localPageNumber = 1; // pageNumber is nulled by getSearchParams
+		String url = TWITTER_URL + "/search/tweets.json";
+		BigInteger maxId = untilId;
 		do {
-			pageNumber = localPageNumber;
-			vars.put("page", Integer.toString(pageNumber));
+			vars.put("max_id", maxId);
 			List<Status> stati;
 			try {
 				String json = http.getPage(url, vars, true);
@@ -2161,6 +2146,9 @@ public class Twitter implements Serializable {
 				}
 			}
 			int numResults = stati.size();
+			
+			maxId = InternalUtils.getMinId(maxId, stati);
+			
 			stati = dateFilter(stati);
 			allResults.addAll(stati);
 			if (callback != null) {
@@ -2172,11 +2160,7 @@ public class Twitter implements Serializable {
 			if (numResults < rpp) { // We've reached the end of the results
 				break;
 			}
-			// paranoia
-			localPageNumber++;
 		} while (allResults.size() < maxResults);
-		// null for the next method
-		pageNumber = null;
 		return allResults;
 	}
 
@@ -2396,14 +2380,14 @@ public class Twitter implements Serializable {
 					+ " is not within +/- 180");
 	}
 
-	/**
-	 * @param pageNumber
-	 *            null (the default) returns the first page. Pages are indexed
-	 *            from 1. This is used once only! Then it is reset to null
-	 */
-	public void setPageNumber(Integer pageNumber) {
-		this.pageNumber = pageNumber;
-	}
+//	/**
+//	 * @param pageNumber
+//	 *            null (the default) returns the first page. Pages are indexed
+//	 *            from 1. This is used once only! Then it is reset to null
+//	 */
+//	public void setPageNumber(Integer pageNumber) {
+//		this.pageNumber = pageNumber;
+//	}
 
 	/**
 	 * Restricts {@link #search(String)} to tweets by users located within a
@@ -2528,10 +2512,18 @@ public class Twitter implements Serializable {
 	 *            aka max_id
 	 */
 	public void setUntilId(Number untilId) {
-		this.untilId = untilId;
+		if (untilId==null) {
+			this.untilId = null;
+			return;
+		}
+		if (untilId instanceof BigInteger) {
+			this.untilId = (BigInteger) untilId;
+			return;
+		}
+		this.untilId = BigInteger.valueOf(untilId.longValue());
 	}
 	
-	public Number getUntilId() {
+	public BigInteger getUntilId() {
 		return untilId;
 	}
 	

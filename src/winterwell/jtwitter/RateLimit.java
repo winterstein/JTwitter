@@ -2,9 +2,12 @@ package winterwell.jtwitter;
 
 import java.util.Date;
 
+import winterwell.json.JSONObject;
+
 /**
  * Info on your Twitter API usage - how many calls do you have to use?
  * 
+ * @testedby {@link RateLimitTest}
  * @author daniel
  */
 public final class RateLimit {
@@ -21,6 +24,10 @@ public final class RateLimit {
 		this.limit = limit;
 		this.remaining = remaining;
 		this.reset = reset;
+	}
+
+	RateLimit(JSONObject jrl) {
+		this(jrl.getString("limit"), jrl.getString("remaining"), jrl.getString("reset"));
 	}
 
 	public int getLimit() {
@@ -68,5 +75,29 @@ public final class RateLimit {
 			// wrap this for convenience??
 			throw new TwitterException(e);
 		}
+	}
+
+	/**
+	 * See https://dev.twitter.com/docs/rate-limiting/1.1/limits
+	 * @param url
+	 * @return the resource name this is counted as
+	 */
+	public static String getResource(String url) {
+		// Take the first 2 bits of path		
+		if ( ! url.startsWith(Twitter.DEFAULT_TWITTER_URL)) {
+			return null;
+		}
+		int s = Twitter.DEFAULT_TWITTER_URL.length();
+		int e = url.indexOf(".json", s);
+		if (e==-1) return null;
+		int e1 = url.indexOf("/", s+1);
+		if (e1==-1 || e1 > e) {			
+			return url.substring(s, e);
+		}
+		int e2 = url.indexOf("/", e1+1);
+		if (e2==-1 || e2 > e) {
+			return url.substring(s, e);
+		}
+		return url.substring(s, e2);
 	}
 }

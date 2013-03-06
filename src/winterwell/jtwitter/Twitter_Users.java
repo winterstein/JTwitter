@@ -691,9 +691,10 @@ public class Twitter_Users {
 	public List<User> searchUsers(String searchTerm) {
 		assert searchTerm != null;
 		Map<String, String> vars = InternalUtils.asMap("q", searchTerm);
-		if (jtwit.pageNumber != null) {
-			vars.put("page", jtwit.pageNumber.toString());
-		}
+		// TODO provide paging
+//		if (jtwit.pageNumber != null) {
+//			vars.put("page", jtwit.pageNumber.toString());
+//		}
 		if (jtwit.count != null && jtwit.count < 20) {
 			vars.put("per_page", String.valueOf(jtwit.count));
 		}
