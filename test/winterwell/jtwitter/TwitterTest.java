@@ -1122,6 +1122,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			List<Status> javaTweets = tw.search("java");
 			assert javaTweets.size() != 0;
 			Status tweet = javaTweets.get(0);
+			System.out.println(tweet+"\n\t"+tweet.getUser()+" "+tweet.getUser().followersCount);
 		}
 		{	// with entities
 			Twitter tw = newTestTwitter();
