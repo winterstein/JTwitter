@@ -1545,9 +1545,10 @@ public class Twitter implements Serializable {
 	 * @param rpp
 	 * @return
 	 */
-	private Map<String, String> getSearchParams(String searchTerm, int rpp) {
-		Map<String, String> vars = InternalUtils.asMap("rpp",
-				Integer.toString(rpp), "q", searchTerm);
+	private Map<String, String> getSearchParams(String searchTerm, Integer rpp) {
+		Map vars = InternalUtils.asMap(
+				"count", rpp, 
+				"q", searchTerm);
 		if (sinceId != null) {
 			vars.put("since_id", sinceId.toString());
 		}
@@ -2099,6 +2100,7 @@ public class Twitter implements Serializable {
 	 *         {@link #setMaxResults(int)} to use > 100.
 	 */
 	public List<Status> search(String searchTerm, ICallback callback, int rpp) {
+		// TODO refactor to use the metadata returned from Twitter
 		if (rpp > 100 && maxResults < rpp)
 			throw new IllegalArgumentException(
 					"You need to switch on paging to fetch more than 100 search results. First call setMaxResults() to raise the limit above "
@@ -2146,7 +2148,7 @@ public class Twitter implements Serializable {
 					break;
 				}
 			}
-			if (numResults < rpp) { // We've reached the end of the results
+			if ((rpp==100 && numResults<70/* allow for some screening */) || numResults < rpp) { // We've reached the end of the results
 				break;
 			}
 		} while (allResults.size() < maxResults);

@@ -1138,7 +1138,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Twitter tw = newTestTwitter();
 			tw.setMaxResults(10);
 			List<Status> tweets = tw.search(":)");
-			assert tweets.size() == 10;
+			assert tweets.size() == 10 : tweets.size();
 		}
 		{	// Lots of results
 			Twitter tw = newTestTwitter();

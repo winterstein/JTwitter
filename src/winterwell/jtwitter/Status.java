@@ -79,14 +79,14 @@ public final class Status implements ITweet {
 		try {
 			JSONObject searchResults = new JSONObject(json);
 			List<Status> users = new ArrayList<Status>();
-			JSONArray arr = searchResults.getJSONArray("results");
+			JSONArray arr = searchResults.getJSONArray("statuses");
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject obj = arr.getJSONObject(i);
-				String userScreenName = obj.getString("from_user");
-				String profileImgUrl = obj.getString("profile_image_url");
-				User user = new User(userScreenName);
-				user.profileImageUrl = InternalUtils.URI(profileImgUrl);
-				Status s = new Status(obj, user);
+//				String userScreenName = obj.getString("from_user");
+//				String profileImgUrl = obj.getString("profile_image_url");
+//				User user = new User(userScreenName);
+//				user.profileImageUrl = InternalUtils.URI(profileImgUrl);
+				Status s = new Status(obj, null);
 				users.add(s);
 			}
 			return users;
