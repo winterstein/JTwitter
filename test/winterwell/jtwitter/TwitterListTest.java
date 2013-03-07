@@ -38,9 +38,10 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 	
 	public void testGetLists() {
-		Twitter jtwit = TwitterTest.newTestTwitter();		
-		List<TwitterList> lists = jtwit.getLists("tweetminster");
-		assert ! lists.isEmpty();
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		List<TwitterList> lists1 = jtwit.getLists("winterstein");
+		List<TwitterList> lists2 = jtwit.getLists("tweetminster");
+		assert ! lists2.isEmpty();
 	}
 
 	public void testTwitterList() {

@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
+import winterwell.jtwitter.Twitter.ITweet;
 
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
@@ -509,6 +511,25 @@ public class InternalUtils {
 	static boolean authoriseIn11(Twitter jtwit) {
 		return jtwit.getHttpClient().canAuthenticate() 
 				|| jtwit.TWITTER_URL.endsWith("1.1");
+	}
+
+
+	/**
+	 * 
+	 * @param maxId
+	 * @param stati
+	 * @return mimimum - 1
+	 */
+	public static BigInteger getMinId(BigInteger maxId, List<? extends ITweet> stati) {
+		BigInteger min = maxId;
+		for (ITweet s : stati) {
+			if (min==null || min.compareTo(s.getId()) > 0) {
+				min = s.getId();
+			}
+		}
+		// Next page must start strictly before this one
+		if (min!=null) min = min.subtract(BigInteger.ONE);
+		return min;
 	}
 
 }

@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import winterwell.jtwitter.Twitter.ITweet;
 
@@ -56,6 +57,8 @@ public class UserStream extends AStream {
 
 	@Override
 	HttpURLConnection connect2() throws IOException {
+		connect3_rateLimit();
+		// API version 2?! Yes, this is right.
 		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
 		Map<String, String> vars = InternalUtils.asMap("with",
 				(withFollowings ? "followings" : "user"));
@@ -63,6 +66,29 @@ public class UserStream extends AStream {
 		return con;
 	}
 
+	/**
+	 * Protect the rate limits & _help_ you avoid annoying Twitter (only
+	 * locally! And forgetful! Do NOT rely on this)
+	 */
+	private void connect3_rateLimit() {
+		if (jtwit.getScreenName() == null)
+			return; // dunno
+		AStream s = user2stream.get(jtwit.getScreenName());
+		if (s != null && s.isConnected())
+			throw new TwitterException.TooManyLogins("One account, one UserStream");		
+		// memory paranoia
+		if (user2stream.size() > 500) {
+			// oh well -- forget stuff (this Map is just a safety check)
+			user2stream = new ConcurrentHashMap<String, AStream>();
+		}
+		user2stream.put(jtwit.getScreenName(), this);
+	}
+	
+	/**
+	 * Used to help avoid breaking api limits.
+	 */
+	static Map<String, AStream> user2stream = new ConcurrentHashMap();
+	
 	/**
 	 * Use the REST API to fill in: mentions of you. Missed you-follow-them
 	 * events are automatically generated on reconnect.
@@ -119,4 +145,12 @@ public class UserStream extends AStream {
 		this.withFollowings = withFollowings;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("UserStream");
+		sb.append("["+jtwit.getScreenNameIfKnown());
+		if (withFollowings) sb.append(" +followings");
+		sb.append("]");
+		return sb.toString();
+	}
 }

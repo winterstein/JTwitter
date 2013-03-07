@@ -13,16 +13,8 @@ import winterwell.utils.io.XStreamBinaryConverter;
 
 public class ExtraWinterwellTests {
 
+	
 //	@Test
-//	public void testWeird() {
-//		Twitter twit = TwitterTest.newTestTwitter();
-//		Status s = twit.getStatus(new BigInteger("1571859190"));
-//		twit.destroyStatus(new BigInteger("1571859190"));
-//		System.out.println(s);
-//	}
-	
-	
-	@Test
 	public void testAuth() throws Exception {
 		OAuthSignpostClient client = new OAuthSignpostClient(
 				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
@@ -47,10 +39,12 @@ public class ExtraWinterwellTests {
 //				"RT @pozorvlak: Delighted to see Alan Bundy (@winterstein's PhD supervisor, IIRC) in the New Year's Honour's list: http://soda.sh/xbE");
 		
 		BigInteger id = new BigInteger("154915015965683712");
+		tt.setIncludeTweetEntities(true);
 		Status s2 = tt.getStatus(id);
 		System.out.println(s2);
+		System.out.println(s2.getDisplayText());
 		List<TweetEntity> urls2 = s2.getTweetEntities(KEntityType.urls);
-		TweetEntity te = urls2.get(0); // this tweet-entity sucks too :(
+		TweetEntity te = urls2==null? null : urls2.get(0); // this tweet-entity sucks too :(
 		System.out.println(urls2);
 		assert ! s2.getText().contains("http://t.co ...");
 		

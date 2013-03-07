@@ -112,6 +112,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	public final String postMultipartForm(String url, Map<String, ?> vars) 
 			throws TwitterException 
 	{
+		String resource = checkRateLimit(url);
 		try {			
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 			connection.setRequestMethod("POST");
@@ -143,8 +144,8 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			ClientHttpRequest req = new ClientHttpRequest(connection);
 			InputStream page = req.post(vars);
 			// check connection & process the envelope
-			processError(connection);
-			processHeaders(connection);
+			processError(connection, resource);
+			processHeaders(connection, resource);
 			return InternalUtils.toString(page);
 		} catch (TwitterException e) {
 			throw e;
@@ -362,7 +363,9 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 
 	@Override
 	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
-			throws IOException, OAuthException {
+			throws IOException, OAuthException 
+	{
+		String resource = checkRateLimit(uri);
 		HttpURLConnection connection = (HttpURLConnection) new URL(uri)
 				.openConnection();
 		connection.setRequestMethod("POST");
@@ -390,8 +393,8 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		os.write(payload.getBytes());
 		InternalUtils.close(os);
 		// check connection & process the envelope
-		processError(connection);
-		processHeaders(connection);
+		processError(connection, resource);
+		processHeaders(connection, resource);
 		return connection;
 	}
 

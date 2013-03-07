@@ -92,8 +92,7 @@ public class TwitterStream extends AStream {
 	HttpURLConnection connect2() throws Exception {
 		connect3_rateLimit();
 
-		String url = "https://stream.twitter.com/1/statuses/" + method
-				+ ".json";
+		String url = "https://stream.twitter.com/"+Twitter.API_VERSION+"/statuses/"+method+".json";
 		Map<String, String> vars = new HashMap();		
 		if (follow != null && follow.size() != 0) {
 			vars.put("follow", InternalUtils.join(follow, 0, Integer.MAX_VALUE));
@@ -128,7 +127,7 @@ public class TwitterStream extends AStream {
 							+ ").\n	But streams OR their filter parameters, so one stream can do a lot.");
 		
 		// memory paranoia
-		if (user2stream.size() > 1000) {
+		if (user2stream.size() > 500) {
 			// oh well -- forget stuff (this Map is just a safety check)
 			user2stream = new ConcurrentHashMap<String, AStream>();
 		}

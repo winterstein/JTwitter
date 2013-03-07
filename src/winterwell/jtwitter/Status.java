@@ -79,14 +79,14 @@ public final class Status implements ITweet {
 		try {
 			JSONObject searchResults = new JSONObject(json);
 			List<Status> users = new ArrayList<Status>();
-			JSONArray arr = searchResults.getJSONArray("results");
+			JSONArray arr = searchResults.getJSONArray("statuses");
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject obj = arr.getJSONObject(i);
-				String userScreenName = obj.getString("from_user");
-				String profileImgUrl = obj.getString("profile_image_url");
-				User user = new User(userScreenName);
-				user.profileImageUrl = InternalUtils.URI(profileImgUrl);
-				Status s = new Status(obj, user);
+//				String userScreenName = obj.getString("from_user");
+//				String profileImgUrl = obj.getString("profile_image_url");
+//				User user = new User(userScreenName);
+//				user.profileImageUrl = InternalUtils.URI(profileImgUrl);
+				Status s = new Status(obj, null);
 				users.add(s);
 			}
 			return users;
@@ -162,6 +162,7 @@ public final class Status implements ITweet {
 	 * _new-style_ retweets. -1 if unknown.
 	 */
 	public final int retweetCount;
+	
 	boolean sensitive;
 
 	/**
@@ -221,7 +222,8 @@ public final class Status implements ITweet {
 			String _rawtext = InternalUtils.jsonGet("text", object);
 			String _text = _rawtext;
 			// Twitter have started truncating RTs -- let's fix the text up if we can
-			boolean truncated = object.optBoolean("truncated");
+			boolean truncated = object.optBoolean("truncated") // This can lie (bugs seen March 2013) -- so let's also check the text
+								|| (_text.endsWith("...") && original!=null);
 			String rtStart = null;
 			if (truncated && original!=null && _text.startsWith("RT ")) {
 				rtStart = "RT @"+original.getUser()+": ";
@@ -248,7 +250,7 @@ public final class Status implements ITweet {
 				inReplyToStatusId = new BigInteger(irt);
 			}
 			favorited = object.optBoolean("favorited");
-
+			
 			// set user
 			if (user != null) {
 				this.user = user;
@@ -257,25 +259,19 @@ public final class Status implements ITweet {
 				// null user happens in very rare circumstances, which I
 				// have not pinned down yet.
 				if (jsonUser == null) {
-					this.user = null;
-				} else if (jsonUser.length() < 3) {
-					// TODO seen a bug where the jsonUser is just
+					this.user = null;					
+				} else if (jsonUser.opt("screen_name")==null) {
+					// Seen a bug where the jsonUser is just
 					// {"id":24147187,"id_str":"24147187"}
 					// Not sure when/why this happens
 					String _uid = jsonUser.optString("id_str");
 					BigInteger userId = new BigInteger(_uid == "" ? object.get(
 							"id").toString() : _uid);
-					try {
-						user = new Twitter().show(userId);
-					} catch (Exception e) {
-						// ignore
-					}
-					this.user = user;
+					this.user = new User(null, userId);
 				} else {
 					// normal JSON case
 					this.user = new User(jsonUser, this);
 				}
-
 			}
 			// location if geocoding is on
 			Object _locn = Status.jsonGetLocn(object);
@@ -505,7 +501,7 @@ public final class Status implements ITweet {
 	}
 
 	/**
-	 * @return text, with the t.co urls replaced.
+	 * @return text, with the t.co urls replaced with their originals (if known).
 	 * Use-case: for filtering based on text contents, when we want to
 	 * match against the full url.
 	 * Note: this does NOT resolve short urls from bit.ly etc. 
@@ -517,7 +513,11 @@ public final class Status implements ITweet {
 	static String getDisplayText2(ITweet tweet) {
 		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
 		String _text = tweet.getText();
-		if (es==null || es.size()==0) return _text;
+		if (es==null || es.size()==0) {
+			// TODO Is it a truncated retweet? Then use the original
+			
+			return _text;
+		}
 		StringBuilder sb = new StringBuilder(200);
 		int i=0;
 		for (TweetEntity entity : es) {

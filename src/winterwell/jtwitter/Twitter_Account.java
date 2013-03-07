@@ -1,7 +1,9 @@
 package winterwell.jtwitter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,6 +73,8 @@ public class Twitter_Account {
 		assert jtwit.getHttpClient().canAuthenticate() : jtwit;
 		this.jtwit = jtwit;
 	}
+	
+
 
 	/**
 	 * Create a new saved search.

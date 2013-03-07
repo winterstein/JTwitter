@@ -253,13 +253,8 @@ public class TwitterList extends AbstractList<User> {
 	 *             on failure
 	 */
 	public void delete() {
-		try {
-			String URL = jtwit.TWITTER_URL + "/" + owner.screenName + "/lists/"
-					+ URLEncoder.encode(slug, "utf-8") + ".json?_method=DELETE";
-			http.post(URL, null, http.canAuthenticate());
-		} catch (UnsupportedEncodingException e) {
-			throw new TwitterException(e);
-		}
+		String URL = jtwit.TWITTER_URL + "/lists/destroy.json";
+		http.post(URL, getListVars(), true);		
 	}
 
 	@Override
@@ -316,22 +311,20 @@ public class TwitterList extends AbstractList<User> {
 
 	/**
 	 * Returns a list of statuses from this list.
+	 * <p>
+	 * This uses the "standardish" settings in JTwitter -- eg include RTs and since-id
 	 * 
 	 * @return List<Status> a list of Status objects for the list
 	 * @throws TwitterException
 	 */
 	// Added TG 3/31/10
 	public List<Status> getStatuses() throws TwitterException {
-		try {
-			String jsonListStatuses = http.getPage(
-					jtwit.TWITTER_URL + "/" + owner.screenName + "/lists/"
-							+ URLEncoder.encode(slug, "UTF-8")
-							+ "/statuses.json", null, http.canAuthenticate());
-			List<Status> msgs = Status.getStatuses(jsonListStatuses);
-			return msgs;
-		} catch (UnsupportedEncodingException e) {
-			throw new TwitterException(e);
-		}
+		Map vars = getListVars();
+		// since-id, etc
+		jtwit.addStandardishParameters(vars);
+		// provides paging
+		String url = jtwit.TWITTER_URL + "/lists/statuses.json";
+		return jtwit.getStatuses(url, vars, true);		
 	}
 
 	public int getSubscriberCount() {

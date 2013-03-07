@@ -163,8 +163,7 @@ public final class User implements Serializable {
 			id = obj.getLong("id");
 			name = InternalUtils.unencode(InternalUtils.jsonGet("name", obj));
 			String sn = InternalUtils.jsonGet("screen_name", obj);
-			screenName = Twitter.CASE_SENSITIVE_SCREENNAMES ? sn : sn
-					.toLowerCase();						
+			screenName = Twitter.CASE_SENSITIVE_SCREENNAMES ? sn : sn.toLowerCase();						
 			// location - normalise a bit
 			Object _locn = Status.jsonGetLocn(obj);
 			location = _locn == null ? null : _locn.toString();
@@ -269,8 +268,11 @@ public final class User implements Serializable {
 		this(screenName, null);
 	}
 
-	private User(String screenName, Long id) {
-		this.id = id;
+	/**
+	 * Create a dummy User object. All fields except screenName and id are set to null.
+	 */
+	User(String screenName, Number id) {
+		this.id = id==null? null : id.longValue();
 		name = null;
 		if (screenName != null && !Twitter.CASE_SENSITIVE_SCREENNAMES) {
 			screenName = screenName.toLowerCase();

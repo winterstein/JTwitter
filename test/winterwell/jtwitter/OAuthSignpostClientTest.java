@@ -2,12 +2,14 @@ package winterwell.jtwitter;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 public class OAuthSignpostClientTest 
-extends TestCase
 {
 
+//	@Test
 	public void testSimple() {
 		OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthScribeClient.JTWITTER_OAUTH_SECRET, "oob");
 		Twitter jtwit = new Twitter(TwitterTest.TEST_USER, client);
@@ -25,6 +27,7 @@ extends TestCase
 		jtwit.setStatus("Using OAuth to tweet");
 	}
 	
+//	@Test
 	public void testRecreatingScribe() {
 		OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthSignpostClient.JTWITTER_OAUTH_SECRET, "oob");
 		Twitter jtwit = new Twitter(TwitterTest.TEST_USER, client);
