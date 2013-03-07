@@ -69,7 +69,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private boolean htmlImpliesError = true;
 
-	private boolean gzip = true;
+	private boolean gzip = false;
 	
 	/**
 	 * Set whether or not to request gzipped responses.
