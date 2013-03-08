@@ -1111,14 +1111,18 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testRetweet() {
 		Twitter tw = newTestTwitter();
 		String[] tweeps = new String[]{
-				"winterstein", "joehalliwell", "spoonmcguffin", "forkmcguffin"};
-		Status s = tw.getStatus(tweeps[new Random().nextInt(tweeps.length)]);
+				"stephenfry", "ladygaga", "justinbieber"
+//				"winterstein", 
+//				"joehalliwell", "spoonmcguffin", "forkmcguffin", "johnnieingram"
+				};
+		String chosen = tweeps[new Random().nextInt(tweeps.length)];
+		Status s = tw.getStatus(chosen);		
+		System.out.println("RT @"+chosen+": "+s+"\tBY: "+tw.getScreenName());
+		
 		Status rt1 = tw.retweet(s);
-		assert rt1.text.contains(s.text) : rt1+ " vs "+s;
-		Status s2 = tw.getStatus("joehalliwell");
-		Status rt2 = tw.updateStatus("RT @"+s2.user.screenName+" "+s2.text);
-		assert rt2.text.contains(s2.text) : rt2;
-
+		
+		assert rt1.getDisplayText().contains(s.getDisplayText()) : rt1+ " vs "+s;
+		
 		Status original = rt1.getOriginal();
 		assert original != null;
 		User user = original.getUser();
@@ -1128,7 +1132,13 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 		// user timeline includes RTs
 		List<Status> tweets = tw.getUserTimeline();
-		assert tweets.contains(rt1) : tweets;
+		assert tweets.contains(rt1) : tweets;	
+		
+		{
+			Status s2 = tw.getStatus("joehalliwell");
+			Status rt2 = tw.updateStatus("RT @"+s2.user.screenName+" "+s2.text);
+			assert rt2.text.contains(s2.text) : rt2;
+		}
 	}
 
 	public void testSearch() {		

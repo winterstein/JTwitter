@@ -868,14 +868,12 @@ public class Twitter implements Serializable {
 			vars.put("count", count.toString());
 		}
 		if (tweetEntities) {
-			vars.put("include_entities", "1"); // TODO remove soon -- this is the new default
+			vars.put("include_entities", "1"); // TODO remove after testing -- this is the new default
 		} else {
 			vars.put("include_entities", "0");
 		}
-		if (includeRTs) {
-//			vars.put("include_rts", "1"); // This is the new default
-		} else {
-			vars.put("include_rts", "0");
+		if ( ! includeRTs) {
+			vars.put("include_rts", "0"); // On is the new default
 		}
 		return vars;
 	}
@@ -1450,11 +1448,15 @@ public class Twitter implements Serializable {
 	 *            the id number.
 	 */
 	public List<User> getRetweeters(Status tweet) {
-		String url = TWITTER_URL + "/statuses/" + tweet.id
-				+ "/retweeted_by.json";
+		String url = TWITTER_URL + "/statuses/retweets/" + tweet.id
+				+ ".json";
 		Map<String, String> vars = addStandardishParameters(new HashMap<String, String>());
 		String json = http.getPage(url, vars, http.canAuthenticate());
-		List<User> users = User.getUsers(json);
+		List<Status> ss = Status.getStatuses(json);		
+		List<User> users = new ArrayList(ss.size());
+		for (Status status : ss) {
+			users.add(status.getUser());
+		}
 		return users;
 	}
 
