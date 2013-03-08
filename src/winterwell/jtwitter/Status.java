@@ -189,6 +189,20 @@ public final class Status implements ITweet {
 	 */
 	public final User user;
 
+	private String lang;		
+	
+	/**
+	 * BCP 47 language identifiers. 
+	 * See the list of languages on Twitter's advanced search page. 
+	 * <br>
+	 * WARNING: Twitter's language detection is NOT reliable!
+	 * 
+	 * @return language code, or null if no language could be detected.
+	 */
+	public String getLang() {
+		return lang;
+	}
+
 //	private String[] withheldIn;
 	
 //	/**
@@ -279,6 +293,9 @@ public final class Status implements ITweet {
 			if (_locn instanceof Place) {
 				place = (Place) _locn;
 			}
+			// language if specified
+			String _lang = object.optString("lang");
+			lang = "und".equals(_lang)? null : _lang;
 
 			retweetCount = object.optInt("retweet_count", -1);			
 			

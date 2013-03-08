@@ -1,10 +1,12 @@
 # JTwitter Change list 
 
-2.8.1:
- - Handle v1.1 rate limits.
+2.8.1: More API v1.1 changes
+ - Handle v1.1 rate limits, and some 1.1 bug-fixes.
  - Retrofit Twitter.getRetweetsByMe
  - Use a more lenient charset decoder (possibly related to occasionally seeing MalformedInputException?)
-  
+ - Default value for include rts has changed.  
+ - Added Status.getLang() property
+ 
 2.8:
  - IMPORTANT: Enforced switch to API v1.1, in line with twitter.com
  
