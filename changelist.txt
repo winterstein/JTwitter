@@ -2,6 +2,8 @@
 
 2.8.1:
  - Handle v1.1 rate limits.
+ - Retrofit Twitter.getRetweetsByMe
+ - Use a more lenient charset decoder (possibly related to occasionally seeing MalformedInputException?)
   
 2.8:
  - IMPORTANT: Enforced switch to API v1.1, in line with twitter.com
