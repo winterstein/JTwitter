@@ -246,7 +246,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testgetRateLimitStatus() {
 		Twitter tw = newTestTwitter();
 		int i = tw.getRateLimitStatus();
-		System.out.println(i);
+		System.out.println("RateLimit: "+i);
 	}
 	
 	public void testRateLimits() {
@@ -443,25 +443,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 	
-	public void testRetweetsByMe() {
-		Twitter twitter = newTestTwitter();
-		Status original = twitter.getStatus("stephenfry");
-		Status retweet = twitter.retweet(original);
-
-		List<Status> rtsByMe = twitter.getRetweetsByMe();
-//		List<Status> rtsOfMe = source.getRetweetsOfMe();
-		assert retweet.getOriginal().equals(original) : retweet.getOriginal();
-		assert retweet.inReplyToStatusId.equals(original.id) : retweet.inReplyToStatusId +" vs "+original.id;		
-		assert retweet.getText().startsWith("RT @spoonmcguffin: ") : retweet;
-		assert ! rtsByMe.isEmpty();
-		assert rtsByMe.contains(retweet);
-//		assert ! rtsOfMe.isEmpty();
-//		assert rtsOfMe.contains(original);
-
-		// retweeters
-//		List<User> retweeters = source.getRetweeters(rtsOfMe.get(0));
-//		System.out.println(retweeters);
-	}
 
 	public void testMisc() {
 		//
@@ -969,6 +950,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert s != null;
 	}
 
+
+	/**
+	 * Try a call with gzip encoding on
+	 */
+	public void testGzipOn() {
+		Twitter tw = newTestTwitter();
+		((URLConnectionHttpClient)tw.getHttpClient()).setGzip(true);
+		List<Status> tweets = tw.getUserTimeline();
+		assert ! tweets.isEmpty();
+	}
+	
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getStatus(int)}.
 	 */

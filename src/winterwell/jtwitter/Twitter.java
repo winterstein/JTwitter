@@ -1492,16 +1492,22 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * @deprecated Removed in api v1.1. Simulated with other methods. Will be removed June 2013
+	 * 
 	 * @return retweets that you have made using "new-style" retweets rather
 	 *         than the RT microfromat. These are your tweets, i.e. they begin
 	 *         "RT @whoever: ". You can get the original tweet via
 	 *         {@link Status#getOriginal()}
 	 */
 	public List<Status> getRetweetsByMe() {
-		String url = TWITTER_URL + "/statuses/retweeted_by_me.json";
-		Map<String, String> vars = addStandardishParameters(new HashMap<String, String>());
-		String json = http.getPage(url, vars, true);
-		return Status.getStatuses(json);
+		List<Status> myTweets = getUserTimeline();
+		List<Status> retweets =new ArrayList();
+		for (Status status : myTweets) {
+			if (status.getOriginal()!=null && status.getText().startsWith("RT")) {
+				retweets.add(status);
+			}
+		}
+		return retweets;
 	}
 
 	/**

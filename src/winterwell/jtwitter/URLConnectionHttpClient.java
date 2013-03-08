@@ -12,6 +12,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.MalformedInputException;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -177,7 +178,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private String getErrorStream(HttpURLConnection connection) {
 		try {
-			return InternalUtils.toString(connection.getErrorStream());
+			return InternalUtils.read(connection.getErrorStream());
 		} catch (NullPointerException e) {
 			return null;
 		}
@@ -295,14 +296,17 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			InputStream inStream = connection.getInputStream();
 			// AZ: gunzip if twitter indicates it's gzipped content
 			// TODO Use this in streaming too (but see dev.twitter.com note about sub-classing!)
-			String contentEncoding = getHeader("Content-Encoding");
+			String contentEncoding = connection.getContentEncoding();
 			if ("gzip".equals(contentEncoding)) {
 				inStream = new GZIPInputStream(inStream);
 			}
 			// Read in the web page
-			String page = InternalUtils.toString(inStream);
+			String page = InternalUtils.read(inStream);
 			// Done
 			return page;
+		} catch(MalformedInputException ex) {
+			// provide some debug info
+			throw new IOException(ex+" enc:"+connection.getContentEncoding());
 		} finally {
 			disconnect(connection);
 		}		
@@ -358,7 +362,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		try {
 			connection = post2_connect(uri, vars);
 			// Get the response
-			String response = InternalUtils.toString(connection
+			String response = InternalUtils.read(connection
 					.getInputStream());
 			return response;
 		} finally {

@@ -146,7 +146,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			// check connection & process the envelope
 			processError(connection, resource);
 			processHeaders(connection, resource);
-			return InternalUtils.toString(page);
+			return InternalUtils.read(page);
 		} catch (TwitterException e) {
 			throw e;
 		} catch (Exception e) {

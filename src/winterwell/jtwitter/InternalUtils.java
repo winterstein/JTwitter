@@ -379,16 +379,18 @@ public class InternalUtils {
 		usage = new ConcurrentHashMap<String, Long>();
 	}
 	
+	/**
+	 * We assume that UTF8 is supported everywhere!
+	 */
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	/**
-	 * Use a bufferred reader (preferably UTF-8) to extract the contents of the
-	 * given stream. A convenience method for
-	 * {@link InternalUtils#toString(Reader)}.
+	 * Use a buffered reader (preferably UTF-8) to extract the contents of the
+	 * given stream. Then close it.
 	 */
-	protected static String toString(InputStream inputStream) {
+	protected static String read(InputStream inputStream) {
 		try {
-			Reader reader = new InputStreamReader(inputStream, UTF_8.newDecoder());
+			Reader reader = new InputStreamReader(inputStream, UTF_8);
 			reader = new BufferedReader(reader);
 			StringBuilder output = new StringBuilder();
 			while (true) {
