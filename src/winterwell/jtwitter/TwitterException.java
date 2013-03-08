@@ -65,11 +65,13 @@ public class TwitterException extends RuntimeException {
 
 	/**
 	 * A Forbidden exception. This is thrown if the authenticating used does not
-	 * have the right to make a request. Possible causes: - Accessing a
-	 * suspended account (ie. trying to look at messages from a spambot) -
-	 * Accessing a protected stream - Repeatedly posting the same status - If
-	 * search is passed a sinceId which is too old. Though the API documentation
+	 * have the right to make a request. Possible causes:
+	 * <ul>
+	 * <li>Accessing a suspended account (ie. trying to look at messages from a spambot)
+	 * <li>Accessing a protected stream - Repeatedly posting the same status
+	 * <li>If search is passed a sinceId which is too old. Though the API documentation
 	 * suggests a 404 should be thrown instead.
+	 * </ul>
 	 */
 	public static class E403 extends E40X {
 		private static final long serialVersionUID = 1L;
@@ -94,7 +96,9 @@ public class TwitterException extends RuntimeException {
 
 	/**
 	 * Not Acceptable. One or more of the parameters are not suitable for the
-	 * resource. The track parameter, for example, would throw this error if:
+	 * resource. 
+	 * <p>
+	 * The track parameter, for example, would throw this error if:
 	 * 
 	 * The track keyword is too long or too short. The bounding box specified is
 	 * invalid. No predicates defined for filtered resource, for example,

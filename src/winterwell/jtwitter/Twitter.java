@@ -873,7 +873,7 @@ public class Twitter implements Serializable {
 			vars.put("include_entities", "0");
 		}
 		if (includeRTs) {
-			vars.put("include_rts", "1"); // TODO remove soon -- this is the new default
+//			vars.put("include_rts", "1"); // This is the new default
 		} else {
 			vars.put("include_rts", "0");
 		}
@@ -2094,6 +2094,8 @@ public class Twitter implements Serializable {
 	 * @param searchTerm
 	 *            This can include several space-separated keywords, #tags and @username
 	 *            (for mentions), and use quotes for \"exact phrase\" searches.
+	 *        Limited to 1,000 characters maximum, including operators. 
+	 *        Queries may additionally be limited by complexity.
 	 * @param callback
 	 *            an object whose process() method will be called on each new
 	 *            page of results.
@@ -2102,6 +2104,8 @@ public class Twitter implements Serializable {
 	 * @return search results - up to maxResults if maxResults is positive, or
 	 *         rpp if maxResults is negative/zero. See
 	 *         {@link #setMaxResults(int)} to use > 100.
+	 *         
+	 * @throws E403 or E406 if the search query can't be handled.
 	 */
 	public List<Status> search(String searchTerm, ICallback callback, int rpp) {
 		// TODO refactor to use the metadata returned from Twitter
@@ -2109,6 +2113,11 @@ public class Twitter implements Serializable {
 			throw new IllegalArgumentException(
 					"You need to switch on paging to fetch more than 100 search results. First call setMaxResults() to raise the limit above "
 							+ rpp);
+		// Too long a query?
+		if (searchTerm.length() > 1000) {
+			throw new TwitterException.E406("Search query too long: "+searchTerm);
+			// Note: queries can still be rejected by twitter on complexity grounds.  
+		}
 //		searchTerm = search2_bugHack(searchTerm);
 		Map vars;
 		if (maxResults < 100 && maxResults > 0) {
@@ -2139,6 +2148,12 @@ public class Twitter implements Serializable {
 				} else {
 					throw pex;
 				}
+			} catch(TwitterException.E403 ex) {
+				// Try to send a more helpful error message TODO keep an eye out that this remains valid
+				if (ex.getMessage()!=null && ex.getMessage().startsWith("code 195:")) {
+					throw new TwitterException.E406("Search too long/complex: "+ex.getMessage());
+				}
+				throw ex;
 			}
 			int numResults = stati.size();
 			
@@ -2399,7 +2414,7 @@ public class Twitter implements Serializable {
 	public void setSearchLocation(double latitude, double longitude,
 			String radius) {
 		assert radius.endsWith("mi") || radius.endsWith("km") : radius;
-		geocode = latitude + "," + longitude + "," + radius;
+		geocode = ((float)latitude) + "," + ((float)longitude) + "," + radius;
 	}
 
 	/**

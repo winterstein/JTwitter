@@ -962,6 +962,29 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 	
 	/**
+	 * Bug seen on LatAm long searches
+	 */
+	public void testCode195() {
+		Twitter tw = newTestTwitter();
+		tw.setSearchResultType(tw.SEARCH_RECENT);
+		tw.setSearchLocation(19.4326077, -99.133208, "37.570701599121094km");
+		String search = "\"necesito conseguir empleo\" OR \"ocupo conseguir empleo\" OR \"necesito un empleo\" OR \"deseo un empleo\" OR \"quisiera un empleo\" OR \"me muero por un empleo\" OR \"quiero una chamba\" OR \"requiero una chamba\" OR \"estoy buscando chamba\" OR \"ando buscando chamba\" OR \"busco chamba\" OR \"ocupo tener chamba\" OR \"quiero conseguir chamba\" OR \"necesito conseguir chamba\" OR \"ocupo conseguir chamba\" OR \"necesito una chamba\" OR \"deseo una chamba\" OR \"quisiera una chamba\" OR \"me muero por una chamba\"";
+		String[] bits = search.split(" OR ");
+		String s = null;
+		for (String string : bits) {
+			s = s==null? string : s+" OR "+string;
+			System.out.println(s.length()+"\t"+s);
+			try {
+				List<Status> rs = tw.search(s);		
+			} catch(TwitterException.E406 ex) {
+				System.out.println(ex);
+				assert s.length() > 120 : s;
+				break;
+			}
+		}
+	}
+	
+	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getStatus(int)}.
 	 */
 	public void testGetStatus() {
