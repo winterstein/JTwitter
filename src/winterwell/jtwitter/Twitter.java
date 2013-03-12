@@ -107,21 +107,6 @@ public class Twitter implements Serializable {
 	public interface ICallback {
 		public boolean process(List<Status> statuses);
 	}
-	
-
-	/** TODO
-	 * 
-	 */
-//	If available, returns an array of replies and mentions related to the 
-//	specified Tweet. There is no guarantee there will be any replies or 
-//	mentions in the response. This method is only available to users who 
-//	have access to #newtwitter.
-	@Deprecated // TODO
-	public List<ITweet> getRelated(ITweet tweet) { 
-		// TODO
-		String url = TWITTER_URL+"/related_results/show/"+tweet.getId()+".json"; 
-		throw new RuntimeException("TODO");
-	}
 			
 	/**
 	 * How is the Twitter API today?
@@ -2551,6 +2536,8 @@ public class Twitter implements Serializable {
 	 * {@link #updateLongStatus(String, long)}. To get an api-key for your app,
 	 * contact twitlonger as described here: http://www.twitlonger.com/api
 	 * 
+	 * This method will be removed June 2013
+	 * 
 	 * @param twitlongerAppName
 	 * @param twitlongerApiKey
 	 */
@@ -2562,6 +2549,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @see Twitter_Users#show(Number)
+	 * 
+	 * This method will be removed June 2013
 	 */
 	@Deprecated
 	public User show(Number userId) {
@@ -2570,6 +2559,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @see Twitter_Users#show(String)
+	 * 
+	 * This method will be removed June 2013
 	 */
 	@Deprecated
 	public User show(String screenName) throws TwitterException,
@@ -2635,6 +2626,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @see Twitter_Users#stopFollowing(String)
+	 * 
+	 * This method will be removed June 2013
 	 */
 	@Deprecated
 	public User stopFollowing(String username) {
@@ -2643,6 +2636,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @see Twitter_Users#stopFollowing(User)
+	 * 
+	 * This method will be removed June 2013
 	 */
 	@Deprecated
 	public User stopFollowing(User user) {
@@ -2874,12 +2869,14 @@ public class Twitter implements Serializable {
 
 
 	/**
-	 * Updates the authenticating user's status with an image (or other media file / attachment).
+	 * Updates the user's status with an image (or other media file / attachment).
 	 * 
 	 * @param statusText
 	 * @param inReplyToStatusId Can be null.
 	 * @param mediaFile
 	 * @return The posted status when successful.
+	 * 
+	 * @see #PHOTO_SIZE_LIMIT
 	 */
 	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
 	// c.f. https://dev.twitter.com/discussions/1059
