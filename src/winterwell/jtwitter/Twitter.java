@@ -1086,8 +1086,7 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * The most recent 20 favourite tweets for the given user. (Note: This can
-	 * use page - and page only - to fetch older favourites).
+	 * The most recent 20 favourite tweets for the given user.
 	 * 
 	 * @param screenName
 	 *            login-name.
