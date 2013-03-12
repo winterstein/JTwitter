@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -118,7 +119,9 @@ public class OAuthScribeClient implements IHttpClient {
 
 	private String consumerKey;
 	private String consumerSecret;
-	private final Map<KRequestType, RateLimit> rateLimits = new EnumMap<KRequestType, RateLimit>(KRequestType.class);
+	
+//	private final Map<KRequestType, RateLimit> rateLimits = new EnumMap<KRequestType, RateLimit>(KRequestType.class);
+	
 	private Token requestToken;
 	private boolean retryingFlag;
 	private boolean retryOnError;
@@ -289,7 +292,14 @@ public class OAuthScribeClient implements IHttpClient {
 
 	@Override
 	public RateLimit getRateLimit(KRequestType reqType) {
-		return rateLimits.get(reqType);
+		return null; //rateLimits.get(reqType);
+	}
+	
+	/**
+	 * @deprecated // TODO update for v1.1
+	 */
+	public Map<String, RateLimit> getRateLimits() {
+		return Collections.EMPTY_MAP; //rateLimits;
 	}
 
 	/**
@@ -439,24 +449,25 @@ public class OAuthScribeClient implements IHttpClient {
 
 	// TODO can we call this whenever a RateLimit exception is thrown?
 	public void updateRateLimits(KRequestType reqType) {
-		String limit = null, remaining = null, reset = null;
-		switch (reqType) {
-		case NORMAL:
-		case SHOW_USER:
-			limit = getHeader("X-RateLimit-Limit");
-			remaining = getHeader("X-RateLimit-Remaining");
-			reset = getHeader("X-RateLimit-Reset");
-			break;
-		case SEARCH:
-		case SEARCH_USERS:
-			limit = getHeader("X-FeatureRateLimit-Limit");
-			remaining = getHeader("X-FeatureRateLimit-Remaining");
-			reset = getHeader("X-FeatureRateLimit-Reset");
-			break;
-		}
-		if (limit != null) {
-			rateLimits.put(reqType, new RateLimit(limit, remaining, reset));
-		}
+		if (true) return; // TODO update for v1.1
+//		String limit = null, remaining = null, reset = null;
+//		switch (reqType) {
+//		case NORMAL:
+//		case SHOW_USER:
+//			limit = getHeader("X-RateLimit-Limit");
+//			remaining = getHeader("X-RateLimit-Remaining");
+//			reset = getHeader("X-RateLimit-Reset");
+//			break;
+//		case SEARCH:
+//		case SEARCH_USERS:
+//			limit = getHeader("X-FeatureRateLimit-Limit");
+//			remaining = getHeader("X-FeatureRateLimit-Remaining");
+//			reset = getHeader("X-FeatureRateLimit-Reset");
+//			break;
+//		}
+//		if (limit != null) {
+//			rateLimits.put(reqType, new RateLimit(limit, remaining, reset));
+//		}
 	}
 
 }

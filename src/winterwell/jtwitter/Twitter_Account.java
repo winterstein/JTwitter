@@ -75,6 +75,15 @@ public class Twitter_Account {
 	}
 	
 
+	/**
+	 * Call Twitter to fetch rate-limit info. This method is itself rate-limited!
+	 *  
+	 * @see IHttpClient#getRateLimits()
+	 */
+	public Map<String, RateLimit> getRateLimits() {
+		return ((URLConnectionHttpClient)jtwit.getHttpClient()).updateRateLimits();
+	}
+
 
 	/**
 	 * Create a new saved search.

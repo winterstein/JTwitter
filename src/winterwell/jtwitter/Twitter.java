@@ -232,11 +232,16 @@ public class Twitter implements Serializable {
 
 		/**
 		 * @deprecated
-		 * @see Twitter#getRateLimit(KRequestType) This is where the Twitter
-		 *      method is implemented.
+		 * @see #getRateLimits() 
 		 */
 		RateLimit getRateLimit(KRequestType reqType);
 		
+		/**
+		 * @return resource-to-rate-limit info, if known, or null.
+		 * This method does _not_ perform a Twitter call.
+		 */
+		Map<String, RateLimit> getRateLimits();
+					
 		/**
 		 * Send an HTTP POST request and return the response body.
 		 * 
@@ -623,15 +628,10 @@ public class Twitter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-//	/**
-//	 * Search has to go through a separate url (Twitter's decision, June 2010).
-//	 */
-//	private static final String TWITTER_SEARCH_URL = "http://search.twitter.com";
-
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.8.1";
+	public final static String version = "2.8.2";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -1374,7 +1374,7 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated Use getHttpClient().getRateLimits()
 	 * What is the current rate limit status? Do we need to throttle back our
 	 * usage? This is the cached info from the last call of that type.
 	 * <p>
@@ -1416,7 +1416,8 @@ public class Twitter implements Serializable {
 		RateLimit rl = ((URLConnectionHttpClient)http).updateRateLimits().get(KRequestType.NORMAL.rateLimit);
 		return rl==null? 90 : rl.getRemaining();
 	}
-
+	
+	
 	/**
 	 * Returns the 20 most recent replies/mentions (status updates with
 	 * 

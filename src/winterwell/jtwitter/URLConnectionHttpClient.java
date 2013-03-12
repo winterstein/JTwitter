@@ -312,7 +312,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		}		
 	}
 
-	@Deprecated
 	@Override
 	public RateLimit getRateLimit(KRequestType reqType) {
 		return rateLimits.get(reqType.rateLimit);
