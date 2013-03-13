@@ -2,6 +2,7 @@
 
 2.8.2:
  - Added Twitter.account().getRateLimits() and IHttpClient.updateRateLimits() 
+ - IMPORTANT: work-around for encoding issue re *
  
 2.8.1: More API v1.1 changes
  - Handle v1.1 rate limits, and some 1.1 bug-fixes.

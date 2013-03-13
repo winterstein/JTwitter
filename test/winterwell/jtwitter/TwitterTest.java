@@ -1270,6 +1270,26 @@ extends TestCase // Comment out to remove the JUnit dependency
 //		assert s2a.id.equals(s2b.id) : s2a+" vs "+s2b;
 		//		assert s2b.source.equals("web") : s2b.source;
 	}
+	
+	/**
+	 * Test for bug 1965
+	 */
+	public void testUpdateStatusSpecialChars() {		
+		Twitter tw = newTestTwitter();
+		int salt = new Random().nextInt(1000);
+		{
+			Status wchars = tw.updateStatus("Hello *"+new Date()+"* world");
+			System.out.println(wchars);
+		}
+		{
+			Status wchars = tw.updateStatus("\"Hello *"+salt+"* world!\" - 'test some more chars ._£$%&");
+			System.out.println(wchars);
+		}
+		{
+			Status wchars = tw.updateStatus("Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩");
+			System.out.println(wchars);
+		}
+	}
 
 
 	/**

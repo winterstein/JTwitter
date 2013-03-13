@@ -224,6 +224,8 @@ public class InternalUtils {
 			// This shouldn't happen as UTF-8 is standard
 			encd = URLEncoder.encode(String.valueOf(x));
 		}
+		// v1.1 doesn't like *
+		encd = encd.replace("*", "%2A");
 		return encd.replace("+", "%20");
 	}
 

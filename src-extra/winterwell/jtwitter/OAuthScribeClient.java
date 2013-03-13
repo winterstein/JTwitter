@@ -336,14 +336,13 @@ public class OAuthScribeClient implements IHttpClient {
 	public String post(String uri, Map<String, String> vars,
 			boolean authenticate) throws TwitterException {
 		try {
-
 			assert canAuthenticate();
 			OAuthRequest request = new OAuthRequest(Verb.POST, uri);
 			if (vars != null && vars.size() != 0) {
 				for (Entry<String, String> e : vars.entrySet()) {
 					if (e.getValue() == null) {
 						continue;
-					}
+					}					
 					request.addBodyParameter(e.getKey(), e.getValue());
 				}
 			}

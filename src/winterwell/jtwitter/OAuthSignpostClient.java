@@ -381,7 +381,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			@Override
 			public InputStream getMessagePayload() throws IOException {
 				// SHould we use ByteArrayInputStream instead? With what
-				// encoding?
+				// encoding?				
 				return new StringBufferInputStream(payload);
 			}
 		};
