@@ -699,7 +699,8 @@ public class Twitter implements Serializable {
 
 
 	/**
-	 * Provides support for fetching many pages
+	 * Provides support for fetching many pages of results.
+	 * -1 = 1 page's worth
 	 */
 	private int maxResults = -1;
 
@@ -1296,8 +1297,7 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Provides support for fetching many pages. -1 indicates "give me as much
-	 * as Twitter will let me have."
+	 * Provides support for fetching many pages. -1 indicates "give me 1 page's worth"
 	 */
 	public int getMaxResults() {
 		return maxResults;
