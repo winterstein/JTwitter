@@ -1282,11 +1282,38 @@ extends TestCase // Comment out to remove the JUnit dependency
 			System.out.println(wchars);
 		}
 		{
-			Status wchars = tw.updateStatus("\"Hello *"+salt+"* world!\" - 'test some more chars ._£$%&");
+			Status wchars = tw.updateStatus("\"Hello *"+salt+"* world!\" - 'test some more chars ._£$%&@");
 			System.out.println(wchars);
 		}
 		{
 			Status wchars = tw.updateStatus("Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩");
+			System.out.println(wchars);
+		}
+	}
+	
+	/**
+	 * Test for bug 1965
+	 */
+	public void testUpdateStatusWithMediaSpecialChars() {		
+		Twitter tw = newTestTwitter();
+		System.out.println(tw.getScreenName());
+		int salt = new Random().nextInt(1000);
+		File file = new File("test/winterwell/jtwitter/sodash-logo-colour-small.png");
+		assert file.exists();
+		{
+			Status wchars = tw.updateStatusWithMedia("How much work goes into the making of a Lady @Dior bag? Find out from the #DioratHarrods exhibition tomorrow onwards-", null, file);
+			System.out.println(wchars);
+		}
+		{
+			Status wchars = tw.updateStatusWithMedia("Pictures *"+new Date()+"* for the world", null, file);
+			System.out.println(wchars);
+		}
+		{
+			Status wchars = tw.updateStatusWithMedia("\"Image *"+salt+"* world!\" - 'test some more chars ._£$%&@", null, file);
+			System.out.println(wchars);
+		}
+		{
+			Status wchars = tw.updateStatusWithMedia("Media: Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩", null, file);
 			System.out.println(wchars);
 		}
 	}
