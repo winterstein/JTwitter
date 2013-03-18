@@ -129,8 +129,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 		// just a smoke test
 		Twitter jtwit = newTestTwitter();		
 		jtwit.updateConfiguration();
-		System.out.println(Twitter.LINK_LENGTH);
+		System.out.println("Link length: "+Twitter.LINK_LENGTH);
 		System.out.println("Photo limit: "+Twitter.PHOTO_SIZE_LIMIT);
+		System.out.println("Media length: "+Twitter.MEDIA_LENGTH);
 	}
 	
 	/**

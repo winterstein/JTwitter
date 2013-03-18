@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8.3:
+ - Increased the "default" Twitter.LINK_LENGTH to 23 characters, and added Twitter.MEDIA_LENGTH
+
 2.8.2:
  - Added Twitter.account().getRateLimits() and IHttpClient.updateRateLimits() 
  - IMPORTANT: work-around for encoding issue re *

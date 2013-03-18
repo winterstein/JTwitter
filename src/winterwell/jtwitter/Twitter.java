@@ -593,12 +593,21 @@ public class Twitter implements Serializable {
 	public static boolean CHECK_TWEET_LENGTH = true;
 
 	/**
-	 * The length of a url after t.co shortening. Currently 20 characters.
+	 * The length of a url after t.co shortening. Currently 22 characters.
+	 * Important: https links are 1 character longer!
 	 * <p>
-	 * Use updateConfiguration() if you want to get the latest settings from
+	 * Use updateConfiguration()if you want to get the latest settings from
 	 * Twitter.
 	 */
-	public static int LINK_LENGTH = 20;
+	public static int LINK_LENGTH = 22;
+	
+	/**
+	 * The characters used up by an attached image. Currently 23 characters (ie = an https link).
+	 * <p>
+	 * Use updateConfiguration()if you want to get the latest settings from
+	 * Twitter.
+	 */
+	public static int MEDIA_LENGTH = 23;
 
 	public static long PHOTO_SIZE_LIMIT = 3145728L; // 3mb
 
@@ -616,7 +625,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.8.2";
+	public final static String version = "2.8.3";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2615,15 +2624,6 @@ public class Twitter implements Serializable {
 		return addStandardishParameters(new HashMap<String, String>());
 	}
 
-	// /**
-	// * The length of an https url after t.co shortening.
-	// * This is just 1 more than {@link #LINK_LENGTH}
-	// * <p>
-	// * Use updateConfiguration() if you want to get the latest settings from
-	// Twitter.
-	// */
-	// public static int LINK_LENGTH_HTTPS = LINK_LENGTH+1;
-
 	/**
 	 * @see Twitter_Users#stopFollowing(String)
 	 * 
@@ -2655,9 +2655,9 @@ public class Twitter implements Serializable {
 			LINK_LENGTH = jo.getInt("short_url_length");
 			// LINK_LENGTH_HTTPS = jo.getInt("short_url_length_https");
 			// LINK_LENGTH + 1
-			// characters_reserved_per_media -- this is just LINK_LENGTH
 			// max_media_per_upload // 1!
-			PHOTO_SIZE_LIMIT = jo.getLong("photo_size_limit");
+			MEDIA_LENGTH = jo.getInt("characters_reserved_per_media");
+			PHOTO_SIZE_LIMIT = jo.getLong("photo_size_limit");			
 			// photo_sizes
 			// short_url_length_https
 		} catch (JSONException e) {
@@ -2713,7 +2713,11 @@ public class Twitter implements Serializable {
 		int shortLength = statusText.length();
 		Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
 		while(m.find()) {
-			shortLength += LINK_LENGTH - m.group().length(); 
+			shortLength += LINK_LENGTH - m.group().length();
+			// https? Add another 1 character
+			if (m.group().startsWith("https")) {
+				shortLength++;
+			}
 		}
 		return shortLength;
 	}
@@ -2750,7 +2754,7 @@ public class Twitter implements Serializable {
 	public Status updateStatus(String statusText, Number inReplyToStatusId)
 			throws TwitterException 
 	{		
-		Map<String, String> vars = updateStatus2_vars(statusText, inReplyToStatusId);
+		Map<String, String> vars = updateStatus2_vars(statusText, inReplyToStatusId, false);
 		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
 					true);
 		try {
@@ -2763,24 +2767,30 @@ public class Twitter implements Serializable {
 	}
 
 	/**
-	 * Check statusText & prep the parameters
+	 * Check statusText length & prep the parameters
 	 * @param statusText
 	 * @param inReplyToStatusId
 	 * @return The vars to send
 	 */
-	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId) 
+	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId, boolean withMedia) 
 	{
 		// check for length
-		if (statusText.length() > MAX_CHARS 
+		int max = withMedia? MAX_CHARS - MEDIA_LENGTH : MAX_CHARS;
+		if (statusText.length() > max 
 				&& TWITTER_URL.contains("twitter") // Hack: allow long posts to WordPress
 				&& CHECK_TWEET_LENGTH)  
 		{
 			int shortLength = countCharacters(statusText);
-			if (shortLength > MAX_CHARS) {
+			if (shortLength > max) {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
 					throw new IllegalArgumentException(
 							"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
+									+ statusText.length() + " " + statusText);
+				}
+				if (withMedia) {
+					throw new IllegalArgumentException(
+							"Status-with-media text must be "+max+" characters or less: "
 									+ statusText.length() + " " + statusText);
 				}
 				throw new IllegalArgumentException(
@@ -2883,8 +2893,8 @@ public class Twitter implements Serializable {
 	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
 		if (mediaFile==null || ! mediaFile.isFile()) {
 			throw new IllegalArgumentException("Invalid file: "+mediaFile);
-		}
-		Map vars = updateStatus2_vars(statusText, inReplyToStatusId);
+		}		
+		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, true);
 		vars.put("media[]", mediaFile);
 		// TODO possibly_sensitive
 		// TODO display_coordinates
