@@ -122,6 +122,8 @@ public class Twitter_Account {
 	}
 
 	/**
+	 * @deprecated It seems Twitter have stopped sending this info! Expect null from this method.
+	 * 
 	 * @return What access level does this login have? If the login is bogus,
 	 *         this will return {@link KAccessLevel#NONE}.
 	 */
