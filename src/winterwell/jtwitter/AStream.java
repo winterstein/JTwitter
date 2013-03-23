@@ -643,7 +643,7 @@ public abstract class AStream implements Closeable {
 			long fi = _friends.getLong(i);
 			friends.add(fi);
 		}
-		if (oldFriends == null || !fillInFollows)
+		if (oldFriends == null || ! fillInFollows)
 			return;
 
 		// This is after a reconnect -- did we miss any follow events?

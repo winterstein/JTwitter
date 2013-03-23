@@ -248,11 +248,6 @@ public class UserStreamTest {
 		String placeHolder="";
 	}
 	
-	@Test
-	public void scratch(){
-		assert ("@bob bob".contains("@ob"));
-	}
-	
 	
 
 
