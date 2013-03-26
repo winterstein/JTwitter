@@ -37,10 +37,11 @@ public class PeerIndex {
 	 */
 	public PeerIndexProfile getProfile(User user) {
 		Map vars = InternalUtils.asMap(
-				"id", user.screenName==null? user.id : user.screenName,
+				(user.screenName==null? "twitter_screen_name":"twitter_id"), (user.screenName==null? user.id : user.screenName),
 				"api_key", API_KEY
 		);
-		String json = client.getPage("http://api.peerindex.net/v2/profile/show.json", 
+		
+		String json = client.getPage("https://api.peerindex.com/1/actor/basic.json", 
 				vars, false);
 		try {
 			JSONObject jo = new JSONObject(json);

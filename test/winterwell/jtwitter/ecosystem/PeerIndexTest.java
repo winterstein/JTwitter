@@ -13,7 +13,7 @@ import winterwell.jtwitter.User;
  */
 public class PeerIndexTest {
 
-	static final String API_KEY = "ffb5b54460954cd4edbba1c08b04d802";
+	static final String API_KEY = "ksyrp23pzagppj857gg3j2sr";
 	
 	/**
 	 * Test method for {@link winterwell.jtwitter.ecosystem.PeerIndex#show(java.lang.String)}.
