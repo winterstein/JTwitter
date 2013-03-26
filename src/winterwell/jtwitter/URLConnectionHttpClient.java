@@ -14,11 +14,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.MalformedInputException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentMap;
 import java.util.zip.GZIPInputStream;
 
 import winterwell.json.JSONArray;
@@ -40,7 +42,7 @@ import winterwell.jtwitter.guts.Base64Encoder;
  * 
  */
 public class URLConnectionHttpClient implements Twitter.IHttpClient,
-		Serializable {
+		Serializable, Cloneable {
 	private static final int dfltTimeOutMilliSecs = 10 * 1000;
 
 	private static final long serialVersionUID = 1L;
@@ -51,9 +53,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	protected String name;
 
-	private final String password;
+	private String password;
 
-	final Map<String, RateLimit> rateLimits = new HashMap();
+	private Map<String, RateLimit> rateLimits = Collections.synchronizedMap(new HashMap());
 
 	/**
 	 * If true, will wait 1/2 second and make a 2nd request when presented with
@@ -158,12 +160,29 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	@Override
 	public Twitter.IHttpClient copy() {
-		URLConnectionHttpClient c = new URLConnectionHttpClient(name, password);
-		c.setTimeout(timeout);
-		c.setRetryOnError(retryOnError);
-		c.setMinRateLimit(minRateLimit);
-		c.rateLimits.putAll(rateLimits);
-		return c;
+		return clone();
+	}
+	
+	/**
+	 * Identical to {@link #copy()}
+	 */
+	@Override
+	public URLConnectionHttpClient clone() {
+		try {
+			URLConnectionHttpClient c = (URLConnectionHttpClient) super.clone();
+			c.name = name;
+			c.password = password;
+			c.gzip = gzip;			
+			c.htmlImpliesError = htmlImpliesError;
+			c.setRetryOnError(retryOnError);
+			c.setTimeout(timeout);
+			c.setMinRateLimit(minRateLimit);
+			c.rateLimits = rateLimits; // Share the rate limit info			
+//			c.rateLimits.putAll(rateLimits); // Copy it			
+			return c;
+		} catch(CloneNotSupportedException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	protected final void disconnect(HttpURLConnection connection) {

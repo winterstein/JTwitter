@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8.4:
+ - For easier resource management, rate limit info is now shared when using IHttpClient.copy()
+ 
 2.8.3:
  - Increased the "default" Twitter.LINK_LENGTH to 23 characters, and added Twitter.MEDIA_LENGTH
 

@@ -817,7 +817,7 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Copy constructor. Use this to pass cloned Twitter objects for
-	 * multi-threaded work.
+	 * multi-threaded work. This will share rate-limit info between them :)
 	 * 
 	 * @param jtwit
 	 */

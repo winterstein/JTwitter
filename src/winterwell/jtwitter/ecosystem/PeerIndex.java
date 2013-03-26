@@ -11,7 +11,13 @@ import winterwell.jtwitter.URLConnectionHttpClient;
 import winterwell.jtwitter.User;
 
 /**
- * Access the PeerIndex ranking system
+ * Access the PeerIndex ranking system.
+ * 
+ * TODO Status: BROKEN by changes at PeerIndex. See:
+ * 
+ * > The new PeerIndex API... https://developers.peerindex.com
+ 
+ * 
  * @author daniel
  * @testedby {@link PeerIndexTest}
  */

@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import junit.framework.TestCase;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
+import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.KRequestType;
@@ -44,6 +45,14 @@ import winterwell.utils.time.Time;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	
+	public void testClientClone() {
+		Twitter jtwit = newTestTwitter();
+		OAuthSignpostClient c = (OAuthSignpostClient) jtwit.getHttpClient();
+		IHttpClient c2 = c.copy();
+		Twitter jtwit2 = new Twitter(null, c2);
+		System.out.println(jtwit2.getStatus());
+	}
 	
 	public void testDisplayTextBug() {
 		Twitter jtwit = newTestTwitter();

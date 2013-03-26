@@ -316,19 +316,18 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 
 	@Override
 	public IHttpClient copy() {
-		OAuthSignpostClient c;
-		if (accessToken != null) {
-			c = new OAuthSignpostClient(consumerKey, consumerSecret,
-					accessToken, accessTokenSecret);
-			c.callbackUrl = callbackUrl;
-		} else {
-			c = new OAuthSignpostClient(consumerKey, consumerSecret,
-					callbackUrl);
-		}
-		c.setTimeout(timeout);
-		c.setRetryOnError(retryOnError);
-		c.setMinRateLimit(minRateLimit);
-		c.rateLimits.putAll(rateLimits);
+		return clone();
+	}
+	
+	@Override
+	public URLConnectionHttpClient clone() {
+		OAuthSignpostClient c = (OAuthSignpostClient) super.clone();
+		c.consumerKey = consumerKey;
+		c.consumerSecret = consumerSecret;
+		c.accessToken = accessToken;
+		c.accessTokenSecret = accessTokenSecret;
+		c.callbackUrl = callbackUrl;		
+		c.init();
 		return c;
 	}
 
