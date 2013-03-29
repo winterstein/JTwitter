@@ -17,6 +17,11 @@ public interface IPlace {
 	String getName();
 
 	String getCountryName();
+	
+	/**
+	 * @return the parent place, e.g. probably UK for London, if known, or null.
+	 */
+	IPlace getParent();
 
 	/**
 	 * @return the centroid (centre of mass) of this Place.

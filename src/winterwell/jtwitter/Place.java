@@ -14,8 +14,6 @@ import com.winterwell.jgeoplanet.Location;
 
 /**
  * Support for Twitter's geo location features.
- * <p>
- * Status: experimental & subject to change!
  * 
  * @author Daniel Winterstein
  * 
@@ -31,7 +29,13 @@ public class Place implements IPlace, Serializable {
 	private String name;
 
 	private String type;
+	private Place parent;
 
+	@Override
+	public IPlace getParent() {
+		return parent;
+	}
+	
 	public Place(JSONObject _place) throws JSONException {
 		// e.g. {"id":"0a3e119020705b64","place_type":"city",
 		// "bounding_box":{"type":"Polygon",
@@ -55,6 +59,15 @@ public class Place implements IPlace, Serializable {
 		}
 		countryCode = InternalUtils.jsonGet("country_code", _place);
 		country = InternalUtils.jsonGet("country", _place);
+		Object _parent = _place.opt("contained_within");
+		// Just the first (?? should we try to poke the chain in here?)
+		if (_parent instanceof JSONArray){
+			JSONArray pa = (JSONArray) _parent;
+			_parent = pa.length()==0? null : pa.get(0);
+		}
+		if (_parent!=null) {
+			this.parent = new Place((JSONObject) _parent);
+		}
 		// bounding box
 		Object bbox = _place.opt("bounding_box");
 		if (bbox instanceof JSONObject) {
