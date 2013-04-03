@@ -6,15 +6,12 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;

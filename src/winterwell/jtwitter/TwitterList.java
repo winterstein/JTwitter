@@ -1,7 +1,5 @@
 package winterwell.jtwitter;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -7,7 +7,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
