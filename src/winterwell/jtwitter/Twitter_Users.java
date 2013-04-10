@@ -685,7 +685,8 @@ public class Twitter_Users {
 	 * Does not do paging-to-max-results. But does support using
 	 * {@link #setPageNumber(Integer)}, and {@link #setMaxResults(int)} for less
 	 * than the standard 20.
-	 * 
+	 * <p>
+	 * Rate-limit: {@link RateLimit#RES_USERS_SEARCH} 
 	 * @param searchTerm
 	 * @return
 	 */
