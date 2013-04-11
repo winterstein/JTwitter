@@ -3,8 +3,7 @@ package winterwell.jtwitter;
 
 import java.util.regex.*;
 /**
- * This file is Copyrighted by Twitter and protected by the Apache 2004 user license
- * see lib/Regex.LICENSE for terms of use.
+ * This file is copyrighted by Twitter and protected by the Twitter's Apache 2004 user license
  * @author alexn
  *
  */
