@@ -497,7 +497,7 @@ public class Twitter implements Serializable {
 				case hashtags:
 					break;
 				case urls:
-					Matcher m = InternalUtils.URL_REGEX.matcher(text);
+					Matcher m = Regex.VALID_URL.matcher(text);
 					if (m.find()) {
 						start = m.start();
 						end = m.end();
@@ -2710,7 +2710,7 @@ public class Twitter implements Serializable {
 	 */
 	public static int countCharacters(String statusText) {
 		int shortLength = statusText.length();
-		Matcher m = InternalUtils.URL_REGEX.matcher(statusText);
+		Matcher m =  Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
 			shortLength += LINK_LENGTH - m.group().length();
 			// https? Add another 1 character

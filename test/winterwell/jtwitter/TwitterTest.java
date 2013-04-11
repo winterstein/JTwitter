@@ -143,6 +143,33 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println("Media length: "+Twitter.MEDIA_LENGTH);
 	}
 	
+	public void testHasURL(){
+		String statusText1a = "hello, I like http://www.google.com";
+		String statusText1b = "hello, I like google.com";
+		String statusText1c = "hello, I love herring";
+		
+		Matcher m1a = InternalUtils.URL_REGEX.matcher(statusText1a);
+		Matcher m1b = InternalUtils.URL_REGEX.matcher(statusText1b);
+		Matcher m1c = InternalUtils.URL_REGEX.matcher(statusText1c);
+
+		assert m1a.find();
+		assert !m1b.find();
+		assert !m1c.find();
+
+		
+		Matcher m2a = Regex.VALID_URL.matcher(statusText1a);
+		Matcher m2b = Regex.VALID_URL.matcher(statusText1b);
+		Matcher m2c = Regex.VALID_URL.matcher(statusText1c);
+
+		assert m2a.find();
+		assert m2b.find();
+		assert !m2c.find();
+
+		Printer.out("Start" +m2b.start());
+		Printer.out("End" +m2b.end());
+
+	}
+	
 	/**
 	 * A random user who protects their tweets.
 	 */
