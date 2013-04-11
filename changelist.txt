@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8.5:
+ - Added Regex, a snapshot of Twitter's URL regex. This is now used for character counting.
+
 2.8.4:
  - For easier resource management, rate limit info is now shared when using IHttpClient.copy()
  - Added IPlace.getParent()

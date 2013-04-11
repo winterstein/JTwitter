@@ -86,7 +86,7 @@ public class InternalUtils {
 
 
 	public static String stripUrls(String text) {
-		return URL_REGEX.matcher(text).replaceAll("");
+		return Regex.VALID_URL.matcher(text).replaceAll("");
 	}
 	
 	public static final Pattern TAG_REGEX = Pattern.compile("<!?/?[\\[\\-a-zA-Z][^>]*>", Pattern.DOTALL);
@@ -121,11 +121,12 @@ public class InternalUtils {
 	public static final Pattern REGEX_JUST_DIGITS = Pattern.compile("\\d+");
 
 	/**
+	 * @deprecated We're using Twitter's definition instead.
+	 * It's a bit loose, but it's the correct one to use for character counting.
+	 * 
 	 * Matches urls. Note: Excludes any trailing .
 	 * 
-	 * TODO Twitter's definition of a url is bit looser!
-	 * 
-	 * @testedy {@link WebUtilsTest#testUrlRegex()}
+	 * @testedby {@link WebUtilsTest#testUrlRegex()}
 	 */
 	static final Pattern URL_REGEX = Pattern
 			.compile("[hf]tt?ps?://[a-zA-Z0-9_%\\-\\.,\\?&\\/=\\+'~#!\\*:]+[a-zA-Z0-9_%\\-&\\/=\\+]");
