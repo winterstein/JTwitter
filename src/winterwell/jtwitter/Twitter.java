@@ -618,7 +618,6 @@ public class Twitter implements Serializable {
 	public static final String SEARCH_RECENT = "recent";
 
 	private static final long serialVersionUID = 1L;
-
 	/**
 	 * JTwitter version
 	 */
