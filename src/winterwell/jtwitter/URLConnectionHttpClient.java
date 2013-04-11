@@ -15,16 +15,13 @@ import java.net.URLConnection;
 import java.nio.charset.MalformedInputException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentMap;
 import java.util.zip.GZIPInputStream;
 
 import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;

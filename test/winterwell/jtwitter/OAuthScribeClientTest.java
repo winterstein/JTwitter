@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.scribe.model.Token;
 
-import junit.framework.TestCase;
-
 
 
 
