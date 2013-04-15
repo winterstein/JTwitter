@@ -404,7 +404,7 @@ public class Twitter implements Serializable {
 		 * @return Can be null if no entities of this type are specified
 		 * @throws JSONException
 		 */
-		static List<TweetEntity> parse(ITweet tweet, String rawText, KEntityType type,
+		static ArrayList<TweetEntity> parse(ITweet tweet, String rawText, KEntityType type,
 				JSONObject jsonEntities) throws JSONException 
 		{
 			assert type != null && tweet != null && rawText != null && jsonEntities!=null
