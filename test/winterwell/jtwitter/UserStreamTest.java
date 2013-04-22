@@ -248,7 +248,33 @@ public class UserStreamTest {
 		String placeHolder="";
 	}
 	
-	
+	/**
+	 * This tests favoriting, and may be tricky.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testUSGetFaves() throws InterruptedException {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		UserStream us = new UserStream(jtwit);
+		us.setPreviousCount(0);
+		us.setWithFollowings(false); // no need to hear what JTwitTest2 has to say		
+		// -- unless it's too us
+		us.setAutoReconnect(true);
+		us.connect();
+		
+		List<Status> stats = jtwit.search("hello");
+		Status astatus = stats.get(0);
+		jtwit.setFavorite(astatus, true);
+		
+		List<ITweet> tweetsRand = us.getTweets();
+		List<ITweet> tweets = us.popTweets();
+		List<TwitterEvent> evs = us.popEvents();
+		
+		boolean weGetSomething = false;
+		weGetSomething = weGetSomething||!evs.isEmpty();
+		assert weGetSomething;
+		String placeHolder="";
+	}
 
 
 	@Test
