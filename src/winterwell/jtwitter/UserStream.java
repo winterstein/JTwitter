@@ -74,8 +74,9 @@ public class UserStream extends AStream {
 		if (jtwit.getScreenName() == null)
 			return; // dunno
 		AStream s = user2stream.get(jtwit.getScreenName());
-		if (s != null && s.isConnected())
-			throw new TwitterException.TooManyLogins("One account, one UserStream");		
+		if (s != null && s.isConnected()) {
+			throw new TwitterException.TooManyLogins("One account, one UserStream");
+		}
 		// memory paranoia
 		if (user2stream.size() > 500) {
 			// oh well -- forget stuff (this Map is just a safety check)

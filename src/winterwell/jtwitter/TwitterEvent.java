@@ -49,6 +49,14 @@ public class TwitterEvent {
 	 */
 	public final String type;
 
+	/**
+	 * Used for the initial burst of follow data.
+	 * @param createdAt
+	 * @param source
+	 * @param type
+	 * @param target
+	 * @param targetObject
+	 */
 	TwitterEvent(Date createdAt, User source, String type, User target,
 			Object targetObject) {
 		this.createdAt = createdAt;
@@ -69,7 +77,11 @@ public class TwitterEvent {
 			return;
 		if (to.has("member_count")) {
 			targetObject = new TwitterList(to, jtwit);
-		} else {
+			return;
+		}
+		try {
+			targetObject = new Status(to, null);
+		} catch(Exception ex) {
 			targetObject = to;
 		}
 	}

@@ -123,6 +123,13 @@ public abstract class AStream implements Closeable {
 		return chop;
 	}
 
+	/**
+	 * A blob of text has come in off the wires... what is it?
+	 * @param jo
+	 * @param jtwitr
+	 * @return
+	 * @throws JSONException
+	 */
 	static Object read3_parse(JSONObject jo, Twitter jtwitr)
 			throws JSONException {
 		// tweets

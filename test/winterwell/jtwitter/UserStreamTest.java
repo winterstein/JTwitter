@@ -270,8 +270,15 @@ public class UserStreamTest {
 		List<ITweet> tweets = us.popTweets();
 		List<TwitterEvent> evs = us.popEvents();
 		
-		boolean weGetSomething = false;
-		weGetSomething = weGetSomething||!evs.isEmpty();
+		for (TwitterEvent twitterEvent : evs) {
+			System.out.println(twitterEvent);
+			if (twitterEvent.is(TwitterEvent.Type.FAVORITE)) {
+				ITweet tweet = (ITweet) twitterEvent.getTargetObject();
+				System.out.println("	Favorited "+tweet);
+			}
+		}
+		
+		boolean weGetSomething = ! evs.isEmpty();
 		assert weGetSomething;
 		String placeHolder="";
 		us.close();
