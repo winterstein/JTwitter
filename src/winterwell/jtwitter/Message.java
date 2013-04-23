@@ -73,6 +73,18 @@ public final class Message implements ITweet {
 	public final String text;
 
 	/**
+	 * @deprecated Used for deleted messages only
+	 * @param id
+	 */
+	Message(User dummyUser, Number id) {
+		this.sender = dummyUser;
+		this.id = id;
+		this.recipient = null;
+		this.createdAt = null;
+		this.text = null;
+	}
+	
+	/**
 	 * @param obj
 	 * @throws JSONException
 	 * @throws TwitterException

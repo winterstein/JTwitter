@@ -152,11 +152,22 @@ public abstract class AStream implements Closeable {
 		// Deletes and other system events, like limits
 		JSONObject del = jo.optJSONObject("delete");
 		if (del != null) {
-			JSONObject s = del.getJSONObject("status");
+			boolean isDM = false;
+			JSONObject s = del.optJSONObject("status");
+			if (s==null) {
+				s = del.getJSONObject("direct_message");
+				isDM = true;
+			}
 			BigInteger id = new BigInteger(s.getString("id_str"));
-			long userId = s.getLong("user_id");
-			Status deadTweet = new Status(null, null, id, null);
-			return new Object[] { "delete", deadTweet, userId };
+			BigInteger userId = new BigInteger(s.getString("user_id"));
+			ITweet deadTweet;			
+			User dummyUser = new User(null, userId);
+			if (isDM) {								
+				deadTweet = new Message(dummyUser, id);
+			} else {
+				deadTweet = new Status(dummyUser, null, id, null);				
+			}									
+			return new Object[] { "delete", deadTweet, userId};
 		}
 		// e.g. {"limit":{"track":1234}}
 		JSONObject limit = jo.optJSONObject("limit");
@@ -625,7 +636,7 @@ public abstract class AStream implements Closeable {
 			// process it...
 			// ...delete?
 			if ("delete".equals(sysEvent[0])) {
-				Status deadTweet = (Status) sysEvent[1];
+				ITweet deadTweet = (ITweet) sysEvent[1];
 				// prune local (which is unlikely to do much)
 				boolean pruned = tweets.remove(deadTweet);
 				if (pruned) return; // No need to keep this event around
