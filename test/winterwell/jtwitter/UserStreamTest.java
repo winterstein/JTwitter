@@ -274,6 +274,7 @@ public class UserStreamTest {
 		weGetSomething = weGetSomething||!evs.isEmpty();
 		assert weGetSomething;
 		String placeHolder="";
+		us.close();
 	}
 
 
