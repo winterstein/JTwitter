@@ -280,6 +280,9 @@ public class UserStreamTest {
 		
 		boolean weGetSomething = ! evs.isEmpty();
 		assert weGetSomething;
+		
+		assert evs.get(0).getTargetObject() instanceof ITweet;
+		
 		String placeHolder="";
 		us.close();
 	}
