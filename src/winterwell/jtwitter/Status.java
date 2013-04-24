@@ -236,8 +236,10 @@ public final class Status implements ITweet {
 			String _rawtext = InternalUtils.jsonGet("text", object);
 			String _text = _rawtext;
 			// Twitter have started truncating RTs -- let's fix the text up if we can
-			boolean truncated = object.optBoolean("truncated") // This can lie (bugs seen March 2013) -- so let's also check the text
-								|| (_text.endsWith("...") && original!=null);
+			boolean truncated = object.optBoolean("truncated"); // This can lie (bugs seen March 2013) -- so let's also check the text
+			if ( ! truncated && original != null) {
+				truncated = _text.endsWith("…") || _text.endsWith("...");
+			}
 			String rtStart = null;
 			if (truncated && original!=null && _text.startsWith("RT ")) {
 				rtStart = "RT @"+original.getUser()+": ";
@@ -531,8 +533,7 @@ public final class Status implements ITweet {
 		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
 		String _text = tweet.getText();
 		if (es==null || es.size()==0) {
-			// TODO Is it a truncated retweet? Then use the original
-			
+			// Is it a truncated retweet? That should be handled in the constructor.			
 			return _text;
 		}
 		StringBuilder sb = new StringBuilder(200);

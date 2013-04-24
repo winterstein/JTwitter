@@ -1047,6 +1047,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testGetStatusLong() {
 		Twitter tw = newTestTwitter();
+		{	// See bug #3057
+			BigInteger bi = new BigInteger("326717073755602944");
+			Status toreg = tw.getStatus(bi);
+			System.out.println(toreg.text+" by "+toreg.user+" = "+toreg.getDisplayText());
+		}
 		{	// Test a specific tweet ("How are you Ntwanano? RT @Reg_Lulekz: Hello Dakalo @DakaloM_: Hello tweeps..." by dakalom_)
 			BigInteger bi = new BigInteger("236109584417292288");
 			Status toreg = tw.getStatus(bi);
