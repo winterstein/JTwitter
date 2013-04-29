@@ -2697,7 +2697,7 @@ public class Twitter implements Serializable {
 	
 	/**
 	 * Compute the effective size of a message, given that Twitter treats things that
-	 * smell like a URL as 20 characters.
+	 * smell like a URL as 22 characters.
 	 * 
 	 * @param statusText
 	 * 			The status to check 
