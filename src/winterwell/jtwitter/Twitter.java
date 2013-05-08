@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.8.5";
+	public final static String version = "2.8.6";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -716,13 +716,6 @@ public class Twitter implements Serializable {
 	 * OAuth.
 	 */
 	private String name;
-
-//	/**
-//	 * Gets used once then reset to null by
-//	 * {@link #addStandardishParameters(Map)}. Gets updated in the while loops
-//	 * of methods doing a get-all-pages.
-//	 */
-//	Integer pageNumber;
 
 	private String resultType;
 
@@ -850,11 +843,6 @@ public class Twitter implements Serializable {
 		if (untilId != null) {
 			vars.put("max_id", untilId.toString());
 		}
-//		if (pageNumber != null) {
-//			vars.put("page", pageNumber.toString());
-//			// this is used once only
-//			pageNumber = null;
-//		}
 		if (count != null) {
 			vars.put("count", count.toString());
 		}

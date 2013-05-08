@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8.6:
+ - Added Twitter_Users.searchUsers(query, page)
+
 2.8.5:
  - Added Regex, a snapshot of Twitter's URL regex. This is now used for character counting.
  - TwitterEvent for favorite now stores a Status object (not a JSON object) as the target-object.

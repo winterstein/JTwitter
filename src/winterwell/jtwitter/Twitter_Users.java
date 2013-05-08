@@ -691,12 +691,25 @@ public class Twitter_Users {
 	 * @return
 	 */
 	public List<User> searchUsers(String searchTerm) {
+		return searchUsers(searchTerm, 0);
+	}
+	
+	/**
+	 * Variant of {@link #searchUsers(String)} which gives access to later pages.
+	 * Note: You can only access upto the first 1000 matching results (a Twitter limitation
+	 * -- c.f. https://dev.twitter.com/docs/api/1.1/get/users/search).
+	 * 
+	 * @param searchTerm
+	 * @param page Which page to retrieve (the first page is 1)
+	 * @return
+	 */
+	public List<User> searchUsers(String searchTerm, int page) {
 		assert searchTerm != null;
 		Map<String, String> vars = InternalUtils.asMap("q", searchTerm);
-		// TODO provide paging
-//		if (jtwit.pageNumber != null) {
-//			vars.put("page", jtwit.pageNumber.toString());
-//		}
+		// provide paging
+		if (page > 1) {
+			vars.put("page", Integer.toString(page));
+		}
 		if (jtwit.count != null && jtwit.count < 20) {
 			vars.put("per_page", String.valueOf(jtwit.count));
 		}
