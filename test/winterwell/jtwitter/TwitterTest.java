@@ -758,8 +758,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
 				TEST_ACCESS_TOKEN[0], TEST_ACCESS_TOKEN[1]);
 		return new Twitter(TEST_USER, client);
-	}
-	
+	}	
 	
 	@NoUTR
 	public void _testAuthUser() {

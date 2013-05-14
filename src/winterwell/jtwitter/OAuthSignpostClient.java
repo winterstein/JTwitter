@@ -254,13 +254,16 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 * @param consumerKey
 	 * @param consumerSecret
 	 * @param accessToken
+	 * @param accessTokenSecret 
 	 */
 	public OAuthSignpostClient(String consumerKey, String consumerSecret,
-			String accessToken, String accessTokenSecret) {
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
-		this.accessToken = accessToken;
-		this.accessTokenSecret = accessTokenSecret;
+			String accessToken, String accessTokenSecret) 
+	{
+		// Check for nulls as we go (cause an NPE if there is one)
+		this.consumerKey = consumerKey.toString();
+		this.consumerSecret = consumerSecret.toString();
+		this.accessToken = accessToken.toString();
+		this.accessTokenSecret = accessTokenSecret.toString();
 		init();
 	}
 
