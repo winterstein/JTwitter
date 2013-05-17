@@ -1,6 +1,10 @@
 package com.winterwell.jgeoplanet;
 
 
+/**
+ * A place; many of the fields may be null.
+ * @author daniel
+ */
 public interface IPlace {
 
 	/**
