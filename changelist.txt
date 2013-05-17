@@ -3,6 +3,7 @@
 2.8.6:
  - Added Twitter_Users.searchUsers(query, page)
  - OAuthSignpostClient constructor checks for null values.
+ - Twitter.updateConfiguration returns true/false if it detects a change
  
 2.8.5:
  - Added Regex, a snapshot of Twitter's URL regex. This is now used for character counting.

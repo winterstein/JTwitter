@@ -2629,20 +2629,33 @@ public class Twitter implements Serializable {
 
 	/**
 	 * Update info on Twitter's configuration -- such as shortened url lengths.
+	 * @return true if we detected a change from the hardcoded defaults.
 	 */
-	public void updateConfiguration() {
+	public boolean updateConfiguration() {
 		String json = http.getPage(TWITTER_URL + "/help/configuration.json",
 				null, true);
+		boolean change = false;
 		try {
 			JSONObject jo = new JSONObject(json);
-			LINK_LENGTH = jo.getInt("short_url_length");
-			// LINK_LENGTH_HTTPS = jo.getInt("short_url_length_https");
-			// LINK_LENGTH + 1
+			{
+				int len = jo.getInt("short_url_length");;
+				if (len != LINK_LENGTH) change = true;
+				LINK_LENGTH = len;
+			}
 			// max_media_per_upload // 1!
-			MEDIA_LENGTH = jo.getInt("characters_reserved_per_media");
-			PHOTO_SIZE_LIMIT = jo.getLong("photo_size_limit");			
+			{
+				int len = jo.getInt("characters_reserved_per_media");
+				if (len != MEDIA_LENGTH) change = true;
+				MEDIA_LENGTH = len;
+			}
+			{	
+				long lmt = jo.getLong("photo_size_limit");
+				if (lmt != PHOTO_SIZE_LIMIT) change = true;
+				PHOTO_SIZE_LIMIT = lmt;
+			}
 			// photo_sizes
 			// short_url_length_https
+			return change;
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(json, e);
 		}
