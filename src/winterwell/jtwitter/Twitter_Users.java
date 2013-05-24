@@ -202,7 +202,9 @@ public class Twitter_Users {
 	}
 
 	/**
-	 * Returns the IDs of the specified user's followers.
+	 * Returns the IDs of the specified user's followers. 
+	 * Returns pages of 5,000 results, most recent first
+	 * (c.f. https://dev.twitter.com/docs/api/1.1/get/followers/ids) 
 	 * 
 	 * @param screenName
 	 *            The screen name of the user whose followers are to be fetched.
