@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8.7:
+ - Altered build setup to use a real copy of android.jar
+ 
 2.8.6:
  - Added Twitter_Users.searchUsers(query, page)
  - OAuthSignpostClient constructor checks for null values.
