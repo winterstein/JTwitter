@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.8.8:
+ - Altered build setup to use 1.6 compiler but target Java 1.5
+ - Twitter.countCharacters will spot & discount the DM microformat "d user "
+
 2.8.7:
  - Altered build setup to use a real copy of android.jar
  

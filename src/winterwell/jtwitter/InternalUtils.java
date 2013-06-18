@@ -121,16 +121,12 @@ public class InternalUtils {
 	public static final Pattern REGEX_JUST_DIGITS = Pattern.compile("\\d+");
 
 	/**
-	 * @deprecated We're using Twitter's definition instead.
-	 * It's a bit loose, but it's the correct one to use for character counting.
-	 * 
-	 * Matches urls. Note: Excludes any trailing .
-	 * 
-	 * @testedby {@link WebUtilsTest#testUrlRegex()}
+	 * Group 1 = the recipient
 	 */
-	static final Pattern URL_REGEX = Pattern
-			.compile("[hf]tt?ps?://[a-zA-Z0-9_%\\-\\.,\\?&\\/=\\+'~#!\\*:]+[a-zA-Z0-9_%\\-&\\/=\\+]");
-
+	// TODO test -- is the \\s? at the end of this regex right??
+	public static final Pattern DM = Pattern.compile("^dm? (\\w+)\\s?", Pattern.CASE_INSENSITIVE);
+	
+	
 	static ConcurrentHashMap<String, Long> usage;
 
 	/**

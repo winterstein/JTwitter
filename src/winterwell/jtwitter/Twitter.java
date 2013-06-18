@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.8.7";
+	public final static String version = "2.8.8";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2699,6 +2699,7 @@ public class Twitter implements Serializable {
 	/**
 	 * Compute the effective size of a message, given that Twitter treats things that
 	 * smell like a URL as 22 characters.
+	 * This also checks for DM microformat, e.g. "d winterstein Hello", where the d user part isn't counted.
 	 * 
 	 * @param statusText
 	 * 			The status to check 
@@ -2706,7 +2707,8 @@ public class Twitter implements Serializable {
 	 * 			The effective message length in characters
 	 */
 	public static int countCharacters(String statusText) {
-		int shortLength = statusText.length();
+		int shortLength = statusText.length();	
+		// Urls count as 22/23
 		Matcher m =  Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
 			shortLength += LINK_LENGTH - m.group().length();
@@ -2715,6 +2717,12 @@ public class Twitter implements Serializable {
 				shortLength++;
 			}
 		}
+		// If a DM, don't count the "d user" microformat
+		Matcher dmm = InternalUtils.DM.matcher(statusText);		
+		if (dmm.find()) {
+			shortLength -= m.end();			
+		}
+
 		return shortLength;
 	}
 	

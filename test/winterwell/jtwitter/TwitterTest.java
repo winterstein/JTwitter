@@ -148,15 +148,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		String statusText1b = "hello, I like google.com";
 		String statusText1c = "hello, I love herring";
 		
-		Matcher m1a = InternalUtils.URL_REGEX.matcher(statusText1a);
-		Matcher m1b = InternalUtils.URL_REGEX.matcher(statusText1b);
-		Matcher m1c = InternalUtils.URL_REGEX.matcher(statusText1c);
-
-		assert m1a.find();
-		assert !m1b.find();
-		assert !m1c.find();
-
-		
 		Matcher m2a = Regex.VALID_URL.matcher(statusText1a);
 		Matcher m2b = Regex.VALID_URL.matcher(statusText1b);
 		Matcher m2c = Regex.VALID_URL.matcher(statusText1c);
