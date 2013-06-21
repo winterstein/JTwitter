@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
+import javax.net.ssl.SSLHandshakeException;
+
 import winterwell.json.JSONArray;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
@@ -259,7 +261,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				}
 			}
 			return json;			
-		} catch (SocketTimeoutException e) {
+		} catch (IOException e) {
 			if ( ! retryOnError) throw getPage2_ex(e, url);
 			try {
 				// wait half a second before retrying
@@ -277,9 +279,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			} catch (Exception e2) {
 				throw getPage2_ex(e, url);
 			}
-		} catch (IOException e) {
-			throw new TwitterException.IO(e);
-		} 
+		}
 	}
 
 	/**
