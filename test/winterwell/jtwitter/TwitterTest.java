@@ -46,6 +46,11 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
 	
+	public void testIssue4280() {
+		Twitter jtwit = newTestTwitter();
+		List<Status> tweets = jtwit.getUserTimeline("samdaat");
+	}
+	
 	public void testClientClone() {
 		Twitter jtwit = newTestTwitter();
 		OAuthSignpostClient c = (OAuthSignpostClient) jtwit.getHttpClient();

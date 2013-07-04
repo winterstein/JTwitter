@@ -2445,7 +2445,7 @@ public class Twitter implements Serializable {
 	 * used with setUntilId().
 	 * You may also want to increase {@link #setMaxResults(int)}.
 	 * 
-	 * @param statusId
+	 * @param statusId Can be null
 	 * @see #setSinceDate(Date)
 	 */
 	public void setSinceId(Number statusId) {
