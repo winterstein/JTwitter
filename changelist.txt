@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+2.8.9:
+ - Bugfix for Twitter.countCharacters with DM microformat. 
+
 2.8.8:
  - Altered build setup to use 1.6 compiler but target Java 1.5
  - Twitter.countCharacters will spot & discount the DM microformat "d user "

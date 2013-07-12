@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "2.8.8";
+	public final static String version = "2.8.9";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2720,7 +2720,7 @@ public class Twitter implements Serializable {
 		// If a DM, don't count the "d user" microformat
 		Matcher dmm = InternalUtils.DM.matcher(statusText);		
 		if (dmm.find()) {
-			shortLength -= m.end();			
+			shortLength -= dmm.end();			
 		}
 
 		return shortLength;
