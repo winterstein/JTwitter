@@ -80,7 +80,7 @@ public class UserStream extends AStream {
 		// memory paranoia
 		if (user2stream.size() > 500) {
 			// oh well -- forget stuff (this Map is just a safety check)
-			user2stream = new ConcurrentHashMap<String, AStream>();
+			user2stream.clear();
 		}
 		user2stream.put(jtwit.getScreenName(), this);
 	}
@@ -88,7 +88,7 @@ public class UserStream extends AStream {
 	/**
 	 * Used to help avoid breaking api limits.
 	 */
-	static Map<String, AStream> user2stream = new ConcurrentHashMap();
+	private final static ConcurrentHashMap<String, AStream> user2stream = new ConcurrentHashMap();
 	
 	/**
 	 * Use the REST API to fill in: mentions of you. Missed you-follow-them
@@ -98,9 +98,10 @@ public class UserStream extends AStream {
 	void fillInOutages2(Twitter jtwit2, Outage outage)
 			throws UnsupportedOperationException, TwitterException {
 		// fetch
-		if (withFollowings)
+		if (withFollowings) {
 			// TODO pull in network activity
 			throw new UnsupportedOperationException("TODO");
+		}
 		// get mentions of you
 		List<Status> mentions = jtwit2.getMentions();
 		for (Status status : mentions) {
@@ -133,7 +134,7 @@ public class UserStream extends AStream {
 	 *         connected.
 	 */
 	public Collection<Long> getFriends() {
-		// TODO update the friends list from follow events??
+		// ??update the friends list from follow events? But we might miss some during an outage.
 		return friends;
 	}
 

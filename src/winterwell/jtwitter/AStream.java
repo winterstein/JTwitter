@@ -202,6 +202,9 @@ public abstract class AStream implements Closeable {
 	 */
 	private int forgotten;
 
+	/**
+	 * Only used by UserStream. See {@link UserStream#getFriends()} 
+	 */
 	List<Long> friends;
 
 	/**
@@ -593,7 +596,7 @@ public abstract class AStream implements Closeable {
 	private void read2(String json) throws JSONException {
 		JSONObject jobj = new JSONObject(json);
 
-		// the 1st object for a user stream is a list of friend ids
+		// the 1st object for a UserStream is a list of friend ids
 		JSONArray _friends = jobj.optJSONArray("friends");
 		if (_friends != null) {
 			read3_friends(_friends);
