@@ -6,7 +6,10 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.StringBufferInputStream;
 import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -148,7 +151,23 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			processHeaders(connection, resource);
 			return InternalUtils.read(page);
 		} catch (TwitterException e) {
-			throw e;
+			throw e;	
+		} catch (SocketTimeoutException e) {
+			throw new TwitterException.Timeout(timeout + "milli-secs for "
+					+ url);
+		} catch (ConnectException e) {
+			// probably also a time out
+			throw new TwitterException.Timeout(url.toString());
+		} catch (SocketException e) {
+			// treat as a server error - because it probably is
+			// (yes, it could also be an error at your end)
+			throw new TwitterException.E50X(e.toString());
+		} catch (IOException e) {
+			// Probably a server error (see issue #4621)
+			if (e.getMessage()!=null && e.getMessage().contains("HTTP response code: 500")) {
+				throw new TwitterException.E50X(e.toString());	
+			}
+			throw new TwitterException(e);
 		} catch (Exception e) {
 			throw new TwitterException(e);
 		}
