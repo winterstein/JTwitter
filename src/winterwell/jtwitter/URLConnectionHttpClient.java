@@ -210,6 +210,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		return vals == null || vals.isEmpty() ? null : vals.get(0);
 	}
 
+	/**
+	 * @return The user's screen-name, if known, or null, or "?user"
+	 */
 	String getName() {
 		return name;
 	}
@@ -580,7 +583,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throw new TwitterException.BadParameter(errorPage + "\n" + url);
 		// is this a suspended user exception?
 		if (errorPage.contains("suspended"))
-			throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
+			throw new TwitterException.SuspendedUser(errorPage +": "+getName()+"\n" + url);
 		// this can be caused by looking up is-follower wrt a suspended
 		// account
 		if (errorPage.contains("Could not find"))
