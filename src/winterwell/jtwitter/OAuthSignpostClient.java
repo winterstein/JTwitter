@@ -21,11 +21,14 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.HttpURLConnectionRequestAdapter;
 import oauth.signpost.exception.OAuthException;
+import oauth.signpost.http.HttpParameters;
 import oauth.signpost.http.HttpRequest;
 import oauth.signpost.signature.AuthorizationHeaderSigningStrategy;
 import oauth.signpost.signature.SigningStrategy;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.guts.ClientHttpRequest;
+import winterwell.utils.Mutable;
+import winterwell.utils.Mutable.Ref;
 
 /**
  * OAuth based login using Signpost (http://code.google.com/p/oauth-signpost/).
@@ -173,22 +176,30 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		}
 	}
 	
+	/**
+	 * This can be set
+	 */
+	private String expiryKey = null;
 
 	/**
 	 * Use with #setProvider() to make this a foursquare OAuth client
 	 */
-	private static final DefaultOAuthProvider FOURSQUARE_PROVIDER = new DefaultOAuthProvider(
+	private static final DefaultOAuthProvider FOURSQUARE_PROVIDER() {
+		return new DefaultOAuthProvider(	
 			"http://foursquare.com/oauth/request_token",
 			"http://foursquare.com/oauth/access_token",
 			"http://foursquare.com/oauth/authorize");
+	}
 
 	/**
 	 * Use with #setProvider() to make this a LinkedIn OAuth client
 	 */
-	private static final DefaultOAuthProvider LINKEDIN_PROVIDER = new DefaultOAuthProvider(
+	private static final DefaultOAuthProvider LINKEDIN_PROVIDER() {return new DefaultOAuthProvider(
 			"https://api.linkedin.com/uas/oauth/requestToken",
 			"https://api.linkedin.com/uas/oauth/accessToken",
 			"https://www.linkedin.com/uas/oauth/authorize");
+	}
+	
 	
 	/**
 	 * This consumer key (and secret) allows you to get up and running fast.
@@ -357,12 +368,17 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 * @return the access token and access token secret - if this client was
 	 *         constructed with an access token, or has successfully
 	 *         authenticated and got one. null otherwise.
+	 *         
+	 *         Also returns the expiry time, if we've got one (null if not). See setExpiryKey for
+	 *         how to locate these.
 	 */
 	public String[] getAccessToken() {
 		if (accessToken == null)
 			return null;
-		return new String[] { accessToken, accessTokenSecret };
+		return new String[] { accessToken, accessTokenSecret};
 	}
+
+	
 
 	@Override
 	String getName() {
@@ -370,7 +386,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		// their name
 		return name == null ? "?user" : name;
 	}
-
+	
 	private void init() {
 		consumer = new SimpleOAuthConsumer(consumerKey, consumerSecret);
 		if (accessToken != null) {
@@ -461,14 +477,14 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	}
 
 	public void setFoursquareProvider() {
-		setProvider(FOURSQUARE_PROVIDER);
+		setProvider(FOURSQUARE_PROVIDER());
 	}
 	
 	/**
 	 * Replace the default Twitter urls with the LinkedIn urls.
 	 */
 	public void setLinkedInProvider() {
-		setProvider(LINKEDIN_PROVIDER);
+		setProvider(LINKEDIN_PROVIDER());
 	}
 
 	/**
@@ -491,6 +507,11 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	public void setProvider(DefaultOAuthProvider provider) {
 		this.provider = provider;
 	}
+
+	public HttpParameters getProviderResponseParams(){
+		return provider.getResponseParameters();
+	}
+
 
 }
 
