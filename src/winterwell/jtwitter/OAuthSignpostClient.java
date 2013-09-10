@@ -27,8 +27,7 @@ import oauth.signpost.signature.AuthorizationHeaderSigningStrategy;
 import oauth.signpost.signature.SigningStrategy;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.guts.ClientHttpRequest;
-import winterwell.utils.Mutable;
-import winterwell.utils.Mutable.Ref;
+
 
 /**
  * OAuth based login using Signpost (http://code.google.com/p/oauth-signpost/).
