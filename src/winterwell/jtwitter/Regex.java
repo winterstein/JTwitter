@@ -1,7 +1,7 @@
 package winterwell.jtwitter;
 
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
 /**
  * This file is copyrighted by Twitter and protected by the Twitter's Apache 2004 user license
  * @author alexn
