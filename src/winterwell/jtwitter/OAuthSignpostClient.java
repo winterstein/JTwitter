@@ -175,10 +175,6 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		}
 	}
 	
-	/**
-	 * This can be set
-	 */
-	private String expiryKey = null;
 
 	/**
 	 * Use with #setProvider() to make this a foursquare OAuth client
@@ -499,7 +495,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	/**
 	 * Set to Twitter settings by default. This method lets you override that.
 	 * 
-	 * @param provider
+	 * @param provider Note: These objects are NOT thread safe.
 	 * @see #setLinkedInProvider()
 	 * @see #setFoursquareProvider()
 	 */
@@ -507,6 +503,9 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		this.provider = provider;
 	}
 
+	/**
+	 * Provide low level access to the provider -- e.g. allows for getting the expiry details from LinkedIn. 
+	 */
 	public HttpParameters getProviderResponseParams(){
 		return provider.getResponseParameters();
 	}

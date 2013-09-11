@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+2.9:
+ - LinkedIn and FourSquare providers made non-static (because they're not actually thread safe)
+ - Added OAuthSignpostClient.getProviderResponseParams() 
+
 2.8.9:
  - Bugfix for Twitter.countCharacters with DM microformat. 
 
