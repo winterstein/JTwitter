@@ -195,6 +195,13 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			"https://www.linkedin.com/uas/oauth/authorize");
 	}
 	
+	private static final DefaultOAuthProvider FLICKR_PROVIDER() {
+		return new DefaultOAuthProvider(
+			"http://www.flickr.com/services/oauth/request_token",
+			"http://www.flickr.com/services/oauth/access_token",
+			"http://www.flickr.com/services/oauth/authorize");
+	}
+	
 	
 	/**
 	 * This consumer key (and secret) allows you to get up and running fast.
@@ -480,6 +487,11 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 */
 	public void setLinkedInProvider() {
 		setProvider(LINKEDIN_PROVIDER());
+		
+	}
+	
+	public void setFlickrProvider() {
+		setProvider(FLICKR_PROVIDER());
 	}
 
 	/**
