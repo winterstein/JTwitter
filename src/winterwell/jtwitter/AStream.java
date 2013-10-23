@@ -108,9 +108,9 @@ public abstract class AStream implements Closeable {
 	public static int MAX_BUFFER = 10000;
 
 	/**
-	 * 15 minutes
+	 * 10 minutes
 	 */
-	private static final int MAX_WAIT_SECONDS = 900;
+	private static final int MAX_WAIT_SECONDS = 600;
 
 	static int forgetIfFull(List incoming) {
 		// forget a batch?
