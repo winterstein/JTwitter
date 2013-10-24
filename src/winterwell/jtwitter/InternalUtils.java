@@ -574,6 +574,7 @@ public class InternalUtils {
 
 
 	public static Boolean geoMatch(GeoCodeQuery query, IPlace place) {
+		if (place==null) return null;
 		boolean unsure = false;
 		// Country
 		if (query.country!=null) {
