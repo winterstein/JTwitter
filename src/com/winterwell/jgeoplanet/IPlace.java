@@ -20,7 +20,11 @@ public interface IPlace {
 	
 	String getName();
 
-	String getCountryName();
+	/**
+	 * ISO3166 2 letter code
+	 * @return
+	 */
+	String getCountryCode();
 	
 	/**
 	 * @return the parent place, e.g. probably UK for London, if known, or null.

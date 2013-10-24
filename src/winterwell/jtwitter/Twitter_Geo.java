@@ -12,6 +12,7 @@ import winterwell.json.JSONObject;
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.Location;
 import com.winterwell.jgeoplanet.MFloat;
 
 /**
@@ -127,6 +128,12 @@ public class Twitter_Geo implements IGeoCode {
 			return Collections.singletonMap((IPlace)places.get(0), 0.8);
 		}		
 		return InternalUtils.prefer(query, places, IPlace.TYPE_CITY, 0.8);
+	}
+
+	@Override
+	public Boolean matches(GeoCodeQuery query, IPlace place) {
+		// What can we test easily?
+		return InternalUtils.geoMatch(query, place);
 	}
 
 	

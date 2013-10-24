@@ -6,6 +6,14 @@ import java.util.Map;
 public interface IGeoCode {
 	
 	/**
+	 * @param query
+	 * @param place
+	 * @return true if place fits this query, e.g. London is in the UK, false if it doesn't.
+	 * null if we don't know
+	 */
+	public Boolean matches(GeoCodeQuery query, IPlace place);
+	
+	/**
 	 * Returns the best-guess {@link IPlace} whose name matches the query
 	 * to some extent.
 	 * 

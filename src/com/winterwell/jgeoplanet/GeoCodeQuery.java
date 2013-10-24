@@ -133,11 +133,19 @@ public class GeoCodeQuery {
 	 */
 	public Location locn;
 
+
+	/**
+	 * @return the bounding box of this Place. Can be null if unknown.
+	 */
+	public BoundingBox bbox; 
+	
 	/**
 	 * Must use {@link ISO3166} codes.
 	 * This is a hint at the country to which the place belongs -- it can be wrong.
 	 */
-	public String country;	
+	public String country;
+		
+	public String city;
 
 	/**
 	 * Must use {@link ISO639} codes.
@@ -155,5 +163,13 @@ public class GeoCodeQuery {
 	 * Type of place wanted. Values are: {@link IPlace#TYPE_CITY}, {@link IPlace#TYPE_COUNTRY}.
 	 */
 	public String type;
+
+	public String getCountryCode() {
+		return country;
+	}
+
+	public BoundingBox getBoundingBox() {
+		return bbox;
+	}	
 
 }

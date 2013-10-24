@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -36,6 +37,7 @@ import winterwell.jtwitter.Twitter.ITweet;
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.Location;
 import com.winterwell.jgeoplanet.MFloat;
 
 /**
@@ -54,11 +56,11 @@ public class InternalUtils {
 	/**
 	 * Utility method for {@link IGeoCode}rs
 	 * @param query
-	 * @param places
-	 * @return places which match the query requirements.
+	 * @param places Can be null.
+	 * @return places which match the query requirements. Can be empty, never null.
 	 */
 	public static Map<IPlace,Double> filterByReq(GeoCodeQuery query, Map<IPlace,Double> places) {
-		if (places==null) return null;
+		if (places==null) return Collections.EMPTY_MAP;
 		if ( ! (query.reqGeometry || query.reqLocn)) { // TODO || query.reqOnlyCity)) { // NB: Every place should have a country
 			return places;
 		}
@@ -568,6 +570,40 @@ public class InternalUtils {
 			}
 		}
 		return best;
+	}
+
+
+	public static Boolean geoMatch(GeoCodeQuery query, IPlace place) {
+		boolean unsure = false;
+		// Country
+		if (query.country!=null) {
+			String cc = ((Place) place).getCountryCode();
+			if ( ! query.country.equals(cc)) {
+				return false;
+			}
+		}
+		
+		// city
+		if (query.city!=null) {
+			// TODO
+		}
+		
+		// Bounding box
+		if (query.bbox != null) {
+			Location locn = place.getCentroid();
+			if (locn!=null && ! query.bbox.contains(locn)) {
+				return false;
+			}
+			// Hm: no long/lat for place -- what shall we say??
+			// Let's be lenient
+			unsure = true;
+		}
+		
+		// requirements
+		Map<IPlace, Double> filtered = filterByReq(query, Collections.singletonMap(place, 1.0));
+		if (filtered.isEmpty()) return false;
+		
+		return unsure? null : true;
 	}
 
 }
