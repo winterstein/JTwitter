@@ -9,7 +9,6 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.URLConnectionHttpClient;
-import winterwell.utils.TodoException;
 
 /**
  * Klout influence scores -- not very reliable, but then what is?

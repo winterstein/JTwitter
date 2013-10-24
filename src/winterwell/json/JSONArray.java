@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -80,7 +81,7 @@ import java.util.Map;
  * @author JSON.org
  * @version 2
  */
-public class JSONArray {
+public class JSONArray implements Iterable<JSONObject> {
 
 
     /**
@@ -875,4 +876,12 @@ public class JSONArray {
            throw new JSONException(e);
         }
     }
+
+    /**
+     * WARNING: This assumes the elements will be objects! If not, you'll get class-cast exceptions.
+     */
+	@Override
+	public Iterator<JSONObject> iterator() {
+		return myArrayList.iterator();
+	}
 }

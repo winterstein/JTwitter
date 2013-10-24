@@ -7,5 +7,7 @@
  *  <li>Exceptions are runtime exceptions.</li>
  * </ul>
  * The package name has been changed to avoid collisions.
+ * <p>
+ * The JTwitter / winterwell.web files should be kept in exact sync with each other.
  */
 package winterwell.json;

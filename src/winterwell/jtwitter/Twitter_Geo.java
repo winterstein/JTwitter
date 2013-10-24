@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 
+import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.MFloat;
@@ -107,15 +109,24 @@ public class Twitter_Geo implements IGeoCode {
 	}
 
 	@Override
-	public IPlace getPlace(String locationDescription, MFloat confidence) {				
-		List<Place> places = geoSearch(locationDescription);
+	public Place getPlace(String locationDescription) {
+		Map<IPlace, Double> places = getPlace(new GeoCodeQuery(locationDescription));
+		if (places.isEmpty()) return null;
+		return (Place) InternalUtils.getBest(places);
+	}
+
+	@Override
+	public Map<IPlace, Double> getPlace(GeoCodeQuery query) {
+		if (query.desc==null || query.desc.isEmpty()) {
+			return Collections.EMPTY_MAP;
+		}
+		List<Place> places = geoSearch(query.desc);
 		if (places.size()==0) return null;
 		// a unique answer?
 		if (places.size()==1) {
-			if (confidence!=null) confidence.value = 0.8f;
-			return places.get(0);
+			return Collections.singletonMap((IPlace)places.get(0), 0.8);
 		}		
-		return InternalUtils.prefer(places, IPlace.TYPE_CITY, confidence, 0.8f);
+		return InternalUtils.prefer(query, places, IPlace.TYPE_CITY, 0.8);
 	}
 
 	

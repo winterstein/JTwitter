@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.0.0:
+ - Breaking change to IGeoCode, unifying JTwitter's geocoding with PinPoint.
+ 
 2.9.1:
  - Klout API update
  - Made android.jar optional. This means a fresh Eclipse project will show compilation errors

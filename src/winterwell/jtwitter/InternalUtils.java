@@ -33,6 +33,7 @@ import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
 
+import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.MFloat;
@@ -52,35 +53,54 @@ public class InternalUtils {
 
 	/**
 	 * Utility method for {@link IGeoCode}rs
+	 * @param query
 	 * @param places
-	 * @param prefType
-	 * @param confidence
+	 * @return places which match the query requirements.
+	 */
+	public static Map<IPlace,Double> filterByReq(GeoCodeQuery query, Map<IPlace,Double> places) {
+		if (places==null) return null;
+		if ( ! (query.reqGeometry || query.reqLocn)) { // TODO || query.reqOnlyCity)) { // NB: Every place should have a country
+			return places;
+		}
+		Map<IPlace,Double> out = new HashMap(places.size());
+		for(IPlace p : places.keySet()) {
+			if (query.reqGeometry && p.getBoundingBox()==null) continue;
+			if (query.reqLocn && p.getCentroid()==null) continue;
+			// TODO if (query.reqOnlyCity && p.getBoundingBox()==null) continue;
+			out.put(p, places.get(p));
+		}
+		return out;
+	}
+
+	
+	/**
+	 * Utility method for {@link IGeoCode}rs
+	 * @param query 
+	 * @param places
+	 * @param prefType e.g. city
 	 * @param baseConfidence
 	 * @return
 	 */
-	public static <P extends IPlace> P prefer(List<P> places, String prefType,
-			MFloat confidence, float baseConfidence) 
+	public static Map<IPlace,Double> prefer(GeoCodeQuery query, List<? extends IPlace> places, String prefType, double baseConfidence) 
 	{
 		assert places.size() != 0;
 		assert baseConfidence >= 0 && baseConfidence <= 1;
 		// prefer cities (or whatever)
-		List cities = new ArrayList();
+		List<IPlace> cities = new ArrayList();
 		for (IPlace place : places) {
 			if (prefType.equals(place.getType())) {
 				cities.add(place);
 			}
 		}
-		if (cities.size()!=0 && cities.size()!=places.size()) {			
-			if (confidence!=null) {
-				float conf = 0.95f*baseConfidence / cities.size();
-				confidence.value = conf;
-			}
-			places = cities;
-		} else {
-			if (confidence!=null) confidence.set(baseConfidence/places.size());
+		HashMap map = new HashMap();
+		List select = cities.size()!=0? cities : places;
+		double c = baseConfidence / places.size();
+		for (Object place : select) {
+			map.put(place, c);
 		}
-		// pick the first
-		return places.get(0);
+
+		Map<IPlace, Double> map2 = filterByReq(query, map);
+		return map2;
 	}
 
 
@@ -531,6 +551,23 @@ public class InternalUtils {
 		// Next page must start strictly before this one
 		if (min!=null) min = min.subtract(BigInteger.ONE);
 		return min;
+	}
+
+
+	/**
+	 * Best of them, or null if places is empty
+	 * @param places
+	 * @return
+	 */
+	public static <X> X getBest(Map<X, Double> places) {
+		double high = Double.NEGATIVE_INFINITY;
+		X best = null;
+		for(Map.Entry<X,Double> e : places.entrySet()) {
+			if (e.getValue() > high) {
+				best = e.getKey();
+			}
+		}
+		return best;
 	}
 
 }

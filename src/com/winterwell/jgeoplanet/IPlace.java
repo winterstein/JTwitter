@@ -6,7 +6,7 @@ package com.winterwell.jgeoplanet;
  * @author daniel
  */
 public interface IPlace {
-
+	
 	/**
 	 * Place-type for cities. Geocoders should try to use this when applicable.
 	 * Users are warned that this is not guaranteed.
