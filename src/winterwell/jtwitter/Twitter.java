@@ -2711,6 +2711,7 @@ public class Twitter implements Serializable {
 		// Urls count as 22/23
 		Matcher m =  Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
+			String grp = m.group();
 			shortLength += LINK_LENGTH - m.group().length();
 			// https? Add another 1 character
 			if (m.group().startsWith("https")) {
