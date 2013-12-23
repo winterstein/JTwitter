@@ -573,6 +573,12 @@ public class InternalUtils {
 	}
 
 
+	/**
+	 * Does place match the query?
+	 * @param query
+	 * @param place
+	 * @return true/false/null. Often null for unsure!
+	 */
 	public static Boolean geoMatch(GeoCodeQuery query, IPlace place) {
 		if (place==null) return null;
 		boolean unsure = false;
