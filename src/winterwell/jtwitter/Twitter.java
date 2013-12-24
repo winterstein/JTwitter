@@ -635,6 +635,7 @@ public class Twitter implements Serializable {
 	static final String DEFAULT_TWITTER_URL = "https://api.twitter.com/"+API_VERSION;
 
 	/**
+	 * @deprecated Not used at present
 	 * Set to true to perform extra error-handling & correction.
 	 */
 	public static boolean WORRIED_ABOUT_TWITTER = false;
@@ -2833,8 +2834,8 @@ public class Twitter implements Serializable {
 	 * if it didn't.<br>
 	 * By default, this only filters DMs.<br>
 	 * Serious checking is switched on via the {@link #WORRIED_ABOUT_TWITTER} flag.
-	 * @param statusText
-	 * @param s
+	 * @param statusText What we meant to send
+	 * @param s What came back
 	 * @return s, or null for DMs
 	 * @throws TwitterException#Unexplained 
 	 */
@@ -2844,14 +2845,18 @@ public class Twitter implements Serializable {
 		if (st.startsWith("dm ") || st.startsWith("d ")) {
 			return null;
 		}
-		if ( ! WORRIED_ABOUT_TWITTER) {
-			return s;
-		}
+		// The checks are dialled down, so let's make this standard
+//		if ( ! WORRIED_ABOUT_TWITTER) {
+//			return s;
+//		}
 		// Weird bug: Twitter occasionally rejects tweets?!
 		// Sightings...
 		// 21/05/12 (spotter: Alex Nuttgens)
 		// 27/03/12 (spotter: Alex Nuttgens)
 		// + other earlier sightings
+		
+		// Bug #6748: Unicode mangling *sometimes*
+		
 		// Sanity check...
 		String targetText = statusText.trim();
 		String returnedStatusText = s.text.trim();
@@ -2865,21 +2870,25 @@ public class Twitter implements Serializable {
 			// All OK
 			return s;
 		}
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// igore the interruption
-		}
-		Status s2 = getStatus();			
-		if (s2 != null) {
-			returnedStatusText = InternalUtils.stripUrls(s2.text.trim());
-			if (targetText.equals(returnedStatusText)) {			
-				return s2;
-			}
-		}
-		throw new TwitterException.Unexplained(
-				"Unexplained failure for tweet: expected \"" + statusText
-						+ "\" but got " + s2);
+		InternalUtils.log("jtwitter", "Text mismatch: "+targetText+" != "+returnedStatusText+" tweet:"+s.getId());
+		return s;
+		
+		// More extreme measures... off for now
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// igore the interruption
+//		}
+//		Status s2 = getStatus();			
+//		if (s2 != null) {
+//			returnedStatusText = InternalUtils.stripUrls(s2.text.trim());
+//			if (targetText.equals(returnedStatusText)) {			
+//				return s2;
+//			}
+//		}
+//		throw new TwitterException.Unexplained(
+//				"Unexplained failure for tweet: expected \"" + statusText
+//						+ "\" but got " + s2);
 	}
 
 

@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -106,6 +107,10 @@ public class InternalUtils {
 	}
 
 
+	/**
+	 * @param text
+	 * @return text with any urls (using Twitter's Regex.VALID_URL) replaced with ""
+	 */
 	public static String stripUrls(String text) {
 		return Regex.VALID_URL.matcher(text).replaceAll("");
 	}
@@ -611,6 +616,38 @@ public class InternalUtils {
 		if (filtered.isEmpty()) return false;
 		
 		return unsure? null : true;
+	}
+
+	private static Method logFn;
+	private static boolean logInit;
+
+	/**
+	 * Use the Winterwell logger. Reflection-based to avoid a dependency.
+	 * @param tag
+	 * @param msg
+	 */
+	public static void log(String tag, String msg) {
+		logInit();
+		if (logFn!=null) {
+			try {
+				logFn.invoke(null, tag, msg);
+			} catch (Exception ex) {
+				// oh well
+			}
+		}
+	}
+
+
+	private static void logInit() {
+		if (logInit) return;
+		try {
+			Class<?> Log = Class.forName("winterwell.utils.reporting.Log");
+			logFn = Log.getMethod("w", String.class, Object.class);
+		} catch(Throwable ex) {
+			// ignore
+		} finally {
+			logInit = true;
+		}
 	}
 
 }

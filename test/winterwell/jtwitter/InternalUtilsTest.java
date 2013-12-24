@@ -16,5 +16,11 @@ public class InternalUtilsTest {
 		String stripped = InternalUtils.stripUrls("hello foo.com http://www.whatever/blah?a=b&c=1-2 yeah");
 		assert stripped.equals("hello foo.com  yeah") : stripped;
 	}
+	
+	@Test
+	public void testLog() throws Exception {
+		InternalUtils.log("foo", "bar");
+		InternalUtils.log("foo", "bar");
+	}
 
 }
