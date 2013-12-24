@@ -9,11 +9,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
+
+import winterwell.jtwitter.InternalUtils;
 
 /**
  * <p>Title: MyJavaTools: Client HTTP Request class</p>
@@ -43,8 +47,23 @@ import java.util.Random;
     os.write(c);
   }
 
+  
+  private static Charset UTF_8;
+  static {
+	  try {
+		  UTF_8  = Charset.forName("UTF8");
+	  } catch(Exception ex) {
+		  InternalUtils.log("jtwitter", "No utf8 charset: "+ex);
+	  }
+  }
+  
+  
   protected void write(String s) throws IOException {
     connect();
+    if (UTF_8!=null) {
+    	os.write(s.getBytes(UTF_8));
+    	return;
+    }
     os.write(s.getBytes());
   }
 

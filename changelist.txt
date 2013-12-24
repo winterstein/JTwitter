@@ -2,7 +2,8 @@
 
 3.0.1:
  - Logging to try and catch unicode bug.
-
+ - Fixed unicode-with-images bug (note: this bug only ever affected some machines).
+ 
 3.0.0:
  - Breaking change to IGeoCode, unifying JTwitter's geocoding with PinPoint (and with better uncertainty outputs).
  
