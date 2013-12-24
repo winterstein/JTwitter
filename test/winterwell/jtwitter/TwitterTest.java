@@ -1335,7 +1335,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Twitter tw = newTestTwitter();
 		System.out.println(tw.getScreenName());
 		int salt = new Random().nextInt(1000);
-		File file = new File("test/winterwell/jtwitter/sodash-logo-colour-small.png");
+		File file = new File("test/winterwell/jtwitter/sodash.png");
 		assert file.exists();
 		{
 			Status wchars = tw.updateStatusWithMedia("How much work goes into the making of a Lady @Dior bag? Find out from the #DioratHarrods exhibition tomorrow onwards-", null, file);
@@ -1346,15 +1346,34 @@ extends TestCase // Comment out to remove the JUnit dependency
 			System.out.println(wchars);
 		}
 		{
-			Status wchars = tw.updateStatusWithMedia("\"Image *"+salt+"* world!\" - 'test some more chars ._£$%&@", null, file);
+			String s = "\"Image *"+salt+"* world!\" - 'test some more chars ._£$%&@";
+			Status wchars = tw.updateStatusWithMedia(s, null, file);
 			System.out.println(wchars);
+			assert wchars.getText().startsWith(s);
 		}
 		{
 			Status wchars = tw.updateStatusWithMedia("Media: Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩", null, file);
 			System.out.println(wchars);
+			assert wchars.getText().startsWith("Media: Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩");
 		}
 	}
-
+	
+	/**
+	 * Test for bug #6748
+	 */
+	public void testUpdateStatusWithMediaUnicode() {
+		Twitter tw = newTestTwitter();
+		System.out.println(tw.getScreenName());
+		int salt = new Random().nextInt(1000);
+		File file = new File("test/winterwell/jtwitter/sodash.png");
+		assert file.exists();
+		{
+			String s = "It's Christmas time… bring on the trees and the presents… and canapés "+salt;
+			Status wchars = tw.updateStatusWithMedia(s, null, file);
+			System.out.println(wchars);
+			assert wchars.getText().startsWith(s);
+		}
+	}
 
 	/**
 	 * This crashes out at above 140, which is correct

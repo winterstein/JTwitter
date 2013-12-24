@@ -2918,6 +2918,8 @@ public class Twitter implements Serializable {
 			String url = TWITTER_URL+"/statuses/update_with_media.json";
 			result = ((OAuthSignpostClient)http).postMultipartForm(url, vars);
 			Status s = new Status(new JSONObject(result), null);
+			// sanity check (c.f. unicode bug #6748)
+			updateStatus2_safetyCheck(statusText, s);
 			return s;
 		} catch (E403 e) {
 			// test for repetition (which gets a 403)
