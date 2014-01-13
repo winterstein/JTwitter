@@ -4,8 +4,22 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.winterwell.jgeoplanet.Location;
+
 public class Twitter_GeoTest {
 
+
+	@Test
+	public void testLocnMove() {
+		Twitter jtwit = TwitterTest.newTestTwitter();
+		Twitter_Geo tg = new Twitter_Geo(jtwit);
+		Place ed = tg.getPlace("Edinburgh, UK");
+		Location c = ed.getCentroid();
+		Location c2 = c.move(1000, 1000);
+		System.out.println(c);
+		System.out.println(c2);
+	}		
+	
 	@Test
 	public void testGeoSearchString() {
 		Twitter jtwit = TwitterTest.newTestTwitter();

@@ -59,8 +59,7 @@ public class Twitter_Geo implements IGeoCode {
 		if (accuracy != 0) {
 			vars.put("accuracy", String.valueOf(accuracy));
 		}
-		boolean auth = InternalUtils.authoriseIn11(jtwit);
-		String json = jtwit.getHttpClient().getPage(url, vars, auth);
+		String json = jtwit.getHttpClient().getPage(url, vars, true);
 		try {
 			JSONObject jo = new JSONObject(json);
 			JSONObject jo2 = jo.getJSONObject("result");
@@ -122,7 +121,7 @@ public class Twitter_Geo implements IGeoCode {
 			return Collections.EMPTY_MAP;
 		}
 		List<Place> places = geoSearch(query.desc);
-		if (places.size()==0) return null;
+		if (places.size()==0) return Collections.EMPTY_MAP;
 		// a unique answer?
 		if (places.size()==1) {
 			return Collections.singletonMap((IPlace)places.get(0), 0.8);
