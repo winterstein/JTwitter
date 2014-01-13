@@ -98,22 +98,18 @@ public class Location implements Serializable {
 	 * @return a new Location
 	 */
 	public Location move(double metresNorth, double metresEast) {
-		// North/South
-		// 1 = north pole to south pole
-		double fracNorth = metresNorth / (500*DIAMETER_OF_EARTH*Math.PI);
-		double lat = latitude + fracNorth*180;
-		// Latitude: [90, -90] is the preferred range.
-		// HACK: Cap at the poles!
-		if (lat>90) lat = 90;
-		else if (lat<-90) lat = -90;
-		// TODO East/West
-		// Argh! A TODO exception in the centre of a critical method :(
-		//if (metresEast!=0) throw new RuntimeException("TODO!");
-		double lng = longitude + metresEast;
-		// [-180, 180] is the preferred range
-		while (lng>180) lng -= 360;
-		while (lng<-180) lng += 360;
-		return new Location(lat, lng);
+
+		double RadiusOfEarth = DIAMETER_OF_EARTH/2; 
+		
+		//Coordinate offsets in radians
+		double dLat = metresNorth/RadiusOfEarth;
+		double dLon = metresEast/(RadiusOfEarth*Math.cos(Math.PI*latitude/180));
+		
+		//OffsetPosition, decimal degrees
+		double latO = latitude + dLat * 180/Math.PI;
+		double lonO = longitude + dLon * 180/Math.PI;
+		 
+		return new Location(latO, lonO);
 	}
 
 	
