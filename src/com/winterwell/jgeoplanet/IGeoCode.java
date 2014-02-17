@@ -6,8 +6,8 @@ import java.util.Map;
 public interface IGeoCode {
 	
 	/**
-	 * @param query
-	 * @param place
+	 * @param query Cannot be null.
+	 * @param place Cannot be null.
 	 * @return true if place fits this query, e.g. London is in the UK, false if it doesn't.
 	 * null if we don't know
 	 */

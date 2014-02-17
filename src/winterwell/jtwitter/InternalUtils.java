@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
+import android.text.GetChars;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
@@ -589,7 +590,10 @@ public class InternalUtils {
 		boolean unsure = false;
 		// Country
 		if (query.country!=null) {
-			String cc = ((Place) place).getCountryCode();
+			String cc = place.getCountryCode();
+			if (cc==null) {
+				// TODO get country for place
+			}
 			if ( ! query.country.equals(cc)) {
 				return false;
 			}
