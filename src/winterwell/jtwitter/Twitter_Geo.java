@@ -12,8 +12,6 @@ import winterwell.json.JSONObject;
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
-import com.winterwell.jgeoplanet.Location;
-import com.winterwell.jgeoplanet.MFloat;
 
 /**
  * Twitter's geolocation support. Use {@link Twitter#geo()} to get one of these

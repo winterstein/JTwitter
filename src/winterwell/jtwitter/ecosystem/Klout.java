@@ -1,10 +1,7 @@
 package winterwell.jtwitter.ecosystem;
 
-import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.Map;
 
-import winterwell.json.JSONArray;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.Twitter.IHttpClient;

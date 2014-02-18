@@ -1,7 +1,5 @@
 package winterwell.jtwitter.ecosystem;
 
-import java.util.Map;
-
 import org.junit.Test;
 
 public class KloutTest {

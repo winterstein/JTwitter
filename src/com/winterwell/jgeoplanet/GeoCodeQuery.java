@@ -1,9 +1,5 @@
 package com.winterwell.jgeoplanet;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.winterwell.jgeoplanet.Location;
 
 
 /**
