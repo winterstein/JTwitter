@@ -34,6 +34,9 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.StrUtils;
+import winterwell.utils.Utils;
+import winterwell.utils.reporting.Log.KErrorPolicy;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
@@ -591,8 +594,8 @@ public class InternalUtils {
 			String cc = place.getCountryCode();
 			if (cc==null) {
 				// TODO get country for place
-			}
-			if ( ! query.country.equals(cc)) {
+				unsure=true;
+			} else if ( ! query.country.equals(cc)) {
 				return false;
 			}
 		}
@@ -616,6 +619,19 @@ public class InternalUtils {
 		// requirements
 		Map<IPlace, Double> filtered = filterByReq(query, Collections.singletonMap(place, 1.0));
 		if (filtered.isEmpty()) return false;
+		
+		// Does it contain the query string?
+		if (unsure) {			
+			if ( ! Utils.isBlank(query.desc) && ! Utils.isBlank(place.getName())) {
+				String qdesc = StrUtils.toCanonical(query.desc);
+				String qname = StrUtils.toCanonical(place.getName());
+				Pattern namep = Pattern.compile("\\b"+Pattern.quote(qname)+"\\b");
+				if (namep.matcher(qdesc).find()) {
+					// Fairly strong benefit of the doubt here
+					return true;					
+				}
+			}
+		}
 		
 		return unsure? null : true;
 	}
