@@ -1,5 +1,6 @@
 package winterwell.jtwitter;
 
+import java.math.BigInteger;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -370,7 +371,7 @@ public class TwitterList extends AbstractList<User> {
 		subscriberCount = jobj.getInt("subscriber_count");
 		name = jobj.getString("name");
 		slug = jobj.getString("slug");
-		id = jobj.getLong("id");
+		id = new BigInteger(jobj.getString("id_str"));
 		_private = "private".equals(jobj.optString("mode"));
 		description = jobj.optString("description");
 		JSONObject user = jobj.getJSONObject("user");

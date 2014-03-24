@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.0.2:
+ - TwitterList uses (64 bit safe) BigInteger. 
+
 3.0.1:
  - Logging to try and catch unicode bug.
  - Fixed unicode-with-images bug (note: this bug only ever affected some machines).
