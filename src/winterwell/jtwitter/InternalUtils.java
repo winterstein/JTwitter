@@ -34,14 +34,12 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.reporting.Log.KErrorPolicy;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
-import com.winterwell.utils.StrUtils;
-import com.winterwell.utils.Utils;
-import com.winterwell.utils.reporting.Log.KErrorPolicy;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else
@@ -622,9 +620,9 @@ public class InternalUtils {
 		
 		// Does it contain the query string?
 		if (unsure) {			
-			if ( ! Utils.isBlank(query.desc) && ! Utils.isBlank(place.getName())) {
-				String qdesc = StrUtils.toCanonical(query.desc);
-				String qname = StrUtils.toCanonical(place.getName());
+			if (query.desc!=null && ! query.desc.isEmpty() && place.getName() != null && ! place.getName().isEmpty()) {
+				String qdesc = InternalUtils.toCanonical(query.desc);
+				String qname = InternalUtils.toCanonical(place.getName());
 				Pattern namep = Pattern.compile("\\b"+Pattern.quote(qname)+"\\b");
 				if (namep.matcher(qdesc).find()) {
 					// Fairly strong benefit of the doubt here
@@ -634,6 +632,40 @@ public class InternalUtils {
 		}
 		
 		return unsure? null : true;
+	}
+
+	private static String toCanonical(String string) {
+		if (string == null)
+			return "";
+		StringBuilder sb = new StringBuilder();
+		boolean spaced = false;
+		for (int i = 0, n = string.length(); i < n; i++) {
+			char c = string.charAt(i);
+			// lowercase letters
+			if (Character.isLetterOrDigit(c)) {
+				spaced = false;
+				// Note: javadoc recommends String.toLowerCase() as being better
+				// -- I wonder if it actually is, or if this is aspirational
+				// internationalisation?
+				c = Character.toLowerCase(c);
+				sb.append(c);
+				continue;
+			}
+			// all else as spaces
+			// compact whitespace
+			// if (Character.isWhitespace(c)) {
+			if (spaced || sb.length() == 0) {
+				continue;
+			}
+			sb.append(' ');
+			spaced = true;
+			// }
+			// ignore punctuation!
+		}		
+		string = sb.toString().trim();
+		// NB: StrUtils would ditch the accents, if we can
+		return string;
+
 	}
 
 	private static Method logFn;
