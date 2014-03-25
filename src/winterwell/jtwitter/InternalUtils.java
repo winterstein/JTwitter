@@ -34,14 +34,14 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.StrUtils;
-import winterwell.utils.Utils;
-import winterwell.utils.reporting.Log.KErrorPolicy;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
+import com.winterwell.utils.StrUtils;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.reporting.Log.KErrorPolicy;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else

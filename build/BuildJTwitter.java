@@ -2,6 +2,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import com.winterwell.utils.io.FileUtils;
+import com.winterwell.utils.reporting.Log;
+
 import winterwell.bob.BuildTask;
 import winterwell.bob.tasks.CopyTask;
 import winterwell.bob.tasks.GitTask;
@@ -11,8 +14,6 @@ import winterwell.bob.tasks.ZipTask;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterTest;
-import winterwell.utils.io.FileUtils;
-import winterwell.utils.reporting.Log;
 
 
 

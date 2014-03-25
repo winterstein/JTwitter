@@ -17,6 +17,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 
+import com.winterwell.utils.NoUTR;
+import com.winterwell.utils.Printer;
+import com.winterwell.utils.StrUtils;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.Time;
+
 import junit.framework.TestCase;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
@@ -27,13 +35,6 @@ import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
-import winterwell.utils.NoUTR;
-import winterwell.utils.Printer;
-import winterwell.utils.StrUtils;
-import winterwell.utils.Utils;
-import winterwell.utils.containers.Containers;
-import winterwell.utils.time.TUnit;
-import winterwell.utils.time.Time;
 
 /**
  * Unit tests for JTwitter.
