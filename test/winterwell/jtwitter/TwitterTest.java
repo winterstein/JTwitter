@@ -1272,7 +1272,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert show != null;
 		User show2 = tw.users().show("winterstein");
 		assert show2 != null;
-
+		System.out.println(show2);
+		
 		// a protected user
 		User ts = tw.users().show(PROTECTED_USER);
 		assert ts.isProtectedUser() : ts;

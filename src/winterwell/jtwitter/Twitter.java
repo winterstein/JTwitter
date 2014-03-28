@@ -2552,8 +2552,6 @@ public class Twitter implements Serializable {
 
 	/**
 	 * @see Twitter_Users#show(String)
-	 * 
-	 * This method will be removed June 2013
 	 */
 	@Deprecated
 	public User show(String screenName) throws TwitterException,
