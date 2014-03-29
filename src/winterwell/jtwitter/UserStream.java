@@ -133,7 +133,7 @@ public class UserStream extends AStream {
 	 * @return people who the user follows -- at the point when the stream last
 	 *         connected.
 	 */
-	public Collection<Long> getFriends() {
+	public Collection<Number> getFriends() {
 		// ??update the friends list from follow events? But we might miss some during an outage.
 		return friends;
 	}

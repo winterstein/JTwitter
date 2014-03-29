@@ -90,10 +90,8 @@ public final class Message implements ITweet {
 	 * @throws TwitterException
 	 */
 	Message(JSONObject obj) throws JSONException, TwitterException {
-		// No need for BigInteger - yet
-		// String _id = obj.getString("id_str");
-		// id = new BigInteger(_id==null? ""+obj.get("id") : _id);
-		id = obj.getLong("id");
+		String _id = obj.getString("id_str");
+		id = new BigInteger(_id==null? ""+obj.get("id") : _id);
 		String _text = obj.getString("text");
 		text = InternalUtils.unencode(_text);
 		String c = InternalUtils.jsonGet("created_at", obj);

@@ -205,7 +205,7 @@ public abstract class AStream implements Closeable {
 	/**
 	 * Only used by UserStream. See {@link UserStream#getFriends()} 
 	 */
-	List<Long> friends;
+	List<Number> friends;
 
 	/**
 	 * Needed for constructing some objects.
@@ -658,7 +658,7 @@ public abstract class AStream implements Closeable {
 	}
 
 	private void read3_friends(JSONArray _friends) throws JSONException {
-		List<Long> oldFriends = friends;
+		List<Number> oldFriends = friends;
 		friends = new ArrayList(_friends.length());
 		for (int i = 0, n = _friends.length(); i < n; i++) {
 			long fi = _friends.getLong(i);
@@ -668,7 +668,7 @@ public abstract class AStream implements Closeable {
 			return;
 
 		// This is after a reconnect -- did we miss any follow events?
-		HashSet<Long> friends2 = new HashSet(friends);
+		HashSet<Number> friends2 = new HashSet(friends);
 		friends2.removeAll(oldFriends);
 		if (friends2.size() == 0)
 			return;
