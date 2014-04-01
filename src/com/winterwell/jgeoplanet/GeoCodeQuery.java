@@ -166,6 +166,13 @@ public class GeoCodeQuery {
 
 	public BoundingBox getBoundingBox() {
 		return bbox;
+	}
+
+	public boolean isEmpty() {
+		return (desc==null || desc.isEmpty())
+				&& locn==null && bbox==null
+				&& city==null && country==null
+				&& (timezone==null || lang==null);
 	}	
 
 }
