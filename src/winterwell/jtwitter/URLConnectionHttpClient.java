@@ -421,7 +421,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		if (limit != null && limit.getRemaining() <= minRateLimit
 			&& ! limit.isOutOfDate()) 
 		{
-			throw new TwitterException.RateLimit(
+			throw new TwitterException.PreEmptiveRateLimit(
 					"Pre-emptive rate-limit block for "+limit+" for "+url);
 		}
 		return resource;
