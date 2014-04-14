@@ -9,7 +9,7 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import winterwell.utils.NoUTR;
+
 import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
@@ -75,7 +75,7 @@ public class TwitterStreamTest {
 	 * @throws InterruptedException
 	 * @throws FileNotFoundException
 	 */
-	@Test @NoUTR
+	@Test 
 	public void testTooManyKeywords2_R6Probes() throws InterruptedException, FileNotFoundException{
 		// Sorry :/
 		boolean thisRunsForeverDontRunIt = false;

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 
-import winterwell.utils.NoUTR;
+
 import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
@@ -757,7 +757,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		return new Twitter(TEST_USER, client);
 	}	
 	
-	@NoUTR
+	
 	public void _testAuthUser() {
 		OAuthSignpostClient client = new OAuthSignpostClient(
 		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
