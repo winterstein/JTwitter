@@ -203,8 +203,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	@Override
 	public String getHeader(String headerName) {
 		if (headers == null)
-			return null;
+			return null;		
 		List<String> vals = headers.get(headerName);
+		if (vals==null) {
+			// Seen April 2014 -- lowercase X-Rate-Limit headers?!
+			vals = headers.get(headerName.toLowerCase());
+		}
 		return vals == null || vals.isEmpty() ? null : vals.get(0);
 	}
 
@@ -220,6 +224,10 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		return rateLimits;
 	}
 
+	/**
+	 * Call Twitter to get the rate limit.
+	 * @return latest rate limits (which will also be cached here for fast checks)
+	 */
 	public Map<String, RateLimit> updateRateLimits() {
 		Map<String, String> vars = null; // request only some resources?
 		String json = getPage(Twitter.DEFAULT_TWITTER_URL+"/application/rate_limit_status.json", vars, true);
@@ -726,7 +734,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 */
 	void updateRateLimits(String resource) {
 		if (resource==null) return;
-		String limit = getHeader("X-Rate-Limit-Limit");
+		String limit = getHeader("X-Rate-Limit-Limit");		
 		if (limit == null) {
 			return;
 		}

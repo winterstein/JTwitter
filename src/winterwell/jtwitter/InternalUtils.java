@@ -373,8 +373,16 @@ public class InternalUtils {
 	}
 
 	static Date parseDate(String c) {
-		if (InternalUtils.REGEX_JUST_DIGITS.matcher(c).matches())
-			return new Date(Long.valueOf(c));
+		if (InternalUtils.REGEX_JUST_DIGITS.matcher(c).matches()) {
+			long cl = Long.valueOf(c);			
+			// Seconds or msecs? Probably seconds
+			long msecs = cl*1000; 
+			if (msecs > 7709085069990L) { // Safety Hack: Well-future date as a guard check
+				return new Date(cl);	
+			} else {
+				return new Date(msecs);
+			}
+		}
 		try {
 			Date _createdAt = new Date(c);
 			return _createdAt;

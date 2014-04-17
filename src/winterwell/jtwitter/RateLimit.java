@@ -40,6 +40,7 @@ public final class RateLimit {
 	private String limit;
 	private String remaining;
 	private String reset;
+	private transient Date _reset;
 
 	public RateLimit(String limit, String remaining, String reset) {
 		this.limit = limit;
@@ -63,7 +64,8 @@ public final class RateLimit {
 	 * @return The date at which the limit will be reset.
 	 */
 	public Date getReset() {
-		return InternalUtils.parseDate(reset);
+		if (_reset==null) _reset = InternalUtils.parseDate(reset);
+		return _reset;
 	}
 
 	/**
