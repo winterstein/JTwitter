@@ -25,6 +25,7 @@ import winterwell.json.JSONArray;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
+import winterwell.utils.reporting.Log;
 
 /**
  * A simple http client that uses the built in URLConnection class.
@@ -426,11 +427,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	protected String checkRateLimit(String url) {
 		String resource = RateLimit.getResource(url);
 		RateLimit limit = rateLimits.get(resource);
+		
 		if (limit != null && limit.getRemaining() <= minRateLimit
 			&& ! limit.isOutOfDate()) 
 		{
 			throw new TwitterException.PreEmptiveRateLimit(
-					"Pre-emptive rate-limit block for "+limit+" for "+url);
+					"Pre-emptive rate-limit block for "+limit+" for "+url+ " based on minimum limit"+ minRateLimit);
 		}
 		return resource;
 	}
