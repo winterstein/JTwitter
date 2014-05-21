@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import winterwell.utils.reporting.Log;
+
 /**
  * A geographical point-location expressed as a latitude and longitude.
  *
@@ -162,8 +164,9 @@ public class Location implements Serializable {
 		return latitude + "," + longitude;
 	}
 	
+	// NB: will not pick up a trailing . See bug #9788
 	public static final Pattern latLongLocn = Pattern.compile(
-			"\\s*(-?[\\d\\.]+),\\s*(-?[\\d\\.]+)\\s*");
+			"(\\S+:)?\\s*(-?[\\d\\.]*\\d),\\s*(-?[\\d\\.]*\\d)\\.?\\s*");
 
 	/**
 	 * Try to parse a string as a latitude/longitude pair.
@@ -174,15 +177,21 @@ public class Location implements Serializable {
 		// Is it a longitude/latitude pair?
 		Matcher m = latLongLocn.matcher(locnDesc);
 		if ( ! m.matches()) return null;
-		String lat = m.group(1);
-		String lng = m.group(2);
-		double _lat = Double.valueOf(lat);
-		if (Math.abs(_lat) > 90) {
-			// Bogus latitude -- beyond a pole!
-			// NB: longitude we allow to loop.
+		String lat = m.group(2);
+		String lng = m.group(3);
+		try {
+			double _lat = Double.valueOf(lat);
+			if (Math.abs(_lat) > 90) {
+				// Bogus latitude -- beyond a pole!
+				// NB: longitude we allow to loop.
+				return null;
+			}
+			return new Location(_lat, Double.valueOf(lng));
+		} catch(NumberFormatException ex) {
+			// e.g. 5.50978.58,-0.27849719
+			Log.w("Location.parse", locnDesc+" "+ex);
 			return null;
 		}
-		return new Location(_lat, Double.valueOf(lng));
 	}
 
 }
