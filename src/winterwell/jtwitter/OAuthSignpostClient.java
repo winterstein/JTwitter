@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import oauth.signpost.AbstractOAuthConsumer;
+import oauth.signpost.AbstractOAuthProvider;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.HttpURLConnectionRequestAdapter;
@@ -195,11 +196,11 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			"https://www.linkedin.com/uas/oauth/authorize");
 	}
 	
-	private static final DefaultOAuthProvider FLICKR_PROVIDER() {
-		return new DefaultOAuthProvider(
-			"http://www.flickr.com/services/oauth/request_token",
-			"http://www.flickr.com/services/oauth/access_token",
-			"http://www.flickr.com/services/oauth/authorize");
+	private static final FlickrOAuthProvider FLICKR_PROVIDER() {
+		return new FlickrOAuthProvider(
+			"https://www.flickr.com/services/oauth/request_token",
+			"https://www.flickr.com/services/oauth/access_token",
+			"https://www.flickr.com/services/oauth/authorize");
 	}
 	
 	
@@ -259,7 +260,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	private OAuthConsumer consumer;
 	private String consumerKey;
 	private String consumerSecret;
-	private DefaultOAuthProvider provider;
+	private AbstractOAuthProvider provider;
 
 	/**
 	 * 
@@ -511,7 +512,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 * @see #setLinkedInProvider()
 	 * @see #setFoursquareProvider()
 	 */
-	public void setProvider(DefaultOAuthProvider provider) {
+	public void setProvider(AbstractOAuthProvider provider) {
 		this.provider = provider;
 	}
 
