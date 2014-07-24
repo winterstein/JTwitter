@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="signpost-core.jar" scope="COMPILE">
+		<srcroot url="file:///middleware/signpost/src.zip"/>
+	</lib>
+	<lib name="android.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$USER_HOME$/winterwell/jtwitter/liblocal/android.jar!/"/>
+	</lib>
+</component>
