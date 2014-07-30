@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import winterwell.utils.io.XStreamBinaryConverter;
+import com.winterwell.utils.io.XStreamBinaryConverter;
 
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KEntityType;
