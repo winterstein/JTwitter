@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import com.winterwell.utils.io.FileUtils;
+import winterwell.utils.io.FileUtils;
 
 import winterwell.utils.reporting.Log;
 import winterwell.bob.BuildTask;
