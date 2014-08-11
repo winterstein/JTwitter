@@ -49,7 +49,7 @@ public class TwitLonger {
 	 * Use twitlonger.com to post a lengthy tweet. See twitlonger.com for more
 	 * details on their service.
 	 * 
-	 * @param message Must be > 140 chars
+	 * @param message Must be &gt; 140 chars
 	 * @param inReplyToStatusId
 	 *            Can be null if this isn't a reply
 	 * @return A Twitter status using a truncated message with a link to
@@ -129,7 +129,6 @@ public class TwitLonger {
 	 *            twitlonger to fetch the full text.
 	 * @return the full status message. If this is not a twitlonger status, this
 	 *         will just return the status text as-is.
-	 * @see #updateLongStatus(String, long)
 	 */
 	public String getLongStatus(Status truncatedStatus) {
 		// regex for http://tl.gd/ID

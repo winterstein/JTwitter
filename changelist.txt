@@ -2,6 +2,7 @@
 
 3.0.3:
  - More robust handling of Rate-Limit headers (after seeing lowercase headers coming back from Twitter).
+ - Twitter.setSinceId() and setUntilId() convert inputs to BigInteger (fixes a formatting bug if double was input).
 
 3.0.2:
  - TwitterList and Message use (64 bit safe) BigInteger.  
