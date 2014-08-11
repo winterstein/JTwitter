@@ -301,7 +301,7 @@ public class TwitterException extends RuntimeException {
 	public static class SuspendedUser extends E403 {
 		private static final long serialVersionUID = 1L;
 
-		SuspendedUser(String msg) {
+		public SuspendedUser(String msg) {
 			super(msg);
 		}
 	}

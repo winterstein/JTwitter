@@ -728,7 +728,7 @@ public class Twitter implements Serializable {
 
 	private Date sinceDate;
 
-	private Number sinceId;
+	private BigInteger sinceId;
 
 	private String sourceApp = "jtwitterlib";
 
@@ -839,8 +839,9 @@ public class Twitter implements Serializable {
 	 */
 	Map<String, String> addStandardishParameters(
 			Map<String, String> vars) {
-		if (sinceId != null) {
-			vars.put("since_id", sinceId.toString());
+		if (sinceId != null && sinceId.doubleValue() != 0) {
+			String s = sinceId.toString();
+			vars.put("since_id", s);
 		}
 		if (untilId != null) {
 			vars.put("max_id", untilId.toString());
@@ -1536,7 +1537,7 @@ public class Twitter implements Serializable {
 		Map vars = InternalUtils.asMap(
 				"count", rpp, 
 				"q", searchTerm);
-		if (sinceId != null) {
+		if (sinceId != null && sinceId.doubleValue()!=0) {
 			vars.put("since_id", sinceId.toString());
 		}
 		if (untilId != null) {
@@ -2447,11 +2448,12 @@ public class Twitter implements Serializable {
 	 * used with setUntilId().
 	 * You may also want to increase {@link #setMaxResults(int)}.
 	 * 
-	 * @param statusId Can be null
+	 * @param statusId Can be null. Only a BigInteger really makes sense (although a double would work to some degree
+	 * -- but beware of rounding errors).
 	 * @see #setSinceDate(Date)
 	 */
 	public void setSinceId(Number statusId) {
-		sinceId = statusId;
+		sinceId = InternalUtils.toBigInteger(statusId);
 	}
 
 	/**
@@ -2503,22 +2505,14 @@ public class Twitter implements Serializable {
 	 *            aka max_id
 	 */
 	public void setUntilId(Number untilId) {
-		if (untilId==null) {
-			this.untilId = null;
-			return;
-		}
-		if (untilId instanceof BigInteger) {
-			this.untilId = (BigInteger) untilId;
-			return;
-		}
-		this.untilId = BigInteger.valueOf(untilId.longValue());
+		this.untilId = InternalUtils.toBigInteger(untilId);
 	}
 	
 	public BigInteger getUntilId() {
 		return untilId;
 	}
 	
-	public Number getSinceId() {
+	public BigInteger getSinceId() {
 		return sinceId;
 	}
 

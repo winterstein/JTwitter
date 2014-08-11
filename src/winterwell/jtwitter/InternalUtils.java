@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +41,7 @@ import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
+import com.winterwell.utils.MathUtils;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else
@@ -706,6 +708,23 @@ public class InternalUtils {
 		} finally {
 			logInit = true;
 		}
+	}
+
+
+	/**
+	 * 
+	 * @param statusId Can be null (returns null)
+	 * @return 
+	 */
+	public static BigInteger toBigInteger(Number statusId) {
+		if (statusId==null) return null;
+		if (statusId instanceof BigInteger) return (BigInteger) statusId;
+		if (statusId instanceof BigDecimal) {
+			BigDecimal n = (BigDecimal) statusId;
+			return n.toBigInteger();
+		}
+		long lng = statusId.longValue();
+		return BigInteger.valueOf(lng);
 	}
 
 }
