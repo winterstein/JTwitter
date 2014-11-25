@@ -112,6 +112,8 @@ public abstract class AStream implements Closeable {
 	 */
 	private static final int MAX_WAIT_SECONDS = 600;
 
+	final String LOGTAG = getClass().getSimpleName();
+
 	static int forgetIfFull(List incoming) {
 		// forget a batch?
 		if (incoming.size() < MAX_BUFFER)
@@ -409,12 +411,12 @@ public abstract class AStream implements Closeable {
 				jtwit2.setMaxResults(100000); // hopefully not needed!
 				// fetch
 				int fnd = fillInOutages2(jtwit2, outage);
-				InternalUtils.log(getClass().getSimpleName(), "outage fill for "+outage+" found: "+fnd);
+				InternalUtils.log(LOGTAG, "outage fill for "+outage+" found: "+fnd);
 				// success
 			} catch(Throwable e) {
 				// fail -- put it back on the queue
 				outages.add(outage);
-				InternalUtils.log(getClass().getSimpleName(), "outage fill for "+outage+" error: "+e);
+				InternalUtils.log(LOGTAG, "outage fill for "+outage+" error: "+e);
 				if (e instanceof Exception) {
 					ex = (Exception) e;
 				} else {
@@ -596,6 +598,7 @@ public abstract class AStream implements Closeable {
 			throw new TwitterException(ex);
 		}
 		// reconnect using a different thread
+		InternalUtils.log(LOGTAG, this+" disconnected: "+ex);
 		reconnect();
 	}
 
@@ -987,8 +990,9 @@ final class StreamGobbler extends Thread {
 //				offTime = System.currentTimeMillis();
 				// TODO log this as a sys-event
 				stream.addSysEvent(new Object[]{"exception", ex});
+				InternalUtils.log(stream.LOGTAG, this+" gobbler.run() exception: "+ex);
 				// try a reconnect?
-				if (!stream.autoReconnect)
+				if ( ! stream.autoReconnect)
 					return; // no - break out of the loop
 				// Note: the thread can also hang or die, so we also do
 				// reconnects from
@@ -998,6 +1002,7 @@ final class StreamGobbler extends Thread {
 					assert stream.stream != null : stream;
 				} catch (Exception e) {
 					// #fail
+					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: "+ex);
 					ex = e;
 					return;
 				}
