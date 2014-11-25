@@ -21,6 +21,7 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -411,10 +412,13 @@ public abstract class AStream implements Closeable {
 				fillInOutages2(jtwit2, outage);
 				// success
 			} catch(Throwable e) {
-				// fail -- put it back on the queue				
+				// fail -- put it back on the queue
 				outages.add(outage);
 				if (e instanceof Exception) {
 					ex = (Exception) e;
+				} else {
+					// wrap and report it
+					ex = new RuntimeException(e);
 				}
 			}			
 		}
