@@ -375,7 +375,7 @@ public abstract class AStream implements Closeable {
 	/**
 	 * Use the REST API to fill in outages when possible. Filled-in outages will
 	 * be removed from the list. 
-	 * WARNING: This swallows exceptions! (but check the return value)
+	 * WARNING: This swallows exceptions! (but check the return value).
 	 * <p>
 	 * In accordance with best-practice, this method will skip over very recent
 	 * outages (which will be picked up by subsequent calls to
@@ -398,8 +398,8 @@ public abstract class AStream implements Closeable {
 		Twitter jtwit2 = new Twitter(jtwit);		
 		Exception ex = null;
 		for (Outage outage : outs) {
-			// too recent? wait at least 1 minute
-			if (System.currentTimeMillis() - outage.untilTime < 60000) {
+			// too recent? wait 20 seconds
+			if (System.currentTimeMillis() - outage.untilTime < 20000) {
 				continue;
 			}
 			boolean ok = outages.remove(outage);
