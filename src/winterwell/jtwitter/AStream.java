@@ -21,7 +21,6 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -409,11 +408,13 @@ public abstract class AStream implements Closeable {
 				jtwit2.setUntilDate(new Date(outage.untilTime));
 				jtwit2.setMaxResults(100000); // hopefully not needed!
 				// fetch
-				fillInOutages2(jtwit2, outage);
+				int fnd = fillInOutages2(jtwit2, outage);
+				InternalUtils.log(getClass().getSimpleName(), "outage fill for "+outage+" found: "+fnd);
 				// success
 			} catch(Throwable e) {
 				// fail -- put it back on the queue
 				outages.add(outage);
+				InternalUtils.log(getClass().getSimpleName(), "outage fill for "+outage+" error: "+e);
 				if (e instanceof Exception) {
 					ex = (Exception) e;
 				} else {
@@ -430,8 +431,9 @@ public abstract class AStream implements Closeable {
 	 * @param jtwit2
 	 *            with screenname, auth-token, sinceId and untilDate all set up
 	 * @param outage
+	 * @return number of messages/events found
 	 */
-	abstract void fillInOutages2(Twitter jtwit2, Outage outage);
+	abstract int fillInOutages2(Twitter jtwit2, Outage outage);
 
 	@Override
 	protected void finalize() throws Throwable {

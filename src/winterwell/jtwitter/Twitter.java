@@ -21,7 +21,6 @@ import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.jtwitter.ecosystem.TwitLonger;
-import winterwell.utils.reporting.Log;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -622,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.0.3";
+	public final static String version = "3.0.4";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.

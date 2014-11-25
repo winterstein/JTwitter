@@ -699,6 +699,7 @@ public class InternalUtils {
 	private static void logInit() {
 		if (logInit) return;
 		try {
+			// Try to grab the Winterwell Log.w() function
 			Class<?> Log = Class.forName("winterwell.utils.reporting.Log");
 			logFn = Log.getMethod("w", String.class, Object.class);
 		} catch(Throwable ex) {

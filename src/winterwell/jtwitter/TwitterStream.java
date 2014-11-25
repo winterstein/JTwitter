@@ -135,7 +135,8 @@ public class TwitterStream extends AStream {
 	}
 
 	@Override
-	void fillInOutages2(Twitter jtwit2, Outage outage) {
+	int fillInOutages2(Twitter jtwit2, Outage outage) {
+		int cnt = 0;
 		if (method != KMethod.filter)
 			throw new UnsupportedOperationException();
 		// keywords?
@@ -147,6 +148,7 @@ public class TwitterStream extends AStream {
 						continue;
 					}
 					tweets.add(status);
+					cnt++;
 				}
 			}
 		}
@@ -160,12 +162,14 @@ public class TwitterStream extends AStream {
 						continue;
 					}
 					tweets.add(status);
+					cnt++;
 				}
 			}
 		}
 		// regions?
 		if (locns != null && ! locns.isEmpty())
 			throw new UnsupportedOperationException("TODO"); // TODO
+		return cnt;
 	}
 
 	/**

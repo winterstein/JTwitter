@@ -95,8 +95,9 @@ public class UserStream extends AStream {
 	 * events are automatically generated on reconnect.
 	 */
 	@Override
-	void fillInOutages2(Twitter jtwit2, Outage outage)
+	int fillInOutages2(Twitter jtwit2, Outage outage)
 			throws UnsupportedOperationException, TwitterException {
+		int cnt = 0;
 		// fetch
 		if (withFollowings) {
 			// TODO pull in network activity
@@ -109,6 +110,7 @@ public class UserStream extends AStream {
 				continue;
 			}
 			tweets.add(status);
+			cnt++;
 		}
 		// get your traffic
 		List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
@@ -117,6 +119,7 @@ public class UserStream extends AStream {
 				continue;
 			}
 			tweets.add(status);
+			cnt++;
 		}
 		List<Message> dms = jtwit2.getDirectMessages();
 		for (ITweet dm : dms) {
@@ -124,9 +127,11 @@ public class UserStream extends AStream {
 				continue;
 			}
 			tweets.add(dm);
+			cnt++;
 		}
 		// Missed follow events are sort of OK: the reconnect will update
 		// friends
+		return cnt;
 	}
 
 	/**

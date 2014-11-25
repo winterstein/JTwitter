@@ -25,7 +25,6 @@ import winterwell.json.JSONArray;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
-import winterwell.utils.reporting.Log;
 
 /**
  * A simple http client that uses the built in URLConnection class.
