@@ -138,7 +138,8 @@ public class Twitter_UsersTest {
 	public void testProtectedAccounts() {
 		Twitter tw = TwitterTest.newTestTwitter();
 		try {
-			tw.show("acwright");
+			User user = tw.show("acwright");
+			assert user.isProtectedUser();
 		} catch (SuspendedUser e) {
 			assert false;
 		} catch (E403 e) {

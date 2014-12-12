@@ -2,7 +2,7 @@
 
 3.0.4:
  - More reporting around stream errors.
- - Bundled Apache/Jakarta commons-codec jar in lib (needed by sugnpost)
+ - Bundled Apache/Jakarta commons-codec (version 1.9) jar in lib (needed by sugnpost)
  
 3.0.3:
  - More robust handling of Rate-Limit headers (after seeing lowercase headers coming back from Twitter).

@@ -11,6 +11,6 @@
 	<classpathentry kind="lib" path="/middleware/scribe-built/scribe-1.3.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
