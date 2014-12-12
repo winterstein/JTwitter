@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
@@ -22,7 +21,6 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.reporting.Log;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -403,7 +401,6 @@ public abstract class AStream implements Closeable {
 		for (Outage outage : outs) {
 			// too recent? wait 20 seconds
 			if (System.currentTimeMillis() - outage.untilTime < 20000) {
-				InternalUtils.log(LOGTAG, "outage holding off fill as too recent");
 				continue;
 			}
 			boolean ok = outages.remove(outage);
@@ -993,7 +990,7 @@ final class StreamGobbler extends Thread {
 //				offTime = System.currentTimeMillis();
 				// TODO log this as a sys-event
 				stream.addSysEvent(new Object[]{"exception", ex});
-				InternalUtils.log(stream.LOGTAG, this+" gobbler.run() exception: "+ex.getStackTrace());
+				InternalUtils.log(stream.LOGTAG, this+" gobbler.run() exception: "+ex);
 				// try a reconnect?
 				if ( ! stream.autoReconnect)
 					return; // no - break out of the loop
@@ -1005,7 +1002,7 @@ final class StreamGobbler extends Thread {
 					assert stream.stream != null : stream;
 				} catch (Exception e) {
 					// #fail
-					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: "+ex.getStackTrace());
+					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: "+ex);
 					ex = e;
 					return;
 				}
