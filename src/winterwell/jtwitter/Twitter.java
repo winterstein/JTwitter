@@ -1325,9 +1325,13 @@ public class Twitter implements Serializable {
 	 */
 	private List<Message> getMessages(String url, Map<String, String> var) {
 		// Default: 1 page
-		if (maxResults < 1) {
-			List<Message> msgs = Message.getMessages(http.getPage(url, var,
-					true));
+		if (maxResults < 1) {			
+			String p = http.getPage(url, var, true);
+			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
+			if (url.contains("direct_messages")) {
+				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var);
+			}
+			List<Message> msgs = Message.getMessages(p);
 			msgs = dateFilter(msgs);
 			return msgs;
 		}
@@ -1336,6 +1340,10 @@ public class Twitter implements Serializable {
 		BigInteger maxId = untilId;
 		List<Message> msgs = new ArrayList<Message>();
 		while (msgs.size() <= maxResults) {
+			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
+			if (url.contains("direct_messages")) {
+				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var);
+			}
 			String p = http.getPage(url, var, true);
 			List<Message> nextpage = Message.getMessages(p);
 			// Next page must start strictly before this one
