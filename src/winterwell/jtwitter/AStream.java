@@ -699,6 +699,7 @@ public abstract class AStream implements Closeable {
 	 * Stores outage information if appropriate.
 	 */
 	synchronized void reconnect() {
+		InternalUtils.log(LOGTAG, this+" reconnect()...");
 		// do the reconnect (can be slow)
 		long now = System.currentTimeMillis();
 		reconnect2();
@@ -706,7 +707,7 @@ public abstract class AStream implements Closeable {
 		addSysEvent(new Object[]{"reconnect", dt});
 
 		// store the outage
-		// TODO merge small outages
+		// ??merge small outages??
 		if (lastId != BigInteger.ZERO) {
 			outages.add(new Outage(lastId, System.currentTimeMillis()));
 			// paranoia: avoid memory leaks
@@ -718,6 +719,7 @@ public abstract class AStream implements Closeable {
 				forgotten += 10000;
 			}
 		}
+		InternalUtils.log(LOGTAG, this+" ...reconnect() done");
 	}
 
 	/**
@@ -726,6 +728,7 @@ public abstract class AStream implements Closeable {
 	 * @param sysEvent
 	 */
 	void addSysEvent(Object[] sysEvent) {
+		InternalUtils.log(LOGTAG, "sysEvent: "+InternalUtils.str(sysEvent));
 		sysEvents.add(sysEvent);
 		if (listeners.size()==0) return;
 		synchronized (listeners) {
@@ -755,7 +758,7 @@ public abstract class AStream implements Closeable {
 			throw e;
 		} catch (Exception e) {
 			// oh well
-			System.out.println(e);
+//			System.out.println(e);
 		}
 		// 2. Exponential back-off. Wait a random number of seconds between 20
 		// and 40 seconds.
@@ -778,7 +781,7 @@ public abstract class AStream implements Closeable {
 				throw e;
 			} catch (Exception e) {
 				// oh well
-				System.out.println(e);
+//				System.out.println(e);
 			}
 		}
 		throw new TwitterException.E50X("Could not connect to streaming server");
@@ -1002,7 +1005,7 @@ final class StreamGobbler extends Thread {
 					assert stream.stream != null : stream;
 				} catch (Exception e) {
 					// #fail
-					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: "+ex);
+					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: "+ex+" now "+e);
 					ex = e;
 					return;
 				}

@@ -4,6 +4,19 @@ import org.junit.Test;
 
 public class InternalUtilsTest {
 
+
+	@Test
+	public void testStr() {
+		{
+			String s = InternalUtils.str(new Object[]{"a", "b"});
+			assert s.equals("a, b");
+		}
+		{
+			String s = InternalUtils.str(new Object[0]);
+			assert s.equals("") : s;
+		}
+	}
+	
 	@Test
 	public void testEncode() {
 		String enc = InternalUtils.encode("+Justin Bieber");

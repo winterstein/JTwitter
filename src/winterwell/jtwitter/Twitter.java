@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.0.4";
+	public final static String version = "3.0.5";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -1046,6 +1046,7 @@ public class Twitter implements Serializable {
 	 * Note: the Twitter API makes this available in rss if that's of interest.
 	 */
 	public List<Message> getDirectMessages() {
+		InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+"...");
 		return getMessages(TWITTER_URL + "/direct_messages.json",
 				standardishParameters());
 	}
@@ -2765,7 +2766,7 @@ public class Twitter implements Serializable {
 					true);
 		try {
 			Status s = new Status(new JSONObject(result), null);
-			s = updateStatus2_safetyCheck(statusText, s);
+//			s = updateStatus2_safetyCheck(statusText, s);
 			return s;
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(result, e);
@@ -2829,67 +2830,67 @@ public class Twitter implements Serializable {
 		return vars;
 	}
 
-	/**
-	 * Test that the updateState worked -- throw TwitterException.Unexplained
-	 * if it didn't.<br>
-	 * By default, this only filters DMs.<br>
-	 * Serious checking is switched on via the {@link #WORRIED_ABOUT_TWITTER} flag.
-	 * @param statusText What we meant to send
-	 * @param s What came back
-	 * @return s, or null for DMs
-	 * @throws TwitterException#Unexplained 
-	 */
-	private Status updateStatus2_safetyCheck(String statusText, Status s) {
-		// is it a direct message? - which doesn't return the true status
-		String st = statusText.toLowerCase();
-		if (st.startsWith("dm ") || st.startsWith("d ")) {
-			return null;
-		}
-		// The checks are dialled down, so let's make this standard
-//		if ( ! WORRIED_ABOUT_TWITTER) {
+//	/**
+//	 * Test that the updateState worked -- throw TwitterException.Unexplained
+//	 * if it didn't.<br>
+//	 * By default, this only filters DMs.<br>
+//	 * Serious checking is switched on via the {@link #WORRIED_ABOUT_TWITTER} flag.
+//	 * @param statusText What we meant to send
+//	 * @param s What came back
+//	 * @return s, or null for DMs
+//	 * @throws TwitterException#Unexplained 
+//	 */
+//	private Status updateStatus2_safetyCheck(String statusText, Status s) {
+//		// is it a direct message? - which doesn't return the true status
+//		String st = statusText.toLowerCase();
+//		if (st.startsWith("dm ") || st.startsWith("d ")) {
+//			return null;
+//		}
+//		// The checks are dialled down, so let's make this standard
+////		if ( ! WORRIED_ABOUT_TWITTER) {
+////			return s;
+////		}
+//		// Weird bug: Twitter occasionally rejects tweets?!
+//		// Sightings...
+//		// 21/05/12 (spotter: Alex Nuttgens)
+//		// 27/03/12 (spotter: Alex Nuttgens)
+//		// + other earlier sightings
+//		
+//		// Bug #6748: Unicode mangling *sometimes*
+//		
+//		// Sanity check...
+//		String targetText = statusText.trim();
+//		String returnedStatusText = s.text.trim();
+//		// strip the urls to remove the effects of the t.co shortener
+//		// (obviously this weakens the safety test, but failure would be
+//		// a corner case of a corner case).
+//		// TODO Twitter also shorten some not-quite-urls, such as "www.google.com", which stripUrls() won't catch.		
+//		targetText = InternalUtils.stripUrls(targetText);
+//		returnedStatusText = InternalUtils.stripUrls(returnedStatusText);
+//		if (returnedStatusText.equals(targetText)) {
+//			// All OK
 //			return s;
 //		}
-		// Weird bug: Twitter occasionally rejects tweets?!
-		// Sightings...
-		// 21/05/12 (spotter: Alex Nuttgens)
-		// 27/03/12 (spotter: Alex Nuttgens)
-		// + other earlier sightings
-		
-		// Bug #6748: Unicode mangling *sometimes*
-		
-		// Sanity check...
-		String targetText = statusText.trim();
-		String returnedStatusText = s.text.trim();
-		// strip the urls to remove the effects of the t.co shortener
-		// (obviously this weakens the safety test, but failure would be
-		// a corner case of a corner case).
-		// TODO Twitter also shorten some not-quite-urls, such as "www.google.com", which stripUrls() won't catch.		
-		targetText = InternalUtils.stripUrls(targetText);
-		returnedStatusText = InternalUtils.stripUrls(returnedStatusText);
-		if (returnedStatusText.equals(targetText)) {
-			// All OK
-			return s;
-		}
-		InternalUtils.log("jtwitter", "Text mismatch: "+targetText+" != "+returnedStatusText+" tweet:"+s.getId());
-		return s;
-		
-		// More extreme measures... off for now
-//		try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// igore the interruption
-//		}
-//		Status s2 = getStatus();			
-//		if (s2 != null) {
-//			returnedStatusText = InternalUtils.stripUrls(s2.text.trim());
-//			if (targetText.equals(returnedStatusText)) {			
-//				return s2;
-//			}
-//		}
-//		throw new TwitterException.Unexplained(
-//				"Unexplained failure for tweet: expected \"" + statusText
-//						+ "\" but got " + s2);
-	}
+//		InternalUtils.log("jtwitter", "Text mismatch: "+targetText+" != "+returnedStatusText+" tweet:"+s.getId());
+//		return s;
+//		
+//		// More extreme measures... off for now
+////		try {
+////			Thread.sleep(500);
+////		} catch (InterruptedException e) {
+////			// igore the interruption
+////		}
+////		Status s2 = getStatus();			
+////		if (s2 != null) {
+////			returnedStatusText = InternalUtils.stripUrls(s2.text.trim());
+////			if (targetText.equals(returnedStatusText)) {			
+////				return s2;
+////			}
+////		}
+////		throw new TwitterException.Unexplained(
+////				"Unexplained failure for tweet: expected \"" + statusText
+////						+ "\" but got " + s2);
+//	}
 
 
 	/**
@@ -2919,7 +2920,7 @@ public class Twitter implements Serializable {
 			result = ((OAuthSignpostClient)http).postMultipartForm(url, vars);
 			Status s = new Status(new JSONObject(result), null);
 			// sanity check (c.f. unicode bug #6748)
-			updateStatus2_safetyCheck(statusText, s);
+//			updateStatus2_safetyCheck(statusText, s);
 			return s;
 		} catch (E403 e) {
 			// test for repetition (which gets a 403)

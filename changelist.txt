@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+3.0.5:
+ - Even more reporting.
+ - Switched off updateStatus2_safetyCheck() -- does little & only false-positives in recent checks.
+
 3.0.4:
  - More reporting around stream errors.
  - Bundled Apache/Jakarta commons-codec (version 1.9) jar in lib (needed by sugnpost)

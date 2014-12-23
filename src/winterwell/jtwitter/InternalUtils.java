@@ -108,6 +108,7 @@ public class InternalUtils {
 
 
 	/**
+	 * @deprecated Not used anymore
 	 * @param text
 	 * @return text with any urls (using Twitter's Regex.VALID_URL) replaced with ""
 	 */
@@ -684,7 +685,7 @@ public class InternalUtils {
 	 * @param tag
 	 * @param msg
 	 */
-	public static void log(String tag, String msg) {
+	public static void log(String tag, Object msg) {
 		logInit();
 		if (logFn!=null) {
 			try {
@@ -724,6 +725,18 @@ public class InternalUtils {
 		}
 		long lng = statusId.longValue();
 		return BigInteger.valueOf(lng);
+	}
+
+
+	public static String str(Object[] array) {
+		if (array==null) return "null";
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<array.length; i++) {
+			sb.append(array[i]);
+			sb.append(", ");
+		}
+		if (sb.length()!=0) sb.delete(sb.length()-2, sb.length());
+		return sb.toString();
 	}
 
 }
