@@ -57,6 +57,7 @@ public class UserStream extends AStream {
 
 	@Override
 	HttpURLConnection connect2() throws IOException {
+		InternalUtils.log(LOGTAG, "connect2()... "+this);
 		connect3_rateLimit();
 		// API version 2?! Yes, this is right.
 		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
@@ -79,7 +80,7 @@ public class UserStream extends AStream {
 		}
 		// memory paranoia
 		if (user2stream.size() > 500) {
-			// oh well -- forget stuff (this Map is just a safety check)
+			// oh well -- forget stuff (this Map is just a safety check)			
 			user2stream.clear();
 		}
 		user2stream.put(jtwit.getScreenName(), this);

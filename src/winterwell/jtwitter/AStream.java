@@ -335,6 +335,7 @@ public abstract class AStream implements Closeable {
 	synchronized public void connect() throws TwitterException {
 		if (isConnected())
 			return;
+		InternalUtils.log(LOGTAG, "connect()... "+this);
 		// close all first
 		close();
 
@@ -362,6 +363,7 @@ public abstract class AStream implements Closeable {
 				throw new TwitterException(readThread.ex);
 			}
 		} catch (Exception e) {
+			InternalUtils.log(LOGTAG, "connect() error: "+e);
 			if (e instanceof TwitterException)
 				throw (TwitterException) e;
 //			Doesn't catch anything: if (con!=null && client instanceof URLConnectionHttpClient) {
@@ -411,12 +413,12 @@ public abstract class AStream implements Closeable {
 				jtwit2.setMaxResults(100000); // hopefully not needed!
 				// fetch
 				int fnd = fillInOutages2(jtwit2, outage);
-				InternalUtils.log(LOGTAG, "outage fill for "+outage+" found: "+fnd);
+				InternalUtils.log(LOGTAG, "outage fill for "+outage+" found: "+fnd+" for "+this);
 				// success
 			} catch(Throwable e) {
 				// fail -- put it back on the queue
 				outages.add(outage);
-				InternalUtils.log(LOGTAG, "outage fill for "+outage+" error: "+e);
+				InternalUtils.log(LOGTAG, "outage fill for "+outage+" error: "+e+" for "+this);
 				if (e instanceof Exception) {
 					ex = (Exception) e;
 				} else {
@@ -520,10 +522,12 @@ public abstract class AStream implements Closeable {
 	 * @see #isAlive()
 	 */
 	public final boolean isConnected() {
-		return readThread != null && readThread.isAlive()
+		boolean yes = readThread != null && readThread.isAlive()
 				&& readThread.ex == null
 				/* so technically this counts a requested stop as an actual stop */
 				&& !readThread.stopFlag;
+		InternalUtils.log(LOGTAG, this+" isConnected? "+yes);
+		return yes;
 	}
 
 	/**
@@ -728,7 +732,7 @@ public abstract class AStream implements Closeable {
 	 * @param sysEvent
 	 */
 	void addSysEvent(Object[] sysEvent) {
-		InternalUtils.log(LOGTAG, "sysEvent: "+InternalUtils.str(sysEvent));
+		InternalUtils.log(LOGTAG, "sysEvent: "+InternalUtils.str(sysEvent)+" for "+this);
 		sysEvents.add(sysEvent);
 		if (listeners.size()==0) return;
 		synchronized (listeners) {
@@ -993,7 +997,7 @@ final class StreamGobbler extends Thread {
 //				offTime = System.currentTimeMillis();
 				// TODO log this as a sys-event
 				stream.addSysEvent(new Object[]{"exception", ex});
-				InternalUtils.log(stream.LOGTAG, this+" gobbler.run() exception: "+ex);
+				InternalUtils.log(stream.LOGTAG, this+" gobbler.run() exception: "+InternalUtils.str(ex));
 				// try a reconnect?
 				if ( ! stream.autoReconnect)
 					return; // no - break out of the loop
@@ -1005,7 +1009,7 @@ final class StreamGobbler extends Thread {
 					assert stream.stream != null : stream;
 				} catch (Exception e) {
 					// #fail
-					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: "+ex+" now "+e);
+					InternalUtils.log(stream.LOGTAG, this+" gobbler.run() reconnect exception: now: "+InternalUtils.str(e)+" was: "+ex);
 					ex = e;
 					return;
 				}

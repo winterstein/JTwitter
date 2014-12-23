@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -35,6 +38,9 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.StrUtils;
+import winterwell.utils.WrappedException;
+import winterwell.utils.io.FileUtils;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
@@ -737,6 +743,65 @@ public class InternalUtils {
 		}
 		if (sb.length()!=0) sb.delete(sb.length()-2, sb.length());
 		return sb.toString();
+	}
+
+	/**
+	 * Created to handle odd failed toString() for Exception: "[Ljava.lang.StackTraceElement;@6553bf22"
+	 * Seen Dec 2014
+	 * @param obj
+	 * @return
+	 */
+	public static String str(Object obj) {
+		if (obj==null) return "null";
+		if (obj instanceof Throwable) {
+			return toString((Throwable)obj, true);
+		}
+		if (obj.getClass().isArray()) {
+			int n = Array.getLength(obj);
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i<n; i++) {
+				Object oi = Array.get(obj, i);
+				sb.append(oi); sb.append(", ");				
+			}
+			if (sb.length()!=0) sb.delete(sb.length()-2, sb.length());
+			return sb.toString();
+		}
+		return obj.toString();
+	}
+
+	/**
+	 * Copied from Printer in utils
+	 * @param x
+	 * @param stacktrace
+	 * @return
+	 */
+	public static String toString(Throwable x, boolean stacktrace) {
+		// Don't generally unwrap, but do unwrap our own wrapper
+		if (x instanceof WrappedException) {
+			x = x.getCause();
+		}
+		if ( ! stacktrace)
+			return x.getMessage() == null ? x.getClass().getSimpleName() : x
+					.getClass().getSimpleName() + ": " + x.getMessage();
+		// NB: the use of StringWriter here means there's little point having an
+		// append-to-StringBuilder version of this method
+		StringWriter w = new StringWriter();
+		w.append(x.getClass() + ": "
+				+ StrUtils.ellipsize(x.getMessage(), 140)
+				+ StrUtils.LINEEND
+				// + Environment.get().get(INDENT)
+				+ "\t");
+		PrintWriter pw = new PrintWriter(w);
+		x.printStackTrace(pw);
+		pw.flush();
+		FileUtils.close(pw);
+		// // If the message got truncated, append it in full here
+		// if (x.getMessage().length() > MAX_ERROR_MSG_LENGTH) {
+		// w.append(StrUtils.LINEEND);
+		// w.append("Full message: ");
+		// w.append(x.getMessage());
+		// }
+		return w.toString();
 	}
 
 }

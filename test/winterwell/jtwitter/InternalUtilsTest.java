@@ -15,6 +15,16 @@ public class InternalUtilsTest {
 			String s = InternalUtils.str(new Object[0]);
 			assert s.equals("") : s;
 		}
+		{
+			RuntimeException e = new RuntimeException("foo");
+			String s = InternalUtils.str(e);
+			assert s.contains("testStr");
+			assert s.contains("RuntimeException");
+		}
+		{
+			String s = InternalUtils.str(new RuntimeException("foo").getStackTrace());
+			assert s.contains("testStr");
+		}
 	}
 	
 	@Test
