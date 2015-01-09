@@ -89,16 +89,26 @@ public abstract class AStream implements Closeable {
 		 * The Java timecode when the stream went back online. i.e. end
 		 */
 		public final long untilTime;
+		public final long sinceTime;
+		public final BigInteger sinceDMId;
 
-		public Outage(BigInteger sinceId, long untilTime) {
+		/**
+		 * 
+		 * @param sinceId Used to fill in the gap
+		 * @param sinceTime Only used for debug info
+		 * @param untilTime Used to fill in the gap
+		 */
+		public Outage(BigInteger sinceId, BigInteger sinceDMId, long sinceTime, long untilTime) {
 			super();
 			this.sinceId = sinceId;
+			this.sinceDMId = sinceDMId;
 			this.untilTime = untilTime;
+			this.sinceTime = sinceTime;
 		}
 
 		@Override
 		public String toString() {
-			return "Outage[id:" + sinceId + " to time:" + untilTime + "]";
+			return "Outage[dt:"+((untilTime-sinceTime)/1000)+"s id:" + sinceId + " to time:" + untilTime + "]";
 		}
 	}
 
@@ -215,7 +225,10 @@ public abstract class AStream implements Closeable {
 	final Twitter jtwit;
 
 	private BigInteger lastId = BigInteger.ZERO;
-
+	
+	/** Do DM ids and tweet ids follow the same numbering? No. */
+	private BigInteger lastDMId = BigInteger.ZERO;
+	
 	final List<IListen> listeners = new ArrayList(0);
 
 	final List<Outage> outages = Collections.synchronizedList(new ArrayList());
@@ -628,11 +641,15 @@ public abstract class AStream implements Closeable {
 				return;
 			tweets.add(tweet);
 			// track the last Status id for tracking outages 
-			// (NB: Message ids are different & less generally useful)
-			if (tweet instanceof Status) {
-				BigInteger id = ((Status) tweet).id;
+			BigInteger id = ((ITweet) tweet).getId();
+			if (tweet instanceof Status) {				
 				if (id.compareTo(lastId) > 0) {
 					lastId = id;
+				}
+			// NB: Message (DM) ids are different
+			} else if (tweet instanceof Message) {				
+				if (id.compareTo(lastDMId) > 0) {
+					lastDMId = id;
 				}
 			}
 			forgotten += forgetIfFull(tweets);
@@ -712,8 +729,8 @@ public abstract class AStream implements Closeable {
 
 		// store the outage
 		// ??merge small outages??
-		if (lastId != BigInteger.ZERO) {
-			outages.add(new Outage(lastId, System.currentTimeMillis()));
+		if (lastId != BigInteger.ZERO || lastDMId != BigInteger.ZERO) {
+			outages.add(new Outage(lastId, lastDMId, now, System.currentTimeMillis()));
 			// paranoia: avoid memory leaks
 			if (outages.size() > 100000) {
 				for (int i = 0; i < 1000; i++) {

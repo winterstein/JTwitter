@@ -122,6 +122,8 @@ public class UserStream extends AStream {
 			tweets.add(status);
 			cnt++;
 		}
+		// different since-id for DMs
+		jtwit2.setSinceId(outage.sinceDMId);
 		List<Message> dms = jtwit2.getDirectMessages();
 		for (ITweet dm : dms) {
 			if (tweets.contains(dm)) {

@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.0.6:
+ - Bugfix for handling DM outages in UserStream.
+
 3.0.5:
  - Even more reporting.
  - Switched off updateStatus2_safetyCheck() -- does little & only false-positives in recent checks.
