@@ -104,33 +104,39 @@ public class UserStream extends AStream {
 			// TODO pull in network activity
 			throw new UnsupportedOperationException("TODO");
 		}
-		// get mentions of you
-		List<Status> mentions = jtwit2.getMentions();
-		for (Status status : mentions) {
-			if (tweets.contains(status)) {
-				continue;
+		{	// get mentions of you		
+			List<Status> mentions = jtwit2.getMentions();
+			InternalUtils.log(LOGTAG, "fillIn mentions "+jtwit2.getSinceId()+": "+mentions.size());
+			for (Status status : mentions) {
+				if (tweets.contains(status)) {
+					continue;
+				}
+				tweets.add(status);
+				cnt++;
 			}
-			tweets.add(status);
-			cnt++;
 		}
-		// get your traffic
-		List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
-		for (Status status : updates) {
-			if (tweets.contains(status)) {
-				continue;
+		{	// get your traffic
+			List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
+			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
+			for (Status status : updates) {
+				if (tweets.contains(status)) {
+					continue;
+				}
+				tweets.add(status);
+				cnt++;
 			}
-			tweets.add(status);
-			cnt++;
 		}
-		// different since-id for DMs
-		jtwit2.setSinceId(outage.sinceDMId);
-		List<Message> dms = jtwit2.getDirectMessages();
-		for (ITweet dm : dms) {
-			if (tweets.contains(dm)) {
-				continue;
+		{	// different since-id for DMs
+			jtwit2.setSinceId(outage.sinceDMId);
+			List<Message> dms = jtwit2.getDirectMessages();
+			InternalUtils.log(LOGTAG, "fillIn DMs "+jtwit2.getSinceId()+": "+dms.size());
+			for (ITweet dm : dms) {
+				if (tweets.contains(dm)) {
+					continue;
+				}
+				tweets.add(dm);
+				cnt++;
 			}
-			tweets.add(dm);
-			cnt++;
 		}
 		// Missed follow events are sort of OK: the reconnect will update
 		// friends
