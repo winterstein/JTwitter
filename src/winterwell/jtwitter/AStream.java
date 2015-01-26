@@ -705,8 +705,8 @@ public abstract class AStream implements Closeable {
 		List<User> newFriends = tu.showById(friends2);
 		User you = jtwit.getSelf();
 		for (User nf : newFriends) {
-			TwitterEvent e = new TwitterEvent(new Date(), nf,
-					TwitterEvent.Type.FOLLOW, you, null);
+			TwitterEvent e = new TwitterEvent(new Date(), you,
+					TwitterEvent.Type.FOLLOW, nf, null);
 			events.add(e);
 		}
 		forgotten += forgetIfFull(events);
