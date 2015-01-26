@@ -624,6 +624,11 @@ public class InternalUtils {
 			if (locn!=null && ! query.bbox.contains(locn)) {
 				return false;
 			}
+			// Our locn is within the bbox, surely this means true? - AN
+			if (locn!=null && query.bbox.contains(locn)) {
+				return true;
+			}
+			
 			// Hm: no long/lat for place -- what shall we say??
 			// Let's be lenient
 			unsure = true;
@@ -638,14 +643,13 @@ public class InternalUtils {
 			if (query.desc!=null && ! query.desc.isEmpty() && place.getName() != null && ! place.getName().isEmpty()) {
 				String qdesc = InternalUtils.toCanonical(query.desc);
 				String qname = InternalUtils.toCanonical(place.getName());
-				Pattern namep = Pattern.compile("\\b"+Pattern.quote(qname)+"\\b");
-				if (namep.matcher(qdesc).find()) {
+				Pattern namep = Pattern.compile("\\b"+Pattern.quote(qdesc)+"\\b");
+				if (namep.matcher(qname).find()) {
 					// Fairly strong benefit of the doubt here
 					return true;					
 				}
 			}
 		}
-		
 		return unsure? null : true;
 	}
 

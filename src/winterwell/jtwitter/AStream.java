@@ -689,17 +689,16 @@ public abstract class AStream implements Closeable {
 
 	private void read3_friends(JSONArray _friends) throws JSONException {
 		List<Number> oldFriends = friends;
-		friends = new ArrayList(_friends.length());
+		friends = new ArrayList<Number>(_friends.length());
 		for (int i = 0, n = _friends.length(); i < n; i++) {
 			long fi = _friends.getLong(i);
 			friends.add(fi);
 		}
-		if (oldFriends == null || ! fillInFollows)
-			return;
+		if (friends == null || friends.isEmpty() || ! fillInFollows) return;
 
 		// This is after a reconnect -- did we miss any follow events?
 		HashSet<Number> friends2 = new HashSet(friends);
-		friends2.removeAll(oldFriends);
+		if (oldFriends != null) friends2.removeAll(oldFriends);
 		if (friends2.size() == 0)
 			return;
 		Twitter_Users tu = new Twitter_Users(jtwit);
