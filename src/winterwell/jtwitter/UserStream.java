@@ -132,6 +132,7 @@ public class UserStream extends AStream {
 			// debug info for latency issues
 			String dmids = "";
 			for (Message message : dms) {
+				if (message==null) continue; // paranoia
 				dmids += message.getId()+" ";
 			}
 			InternalUtils.log(LOGTAG, "fillIn DMs "+jtwit2.getSinceId()+": "+dms.size()+" "+dmids);
