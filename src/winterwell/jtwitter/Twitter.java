@@ -2222,13 +2222,14 @@ public class Twitter implements Serializable {
 	 *             if the recipient is not following you. (you can \@mention
 	 *             anyone but you can only dm people who follow you).
 	 */
-	public Message sendMessage(String recipient, String text) throws TwitterException {
+	public Message sendMessage(String recipient, String text) throws TwitterException {		
 		assert recipient != null && text != null : recipient + " " + text;
 		assert ! text.startsWith("d " + recipient) : recipient + " " + text;
 		assert ! recipient.startsWith("@") : recipient + " " + text;
 		if (text.length() > 140)
 			throw new IllegalArgumentException("Message is too long.");
-		Map<String, String> vars = InternalUtils.asMap("user", recipient,
+		Map<String, String> vars = InternalUtils.asMap(
+				"screen_name", recipient,
 				"text", text);
 		if (tweetEntities) {
 			vars.put("include_entities", "1");
