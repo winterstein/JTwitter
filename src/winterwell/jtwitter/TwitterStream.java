@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author Daniel
  */
-public class TwitterStream extends AStream {
+public class TwitterStream extends AStream implements IStream{
 
 	public static enum KMethod {
 		/**

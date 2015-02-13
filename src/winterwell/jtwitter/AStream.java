@@ -38,7 +38,7 @@ import winterwell.jtwitter.Twitter.ITweet;
  * 
  * @author daniel
  */
-public abstract class AStream implements Closeable {
+public abstract class AStream implements IStream, Closeable {
 
 	// TODO
 	// reconnects MAX_RECONNECTS_PER_HOUR
@@ -406,7 +406,7 @@ public abstract class AStream implements Closeable {
 	 * </p>
 	 * @return null if all OK, the Exception raised otherwise.
 	 */
-	public final Exception fillInOutages() throws UnsupportedOperationException {
+	public Exception fillInOutages() throws UnsupportedOperationException {
 		if (outages.size() == 0)
 			return null;
 		Outage[] outs = outages.toArray(new Outage[0]);
@@ -487,7 +487,7 @@ public abstract class AStream implements Closeable {
 	 *         add items in the correct order. The list size is capped to avoid
 	 *         memory leakage.
 	 */
-	public final List<Outage> getOutages() {
+	public List<Outage> getOutages() {
 		return outages;
 	}
 
