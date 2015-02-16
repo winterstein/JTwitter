@@ -51,6 +51,7 @@ public class BuildJTwitter extends BuildTask {
 		// Doc
 		File doc = new File(base, "doc");
 		JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);
+//		doctask.setDoclintFlag(true);
 		doctask.run();
 		
 		// zip

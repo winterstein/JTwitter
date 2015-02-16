@@ -129,7 +129,13 @@ public class UserStream extends AStream {
 		{	// different since-id for DMs
 			jtwit2.setSinceId(outage.sinceDMId);
 			List<Message> dms = jtwit2.getDirectMessages();
-			InternalUtils.log(LOGTAG, "fillIn DMs "+jtwit2.getSinceId()+": "+dms.size());
+			// debug info for latency issues
+			String dmids = "";
+			for (Message message : dms) {
+				if (message==null) continue; // paranoia
+				dmids += message.getId()+" ";
+			}
+			InternalUtils.log(LOGTAG, "fillIn DMs "+jtwit2.getSinceId()+": "+dms.size()+" "+dmids);
 			for (ITweet dm : dms) {
 				if (tweets.contains(dm)) {
 					continue;
