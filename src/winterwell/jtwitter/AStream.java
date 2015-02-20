@@ -418,8 +418,12 @@ public abstract class AStream implements Closeable {
 			if (System.currentTimeMillis() - outage.untilTime < 20000) {
 				continue;
 			}
+			InternalUtils.log(LOGTAG, "attempted outage fill for "+outage+" for "+this);
 			boolean ok = outages.remove(outage);
-			if ( ! ok) continue; // already done or dropped
+			if ( ! ok) {
+				InternalUtils.log(LOGTAG, "outage registers already done for "+outage+" for "+this);
+				continue; // already done or dropped
+			}
 			try {						
 				jtwit2.setSinceId(outage.sinceId);
 				jtwit2.setUntilDate(new Date(outage.untilTime));
