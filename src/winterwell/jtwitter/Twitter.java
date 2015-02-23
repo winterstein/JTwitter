@@ -1714,10 +1714,11 @@ public class Twitter implements Serializable {
 			}			
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-			
+			Date minDate = InternalUtils.getMinDate(nextpage);
 			List<Status> filtered = dateFilter(nextpage);
 			msgs.addAll(filtered);
-			if (filtered.size()<nextpage.size()){
+			
+			if (filtered.size()<nextpage.size() && sinceDate != null && sinceDate.after(minDate)){
 				// Filtering has occurred, this means we'll get no more tweets.
 				break;
 			}
