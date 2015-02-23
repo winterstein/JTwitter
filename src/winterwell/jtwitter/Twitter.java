@@ -1339,12 +1339,8 @@ public class Twitter implements Serializable {
 		// Fetch all pages until we run out
 		// -- or Twitter complains in which case you'll get an exception
 		BigInteger maxId = untilId;
-		// maxResults refers here to number of messages Twitter has provided, regardless of 
-		// date filtering. This is to avoid looping over the entire Twitter history, when a page
-		// of results, all of which hit the dateFilter(). 
-		int msgcount = 0;
 		List<Message> msgs = new ArrayList<Message>();
-		while (msgcount <= maxResults) {
+		while (msgs.size() <= maxResults) {
 			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
 			if (url.contains("direct_messages")) {
 				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var);
@@ -1353,7 +1349,6 @@ public class Twitter implements Serializable {
 			List<Message> nextpage = Message.getMessages(p);
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-			msgcount = msgcount + nextpage.size();
 			nextpage = dateFilter(nextpage);
 			msgs.addAll(nextpage);
 			
@@ -1695,11 +1690,7 @@ public class Twitter implements Serializable {
 		BigInteger maxId = untilId;
 		List<Status> msgs = new ArrayList<Status>();
 
-		// maxResults refers here to number of messages Twitter has provided, regardless of 
-		// date filtering. This is to avoid looping over the entire Twitter history, when a page
-		// of results, all of which hit the dateFilter(). 
-		int msgcount = 0;
-		while (msgcount <= maxResults) {			
+		while (msgs.size() <= maxResults) {			
 			List<Status> nextpage; 
 			try {
 				String json = http.getPage(url, var, authenticate);
@@ -1721,11 +1712,18 @@ public class Twitter implements Serializable {
 			if (nextpage.size() == 0) {
 				break;
 			}	
-			msgcount = msgcount + nextpage.size();
+			
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
+			Date minDate = InternalUtils.getMinDate(nextpage);
 			List<Status> filtered = dateFilter(nextpage);
 			msgs.addAll(filtered);
+			// If we've passed the sinceDate, and we've started to filter messages, to the point
+			// where we receive none. then we need to stop probing to avoid looping over ever-older messages,
+			// and the rate-limiting that'll cause.
+			if (filtered.size() == 0 && sinceDate != null && sinceDate.after(minDate)){
+				break;
+			}
 			var.put("max_id", maxId.toString());			
 		}
 		return msgs;
