@@ -581,15 +581,15 @@ public class InternalUtils {
 	 * @param stati
 	 * @return mimimum - 1
 	 */
-	public static Date getMinDate(List<? extends ITweet> stati) {
-		Date min = null;
+	public static Date getMaxDate(List<? extends ITweet> stati) {
+		Date max = null;
 		for (ITweet s : stati) {
-			if (min==null || min.compareTo(s.getCreatedAt()) > 0) {
-				min = s.getCreatedAt();
+			if (max==null || max.before(s.getCreatedAt())) {
+				max = s.getCreatedAt();
 			}
 		}
 		// Next page must start strictly before this one
-		return min;
+		return max;
 	}
 	
 	/**

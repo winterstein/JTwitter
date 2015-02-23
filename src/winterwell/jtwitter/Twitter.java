@@ -1715,13 +1715,13 @@ public class Twitter implements Serializable {
 			
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-			Date minDate = InternalUtils.getMinDate(nextpage);
+			Date maxDate = InternalUtils.getMaxDate(nextpage);
 			List<Status> filtered = dateFilter(nextpage);
 			msgs.addAll(filtered);
 			// If we've passed the sinceDate, and we've started to filter messages, to the point
 			// where we receive none. then we need to stop probing to avoid looping over ever-older messages,
 			// and the rate-limiting that'll cause.
-			if (filtered.size() == 0 && sinceDate != null && sinceDate.after(minDate)){
+			if (filtered.size() == 0 && sinceDate != null && sinceDate.after(maxDate)){
 				break;
 			}
 			var.put("max_id", maxId.toString());			
