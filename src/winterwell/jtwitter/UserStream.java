@@ -100,10 +100,6 @@ public class UserStream extends AStream {
 			throws UnsupportedOperationException, TwitterException {
 		int cnt = 0;
 		// fetch
-		if (withFollowings) {
-			// TODO pull in network activity
-			throw new UnsupportedOperationException("TODO");
-		}
 		{	// get mentions of you		
 			List<Status> mentions = jtwit2.getMentions();
 			InternalUtils.log(LOGTAG, "fillIn mentions "+jtwit2.getSinceId()+": "+mentions.size());
@@ -115,7 +111,20 @@ public class UserStream extends AStream {
 				cnt++;
 			}
 		}
-		{	// get your traffic
+		if (withFollowings) { // Get your and network stuff.
+			// Can't get too many results, rate-limiting is severe (15x20 results per 15 mins) for this resource 
+			jtwit2.setMaxResults(50);
+			List<Status> updates = jtwit2.getHomeTimeline();
+			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
+			for (Status status : updates) {
+				if (tweets.contains(status)) {
+					continue;
+				}
+				tweets.add(status);
+				cnt++;
+			}
+			jtwit2.setMaxResults(100000);
+		} 	else {	// get your traffic
 			List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
 			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
 			for (Status status : updates) {
