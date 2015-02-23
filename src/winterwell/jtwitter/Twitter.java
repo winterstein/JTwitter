@@ -1715,7 +1715,13 @@ public class Twitter implements Serializable {
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
 			
-			msgs.addAll(dateFilter(nextpage));
+			List<Status> filtered = dateFilter(nextpage);
+			msgs.addAll(filtered);
+			if (filtered.size()<nextpage.size()){
+				// Filtering has occurred, this means we'll get no more tweets.
+				break;
+			}
+			
 			var.put("max_id", maxId.toString());			
 		}
 		return msgs;

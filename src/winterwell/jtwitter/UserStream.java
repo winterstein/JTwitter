@@ -113,7 +113,7 @@ public class UserStream extends AStream {
 		}
 		if (withFollowings) { // Get your and network stuff.
 			// Can't get too many results, rate-limiting is severe (15x20 results per 15 mins) for this resource 
-			jtwit2.setMaxResults(50);
+			jtwit2.setMaxResults(100);
 			List<Status> updates = jtwit2.getHomeTimeline();
 			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
 			for (Status status : updates) {
