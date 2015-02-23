@@ -1339,8 +1339,12 @@ public class Twitter implements Serializable {
 		// Fetch all pages until we run out
 		// -- or Twitter complains in which case you'll get an exception
 		BigInteger maxId = untilId;
+		// maxResults refers here to number of messages Twitter has provided, regardless of 
+		// date filtering. This is to avoid looping over the entire Twitter history, when a page
+		// of results, all of which hit the dateFilter(). 
+		int msgcount = 0;
 		List<Message> msgs = new ArrayList<Message>();
-		while (msgs.size() <= maxResults) {
+		while (msgcount <= maxResults) {
 			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
 			if (url.contains("direct_messages")) {
 				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var);
@@ -1349,7 +1353,7 @@ public class Twitter implements Serializable {
 			List<Message> nextpage = Message.getMessages(p);
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-						
+			msgcount = msgcount + nextpage.size();
 			nextpage = dateFilter(nextpage);
 			msgs.addAll(nextpage);
 			
@@ -1690,7 +1694,12 @@ public class Twitter implements Serializable {
 		// allows for "drift" when new tweets are posted during the paging.
 		BigInteger maxId = untilId;
 		List<Status> msgs = new ArrayList<Status>();
-		while (msgs.size() <= maxResults) {			
+
+		// maxResults refers here to number of messages Twitter has provided, regardless of 
+		// date filtering. This is to avoid looping over the entire Twitter history, when a page
+		// of results, all of which hit the dateFilter(). 
+		int msgcount = 0;
+		while (msgcount <= maxResults) {			
 			List<Status> nextpage; 
 			try {
 				String json = http.getPage(url, var, authenticate);
@@ -1711,18 +1720,12 @@ public class Twitter implements Serializable {
 			// cause the system to quit early.
 			if (nextpage.size() == 0) {
 				break;
-			}			
+			}	
+			msgcount = msgcount + nextpage.size();
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-			Date minDate = InternalUtils.getMinDate(nextpage);
 			List<Status> filtered = dateFilter(nextpage);
 			msgs.addAll(filtered);
-			
-			if (filtered.size()<nextpage.size() && sinceDate != null && sinceDate.after(minDate)){
-				// Filtering has occurred, this means we'll get no more tweets.
-				break;
-			}
-			
 			var.put("max_id", maxId.toString());			
 		}
 		return msgs;

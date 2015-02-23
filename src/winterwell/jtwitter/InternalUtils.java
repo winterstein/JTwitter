@@ -576,23 +576,6 @@ public class InternalUtils {
 	}
 
 	/**
-	 * 
-	 * @param maxId
-	 * @param stati
-	 * @return mimimum - 1
-	 */
-	public static Date getMinDate(List<? extends ITweet> stati) {
-		Date min = null;
-		for (ITweet s : stati) {
-			if (min==null || min.compareTo(s.getCreatedAt()) > 0) {
-				min = s.getCreatedAt();
-			}
-		}
-		// Next page must start strictly before this one
-		return min;
-	}
-	
-	/**
 	 * Best of them, or null if places is empty
 	 * @param places
 	 * @return
