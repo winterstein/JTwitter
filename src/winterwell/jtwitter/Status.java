@@ -241,7 +241,8 @@ public final class Status implements ITweet {
 				truncated = _text.endsWith("…") || _text.endsWith("...");
 			}
 			String rtStart = null;
-			if (truncated && original!=null && _text.startsWith("RT ")) {
+			// We should get entities from the original in ALL cases, or else there's a risk of getting truncated entites.
+			if (original!=null && _text.startsWith("RT ")) {
 				rtStart = "RT @"+original.getUser()+": ";
 				_text = rtStart+original.getText();				
 			} else {
