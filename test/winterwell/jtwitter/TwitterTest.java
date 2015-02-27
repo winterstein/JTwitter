@@ -1671,7 +1671,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	@Test
 	public void testBadJSON() throws IOException {
 		String json = readFile("jtwitter/test/winterwell/jtwitter/bad_json.txt");
-		Status s = new Status(new JSONObject(json),null);
+		Status s = readStatusFromJson(json);
 		for (TweetEntity te : s.getTweetEntities(KEntityType.hashtags)){
 			assert te.toString().length() > 1;
 		}
@@ -1680,6 +1680,22 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
+	@Test
+	public void testBadJSON2_Contents() throws IOException {
+		String json = readFile("jtwitter/test/winterwell/jtwitter/bad_json.txt");
+		Status s = readStatusFromJson(json);
+		for (TweetEntity te : s.getTweetEntities(KEntityType.hashtags)){
+			assert te.toString().length() > 1;
+		}
+		for (TweetEntity te : s.getTweetEntities(KEntityType.urls)){
+			assert te.toString().length() > 1;
+		}
+	}
+
+	public static Status readStatusFromJson(String json) {
+		return new Status(new JSONObject(json),null);
+	}
+	
 	private String readFile(String file) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = null;
@@ -1690,7 +1706,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 			stringBuilder.append(line);
 			stringBuilder.append(ls);
 		}
-
 		return stringBuilder.toString();
 	}
 

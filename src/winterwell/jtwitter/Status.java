@@ -222,7 +222,7 @@ public final class Status implements ITweet {
 	 * @throws TwitterException
 	 */
 	@SuppressWarnings("deprecation")
-	Status(JSONObject object, User user) throws TwitterException {
+	public Status(JSONObject object, User user) throws TwitterException {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
