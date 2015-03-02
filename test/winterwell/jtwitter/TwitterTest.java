@@ -47,6 +47,15 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
 	
+	public void testDoesBeckiFollowCoop() {
+		Twitter jtwit = newTestTwitter();
+		boolean f = jtwit.users().isFollower("beckishort", "coopbankuk_help");
+		boolean f2 = jtwit.users().isFollower("coopbankuk_help", "beckishort");
+		System.out.println(f);
+		System.out.println(f2);
+		assert f && f2;
+	}
+	
 	public void testIssue4280() {
 		Twitter jtwit = newTestTwitter();
 		List<Status> tweets = jtwit.getUserTimeline("samdaat");
