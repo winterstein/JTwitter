@@ -222,7 +222,7 @@ public final class Status implements ITweet {
 	 * @throws TwitterException
 	 */
 	@SuppressWarnings("deprecation")
-	public Status(JSONObject object, User user) throws TwitterException {
+	Status(JSONObject object, User user) throws TwitterException {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
@@ -236,12 +236,13 @@ public final class Status implements ITweet {
 			String _rawtext = InternalUtils.jsonGet("text", object);
 			String _text = _rawtext;
 			// Twitter have started truncating RTs -- let's fix the text up if we can
-			boolean truncated = object.optBoolean("truncated"); // This can lie (bugs seen March 2013) -- so let's also check the text
-			if ( ! truncated && original != null) {
-				truncated = _text.endsWith("…") || _text.endsWith("...");
-			}
+			// Feb/March 2015: We should get entities from the original in ALL cases (not just marked as truncated)
+			// or else there's a risk of getting truncated entites. -- Alex
+//			boolean truncated = object.optBoolean("truncated"); // This can lie (bugs seen March 2013) -- so let's also check the text
+//			if ( ! truncated && original != null) {
+//				truncated = _text.endsWith("…") || _text.endsWith("...");
+//			}
 			String rtStart = null;
-			// We should get entities from the original in ALL cases, or else there's a risk of getting truncated entites.
 			if (original!=null && _text.startsWith("RT ")) {
 				rtStart = "RT @"+original.getUser()+": ";
 				_text = rtStart+original.getText();				

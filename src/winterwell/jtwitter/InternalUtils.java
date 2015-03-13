@@ -579,11 +579,13 @@ public class InternalUtils {
 	 * 
 	 * @param maxId
 	 * @param stati
-	 * @return mimimum - 1
+	 * @return max date, or null if stati is empty
 	 */
 	public static Date getMaxDate(List<? extends ITweet> stati) {
 		Date max = null;
 		for (ITweet s : stati) {
+			// paranoia
+			if (s==null || s.getCreatedAt()==null) continue;
 			if (max==null || max.before(s.getCreatedAt())) {
 				max = s.getCreatedAt();
 			}
