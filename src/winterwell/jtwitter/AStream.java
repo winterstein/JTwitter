@@ -804,6 +804,7 @@ public abstract class AStream implements Closeable {
 			} catch (TwitterException.E40X e) {
 				throw e;
 			} catch (Exception e) {
+				InternalUtils.log(LOGTAG, "Unknown exception occurring: is called:" + InternalUtils.str(e));
 				// oh well
 //				System.out.println(e);
 			}
