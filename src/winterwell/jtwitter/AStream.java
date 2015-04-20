@@ -543,7 +543,7 @@ public abstract class AStream implements Closeable {
 				&& readThread.ex == null
 				/* so technically this counts a requested stop as an actual stop */
 				&& !readThread.stopFlag;
-		InternalUtils.log(LOGTAG, this+" isConnected? "+yes);
+		// Let's just assume yes for logging, as disk space is needed.
 		if (!yes){
 			try {
 				if (readThread == null){
