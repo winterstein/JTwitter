@@ -639,7 +639,7 @@ public abstract class AStream implements Closeable {
 			throw new TwitterException(ex);
 		}
 		// reconnect using a different thread
-		InternalUtils.log(LOGTAG, this+" disconnected: "+ex);
+		InternalUtils.log(LOGTAG, this+" disconnected: "+ex + " " + ex.getStackTrace());
 		reconnect();
 	}
 
@@ -793,8 +793,9 @@ public abstract class AStream implements Closeable {
 
 	private void reconnect2() {
 		// Try again as advised by dev.twitter.com:
-		// 1. straightaway
+		// 1. after 10 milliseconds (trying to remove TML exceptions - AN)
 		try {
+			Thread.sleep(10);
 			connect();
 			return;
 		} catch (TwitterException.E40X e) {
