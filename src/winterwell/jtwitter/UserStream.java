@@ -6,6 +6,7 @@ package winterwell.jtwitter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,10 +60,10 @@ public class UserStream extends AStream {
 	HttpURLConnection connect2() throws IOException {
 		connect3_rateLimit();
 		// API version 2?! Yes, this is right.
-		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
-		Map<String, String> vars = InternalUtils.asMap("with",
-				(withFollowings ? "followings" : "user"));
-		HttpURLConnection con = client.connect(url, vars, true);
+		String url = "https://userstream.twitter.com/" + Twitter.API_VERSION +"/user.json?delimited=length";
+//		Map<String, String> vars = InternalUtils.asMap("with",
+//				(withFollowings ? "followings" : "user"));
+		HttpURLConnection con = client.connect(url, new HashMap(), true);
 		return con;
 	}
 
