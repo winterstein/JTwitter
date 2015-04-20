@@ -1,7 +1,19 @@
 # JTwitter Change list 
 
+3.0.6:
+ - Bugfix for handling DM outages in UserStream.
+
+3.0.5:
+ - Even more reporting.
+ - Switched off updateStatus2_safetyCheck() -- does little & only false-positives in recent checks.
+
+3.0.4:
+ - More reporting around stream errors.
+ - Bundled Apache/Jakarta commons-codec (version 1.9) jar in lib (needed by sugnpost)
+ 
 3.0.3:
  - More robust handling of Rate-Limit headers (after seeing lowercase headers coming back from Twitter).
+ - Twitter.setSinceId() and setUntilId() convert inputs to BigInteger (fixes a formatting bug if double was input).
 
 3.0.2:
  - TwitterList and Message use (64 bit safe) BigInteger.  

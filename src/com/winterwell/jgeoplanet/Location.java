@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.utils.reporting.Log;
+import winterwell.jtwitter.InternalUtils;
 
 /**
  * A geographical point-location expressed as a latitude and longitude.
@@ -189,7 +189,7 @@ public class Location implements Serializable {
 			return new Location(_lat, Double.valueOf(lng));
 		} catch(NumberFormatException ex) {
 			// e.g. 5.50978.58,-0.27849719
-			Log.w("Location.parse", locnDesc+" "+ex);
+			InternalUtils.log("Location.parse", locnDesc+" "+ex);
 			return null;
 		}
 	}

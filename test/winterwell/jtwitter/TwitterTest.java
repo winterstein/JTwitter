@@ -47,6 +47,15 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
 	
+	public void testDoesBeckiFollowCoop() {
+		Twitter jtwit = newTestTwitter();
+		boolean f = jtwit.users().isFollower("beckishort", "coopbankuk_help");
+		boolean f2 = jtwit.users().isFollower("coopbankuk_help", "beckishort");
+		System.out.println(f);
+		System.out.println(f2);
+		assert f && f2;
+	}
+	
 	public void testIssue4280() {
 		Twitter jtwit = newTestTwitter();
 		List<Status> tweets = jtwit.getUserTimeline("samdaat");
@@ -1252,6 +1261,24 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(""+sent2.getTweetEntities(KEntityType.urls));
 	}
 
+	/**
+	 * How to send to 2 people??
+	 */
+	public void tstSendMessage2Users() {
+		Twitter tw = newTestTwitter();
+		Twitter_Account ta = new Twitter_Account(tw);
+		// TODO ta.setgeotagging true
+		tw.setMyLocation(new double[]{-55,1});
+		String msg = "Please ignore this message http://www.winterwell.com "+new Random().nextInt(1000);
+		Message sent = tw.sendMessage("winterstein,spoonmcguffin", msg);
+		System.out.println(""+sent);
+		tw.setIncludeTweetEntities(true);
+		String msg2 = "Please ignore this message too http://www.winterwell.com "+new Random().nextInt(1000);
+		Message sent2 = tw.sendMessage("winterstein", msg2);
+		System.out.println(""+sent2.getTweetEntities(KEntityType.urls));
+	}
+
+	
 	/**
 	 * Twitter bug :( -- https://dev.twitter.com/issues/461
 	 */

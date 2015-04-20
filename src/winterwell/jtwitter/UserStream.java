@@ -59,6 +59,7 @@ public class UserStream extends AStream {
 
 	@Override
 	HttpURLConnection connect2() throws IOException {
+		InternalUtils.log(LOGTAG, "connect2()... "+this);
 		connect3_rateLimit();
 		// API version 2?! Yes, this is right.
 		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
@@ -84,7 +85,7 @@ public class UserStream extends AStream {
 		}
 		// memory paranoia
 		if (user2stream.size() > 500) {
-			// oh well -- forget stuff (this Map is just a safety check)
+			// oh well -- forget stuff (this Map is just a safety check)			
 			user2stream.clear();
 		}
 		user2stream.put(jtwit.getScreenName(), this);
@@ -100,38 +101,57 @@ public class UserStream extends AStream {
 	 * events are automatically generated on reconnect.
 	 */
 	@Override
-	void fillInOutages2(Twitter jtwit2, Outage outage)
+	int fillInOutages2(Twitter jtwit2, Outage outage)
 			throws UnsupportedOperationException, TwitterException {
+		int cnt = 0;
 		// fetch
 		if (withFollowings) {
 			// TODO pull in network activity
 			throw new UnsupportedOperationException("TODO");
 		}
-		// get mentions of you
-		List<Status> mentions = jtwit2.getMentions();
-		for (Status status : mentions) {
-			if (tweets.contains(status)) {
-				continue;
+		{	// get mentions of you		
+			List<Status> mentions = jtwit2.getMentions();
+			InternalUtils.log(LOGTAG, "fillIn mentions "+jtwit2.getSinceId()+": "+mentions.size());
+			for (Status status : mentions) {
+				if (tweets.contains(status)) {
+					continue;
+				}
+				tweets.add(status);
+				cnt++;
 			}
-			tweets.add(status);
 		}
-		// get your traffic
-		List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
-		for (Status status : updates) {
-			if (tweets.contains(status)) {
-				continue;
+		{	// get your traffic
+			List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
+			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
+			for (Status status : updates) {
+				if (tweets.contains(status)) {
+					continue;
+				}
+				tweets.add(status);
+				cnt++;
 			}
-			tweets.add(status);
 		}
-		List<Message> dms = jtwit2.getDirectMessages();
-		for (ITweet dm : dms) {
-			if (tweets.contains(dm)) {
-				continue;
+		{	// different since-id for DMs
+			jtwit2.setSinceId(outage.sinceDMId);
+			List<Message> dms = jtwit2.getDirectMessages();
+			// debug info for latency issues
+			String dmids = "";
+			for (Message message : dms) {
+				if (message==null) continue; // paranoia
+				dmids += message.getId()+" ";
 			}
-			tweets.add(dm);
+			InternalUtils.log(LOGTAG, "fillIn DMs "+jtwit2.getSinceId()+": "+dms.size()+" "+dmids);
+			for (ITweet dm : dms) {
+				if (tweets.contains(dm)) {
+					continue;
+				}
+				tweets.add(dm);
+				cnt++;
+			}
 		}
 		// Missed follow events are sort of OK: the reconnect will update
 		// friends
+		return cnt;
 	}
 
 	/**

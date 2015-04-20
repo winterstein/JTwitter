@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="bin" path="src"/>
-	<classpathentry kind="src" path="build"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="src-extra"/>
+	<classpathentry kind="src" output="binlocal" path="build"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="binlocal" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/middleware/oauth/oauth-consumer.jar"/>
 	<classpathentry kind="lib" path="/middleware/signpost/signpost-core.jar" sourcepath="/middleware/signpost/src.zip"/>
-	<classpathentry kind="lib" path="liblocal/android.jar">
-		<attributes>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="/middleware/scribe-built/scribe-1.3.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
-	<classpathentry kind="output" path="binlocal"/>
+	<classpathentry kind="lib" path="lib/commons-codec.jar"/>
+	<classpathentry kind="lib" path="liblocal/android.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -21,6 +21,11 @@ import winterwell.jtwitter.Twitter.ITweet;
  */
 public class Twitter_Account {
 
+	/**
+	 * The access level is set for the application as a whole!
+	 * 
+	 * If you want different levels, make several applications.
+	 */
 	public static enum KAccessLevel {
 		/** no login or invalid login */
 		NONE,

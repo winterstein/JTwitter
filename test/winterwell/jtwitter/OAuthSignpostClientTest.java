@@ -7,7 +7,7 @@ public class OAuthSignpostClientTest
 
 //	@Test
 	public void testSimple() {
-		OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthScribeClient.JTWITTER_OAUTH_SECRET, "oob");
+		OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthSignpostClient.JTWITTER_OAUTH_SECRET, "oob");
 		Twitter jtwit = new Twitter(TwitterTest.TEST_USER, client);
 		// open the authorisation page in the user's browser
 		client.authorizeDesktop();

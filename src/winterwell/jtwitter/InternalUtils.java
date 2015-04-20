@@ -5,10 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,7 +38,9 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.reporting.Log.KErrorPolicy;
+import winterwell.utils.StrUtils;
+import winterwell.utils.WrappedException;
+import winterwell.utils.io.FileUtils;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
@@ -108,6 +114,7 @@ public class InternalUtils {
 
 
 	/**
+	 * @deprecated Not used anymore
 	 * @param text
 	 * @return text with any urls (using Twitter's Regex.VALID_URL) replaced with ""
 	 */
@@ -617,6 +624,11 @@ public class InternalUtils {
 			if (locn!=null && ! query.bbox.contains(locn)) {
 				return false;
 			}
+			// Our locn is within the bbox, surely this means true? - AN
+			if (locn!=null && query.bbox.contains(locn)) {
+				return true;
+			}
+			
 			// Hm: no long/lat for place -- what shall we say??
 			// Let's be lenient
 			unsure = true;
@@ -631,14 +643,13 @@ public class InternalUtils {
 			if (query.desc!=null && ! query.desc.isEmpty() && place.getName() != null && ! place.getName().isEmpty()) {
 				String qdesc = InternalUtils.toCanonical(query.desc);
 				String qname = InternalUtils.toCanonical(place.getName());
-				Pattern namep = Pattern.compile("\\b"+Pattern.quote(qname)+"\\b");
-				if (namep.matcher(qdesc).find()) {
+				Pattern namep = Pattern.compile("\\b"+Pattern.quote(qdesc)+"\\b");
+				if (namep.matcher(qname).find()) {
 					// Fairly strong benefit of the doubt here
 					return true;					
 				}
 			}
 		}
-		
 		return unsure? null : true;
 	}
 
@@ -684,7 +695,7 @@ public class InternalUtils {
 	 * @param tag
 	 * @param msg
 	 */
-	public static void log(String tag, String msg) {
+	public static void log(String tag, Object msg) {
 		logInit();
 		if (logFn!=null) {
 			try {
@@ -699,6 +710,7 @@ public class InternalUtils {
 	private static void logInit() {
 		if (logInit) return;
 		try {
+			// Try to grab the Winterwell Log.w() function
 			Class<?> Log = Class.forName("winterwell.utils.reporting.Log");
 			logFn = Log.getMethod("w", String.class, Object.class);
 		} catch(Throwable ex) {
@@ -706,6 +718,94 @@ public class InternalUtils {
 		} finally {
 			logInit = true;
 		}
+	}
+
+
+	/**
+	 * 
+	 * @param statusId Can be null (returns null)
+	 * @return 
+	 */
+	public static BigInteger toBigInteger(Number statusId) {
+		if (statusId==null) return null;
+		if (statusId instanceof BigInteger) return (BigInteger) statusId;
+		if (statusId instanceof BigDecimal) {
+			BigDecimal n = (BigDecimal) statusId;
+			return n.toBigInteger();
+		}
+		long lng = statusId.longValue();
+		return BigInteger.valueOf(lng);
+	}
+
+
+	public static String str(Object[] array) {
+		if (array==null) return "null";
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<array.length; i++) {
+			sb.append(array[i]);
+			sb.append(", ");
+		}
+		if (sb.length()!=0) sb.delete(sb.length()-2, sb.length());
+		return sb.toString();
+	}
+
+	/**
+	 * Created to handle odd failed toString() for Exception: "[Ljava.lang.StackTraceElement;@6553bf22"
+	 * Seen Dec 2014
+	 * @param obj
+	 * @return
+	 */
+	public static String str(Object obj) {
+		if (obj==null) return "null";
+		if (obj instanceof Throwable) {
+			return toString((Throwable)obj, true);
+		}
+		if (obj.getClass().isArray()) {
+			int n = Array.getLength(obj);
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i<n; i++) {
+				Object oi = Array.get(obj, i);
+				sb.append(oi); sb.append(", ");				
+			}
+			if (sb.length()!=0) sb.delete(sb.length()-2, sb.length());
+			return sb.toString();
+		}
+		return obj.toString();
+	}
+
+	/**
+	 * Copied from Printer in utils
+	 * @param x
+	 * @param stacktrace
+	 * @return
+	 */
+	public static String toString(Throwable x, boolean stacktrace) {
+		// Don't generally unwrap, but do unwrap our own wrapper
+		if (x instanceof WrappedException) {
+			x = x.getCause();
+		}
+		if ( ! stacktrace)
+			return x.getMessage() == null ? x.getClass().getSimpleName() : x
+					.getClass().getSimpleName() + ": " + x.getMessage();
+		// NB: the use of StringWriter here means there's little point having an
+		// append-to-StringBuilder version of this method
+		StringWriter w = new StringWriter();
+		w.append(x.getClass() + ": "
+				+ StrUtils.ellipsize(x.getMessage(), 140)
+				+ StrUtils.LINEEND
+				// + Environment.get().get(INDENT)
+				+ "\t");
+		PrintWriter pw = new PrintWriter(w);
+		x.printStackTrace(pw);
+		pw.flush();
+		FileUtils.close(pw);
+		// // If the message got truncated, append it in full here
+		// if (x.getMessage().length() > MAX_ERROR_MSG_LENGTH) {
+		// w.append(StrUtils.LINEEND);
+		// w.append("Full message: ");
+		// w.append(x.getMessage());
+		// }
+		return w.toString();
 	}
 
 }
