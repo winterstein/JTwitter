@@ -544,6 +544,26 @@ public abstract class AStream implements Closeable {
 				/* so technically this counts a requested stop as an actual stop */
 				&& !readThread.stopFlag;
 		InternalUtils.log(LOGTAG, this+" isConnected? "+yes);
+		if (!yes){
+			try {
+				if (readThread == null){
+					InternalUtils.log(LOGTAG, "not Connected!? Details : readThread is NULL!");
+				}
+				else if (readThread.ex == null){
+					InternalUtils.log(LOGTAG, "not Connected!? Details : " +
+						" readThread: " + readThread + 
+						" readThread.isAlive(): " + readThread.isAlive() +
+						" readThread.stopFlag: " + readThread.stopFlag);
+				} else {
+					InternalUtils.log(LOGTAG, "not Connected!? Exception: " +
+							readThread.ex.getStackTrace());
+				}
+				
+			}
+			catch (Throwable t){
+					InternalUtils.log(LOGTAG, "not Connected - Logging failed!");
+			}
+		}
 		return yes;
 	}
 
