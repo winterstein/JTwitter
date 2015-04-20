@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.Utils;
 
 /**
  * @WARNING There are bugs on Twitter's end -- the messages returned by this
@@ -60,10 +61,13 @@ public class UserStream extends AStream {
 	HttpURLConnection connect2() throws IOException {
 		connect3_rateLimit();
 		// API version 2?! Yes, this is right.
-		String url = "https://userstream.twitter.com/" + Twitter.API_VERSION +"/user.json?delimited=length";
-//		Map<String, String> vars = InternalUtils.asMap("with",
-//				(withFollowings ? "followings" : "user"));
-		HttpURLConnection con = client.connect(url, new HashMap(), true);
+		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
+		Map<String, String> vars = new HashMap();
+		if (Utils.yes(withFollowings)){
+			vars = InternalUtils.asMap("with",
+					(withFollowings ? "followings" : "user"));
+		}
+		HttpURLConnection con = client.connect(url, vars, true);
 		return con;
 	}
 
