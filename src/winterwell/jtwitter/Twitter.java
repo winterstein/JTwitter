@@ -2243,8 +2243,8 @@ public class Twitter implements Serializable {
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(result, e);
 		} catch (TwitterException.E404 e) {
-			// suspended user?? TODO investigate
-			throw new TwitterException.E404(e.getMessage() + " with recipient="
+			// Probably a suspended user. But could be a rename or a delete.
+			throw new TwitterException.MissingUser(e.getMessage() + " with recipient="
 					+ recipient + ", text=" + text);
 		}
 	}

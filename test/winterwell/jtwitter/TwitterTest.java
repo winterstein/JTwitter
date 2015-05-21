@@ -46,6 +46,11 @@ import winterwell.jtwitter.TwitterException.E404;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	public void testGetTaxiUK() {
+		Twitter jtwit = newTestTwitter();
+		User user = jtwit.users().show(305506258L);
+		System.out.println(user);
+	}
 	
 	public void testDoesBeckiFollowCoop() {
 		Twitter jtwit = newTestTwitter();

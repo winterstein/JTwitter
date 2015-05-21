@@ -156,8 +156,7 @@ public class InternalUtils {
 	/**
 	 * Group 1 = the recipient
 	 */
-	// TODO test -- is the \\s? at the end of this regex right??
-	public static final Pattern DM = Pattern.compile("^dm? (\\w+)\\s?", Pattern.CASE_INSENSITIVE);
+	public static final Pattern DM = Pattern.compile("^dm? (\\w+)\\b", Pattern.CASE_INSENSITIVE);
 	
 	
 	static ConcurrentHashMap<String, Long> usage;
