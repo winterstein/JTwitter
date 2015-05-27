@@ -1,0 +1,543 @@
+# JTwitter Change list 
+
+3.0.6:
+ - Bugfix for handling DM outages in UserStream.
+
+3.0.5:
+ - Even more reporting.
+ - Switched off updateStatus2_safetyCheck() -- does little & only false-positives in recent checks.
+
+3.0.4:
+ - More reporting around stream errors.
+ - Bundled Apache/Jakarta commons-codec (version 1.9) jar in lib (needed by sugnpost)
+ 
+3.0.3:
+ - More robust handling of Rate-Limit headers (after seeing lowercase headers coming back from Twitter).
+ - Twitter.setSinceId() and setUntilId() convert inputs to BigInteger (fixes a formatting bug if double was input).
+
+3.0.2:
+ - TwitterList and Message use (64 bit safe) BigInteger.  
+
+3.0.1:
+ - Logging to try and catch unicode bug.
+ - Fixed unicode-with-images bug (note: this bug only ever affected some machines).
+ 
+3.0.0:
+ - Breaking change to IGeoCode, unifying JTwitter's geocoding with PinPoint (and with better uncertainty outputs).
+ 
+2.9.1:
+ - Klout API update
+ - Made android.jar optional. This means a fresh Eclipse project will show compilation errors
+ in AndroidTwitterLogin. Which isn't ideal, but is MUCH better than the build failing (previous
+ behaviour).
+
+2.9:
+ - LinkedIn and FourSquare providers made non-static (because they're not actually thread safe)
+ - Added OAuthSignpostClient.getProviderResponseParams() 
+
+2.8.9:
+ - Bugfix for Twitter.countCharacters with DM microformat. 
+
+2.8.8:
+ - Altered build setup to use 1.6 compiler but target Java 1.5
+ - Twitter.countCharacters will spot & discount the DM microformat "d user "
+
+2.8.7:
+ - Altered build setup to use a real copy of android.jar
+ 
+2.8.6:
+ - Added Twitter_Users.searchUsers(query, page)
+ - OAuthSignpostClient constructor checks for null values.
+ - Twitter.updateConfiguration returns true/false if it detects a change
+ 
+2.8.5:
+ - Added Regex, a snapshot of Twitter's URL regex. This is now used for character counting.
+ - TwitterEvent for favorite now stores a Status object (not a JSON object) as the target-object.
+ - Bugfix for parsing the stream event when a DM is deleted. 
+ - Bugfix for change in Twitter's (still buggy) RT truncation (the change is from ... to … -- JTwitter
+ will correct for this) 
+ 
+2.8.4:
+ - For easier resource management, rate limit info is now shared when using IHttpClient.copy()
+ - Added IPlace.getParent()
+ 
+2.8.3:
+ - Increased the "default" Twitter.LINK_LENGTH to 23 characters, and added Twitter.MEDIA_LENGTH
+
+2.8.2:
+ - Added Twitter.account().getRateLimits() and IHttpClient.updateRateLimits() 
+ - IMPORTANT: work-around for encoding issue re *
+ 
+2.8.1: More API v1.1 changes
+ - Handle v1.1 rate limits, and some 1.1 bug-fixes.
+ - Retrofit Twitter.getRetweetsByMe
+ - Use a more lenient charset decoder (possibly related to occasionally seeing MalformedInputException?)
+ - Default value for include rts has changed.  
+ - Added Status.getLang() property
+ 
+2.8:
+ - IMPORTANT: Enforced switch to API v1.1, in line with twitter.com
+ 
+2.7.1:
+ - Signpost oauth jar: Minor version upgrade (1.2.1.1 -> 1.2.1.2)
+ - Improvements by Azonli (https://github.com/azonli): gzip encoding (off by default) & Scribe client update. 
+ 
+2.7:
+ - IMPORTANT: Bugfix for change in Twitter's oauth urls
+ 
+2.6.10:
+ - Use the callback url in AndroidTwitterLogin
+ - Twitter.users().getFriends() can work by user-id as well as by screenname
+ 
+2.6.9:
+ - Repeated favorite (star) does not generate an error. Instead the Twitter.setFavorite() return value is null.
+ - STREAM is a request type (for completeness + convenience of some use-cases).
+ - TwitLonger support refactored into a separate class.
+ - Catch Twitter-is-completely-hosed error pages & throw an E50X instead of a ParsingException
+ 
+2.6.8:
+ - Image upload! See Twitter.updateStatusWithMedia()
+ - Started coding around the 1.0 / 1.1 switch. API version 1.0 will remain valid until March 5th, 2013.
+ - Removed methods switched off by Twitter: 
+	Twitter.getPublicTimeline()
+	Twitter_Users.getFeatured()
+ - Added Twitter.CHECK_TWEET_LENGTH to allow disabling of length-checking.
+ - Twitter now send DMs as part of a UserStream. Hurrah! It only took them a year to catch up with their documentation. 
+ UserStream is still deprecated, because Twitter still have bugs & the returned results are unreliable.
+ - Added the disconnect event to the system events handled by AStream
+ - AStream handles unknown system events gracefully.
+ - Location.parse() is more robust around bad-coordinates.
+ 
+2.6.7:
+ - Added Twitter.getSinceId() and Twitter.getUntilId()
+ 
+2.6.6:
+ - Moved the support for deprecated oauth libraries, OAuthHttpClient.java and OAuthScribeClient.java, 
+ into a separate source code folder, src-extra, and EXCLUDED them from jtwitter.jar.
+ This fixes a Proguard issue reported by Ben Randall. 
+ You can still compile and use them.
+ - Added setMyPlace() to complement setMyLocation()
+ - Added BoundingBox.isPoint()
+ - Support for some odd WordPress return values.
+ - Allow long posts to WordPress.
+ - Fixes a bug in Twitter where short urls lead to bogus TweetEntity offsets.
+ 
+2.6.5:
+ - Twitter_Users.show() handles the 404 which you get if all the usernames are deleted
+ users.
+ - TwitterStream now guards against too many keywords, avoiding Twitter getting invalid requests.
+  
+2.6.4:
+ - Bugfix where some entities could throw Status.getDisplayText() 
+ - Minor bugfix for TwitterException.Parsing -- the message clip now clips to the first part of the json.
+ - Added TwitterCounter support.
+ - Added JSONArray.getList() for convenient iteration. 
+ - Added IHttpClient.isRetryOnError()
+ - Added workaround for a new bug in Twitter, where they sometimes send bad json (the packet gets chopped short).
+ 
+2.6.3:
+ - Bugfix for a v2.6.2 bug where updateStatus mistook "do ..." for a dm. 
+ - Twitter.countCharacters() is now available as a method for url-sensitive counting.
+ 
+2.6.2:
+ - Added more Android dummy classes to allow compilation without android.jar
+ - Minor early safety checks in TwitterStream
+ - More documentation for the AndroidTwitterLogin class 
+ - The slightly paranoid safety checking of Twitter.updateStatus() is now _off_ by default. Switch it on if desired with the Twitter.WORRIED_ABOUT_TWITTER flag.
+ 
+2.6.1:
+ - Improved AndroidTwitterLogin performance. Added onFail() method. 
+
+2.6: Unifying geo-coding service with JGeoPlanet
+ - *Breaking Change*: LatLong is replaced by Location from jgeoplanet (a sister-project by Winterwell).
+ - New interfaces for geo-location: IPlace & IGeoCode
+ - Some JGeoPlanet classes moved into JTwitter so we still have no dependencies beyond Signpost.
+ - Minor improvements to JSONObject (error messages, map access)
+ - Added AndroidTwitterLogin for easy Android Twitter access :)
+ This replaces & improves on the short-lived TwitterAuthActivity of version 2.5.
+ - Added Location.parse() lat/long parser
+ 
+2.5:
+ - Added getScreenNameIfKnown()
+ - Added sketch code for image uploading (not ready for use yet!).
+ - Added Twitter_Analytics and Twitter.analytics().getUrlCount() Thanks to ottopress.com for the info.
+ - Added TwitterAuthActivity for Android users. Removed the now obsolete AndroidJTwitter example file.
+ - Added dummy code for Android to the source-code in git. This handy trick avoids having to include a 
+ 5mb android.jar. Note: if you want to edit the TwitterAuthActivity source code in Eclipse, you may want 
+ to remove the dummy folder from the build-path and replace it with an actual android.jar library.       
+ 
+2.4:
+ - Moved org.json files into winterwell.json so they can be edited to
+ be a bit less annoying.
+ - Added support for Klout scores! -- winterwell.jtwitter.ecosystem.Klout 
+ - JSONException tweaked to be RuntimeException so it's a bit less annoying.
+ - If Twitter returns html, this is reported as a server error with a TwitterException.E50X
+ - Meaningful TwitterExceptions in streaming to replace e.g. IOException.
+ - TwitterStream.setTrackKeywords() checks it's inputs. 
+ 
+2.3.8:
+ - Twitter have started truncating long RTs (& returning dud tweet-entities to go with them).
+ Fortunately they also return the original RT, so we can correct for this. Which we now do.
+ 
+2.3.7:
+ - Fixed generic type bug on AStream.getSysEvents()
+ - reconnecting is now a sys-event, reported as ["reconnect", long milliseconds-required]
+
+2.3.6:
+ - MINOR BREAKING CHANGE: Moved support for third party tools into the "ecosystem" package.
+ - Added support for PeerIndex -- winterwell.jtwitter.ecosystem.PeerIndex
+ - Twitter.toString() method
+ - Added support for Topsy -- winterwell.jtwitter.ecosystem.Topsy
+ - Added new API features Twitter.getListsAll(User) and Twitter.getRelated(ITweet)
+ 
+2.3.5:
+ - Twitter.updateStatus() no longer throws an exception if the returned status
+ does not match the update. This was a workaround for an intermittent bug in Twitter -- hopefully they've patched it by now (Twitter have shown their usual awful responsiveness & comms on bugs). Removed because the vagaries of t.co
+ being applied can lead to false alarms.
+ - Removed use of String.isEmpty()
+
+2.3.4:
+ - Over-long tweet detection correctly handles t.co shortening of long urls.
+ - Fixed bug in Twitter.updateConfiguration()
+ - Added ITweet.getDisplayText() and more defensive coding for random bad data
+ from Twitter
+ - Added Twitter.getAPIStatus() to show how Twitter's servers are behaving.
+ - Removed stray winterwell.utils references
+ 
+2.3.3:
+ - Fixed encoding issue which affected some TwitterStreams (" " is now encoded as "%20" not "+")
+ - Fixed corner case issue in TweetEntity parsing. 
+ - Fixed occasional (rare) null pointer in TweetEntity parsing, arising from a change in Twitter's responses.
+ - Added Status.getDisplayText() which will replace TweetEntities with their
+ display form.
+ 
+2.3.2:
+ - Important Bug-fixes in the Place constructor and TweetEntity.toString()
+ - Improved auto-reconnect behaviour in streams. 
+ - Added BadHttpClient for testing.
+ - Improved json parsing to handle issues from Crockford's bad json.org code.
+ - Minor breaking change: removed IHttpClient.updateRateLimits(). This is now
+ handled internally by HttpClients for greater consistency. 
+ - Twitter.search() tests the rpp parameter for user error.
+ - Twitter.getRetweeters() does not require authentication.
+
+2.3.1:
+ - Largely cosmetic edits in streaming
+ - Geometry handling in Place with a LatLong object
+ 
+2.3: BIG BREAKING CHANGES!
+This release does a large (but cosmetic) refactoring:
+ - Status, User and Message now have their own files. They were getting too large
+ to be comfortably held in Twitter.
+ - User-related methods moved into TwitterUsers.
+ However (to limit the edits required) most methods can still be called via Twitter as before. 
+ - Extra support for keeping within rate-limits in SignpostHttpClient
+ - Bug fix for TwitterStream using track with no keywords / follow-ids 
+
+2.2:
+ - Added ITweet.getMentions() to increase the overlap between Status and Message.
+ - Added copy-constructor and IHttpClient.copy() method for safer multi-threading.
+ This addresses a thread-safety issue in Signpost which can lead to an infinite loop or out-of-memory problem.
+ - *breaking change:* User.isFollowingYou() and User.isFollowedByYou() return null if the information.
+ is unknown. Previously they defaulted to false.
+ - *Breaking change:* renamed TwitterGeo to Twitter_Geo and TwitterAccount to Twitter_Account.
+ to reflect that conceptually they're an extension of the Twitter class.
+ - *Breaking change:* created a TwitterAccount.Search class to describe saved searched.
+ - Added E40X as a common base-class for errors that are the user's (or progammer's) fault.
+ - Added entity support to ITweet and Message. 
+ - Twitter.setIncludeTweetEntities() now defaults to true, so you get the t.co link info by default.
+ - Streaming API: UserStream and TwitterStream provide streaming support :) 
+ - Place class to model Twitter place data, plus ITweet.getPlace() and User.getPlace() 
+ - Fixed date parsing bug in rate-limits (alternative format depending on source)
+ - RateLimit logic bug (isRateLimited() could be overly optimistic) 
+ - Fixed _another_ Twitter Search API bug!
+ - Moved some of Twitter's static internal utility methods into InternalUtils.
+ - Added InternalUtils.getAPIUsageStats() to allow analysis of API usage.
+ - Added E406, E413, E416 exceptions (all sub-classes of E40X) for streaming-API user errors. 
+ 
+2.1.7
+ - Fixed issue with t.co shortener upsetting Twitter.updateStatus' sanity check.
+ - Added Saved Search support in TwitterAccount:
+ 	- TwitterAccount.getSavedSearches()
+ 	- TwitterAccount.createSavedSearch()
+ 	- TwitterAccount.destroySavedSearch()
+ - Added TwitterGeo to give access to Twitter geolocation search.
+ - Added Twitter.setUntilId()
+ 
+2.1.6
+ - Workaround for a serious bug in the Twitter search API re location and OR
+ - Removed SimpleRSSReader (no longer used since the introduction of the
+ include_rts flag) 
+ - Added TwitterException.AccessLevel
+ - TwitterException.Timeout extends E50X to reflect that its a server issue
+ - URLConnectionHttpClient.setRetryOnError() delay cut to 1/2 a second, and 
+ retry now applies to all E50X cases
+ - TwitterList calls init in the lazy-loading constructor. This is so an E404
+ exception is thrown early if needed.
+ - TwitterList lazy-loading constructor deprecated in favour of static TwitterList.get()
+ method.
+ 
+2.1.5
+- Twitter.isValidLogin now uses TwitterAccount (fixes a bug with the change
+ in access levels).
+
+2.1.4
+ - Added check for zero-byte chars in tweets (which occur very rarely, but can cause problems with other software).
+ - Added TwitterAccount.getAccessLevel() and TwitterAccount.KAccessLevel to
+ support inspection of the powers conferred by an oauth token.
+ - Cleaned up test dependencies.  
+
+2.1.3
+ - Updated TwitterList methods to use the new preferred endpoints.
+ - Updated Twitter.getReplies() to use the new preferred endpoint.
+ - Added Twitter.getMentions() which is equivalent to getReplies()
+ - Fixed bug in TwitterList.add/remove not updating the local cached list.
+
+2.1.2
+ - Patched bug in User.following/followedBy fields. 
+ - Altered method name user.following() to User.followingYou() for greater clarity.
+ 
+2.1.1
+ - Added a fix for the date parsing issue with yamba.marakana.net 
+ 
+2.1.0
+ - Added Twitter.getListsContaningMe() and Twitter.getListsContaining()
+ - Added TwitterList.getOwner(), and unsure why this wasn't there from the start.
+ - Fixed a bug in paging, whereby retweets being missed out could cause the paging
+ to stop early, and a related bug where posts during paging could lead to "page drift".
+ - Changed TwitterList.toString() to include the owner
+ 
+2.0.1
+ - Added RateLimit.waitForReset()
+ - Included use of SimpleDateFormat if date parsing goes wrong. This has been
+ reported as a bug for the Twitter-like service run by Marakana.
+ 
+2.0
+ - Added Streaming
+ - Workaround for parsing error in getFriend/FollowerIDs due to rare Twitter response  
+ - Fixed bug where page 2 could get requested by some methods following a search.
+ - Added TwitterAccount.setProfile() to support more profile updates.
+ - Added isRateLimited()
+
+1.9.0
+ - added RateLimit 
+ 
+1.8.6
+ - Made Swing usage by-reflection, which makes it less of a dependency. Hence
+ allows deployment on older Android devices. 
+ 
+1.8.5
+ - Added reportSpam()
+ - User.getId() and Message.getId() return Long instead of Number. This is a
+ backwards compatible change.
+ - Fixed class cast bug in Message.equals(). Thanks to Miroslav Pokorny. 
+ 
+1.8.4
+ - Bug fixes in Twitter.updateStatus() and Status.equals()
+
+1.8.3
+ - BREAKING CHANGE: Twitter IDs have got too big for Java's long! 
+ 	- So Status will use BigInteger. User and Message will use Number (which will be a Long for now). 
+ 	- Methods which used to take long parameters, now take Number. 
+ 	- Use null for an unset parameter. 0 and -1 cannot be used to indicate unset parameters any more. 
+ - TwitterException.SuspendedUser now thrown when appropriate for isFollower calls.
+ 
+1.8.2
+ - Url encoding now explicitly specifies UTF8, which fixes issues with exotic unicode chars on JVMs with different default settings. 
+ Thanks to Juraj Bednar for spotting and fixing. 
+
+1.8.1
+ - Added a case-sensitive-screennames toggle in response to user requests
+
+1.8
+ - Basic Auth is gone. Twitter finally switched it off on Spetember 1st.
+ - Added UpdateToOAuth exception
+ - Made most classes Serializable for better AppEngine support
+
+1.7.3
+ - Added TweetEntity support, switch it on via Twitter.setIncludeTweetEntities()
+ - Improved Twitter.getUserTimelineWithRetweets()
+
+1.7.2
+ - Added listedCount and followRequestSent fields to User
+ - Added retweetCount field to Status
+ - Twitter.getUserTimeline(String screenName) now supports Twitter.setMaxResults()
+ - Fixed JSONException bug due to Twitter now returning occasional null values. 
+
+1.7.1
+ - Fixed TwitterList.getSubscribers() bug.
+
+1.7.0
+ - twitlonger.com integration: updateLongStatus() and getLongStatus()
+ - Thanks to George Graves for helping with a null User bug!
+ 
+1.6.5
+ - User.timezoneOffSet is a double to handle e.g. India with offset 5.5
+
+1.6.4
+ - Added sketch for TwextEntity for whenever Twitter switch it on
+ - Fixed mixed formatting bug in Status.source (that's a bug in Twitter itself). 
+ - Fixed html entity encoding in Twitter.getUserTimelineWithRetweets()
+
+1.6.3
+ - Fixed bug in setFavorite()
+ - Added destroy() which deletes both Status and Message objects
+ 
+1.6.2
+ - Better error messages
+ - Added setMyLocation() for doing status updates with location.
+ - Added exception TwitterException.BadParameter for requests that get a
+ "too old" error.
+
+1.6.1
+ - Added OAuth via Signpost.
+ - OAuth via Scribe now works (needs Scribe v0.6.6 or above).
+ - Moved tests into separate test folder.
+ - Introduced TwitterException.Repetition
+ - Added TwitterAccount.verifyCredentials()
+ - Added getUserTimelineWithRetweets() (and SimpleRSSReader to back it up)
+ - SocketExceptions are assumed to be Twitter's fault and generate E50X exceptions.
+
+1.6.0
+ - Added OAuth via Scribe
+ - OAuth Scribe class moved into jar proper
+ - Several improvements to TwitterList by Tony Greening.
+ - setMaxResults(0) is not allowed (indicates a bug in the calling code)
+
+1.5.0
+ - List support via TwitterList (partial - doesn't cover all of the API - but does 
+ provide a nice lazy-fetching mechanism)
+ - Created TwitterAccount to hold account-editing methods - very patchy for now.
+ - Added retweet methods.
+ - Changed getRetweets(Status) to work by new-style retweet api, not search.
+
+1.4.4
+ - Fixed dumbass bug in convert html entities (<,> swapped)
+ - Added userSearch()
+ 
+1.4.3
+ - Adjusted urls to the official v1 urls: http://api.twitter.com/1 
+ 	(from http://twitter.com)
+ - Added bulkShow() for efficient fetching of info on tweeps
+ - Added TwitterException.Unexplained for weird behaviour from Twitter
+ - User.createdAt is now a Date 
+
+1.4.2
+ - Removed winterwell.utils dependency that had crept in.
+ 
+1.4.1
+ - Now un-escapes some html entities from tweets: & " ' < >
+
+1.4
+ - Fixed "compiled to Java v1.6" issue
+
+1.3.3
+ - Moved to pages with Twitter's new cursor based pagination system
+ - Optionally sets in_reply_to info, thanks to Eric Mill of Sunlight Labs http://sunlightlabs.com/projects/android-congress/
+ - Added support for favorites 
+ - Switch from id to screen_name to avoid ambiguity with numerical 
+   screen-names (bit of a screw-up by Twitter there, methinks)
+ - removed getFriendsTimeline(username) as this is no longer supported
+ - added retweet() method
+ - Included OAuthHttpClient in the jar, thanks to John Kristian's code
+ - Support for accessing other websites now that Twitter's API has spread.
+ - Support for location-based search
+ - More robust handling of Twitter responses.
+
+1.3.2
+ - Made count fields in User into ints, not longs (no-one will have 2^32 friends or updates) 
+ - Some bug fixes
+ - Added getUser() as synonym for show()
+ - Added ICallback for multi-page searches
+ - Changed getName() to getScreenName() to avoid the ambiguity between
+   display-names and screen-names, and for consistency with Twitter.User
+
+1.3.1
+ - Added support for command line usage: java -jar jtwitter.jar name password tweet 
+
+1.3.0
+ - Added many new fields to User, thanks to Ken Zalewskiof the New York State Senate
+ - The User objects returned by search now include a profile image
+
+1.2.3
+ - Bug fix to getStatus(String), thanks to Lucas Simão da Costa e Silva
+
+1.2.2
+ - Added TwitterException.Timeout
+ 
+1.2.1
+ - Support for status ids larger than 2^31
+ - Status destruction now immediately apparent.
+ 
+1.2
+ - More specialised Exceptions
+ - Improved error handling in URLConnectionHttpClient
+ - Added TwitterException.E403 and E50X
+ - Added optional robustness workaround for 502 errors from Twitter
+ 
+1.1 (with Miles Gould)
+
+ - Added standard-ish parameters: page, since_id
+ - Added date filtering to replace the since parameter
+ - Can now fetch multiple pages! See setMaxResults()
+ - Added ITweet interface giving common access to common parts of
+   Messages and Statuses
+ - Added isFollower() and isFollowing() methods
+ - Renamed breakFriendship() to stopFollowing() for clarity (old method
+   kept as a delegate)
+ - Twitter class is no longer final
+ - Added "dummy" User objects which just have a screen name - useful
+   for working with Maps and Collections
+ - Fixed bug re. getStatus() when there is no status
+ - Added getFriendsIDs() and getFollowersIds()
+ - Incorporated some of John Kristian's code to factor out the http
+   connection. But not the OAuth bit, since that entails a dependency.
+ - Switched id numbers from int to long for long-term stability
+ - Changed User.toString() - now returns the screen-name
+ - Added TwitterException.E404 which should be thrown for 404s
+ - Message is now only for direct messages. @you mentions are handled
+   as Status objects.
+ 
+ 
+1.0
+ 
+- Added search support 
+- Fixed bugs due to changes in the API: the since filter has gone (why?) 
+- Added more properties to user: timezone
+
+0.9.8
+- Added default source of jtwitterlib (points to open-source JTwitter page). 
+- Fixed some bugs in TwitterTest
+
+0.9.7
+- Added source support
+- Added notifications support.
+- Fixed bugs due to changes in the API (from get to post): befriend, breakFriendship,
+
+0.9.6
+- Replaced sun.misc.BASE64Encoder with a local copy of an LGPL Base64Encoder.
+
+0.9.5
+- Changed package namespace from thinktank.jtwitter to winterwell.jtwitter 
+- Fixed bugs in getFriendsTimeline() and getFeatured() caused by API changes.
+
+0.9.4
+- splitMessage() breaks a long string into tweet-size sections.
+
+0.9.3
+- getDirectMessages() now retrieves all messages, not just the first 20. Thanks to Steve Jensen for spotting the bug and writing the fix.
+- Added getRecentDirectMessages() which retrieves only the latest 20 messages.
+- Added getDirectMessages(long sinceId) at Steve's request.
+
+0.9.2
+- Made Java 5 compatible.
+- Added source field in Twitter.Status
+- Made getUserTimeline() authenticate.
+Thanks to Sheila Colemam for suggesting these fixes.
+
+0.9.1
+- Added Message object, changed getDirectMessages() and getReplies() to use this.
+- Added destroyStatus(int).
+- Added destroyStatus(Status).
+- Fixed bug in getStatus(String).
+- Changed updateStatus(String) to return a Status object.
