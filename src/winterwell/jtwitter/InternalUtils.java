@@ -1,6 +1,8 @@
 package winterwell.jtwitter;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,14 +40,13 @@ import java.util.regex.Pattern;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.StrUtils;
-import winterwell.utils.WrappedException;
-import winterwell.utils.io.FileUtils;
 
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
+import com.winterwell.utils.StrUtils;
+import com.winterwell.utils.WrappedException;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else
@@ -181,22 +182,23 @@ public class InternalUtils {
 		return m;
 	}
 
-	public static void close(OutputStream output) {
+	public static void close(Closeable output) {
 		if (output == null)
 			return;
 		// Flush (annoying that this is not part of Closeable)
-		try {
-			output.flush();
-		} catch (Exception e) {
-			// Ignore
-		} finally {
+		if (output instanceof Flushable) {
+			try {
+				((Flushable) output).flush();
+			} catch (Exception e) {
+				// Ignore
+			}
+		}
 		// Close
 		try {
 			output.close();
 		} catch (IOException e) {
 			// Ignore
-		}
-		}
+		}		
 	}
 	
 	public static void close(InputStream input) {
@@ -816,7 +818,7 @@ public class InternalUtils {
 		PrintWriter pw = new PrintWriter(w);
 		x.printStackTrace(pw);
 		pw.flush();
-		FileUtils.close(pw);
+		close(pw);
 		// // If the message got truncated, append it in full here
 		// if (x.getMessage().length() > MAX_ERROR_MSG_LENGTH) {
 		// w.append(StrUtils.LINEEND);

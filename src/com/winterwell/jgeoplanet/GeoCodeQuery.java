@@ -1,6 +1,6 @@
 package com.winterwell.jgeoplanet;
 
-import winterwell.utils.Utils;
+import com.winterwell.utils.Utils;
 
 
 
