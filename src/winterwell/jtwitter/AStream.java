@@ -639,7 +639,7 @@ public abstract class AStream implements Closeable {
 			throw new TwitterException(ex);
 		}
 		// reconnect using a different thread
-		InternalUtils.log(LOGTAG, this+" disconnected: "+ex + " " + ex.getStackTrace());
+		InternalUtils.log(LOGTAG, this+" disconnected: " + (ex==null?"no exception" : ex+" "+ex.getStackTrace()));
 		reconnect();
 	}
 
