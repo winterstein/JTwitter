@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.0.8";
+	public final static String version = "3.0.9";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2250,6 +2250,12 @@ public class Twitter implements Serializable {
 			return new Message(new JSONObject(result));
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(result, e);
+		} catch(TwitterException.E403 e) {
+			// repeated DMs get a 403
+			if (e.getMessage()!=null && e.getMessage().startsWith("code 151:")) {
+				throw new TwitterException.Repetition("DM "+recipient+" "+text+" Error:"+e);
+			}
+			throw e;
 		} catch (TwitterException.E404 e) {
 			// Probably a suspended user. But could be a rename or a delete.
 			throw new TwitterException.MissingUser(e.getMessage() + " with recipient="

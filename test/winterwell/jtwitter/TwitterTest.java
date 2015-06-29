@@ -1269,6 +1269,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Message sent2 = tw.sendMessage("winterstein", msg2);
 		System.out.println(""+sent2.getTweetEntities(KEntityType.urls));
 	}
+	
+
+	public void testSendMessageToSelf() {
+		Twitter tw = newTestTwitter();
+		String msg = "Hello you, I mean me "+new Random().nextInt(1000);
+		tw.setIncludeTweetEntities(true);
+		Message sent = tw.sendMessage(tw.getScreenName(), msg);
+		System.out.println(sent);
+	}
+
 
 	/**
 	 * How to send to 2 people??
