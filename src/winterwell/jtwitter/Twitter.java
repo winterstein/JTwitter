@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.0.7";
+	public final static String version = "3.0.8";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -1349,7 +1349,6 @@ public class Twitter implements Serializable {
 			List<Message> nextpage = Message.getMessages(p);
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-						
 			nextpage = dateFilter(nextpage);
 			msgs.addAll(nextpage);
 			
@@ -1690,6 +1689,7 @@ public class Twitter implements Serializable {
 		// allows for "drift" when new tweets are posted during the paging.
 		BigInteger maxId = untilId;
 		List<Status> msgs = new ArrayList<Status>();
+
 		while (msgs.size() <= maxResults) {			
 			List<Status> nextpage; 
 			try {
@@ -1711,11 +1711,19 @@ public class Twitter implements Serializable {
 			// cause the system to quit early.
 			if (nextpage.size() == 0) {
 				break;
-			}			
+			}	
+			
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-			
-			msgs.addAll(dateFilter(nextpage));
+			Date maxDate = InternalUtils.getMaxDate(nextpage);
+			List<Status> filtered = dateFilter(nextpage);
+			msgs.addAll(filtered);
+			// If we've passed the sinceDate, and we've started to filter messages, to the point
+			// where we receive none. then we need to stop probing to avoid looping over ever-older messages,
+			// and the rate-limiting that'll cause.
+			if (filtered.size() == 0 && sinceDate != null && sinceDate.after(maxDate)){
+				break;
+			}
 			var.put("max_id", maxId.toString());			
 		}
 		return msgs;

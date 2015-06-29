@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.Utils;
 
 /**
  * @WARNING There are bugs on Twitter's end -- the messages returned by this
@@ -64,7 +63,7 @@ public class UserStream extends AStream {
 		// API version 2?! Yes, this is right.
 		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
 		Map<String, String> vars = new HashMap();
-		if (Utils.yes(withFollowings)){
+		if (withFollowings) {
 			vars = InternalUtils.asMap("with",
 					(withFollowings ? "followings" : "user"));
 		}
@@ -105,10 +104,6 @@ public class UserStream extends AStream {
 			throws UnsupportedOperationException, TwitterException {
 		int cnt = 0;
 		// fetch
-		if (withFollowings) {
-			// TODO pull in network activity
-			throw new UnsupportedOperationException("TODO");
-		}
 		{	// get mentions of you		
 			List<Status> mentions = jtwit2.getMentions();
 			InternalUtils.log(LOGTAG, "fillIn mentions "+jtwit2.getSinceId()+": "+mentions.size());
@@ -120,7 +115,21 @@ public class UserStream extends AStream {
 				cnt++;
 			}
 		}
-		{	// get your traffic
+		if (withFollowings) { // Get your and network stuff.
+			// Can't get too many results, rate-limiting is severe (15x20 results per 15 mins) for this resource
+			jtwit2.setMaxResults(100);
+			List<Status> updates = jtwit2.getHomeTimeline();
+			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
+			for (Status status : updates) {
+				if (tweets.contains(status)) {
+					continue;
+				}
+				tweets.add(status);
+				cnt++;
+			}
+			// NB: 100k was the original setting -- see fillInOutages()
+			jtwit2.setMaxResults(100000);
+		} 	else {	// get your traffic
 			List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
 			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
 			for (Status status : updates) {

@@ -543,7 +543,27 @@ public abstract class AStream implements Closeable {
 				&& readThread.ex == null
 				/* so technically this counts a requested stop as an actual stop */
 				&& !readThread.stopFlag;
-		InternalUtils.log(LOGTAG, this+" isConnected? "+yes);
+		// Let's just assume yes for logging, as disk space is needed.
+		if (!yes){
+			try {
+				if (readThread == null){
+					InternalUtils.log(LOGTAG, "not Connected!? Details : readThread is NULL!");
+				}
+				else if (readThread.ex == null){
+					InternalUtils.log(LOGTAG, "not Connected!? Details : " +
+						" readThread: " + readThread + 
+						" readThread.isAlive(): " + readThread.isAlive() +
+						" readThread.stopFlag: " + readThread.stopFlag);
+				} else {
+					InternalUtils.log(LOGTAG, "not Connected!? Exception: " +
+							readThread.ex.getStackTrace());
+				}
+				
+			}
+			catch (Throwable t){
+					InternalUtils.log(LOGTAG, "not Connected - Logging failed!");
+			}
+		}
 		return yes;
 	}
 
@@ -619,7 +639,7 @@ public abstract class AStream implements Closeable {
 			throw new TwitterException(ex);
 		}
 		// reconnect using a different thread
-		InternalUtils.log(LOGTAG, this+" disconnected: "+ex);
+		InternalUtils.log(LOGTAG, this+" disconnected: "+ex + " " + ex.getStackTrace());
 		reconnect();
 	}
 
@@ -773,8 +793,9 @@ public abstract class AStream implements Closeable {
 
 	private void reconnect2() {
 		// Try again as advised by dev.twitter.com:
-		// 1. straightaway
+		// 1. after 10 milliseconds (trying to remove TML exceptions - AN)
 		try {
+			Thread.sleep(10);
 			connect();
 			return;
 		} catch (TwitterException.E40X e) {
@@ -804,6 +825,7 @@ public abstract class AStream implements Closeable {
 			} catch (TwitterException.E40X e) {
 				throw e;
 			} catch (Exception e) {
+				InternalUtils.log(LOGTAG, "Unknown exception occurring: is called:" + InternalUtils.str(e));
 				// oh well
 //				System.out.println(e);
 			}

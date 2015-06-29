@@ -1,5 +1,11 @@
 # JTwitter Change list 
 
+3.0.8:
+ - Bugfix for when Twitter truncates RTs without telling us.
+
+3.0.7:
+ - Efficiency, reducing number of calls when using date filters.
+ 
 3.0.6:
  - Bugfix for handling DM outages in UserStream.
 

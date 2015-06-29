@@ -24,6 +24,7 @@ public final class RateLimit {
 	public static final String RES_USERS_BULK_SHOW = "/users/lookup";
 	public static final String RES_USERS_SHOW1 = "/users/show";
 	public static final String RES_USER_TIMELINE = "/statuses/user_timeline";
+	public static final String RES_HOME_TIMELINE = "/statuses/home_timeline";
 	public static final String RES_MENTIONS = "/statuses/mentions_timeline";
 	public static final String RES_SEARCH = "/search/tweets";
 	public static final String RES_STATUS_SHOW = "/statuses/show";
