@@ -190,7 +190,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	/**
 	 * Use with #setProvider() to make this a LinkedIn OAuth client
 	 */
-	private static final DefaultOAuthProvider LINKEDIN_PROVIDER() {return new DefaultOAuthProvider(
+	private static final DefaultOAuthProvider LINKEDIN_PROVIDER() {return new DefaultOAuthProvider(			
 			"https://api.linkedin.com/uas/oauth/requestToken",
 			"https://api.linkedin.com/uas/oauth/accessToken",
 			"https://www.linkedin.com/uas/oauth/authorize");
@@ -487,8 +487,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 * Replace the default Twitter urls with the LinkedIn urls.
 	 */
 	public void setLinkedInProvider() {
-		setProvider(LINKEDIN_PROVIDER());
-		
+		setProvider(LINKEDIN_PROVIDER());		
 	}
 	
 	public void setFlickrProvider() {

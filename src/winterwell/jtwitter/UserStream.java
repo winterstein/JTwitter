@@ -63,10 +63,13 @@ public class UserStream extends AStream {
 		InternalUtils.log(LOGTAG, "connect2()... "+this);
 		connect3_rateLimit();
 		// API version 2?! Yes, this is right.
-		String url = "https://userstream.twitter.com/" + Twitter.API_VERSION +"/user.json?delimited=length";
-//		Map<String, String> vars = InternalUtils.asMap("with",
-//				(withFollowings ? "followings" : "user"));
-		HttpURLConnection con = client.connect(url, new HashMap(), true);
+		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
+		Map<String, String> vars = new HashMap();
+		if (withFollowings) {
+			vars = InternalUtils.asMap("with",
+					(withFollowings ? "followings" : "user"));
+		}
+		HttpURLConnection con = client.connect(url, vars, true);
 		return con;
 	}
 

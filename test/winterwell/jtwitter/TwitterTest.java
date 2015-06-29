@@ -50,6 +50,20 @@ import winterwell.jtwitter.TwitterException.E404;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	public void testGetTaxiUK() {
+		Twitter jtwit = newTestTwitter();
+		User user = jtwit.users().show(305506258L);
+		System.out.println(user);
+	}
+	
+	public void testDoesBeckiFollowCoop() {
+		Twitter jtwit = newTestTwitter();
+		boolean f = jtwit.users().isFollower("beckishort", "coopbankuk_help");
+		boolean f2 = jtwit.users().isFollower("coopbankuk_help", "beckishort");
+		System.out.println(f);
+		System.out.println(f2);
+		assert f && f2;
+	}
 	
 	public void testIssue4280() {
 		Twitter jtwit = newTestTwitter();
@@ -1255,6 +1269,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Message sent2 = tw.sendMessage("winterstein", msg2);
 		System.out.println(""+sent2.getTweetEntities(KEntityType.urls));
 	}
+	
+
+	public void testSendMessageToSelf() {
+		Twitter tw = newTestTwitter();
+		String msg = "Hello you, I mean me "+new Random().nextInt(1000);
+		tw.setIncludeTweetEntities(true);
+		Message sent = tw.sendMessage(tw.getScreenName(), msg);
+		System.out.println(sent);
+	}
+
 
 	/**
 	 * How to send to 2 people??

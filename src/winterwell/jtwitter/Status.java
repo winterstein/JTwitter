@@ -301,7 +301,8 @@ public final class Status implements ITweet {
 			String _lang = object.optString("lang");
 			lang = "und".equals(_lang)? null : _lang;
 
-			retweetCount = object.optInt("retweet_count", -1);			
+			retweetCount = object.optInt("retweet_count", -1);
+			// favourites??
 			
 			// ignore this as it can be misleading: true is reliable, false isn't
 			// retweeted = object.optBoolean("retweeted");

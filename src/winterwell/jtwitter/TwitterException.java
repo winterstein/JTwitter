@@ -91,6 +91,18 @@ public class TwitterException extends RuntimeException {
 
 		public E404(String string) {
 			super(string);
+		}				
+	}
+	
+	/**
+	 * This might be a suspended account, a deleted account, or a renamed account.
+	 * Anyway, you can't contact them.
+	 */
+	public static class MissingUser extends E404 {
+		private static final long serialVersionUID = 1L;
+
+		public MissingUser(String string) {
+			super(string);
 		}
 	}
 
