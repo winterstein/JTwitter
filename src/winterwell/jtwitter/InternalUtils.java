@@ -46,7 +46,6 @@ import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
 import com.winterwell.utils.StrUtils;
-import com.winterwell.utils.WrappedException;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else
@@ -800,7 +799,7 @@ public class InternalUtils {
 	 */
 	public static String toString(Throwable x, boolean stacktrace) {
 		// Don't generally unwrap, but do unwrap our own wrapper
-		if (x instanceof WrappedException) {
+		if (x.getClass().toString().contains("WrappedException")) {
 			x = x.getCause();
 		}
 		if ( ! stacktrace)
@@ -825,6 +824,14 @@ public class InternalUtils {
 		// w.append(x.getMessage());
 		// }
 		return w.toString();
+	}
+
+
+	public static Object or(Object... bits) {
+		for (Object string : bits) {
+			if (string!=null && ! string.toString().isEmpty()) return string;
+		}
+		return null;
 	}
 
 }

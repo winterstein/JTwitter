@@ -1,6 +1,8 @@
 package com.winterwell.jgeoplanet;
 
-import com.winterwell.utils.Utils;
+import winterwell.jtwitter.InternalUtils;
+
+
 
 
 
@@ -108,7 +110,7 @@ public class GeoCodeQuery {
 	
 	@Override
 	public String toString() {
-		return "GeoCodeQuery["+Utils.or(desc, city, country, locn, timezone)+"]";
+		return "GeoCodeQuery["+InternalUtils.or(desc, city, country, locn, timezone)+"]";
 	}
 	
 	/**

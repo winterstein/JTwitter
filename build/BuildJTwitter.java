@@ -4,7 +4,7 @@ import java.util.List;
 
 
 import com.winterwell.utils.io.FileUtils;
-import com.winterwell.utils.log.Log;
+import winterwell.utils.reporting.Log;
 import winterwell.bob.BuildTask;
 import winterwell.bob.tasks.CopyTask;
 import winterwell.bob.tasks.GitTask;
