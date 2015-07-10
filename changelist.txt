@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.1.0:
+ - Cleaned out some winterwell.utils references which had sneaked into /src.
+ 
 3.0.8:
  - Bugfix for when Twitter truncates RTs without telling us.
 

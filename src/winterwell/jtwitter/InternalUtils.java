@@ -45,7 +45,6 @@ import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
-import com.winterwell.utils.StrUtils;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else
@@ -808,11 +807,7 @@ public class InternalUtils {
 		// NB: the use of StringWriter here means there's little point having an
 		// append-to-StringBuilder version of this method
 		StringWriter w = new StringWriter();
-		w.append(x.getClass() + ": "
-				+ StrUtils.ellipsize(x.getMessage(), 140)
-				+ StrUtils.LINEEND
-				// + Environment.get().get(INDENT)
-				+ "\t");
+		w.append(x.getClass() + ": " + x.getMessage());
 		PrintWriter pw = new PrintWriter(w);
 		x.printStackTrace(pw);
 		pw.flush();
