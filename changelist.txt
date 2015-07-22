@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.1.1:
+ - Adjusted bulk user lookup to use post, which has less timeout issues.
+ 
 3.1.0:
  - Cleaned out some winterwell.utils references which had sneaked into /src.
  

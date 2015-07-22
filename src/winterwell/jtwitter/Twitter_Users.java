@@ -83,7 +83,7 @@ public class Twitter_Users {
 					: "user_id";
 			Map<String, String> vars = InternalUtils.asMap(var, names);
 			try {
-				String json = http.getPage(jtwit.TWITTER_URL + apiMethod, vars, auth);
+				String json = http.post(jtwit.TWITTER_URL + apiMethod, vars, auth);
 				List<User> usersi = User.getUsers(json);
 				users.addAll(usersi);
 			} catch (TwitterException.E404 e) {
@@ -178,19 +178,6 @@ public class Twitter_Users {
 			throw new TwitterException.Parsing(json, e);
 		}
 	}
-
-//	/**
-//	 * This is no longer a Twitter feature.
-//	 */
-//	public List<User> getFeatured() throws TwitterException {
-//		List<User> users = new ArrayList<User>();
-//		List<Status> featured = jtwit.getPublicTimeline();
-//		for (Status status : featured) {
-//			User user = status.getUser();
-//			users.add(user);
-//		}
-//		return users;
-//	}
 
 	/**
 	 * Returns the IDs of the authenticating user's followers.
@@ -327,6 +314,7 @@ public class Twitter_Users {
 	 *            The screen name of the user for whom to request a list of
 	 *            friends.
 	 * @throws TwitterException
+	 * @see {@link #getFriendIDs(String)}
 	 */
 	public List<User> getFriends(String username) throws TwitterException {
 		// Simulate the old v1.0 method with v1.1 methods
