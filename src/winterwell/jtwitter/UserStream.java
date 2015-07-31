@@ -143,6 +143,8 @@ public class UserStream extends AStream {
 		}
 		{	// different since-id for DMs
 			jtwit2.setSinceId(outage.sinceDMId);
+			jtwit2.setUntilId(outage.untilDMId);
+			jtwit2.setMaxResults(100000);
 			List<Message> dms = jtwit2.getDirectMessages();
 			// debug info for latency issues
 			String dmids = "";

@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.1.1";
+	public final static String version = "3.1.2";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -1343,19 +1343,20 @@ public class Twitter implements Serializable {
 		while (msgs.size() <= maxResults) {
 			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
 			if (url.contains("direct_messages")) {
-				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var);
+				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var+" already-got:"+msgs.size());
 			}
 			String p = http.getPage(url, var, true);
 			List<Message> nextpage = Message.getMessages(p);
 			// Next page must start strictly before this one
 			maxId = InternalUtils.getMinId(maxId, nextpage);
-			nextpage = dateFilter(nextpage);
-			msgs.addAll(nextpage);
-			
+			List<Message> nextpageDateFiltered = dateFilter(nextpage);
+			msgs.addAll(nextpageDateFiltered); 
 			if (nextpage.size() < 20) {
+				// No more results to get
 				break;
-			}
-			
+			}	
+			// TODO Can we stop early if the date-filter kicked in?
+			// Twitter goes most-recent-first, so we could stop now if the sinceDate was actively filtering. 
 			var.put("max_id", maxId.toString());
 		}
 		return msgs;

@@ -21,6 +21,8 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.utils.time.TUnit;
+import winterwell.utils.time.Time;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -85,12 +87,14 @@ public abstract class AStream implements Closeable {
 		 * The id received just before the outage. i.e. start
 		 */
 		public final BigInteger sinceId;
+		BigInteger untilId;
 		/**
 		 * The Java timecode when the stream went back online. i.e. end
 		 */
 		public final long untilTime;
 		public final long sinceTime;
 		public final BigInteger sinceDMId;
+		BigInteger untilDMId;
 
 		/**
 		 * 
@@ -124,13 +128,19 @@ public abstract class AStream implements Closeable {
 
 	final String LOGTAG = getClass().getSimpleName();
 
+	/**
+	 * Remove from the beginning of long lists
+	 * @param incoming
+	 * @return the number pruned
+	 */
 	static int forgetIfFull(List incoming) {
 		// forget a batch?
 		if (incoming.size() < MAX_BUFFER)
 			return 0;
 		int chop = MAX_BUFFER / 10;
 		for (int i = 0; i < chop; i++) {
-			incoming.remove(0);
+			Object gone = incoming.remove(0);
+			InternalUtils.log("twitter.forget", gone);
 		}
 		return chop;
 	}
@@ -389,8 +399,8 @@ public abstract class AStream implements Closeable {
 	abstract HttpURLConnection connect2() throws Exception;
 
 	/**
-	 * Use the REST API to fill in outages when possible. Filled-in outages will
-	 * be removed from the list. 
+	 * Use the REST API to fill in outages when possible. There is a list of outages -- filled-in outages will
+	 * be removed from the list, failed ones will be left on. 
 	 * WARNING: This swallows exceptions! (but check the return value).
 	 * <p>
 	 * In accordance with best-practice, this method will skip over very recent
@@ -424,8 +434,14 @@ public abstract class AStream implements Closeable {
 				InternalUtils.log(LOGTAG, "outage registers already done for "+outage+" for "+this);
 				continue; // already done or dropped
 			}
+			if (System.currentTimeMillis() - outage.untilTime > TUnit.HOUR.millisecs) {
+				InternalUtils.log(LOGTAG, "Fail :( Giving up on old outage "+outage+" from "+new Time(outage.untilTime)+" for "+this);
+				continue; // Fail :(
+			}
 			try {						
 				jtwit2.setSinceId(outage.sinceId);
+				jtwit2.setUntilId(outage.untilId);
+				// TODO an until jtwit2.setUntilId(outage.untilId);
 				jtwit2.setUntilDate(new Date(outage.untilTime));
 				jtwit2.setMaxResults(100000); // hopefully not needed!
 				// fetch
@@ -544,27 +560,24 @@ public abstract class AStream implements Closeable {
 				/* so technically this counts a requested stop as an actual stop */
 				&& !readThread.stopFlag;
 		// Let's just assume yes for logging, as disk space is needed.
-		if (!yes){
-			try {
-				if (readThread == null){
-					InternalUtils.log(LOGTAG, "not Connected!? Details : readThread is NULL!");
-				}
-				else if (readThread.ex == null){
-					InternalUtils.log(LOGTAG, "not Connected!? Details : " +
-						" readThread: " + readThread + 
-						" readThread.isAlive(): " + readThread.isAlive() +
-						" readThread.stopFlag: " + readThread.stopFlag);
-				} else {
-					InternalUtils.log(LOGTAG, "not Connected!? Exception: " +
-							readThread.ex.getStackTrace());
-				}
-				
+		if (yes) return true;
+		try {
+			if (readThread == null){
+				InternalUtils.log(LOGTAG, "not Connected!? Details : readThread is NULL!");
 			}
-			catch (Throwable t){
-					InternalUtils.log(LOGTAG, "not Connected - Logging failed!");
+			else if (readThread.ex == null){
+				InternalUtils.log(LOGTAG, "not Connected!? Details : " +
+					" readThread: " + readThread + 
+					" readThread.isAlive(): " + readThread.isAlive() +
+					" readThread.stopFlag: " + readThread.stopFlag);
+			} else {
+				InternalUtils.log(LOGTAG, "not Connected!? Exception: " +readThread.ex);
 			}
+			
+		} catch (Throwable t) {
+			InternalUtils.log(LOGTAG, "not Connected - Logging failed!");
 		}
-		return yes;
+		return false;
 	}
 
 	/**
@@ -668,12 +681,12 @@ public abstract class AStream implements Closeable {
 			BigInteger id = ((ITweet) tweet).getId();
 			if (tweet instanceof Status) {				
 				if (id.compareTo(lastId) > 0) {
-					lastId = id;
+					setLastId(id);
 				}
 			// NB: Message (DM) ids are different
 			} else if (tweet instanceof Message) {				
 				if (id.compareTo(lastDMId) > 0) {
-					lastDMId = id;
+					setLastDMId(id);
 				}
 			}
 			forgotten += forgetIfFull(tweets);
@@ -709,6 +722,21 @@ public abstract class AStream implements Closeable {
 		}
 		// ??
 		System.out.println(jobj);
+	}
+
+	private void setLastId(BigInteger id) {
+		lastId = id;
+		// add to outages
+		for(Outage outage : outages) {
+			if (outage.untilId==null) outage.untilId = id;
+		}
+	}
+	private void setLastDMId(BigInteger id) {
+		lastDMId = id;
+		// add to outages
+		for(Outage outage : outages) {
+			if (outage.untilDMId==null) outage.untilDMId = id;
+		}
 	}
 
 	private void read3_friends(JSONArray _friends) throws JSONException {
@@ -754,13 +782,11 @@ public abstract class AStream implements Closeable {
 		// ??merge small outages??
 		if (lastId != BigInteger.ZERO || lastDMId != BigInteger.ZERO) {
 			outages.add(new Outage(lastId, lastDMId, now, System.currentTimeMillis()));
-			// paranoia: avoid memory leaks
-			if (outages.size() > 100000) {
-				for (int i = 0; i < 1000; i++) {
-					outages.remove(0);
-				}
+			// paranoia: avoid memory leaks			
+			if (outages.size() > MAX_BUFFER) {
+				int dropped = forgetIfFull(outages);
 				// add an arbitrary number to the forgotten count: 10 per outage
-				forgotten += 10000;
+				forgotten += 10*dropped;
 			}
 		}
 		InternalUtils.log(LOGTAG, this+" ...reconnect() done");

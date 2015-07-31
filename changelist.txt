@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.1.2:
+ - Tweaks to handling of outage filling for stream disconnects, and to the interaction between date-filters and max-results.  
+ 
 3.1.1:
  - Adjusted bulk user lookup to use post, which has less timeout issues.
  
