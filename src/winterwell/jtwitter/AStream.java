@@ -21,8 +21,6 @@ import winterwell.json.JSONObject;
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.time.TUnit;
-import winterwell.utils.time.Time;
 
 /**
  * Internal base class for UserStream and TwitterStream.
@@ -112,7 +110,7 @@ public abstract class AStream implements Closeable {
 
 		@Override
 		public String toString() {
-			return "Outage[dt:"+((untilTime-sinceTime)/1000)+"s id:" + sinceId + " to time:" + untilTime + "]";
+			return "Outage[dt:"+((untilTime-sinceTime)/1000)+"s id:" + sinceId + " to time:" + untilTime +" untilId:"+untilId+"]";
 		}
 	}
 
@@ -434,8 +432,8 @@ public abstract class AStream implements Closeable {
 				InternalUtils.log(LOGTAG, "outage registers already done for "+outage+" for "+this);
 				continue; // already done or dropped
 			}
-			if (System.currentTimeMillis() - outage.untilTime > TUnit.HOUR.millisecs) {
-				InternalUtils.log(LOGTAG, "Fail :( Giving up on old outage "+outage+" from "+new Time(outage.untilTime)+" for "+this);
+			if (System.currentTimeMillis() - outage.untilTime > InternalUtils.HOUR) {
+				InternalUtils.log(LOGTAG, "Fail :( Giving up on old outage "+outage+" from "+new Date(outage.untilTime)+" for "+this);
 				continue; // Fail :(
 			}
 			try {						

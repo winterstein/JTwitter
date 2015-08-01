@@ -536,6 +536,11 @@ public class InternalUtils {
 	 */
 	public static final Pattern pDocType = Pattern.compile("<!DOCTYPE.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
+	/**
+	 * one hour in milliseconds
+	 */
+	public static final long HOUR = 1000*60*60;
+
 	public static void sleep(long msecs) {
 		try {
 			Thread.sleep(msecs);

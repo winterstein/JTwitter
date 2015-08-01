@@ -312,9 +312,15 @@ public class TwitterException extends RuntimeException {
 	 */
 	public static class SuspendedUser extends E403 {
 		private static final long serialVersionUID = 1L;
+		/**
+		 * If true, it was the calling user (ie you) who is suspended.
+		 * If false, it was *probably* the target user who is suspended.
+		 */
+		public final boolean suspendedCaller;
 
 		public SuspendedUser(String msg) {
 			super(msg);
+			this.suspendedCaller = msg!=null && msg.contains("code 64:");
 		}
 	}
 
