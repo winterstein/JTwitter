@@ -1,9 +1,11 @@
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.winterwell.utils.io.FileUtils;
+
 import winterwell.utils.reporting.Log;
 import winterwell.bob.BuildTask;
 import winterwell.bob.tasks.CopyTask;
@@ -93,6 +95,9 @@ public class BuildJTwitter extends BuildTask {
 		// Update the version number
 		File webPageFile = new File(webDir, "../jtwitter.php");
 		String webpage = FileUtils.read(webPageFile);
+		Pattern pattern = Pattern.compile("<span class='version'>[0-9\\.]+</span>");
+		Matcher m = pattern.matcher(webpage);
+		assert m.find();
 		webpage = webpage.replaceAll("<span class='version'>[0-9\\.]+</span>", 
 									"<span class='version'>"+Twitter.version+"</span>");
 		webpage = webpage.replaceAll("jtwitter-[0-9\\-\\.]+\\.zip", zipFile.getName());
