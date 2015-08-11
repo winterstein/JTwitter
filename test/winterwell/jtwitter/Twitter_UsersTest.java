@@ -1,10 +1,12 @@
 package winterwell.jtwitter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 
+import sun.rmi.runtime.NewThreadAction;
 import winterwell.json.JSONException;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -36,6 +38,37 @@ public class Twitter_UsersTest {
 		Thread.sleep(lag);
 
 		User u2 = tw.follow("winterstein");
+	}
+
+	
+	@Test
+	public void testCursor() throws InterruptedException {
+		Twitter tw = TwitterTest.newTestTwitter();
+		{	// a couple of pages from a mega list
+			Twitter_Users tu = tw.users();
+			ListWithCursor<Number> fids = tu.getFollowerIDs("stephenfry");
+			assert fids.hasCursor();
+			String c = fids.getCursor();
+			tu.setCursor(c);
+			ListWithCursor<Number> fids2 = tu.getFollowerIDs("stephenfry");
+			assert fids2.hasCursor();
+			assert ! fids.getCursor().equals(fids2.getCursor());
+			ArrayList fids2only = new ArrayList(fids2);
+			fids2only.removeAll(fids);
+			assert fids.size() > 3000;
+			assert fids2.size() > 3000;
+			System.out.println(fids.size()+"\t"+fids2.size());
+			assert fids2.size() - fids2only.size() < 10; 
+		}
+		{	// a small list
+			Twitter_Users tu = tw.users();
+			ListWithCursor<Number> fids = tu.getFollowerIDs("spoonmcguffin");
+			String c = fids.getCursor();
+			assert ! fids.hasCursor();
+			System.out.println(fids.size());
+			assert fids.size() < 4000;
+			assert fids.END.equals(c) : c;
+		}
 	}
 	
 

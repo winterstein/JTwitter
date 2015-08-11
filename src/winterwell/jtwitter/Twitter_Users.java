@@ -184,7 +184,7 @@ public class Twitter_Users {
 	 * 
 	 * @throws TwitterException
 	 */
-	public List<Number> getFollowerIDs() throws TwitterException {
+	public ListWithCursor<Number> getFollowerIDs() throws TwitterException {
 		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", null, null);
 	}
 
@@ -197,7 +197,7 @@ public class Twitter_Users {
 	 *            The screen name of the user whose followers are to be fetched.
 	 * @throws TwitterException
 	 */
-	public List<Number> getFollowerIDs(String screenName)
+	public ListWithCursor<Number> getFollowerIDs(String screenName)
 			throws TwitterException {
 		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", screenName, null);
 	}
@@ -209,7 +209,7 @@ public class Twitter_Users {
 	 *            The id of the user whose followers are to be fetched.
 	 * @throws TwitterException
 	 */
-	public List<Number> getFollowerIDs(long userId)
+	public ListWithCursor<Number> getFollowerIDs(long userId)
 			throws TwitterException {
 		return getUserIDs(jtwit.TWITTER_URL + "/followers/ids.json", null, userId);
 	}
@@ -251,7 +251,7 @@ public class Twitter_Users {
 	 * 
 	 * @throws TwitterException
 	 */
-	public List<Number> getFriendIDs() throws TwitterException {
+	public ListWithCursor<Number> getFriendIDs() throws TwitterException {
 		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", null, null);
 	}
 
@@ -267,7 +267,7 @@ public class Twitter_Users {
 	 * 
 	 * @throws TwitterException
 	 */
-	public List<Number> getFriendIDs(String screenName) throws TwitterException {
+	public ListWithCursor<Number> getFriendIDs(String screenName) throws TwitterException {
 		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", screenName, null);
 	}
 	
@@ -279,7 +279,7 @@ public class Twitter_Users {
 	 *            The id of the user whose friends are to be fetched.
 	 * @throws TwitterException
 	 */
-	public List<Number> getFriendIDs(long userId) throws TwitterException {
+	public ListWithCursor<Number> getFriendIDs(long userId) throws TwitterException {
 		return getUserIDs(jtwit.TWITTER_URL + "/friends/ids.json", null, userId);
 	}
 
@@ -396,9 +396,25 @@ public class Twitter_Users {
 		return show(screenName);
 	}
 
+	// NB: We use a String not a Long for future-proofing.
+	String cursor = "-1";
+	
+	/**
+	 * Set the cursor used by {@link #getFollowerIDs()}, {@link #getFriendIDs()} and related methods.
+	 * If you set this, be careful to unset it, or use a fresh {@link Twitter_Users} object.
+	 * @param cursor Can be null or -1 for "first page". 
+	 * @return this
+	 */
+	public Twitter_Users setCursor(String cursor) {
+		this.cursor = cursor==null? "-1" : cursor;
+		return this;
+	}
+	
 	/**
 	 * Use cursors to fetch upto jtwit.maxResults
 	 * TODO More controlled paging??
+	 * 
+	 * Doc: https://dev.twitter.com/rest/reference/get/friends/ids
 	 * 
 	 * @param url
 	 *            API method to call
@@ -407,33 +423,43 @@ public class Twitter_Users {
 	 * @return twitter-id numbers for friends/followers of screenName or userId Is
 	 *         affected by {@link #maxResults}
 	 */
-	private List<Number> getUserIDs(String url, String screenName, Long userId) {
-		Long cursor = -1L;
-		List<Number> ids = new ArrayList<Number>();
+	private ListWithCursor<Number> getUserIDs(String url, String screenName, Long userId) {
+		String crsr = cursor;
+		ListWithCursor<Number> ids = new ListWithCursor();
 		if (screenName != null && userId != null) throw new IllegalArgumentException("cannot use both screen_name and user_id when fetching user_ids");
 		Map<String, String> vars = InternalUtils.asMap("screen_name",
 				screenName, "user_id", userId);
-		while (cursor != 0 && ! jtwit.enoughResults(ids)) {
-			vars.put("cursor", String.valueOf(cursor));
+		while ( ! jtwit.enoughResults(ids)) {
+			vars.put("cursor", crsr);
+			// get less than one full page?
+			// NB: returned results may be lower anyway, as suspended users are filtered by Twitter
+			if (jtwit.getMaxResults() > 0 && jtwit.getMaxResults() < 5000) {
+				vars.put("count", String.valueOf(jtwit.getMaxResults()));
+			}
+			// Call the API
 			String json = http.getPage(url, vars, http.canAuthenticate());
 			try {
 				// it seems Twitter will occasionally return a raw array
 				JSONArray jarr;
 				if (json.charAt(0) == '[') {
 					jarr = new JSONArray(json);
-					cursor = 0L;
+					// No next-page cursor, so break out of the loop
+					crsr = ListWithCursor.LOST;					
 				} else {
 					JSONObject jobj = new JSONObject(json);
 					jarr = (JSONArray) jobj.get("ids");
-					cursor = new Long(jobj.getString("next_cursor"));
-				}
+					crsr = jobj.getString("next_cursor");
+				}				
 				for (int i = 0; i < jarr.length(); i++) {
 					ids.add(jarr.getLong(i));
 				}
-				if (jarr.length()==0) {
-					// No more
+				// set the cursor
+				if ("0".equals(crsr)) crsr = ListWithCursor.END;
+				ids.setCursor(crsr);
+				// No more? Hazard a safe guess for the common case of well-under-5k
+				if ( ! ids.hasCursor() || jarr.length() < 1000) {
 					break;
-				}
+				}							
 			} catch (JSONException e) {
 				throw new TwitterException.Parsing(json, e);
 			}

@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.1.3";
+	public final static String version = "3.1.4";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -998,11 +998,14 @@ public class Twitter implements Serializable {
 	 * Have we got enough results for the current search?
 	 * 
 	 * @param list
-	 * @return false if maxResults is set to -1 (ie, unlimited) or if list
-	 *         contains less than maxResults results.
+	 * @return always false if list is empty, true if maxResults is set to -1 (ie, one-page) or if list
+	 *         contains maxResults or more items.
 	 */
 	boolean enoughResults(List list) {
-		return (maxResults != -1 && list.size() >= maxResults);
+		if (list.isEmpty()) return false;
+		// -1 = a default of one page
+		if (maxResults==-1) return true;
+		return list.size() >= maxResults;
 	}
 
 	// TODO is this still needed??
@@ -2951,6 +2954,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * User and social-network related API methods.
+	 * <p>
+	 * Note: this is a new object with an unset cursor.
 	 */
 	public Twitter_Users users() {
 		return new Twitter_Users(this);
