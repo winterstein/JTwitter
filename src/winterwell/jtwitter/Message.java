@@ -96,7 +96,14 @@ public final class Message implements ITweet {
 		text = InternalUtils.unencode(_text);
 		String c = InternalUtils.jsonGet("created_at", obj);
 		createdAt = InternalUtils.parseDate(c);
-		sender = new User(obj.getJSONObject("sender"), null);				
+		
+		// Requests to direct_messages/show.json put the originator in "user" instead of "sender"
+		JSONObject senderJSON = obj.optJSONObject("sender");
+		if(senderJSON == null) {
+			senderJSON = obj.getJSONObject("user");
+		}
+		sender = new User(senderJSON, null);
+		
 		// recipient - for messages you sent
 		Object recip = obj.opt("recipient");
 		if (recip instanceof JSONObject) { // Note JSONObject.has is dangerously

@@ -1041,6 +1041,27 @@ public class Twitter implements Serializable {
 	}
 
 	/**
+	 * Returns a single direct message to the authenticating user, specified by ID
+	 * @param id The DM ID. 
+	 */
+	public Message getDirectMessage(Number id) {
+		
+		boolean auth = InternalUtils.authoriseIn11(this);		
+		
+		
+		Map vars = InternalUtils.asMap("id", id);
+		String json = http.getPage(TWITTER_URL + "/statuses/show/" + id
+				+ ".json", vars, auth);
+		try {
+			Message message = new Message(new JSONObject(json));
+			return message;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+	}
+	
+	
+	/**
 	 * Returns a list of the direct messages sent to the authenticating user.
 	 * <p>
 	 * Note: the Twitter API makes this available in rss if that's of interest.
