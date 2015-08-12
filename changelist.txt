@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.1.4: Added ListWithCursor for paging through follower-id lists.
+
 3.1.3: More info with SuspendedUser exceptions
 
 3.1.2:
