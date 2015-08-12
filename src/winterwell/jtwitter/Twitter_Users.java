@@ -462,6 +462,10 @@ public class Twitter_Users {
 				}							
 			} catch (JSONException e) {
 				throw new TwitterException.Parsing(json, e);
+			} catch (TwitterException.RateLimit rex) {
+				if (ids.isEmpty()) throw rex;
+				InternalUtils.log("getUserIDs", rex);
+				// return what we do have
 			}
 		}
 		return ids;
