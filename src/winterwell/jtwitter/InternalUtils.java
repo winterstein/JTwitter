@@ -37,6 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.Test;
+
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.ITweet;
@@ -834,4 +836,24 @@ public class InternalUtils {
 		return null;
 	}
 
+	/**
+	 * Splits a Twitter Snowflake ID into its component numbers, performs arithmetic on the timestamp component, and reconstitutes a synthetic ID for "since_id" and "until_id" purposes.
+	 * Last open-source release of the Snowflake spec: https://github.com/twitter/snowflake/releases/tag/snowflake-2010
+	 * @param time A signed integer - milliseconds to add or subtract from the time
+	 * @return A synthetic status ID (which does not necessarily correspond to a tweet) {time} msec in the future or past compared to statusId.
+	 */
+	public static BigInteger addTimeToStatusId(BigInteger statusId, long time) {
+		long id = statusId.longValue();
+		
+		// Timestamp is everything up to the 22 least significant bits
+		long timestamp = id >> 22;		
+		// ...and the 22 LSBs are datacenter ID + worker ID + sequence
+		long identifiers = id - (timestamp << 22);
+
+		// This is in msec, but it is NOT a standard epoch timestamp!
+		// It uses Twitter's "twepoch", which starts at Unix time 1288834974657L
+		// If you think this is ridiculous - they have 41 bits for the timestamp, so if they used Unix they would have run out of space in only 2039...
+		timestamp += time;
+		return BigInteger.valueOf((timestamp << 22) + identifiers);
+	}
 }

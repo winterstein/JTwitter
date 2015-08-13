@@ -436,9 +436,15 @@ public abstract class AStream implements Closeable {
 				InternalUtils.log(LOGTAG, "Fail :( Giving up on old outage "+outage+" from "+new Date(outage.untilTime)+" for "+this);
 				continue; // Fail :(
 			}
-			try {						
-				jtwit2.setSinceId(outage.sinceId);
-				jtwit2.setUntilId(outage.untilId);
+			try {
+				/* Twitter engineer John Kalucki suggests pushing since_id and until_id ~5000msec back and forward
+				 * respectively to ensure full retrieval now that IDs are only guaranteed to be K-sorted (and for a nebulous K):
+				 * https://groups.google.com/d/msg/twitter-development-talk/UVKjSormzLY/YXIfhn1-YjwJ 
+				 * JTwitter (now) has functionality for performing time-arithmetic on Twitter IDs to this end.
+			 	 */
+				// The API will only ever return DMs from within the 200 most recent, and allows 200 in a single call, so no risk is added by widening the range we ask for.
+				jtwit2.setSinceId(InternalUtils.addTimeToStatusId(outage.sinceId, -5000L));
+				jtwit2.setUntilId(InternalUtils.addTimeToStatusId(outage.untilId, 5000L));
 				// TODO an until jtwit2.setUntilId(outage.untilId);
 				jtwit2.setUntilDate(new Date(outage.untilTime));
 				jtwit2.setMaxResults(100000); // hopefully not needed!
