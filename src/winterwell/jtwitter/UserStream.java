@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import winterwell.jtwitter.Twitter.ITweet;
 
 /**
@@ -99,6 +98,8 @@ public class UserStream extends AStream {
 	/**
 	 * Use the REST API to fill in: mentions of you. Missed you-follow-them
 	 * events are automatically generated on reconnect.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	int fillInOutages2(Twitter jtwit2, Outage outage)
@@ -141,9 +142,12 @@ public class UserStream extends AStream {
 				cnt++;
 			}
 		}
-		{	// different since-id for DMs
-			jtwit2.setSinceId(outage.sinceDMId);
-			jtwit2.setUntilId(outage.untilDMId);
+		{	// different since-id for DMs??
+//			jtwit2.setSinceId(outage.sinceDMId);
+//			jtwit2.setUntilId(outage.untilDMId);			
+			jtwit2.setSinceId(InternalUtils.addTimeToStatusId(outage.sinceDMId, -5000L));
+			jtwit2.setUntilId(InternalUtils.addTimeToStatusId(outage.untilDMId, 5000L));
+			
 			jtwit2.setMaxResults(100000);
 			List<Message> dms = jtwit2.getDirectMessages();
 			// debug info for latency issues
