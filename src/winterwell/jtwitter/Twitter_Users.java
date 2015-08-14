@@ -462,37 +462,13 @@ public class Twitter_Users {
 				}							
 			} catch (JSONException e) {
 				throw new TwitterException.Parsing(json, e);
+			} catch (TwitterException.RateLimit rex) {
+				if (ids.isEmpty()) throw rex;
+				InternalUtils.log("getUserIDs", rex);
+				// return what we do have
 			}
 		}
 		return ids;
-	}
-
-	/**
-	 * Low-level method for fetching e.g. your friends
-	 * 
-	 * @param url
-	 * @param screenName
-	 *            e.g. your screen-name
-	 * @return
-	 */
-	private List<User> getUsers(String url, String screenName) {
-		Map<String, String> vars = InternalUtils.asMap("screen_name",
-				screenName);
-		List<User> users = new ArrayList<User>();
-		Long cursor = -1L;
-		while (cursor != 0 && !jtwit.enoughResults(users)) {
-			vars.put("cursor", cursor.toString());
-			JSONObject jobj;
-			try {
-				jobj = new JSONObject(http.getPage(url, vars,
-						http.canAuthenticate()));
-				users.addAll(User.getUsers(jobj.getString("users")));
-				cursor = new Long(jobj.getString("next_cursor"));
-			} catch (JSONException e) {
-				throw new TwitterException.Parsing(null, e);
-			}
-		}
-		return users;
 	}
 
 	public boolean isBlocked(Long userId) {

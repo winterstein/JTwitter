@@ -184,8 +184,8 @@ public final class Status implements ITweet {
 	 * <p>
 	 * When can this be null?<br>
 	 * - If creating a "fake" tweet via
-	 * {@link Status#Status(User, String, long, Date)} and supplying a null
-	 * User!
+	 * {@link Status#Status(User, String, long, Date)} and supplying a null User!
+	 * - For the original of a retweet -- Twitter needn't tell us the details :(
 	 */
 	public final User user;
 
@@ -213,6 +213,8 @@ public final class Status implements ITweet {
 //	public String[] getWithheldIn() {
 //		return withheldIn;
 //	}
+	
+	private static final Pattern RT_AUTHOR = Pattern.compile("RT @([^: ]+):");
 
 	/**
 	 * @param object
@@ -226,22 +228,32 @@ public final class Status implements ITweet {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
+			String _rawtext = InternalUtils.jsonGet("text", object);
 			// retweet?
 			JSONObject retweeted = object.optJSONObject("retweeted_status");
 			if (retweeted != null) {
-				original = new Status(retweeted, null);
+				if (retweeted.has("user")) {
+					original = new Status(retweeted, null);
+				} else {
+					// no user info?! Seen repeatedly August 2015. Fix up from the text					
+					Matcher m = RT_AUTHOR.matcher(_rawtext);
+					if (m.find()) {
+						String srcAuthorName = m.group(1);
+						User srcAuthor = new User(srcAuthorName);
+						original = new Status(retweeted, srcAuthor);
+					} else {
+						// No author info :(
+						original = new Status(retweeted, null);
+					}					
+				}
 			}
 			
-			// text!
-			String _rawtext = InternalUtils.jsonGet("text", object);
+			// text!			
 			String _text = _rawtext;
 			// Twitter have started truncating RTs -- let's fix the text up if we can
 			// Feb/March 2015: We should get entities from the original in ALL cases (not just marked as truncated)
 			// or else there's a risk of getting truncated entites. -- Alex
 //			boolean truncated = object.optBoolean("truncated"); // This can lie (bugs seen March 2013) -- so let's also check the text
-//			if ( ! truncated && original != null) {
-//				truncated = _text.endsWith("…") || _text.endsWith("...");
-//			}
 			String rtStart = null;
 			if (original!=null && _text.startsWith("RT ")) {
 				rtStart = "RT @"+original.getUser()+": ";
