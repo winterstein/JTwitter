@@ -37,4 +37,12 @@ public class ListWithCursor<E> extends ArrayList<E> {
 		return cursor != null && ! LOST.equals(cursor) && ! END.equals(cursor);
 	}
 
+	/**
+	 * @return true if this list has the special {@link #END} cursor, to mark it as having
+	 * reached the end.
+	 */
+	public boolean isEnd() {
+		return END.equals(cursor);
+	}
+
 }
