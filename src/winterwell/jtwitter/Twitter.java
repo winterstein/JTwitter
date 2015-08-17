@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.1.4";
+	public final static String version = "3.1.5";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -633,6 +633,8 @@ public class Twitter implements Serializable {
 	static final String API_VERSION = "1.1";
 
 	static final String DEFAULT_TWITTER_URL = "https://api.twitter.com/"+API_VERSION;
+
+	public static final int MAX_DM_LENGTH = 10000;
 
 	/**
 	 * @deprecated Not used at present
@@ -2259,7 +2261,7 @@ public class Twitter implements Serializable {
 		assert recipient != null && text != null : recipient + " " + text;
 		assert ! text.startsWith("d " + recipient) : recipient + " " + text;
 		assert ! recipient.startsWith("@") : recipient + " " + text;
-		if (text.length() > 140)
+		if (text.length() > MAX_DM_LENGTH)
 			throw new IllegalArgumentException("Message is too long.");
 		Map<String, String> vars = InternalUtils.asMap(
 				"screen_name", recipient,
