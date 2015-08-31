@@ -358,7 +358,7 @@ public class Twitter implements Serializable {
 	}
 
 	public static enum KEntityType {
-		hashtags, urls, user_mentions
+		hashtags, urls, user_mentions, media, symbols, extended_entities
 	}
 
 	/**
@@ -633,6 +633,10 @@ public class Twitter implements Serializable {
 	static final String API_VERSION = "1.1";
 
 	static final String DEFAULT_TWITTER_URL = "https://api.twitter.com/"+API_VERSION;
+	
+	static final String TWITTER_UPLOAD_URL = "https://upload.twitter.com/" + API_VERSION;
+
+	static final String MEDIA_UPLOAD_ENDPOINT = "/media/upload.json";
 
 	public static final int MAX_DM_LENGTH = 10000;
 
@@ -2963,6 +2967,59 @@ public class Twitter implements Serializable {
 			Status s = new Status(new JSONObject(result), null);
 			// sanity check (c.f. unicode bug #6748)
 //			updateStatus2_safetyCheck(statusText, s);
+			return s;
+		} catch (E403 e) {
+			// test for repetition (which gets a 403)
+			Status s = getStatus();
+			if (s != null && s.getText().equals(statusText))
+				throw new TwitterException.Repetition(s.getText());
+			throw e;
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(result, e);
+		}
+	}
+	
+	/**
+	 * Updates the user's status with multiple images.
+	 * 
+	 * @param statusText
+	 * @param inReplyToStatusId Can be null.
+	 * @param mediaFiles
+	 * @return The posted status when successful.
+	 * 
+	 * @see #PHOTO_SIZE_LIMIT
+	 */
+	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
+	// c.f. https://dev.twitter.com/discussions/1059
+	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<File> mediaFiles) {
+		// List.toString() outputs "[item1, ..., itemN]" but Twitter wants "item1,...,itemN" so we do it the hard way 
+		StringBuilder fileIds = new StringBuilder();
+		for (File file: mediaFiles) {
+			if (file == null || ! file.isFile()) {
+				throw new IllegalArgumentException("Invalid file: " + file);
+			}
+			
+			Map vars = new HashMap();
+			vars.put("media", file);
+			String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
+			String result = ((OAuthSignpostClient)http).postMultipartForm(url, vars);
+			JSONObject response = new JSONObject(result);
+			String id = response.optString("media_id_string");
+			if (id != null) fileIds.append(id + ",");
+		}
+		
+		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, true);
+		if(fileIds.length() > 0) vars.put("media_ids", fileIds.substring(0, fileIds.length() - 1));
+		
+		String result = null;
+		try {			
+			// Breaking change from v1.0, which went to upload.twitter.com
+			String url = TWITTER_URL+"/statuses/update.json";
+			result = http.post(url, vars,
+					true);
+			
+			Status s = new Status(new JSONObject(result), null);
+
 			return s;
 		} catch (E403 e) {
 			// test for repetition (which gets a 403)
