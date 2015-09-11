@@ -691,7 +691,7 @@ public class Twitter_Users {
 	 * Note: You can only access upto the first 1000 matching results (a Twitter limitation
 	 * -- c.f. https://dev.twitter.com/docs/api/1.1/get/users/search).
 	 * 
-	 * @param searchTerm
+	 * @param searchTerm Does not support OR, "quotes". Does support -term for not.
 	 * @param page Which page to retrieve (the first page is 1)
 	 * @return
 	 */
