@@ -1,5 +1,6 @@
 package winterwell.jtwitter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -207,6 +208,21 @@ public class Twitter_Account {
 		return InternalUtils.user(json);
 	}
 
+	/**
+	 * See https://dev.twitter.com/rest/reference/post/account/update_profile_image.
+	 * Note: changes may take 5 seconds to be processed.
+	 * 
+	 * @param image gif, jpg, or png <700k. Larger images will be scaled by Twitter.
+	 * Use a square image! Otherwise Twitter will crop it ruthlessly.
+	 * @return User
+	 */
+	public User setProfileImage(File image) {
+		Map<String, String> vars = InternalUtils.asMap("image",image);
+		String url = jtwit.TWITTER_URL+"/account/update_profile_image.json";
+		String result = ((OAuthSignpostClient)jtwit.getHttpClient()).postMultipartForm(url, vars);
+		return InternalUtils.user(result);
+	}
+	
 	/**
 	 * Set the authenticating user's colors.
 	 * 
