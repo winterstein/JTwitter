@@ -334,13 +334,33 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 * @return url to direct the user to for authorisation. Send the user to
 	 *         this url. They click "OK", then get redirected to your callback
 	 *         url.
+	 * @see #signInUrl();
 	 */
 	public URI authorizeUrl() {
 		try {
+			// NB: Calls https://api.twitter.com/oauth/request_token to get a token
 			String url = provider.retrieveRequestToken(consumer, callbackUrl);
 			return new URI(url);
 		} catch (Exception e) {
-			// Why does this happen?
+			// Our request for a token failed :(
+			throw new TwitterException(e);
+		}
+	}
+	
+	/**
+	 * @return url to direct the user to for sign-in with Twitter. Send the user to
+	 *         this url. If they've already authorised, then they get an instant redirect.
+	 * @see #signInUrl();
+	 */
+	public String signInUrl() {
+		try {
+			// NB: Calls https://api.twitter.com/oauth/request_token to get a token
+			String url = provider.retrieveRequestToken(consumer, callbackUrl);
+			// HACK: Sadly signpost doesn't implement this feature
+			url = url.replace("authorize", "authenticate");
+			return url;
+		} catch (Exception e) {
+			// Our request for a token failed :(
 			throw new TwitterException(e);
 		}
 	}
