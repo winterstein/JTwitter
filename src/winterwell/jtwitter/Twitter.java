@@ -636,6 +636,9 @@ public class Twitter implements Serializable {
 	
 	static final String TWITTER_UPLOAD_URL = "https://upload.twitter.com/" + API_VERSION;
 
+	/**
+	 * Uploaded media files will be available for use for 60 minutes before they are flushed from the servers (if not associated with a Tweet or Card).
+	 */
 	static final String MEDIA_UPLOAD_ENDPOINT = "/media/upload.json";
 
 	public static final int MAX_DM_LENGTH = 10000;
@@ -2992,6 +2995,7 @@ public class Twitter implements Serializable {
 	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
 	// c.f. https://dev.twitter.com/discussions/1059
 	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<File> mediaFiles) {
+		// Upload each file, and get a media_id for it
 		// List.toString() outputs "[item1, ..., itemN]" but Twitter wants "item1,...,itemN" so we do it the hard way 
 		StringBuilder fileIds = new StringBuilder();
 		for (File file: mediaFiles) {
