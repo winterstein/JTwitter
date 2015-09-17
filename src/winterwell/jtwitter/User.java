@@ -235,6 +235,7 @@ public final class User implements Serializable {
 			}
 
 			listedCount = obj.optInt("listed_count", -1);
+			// birthday -- not yet c.f. https://twittercommunity.com/t/users-object-birthday/45442
 			// status
 			if (status == null) {
 				JSONObject s = obj.optJSONObject("status");
