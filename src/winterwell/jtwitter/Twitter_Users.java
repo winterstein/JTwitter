@@ -694,7 +694,7 @@ public class Twitter_Users {
 	 * 
 	 * @param searchTerm Does not support OR, "quotes". Does support -term for not.
 	 * @param page Which page to retrieve (the first page is 1)
-	 * @return
+	 * @return list of users. Can be empty, never null.
 	 */
 	public List<User> searchUsers(String searchTerm, int page) {
 		assert searchTerm != null;
