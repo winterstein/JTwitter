@@ -10,7 +10,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import winterwell.utils.Printer;
-import com.winterwell.utils.StrUtils;
+import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
