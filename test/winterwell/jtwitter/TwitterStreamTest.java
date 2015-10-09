@@ -9,15 +9,14 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import winterwell.jtwitter.Twitter.ITweet;
+import winterwell.jtwitter.TwitterException.E413;
 import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
 import winterwell.utils.time.Time;
-
-import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.jtwitter.TwitterException.E413;
 
 public class TwitterStreamTest {
 

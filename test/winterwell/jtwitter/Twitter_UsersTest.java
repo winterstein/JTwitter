@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import sun.rmi.runtime.NewThreadAction;
 import winterwell.json.JSONException;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;

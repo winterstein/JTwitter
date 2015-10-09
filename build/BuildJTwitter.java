@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.utils.io.FileUtils;
-
-import winterwell.utils.reporting.Log;
 import winterwell.bob.BuildTask;
 import winterwell.bob.tasks.CopyTask;
 import winterwell.bob.tasks.GitTask;
@@ -16,6 +13,8 @@ import winterwell.bob.tasks.ZipTask;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterTest;
+import winterwell.utils.io.FileUtils;
+import winterwell.utils.reporting.Log;
 
 
 
