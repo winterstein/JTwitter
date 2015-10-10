@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.1.8:
+ - Added account().setProfileBanner() plus some convenience methods for setProfile()
+
 3.1.7: 
  - Added account().setProfileImage()
  - Added OAuthSignpostClient.signInUrl() (i.e. /authenticate) for implementing sign-in-with-Twitter

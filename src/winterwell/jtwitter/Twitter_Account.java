@@ -3,6 +3,7 @@ package winterwell.jtwitter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -207,6 +208,29 @@ public class Twitter_Account {
 		String json = jtwit.getHttpClient().post(apiUrl, vars, true);
 		return InternalUtils.user(json);
 	}
+	
+	/**
+	 * Convenience method for {@link #setProfile(String, String, String, String)}
+	 * @param description
+	 */
+	public User setProfileDescription(String description) {
+		return setProfile(null, null, null, description);
+	}
+	/**
+	 * Convenience method for {@link #setProfile(String, String, String, String)}
+	 * @param description
+	 */
+	public User setProfileLink(String url) {
+		return setProfile(null, url, null, null);
+	}
+	/**
+	 * Convenience method for {@link #setProfile(String, String, String, String)}
+	 * @param description
+	 */
+	public User setProfileLocation(String locn) {
+		return setProfile(null, null, locn, null);
+	}
+	
 
 	/**
 	 * See https://dev.twitter.com/rest/reference/post/account/update_profile_image.
@@ -222,7 +246,29 @@ public class Twitter_Account {
 		String result = ((OAuthSignpostClient)jtwit.getHttpClient()).postMultipartForm(url, vars);
 		return InternalUtils.user(result);
 	}
-	
+
+	/**
+	 * See https://dev.twitter.com/rest/reference/post/account/update_profile_banner
+	 * 
+	 * NB: The API supports cropping, but we have not implemented this yet.
+	 * @param image
+	 * @return the updated user
+	 */
+	public User setProfileBanner(File image) {
+		Map<String, String> vars = InternalUtils.asMap("banner",image);
+		String url = jtwit.TWITTER_URL+"/account/update_profile_banner.json";
+		String result = ((OAuthSignpostClient)jtwit.getHttpClient()).postMultipartForm(url, vars);
+		return InternalUtils.user(result);
+	}
+
+	/**
+	 */
+	public User removeProfileBanner() {
+		String url = jtwit.TWITTER_URL+"/account/remove_profile_banner.json";
+		String result = ((OAuthSignpostClient)jtwit.getHttpClient()).post(url, new HashMap(), true);
+		return InternalUtils.user(result);
+	}
+
 	/**
 	 * Set the authenticating user's colors.
 	 * 
