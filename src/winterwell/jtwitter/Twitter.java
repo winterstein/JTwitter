@@ -1358,6 +1358,11 @@ public class Twitter implements Serializable {
 	 * @return
 	 */
 	private List<Message> getMessages(String url, Map<String, String> var) {
+		// Twitter truncates DMs to 140 chars to maintain compatibility with older apps
+		// Add param "full_text=true" to query to get full text
+		if(!var.containsKey("full_text")) {
+			var.put("full_text", "true");
+		}
 		// Default: 1 page
 		if (maxResults < 1) {			
 			String p = http.getPage(url, var, true);
