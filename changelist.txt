@@ -1,7 +1,8 @@
 # JTwitter Change list 
 
 3.1.8:
- - Added account().setProfileBanner() plus some convenience methods for setProfile()
+ - Added account().setProfileBanner()
+ - Added some convenience methods for setProfile()
 
 3.1.7: 
  - Added account().setProfileImage()

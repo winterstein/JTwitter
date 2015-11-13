@@ -43,7 +43,7 @@ public class JSONTokener {
     /**
      * The source string being tokenized.
      */
-    private String mySource;
+    private final String mySource;
 
 
     /**

@@ -189,7 +189,9 @@ public final class Status implements ITweet {
 	 */
 	public final User user;
 
-	private String lang;		
+	private String lang;
+
+	private transient String _rawtext;		
 	
 	/**
 	 * BCP 47 language identifiers. 
@@ -228,7 +230,7 @@ public final class Status implements ITweet {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
-			String _rawtext = InternalUtils.jsonGet("text", object);
+			_rawtext = InternalUtils.jsonGet("text", object);
 			// retweet?
 			JSONObject retweeted = object.optJSONObject("retweeted_status");
 			if (retweeted != null) {
@@ -544,6 +546,11 @@ public final class Status implements ITweet {
 		return getDisplayText2(this);
 	}
 
+	/**
+	 * Expand urls
+	 * @param tweet
+	 * @return
+	 */
 	static String getDisplayText2(ITweet tweet) {
 		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
 		String _text = tweet.getText();
@@ -553,7 +560,19 @@ public final class Status implements ITweet {
 		}
 		StringBuilder sb = new StringBuilder(200);
 		int i=0;
+		// sort by 
 		for (TweetEntity entity : es) {
+			// What? there are invalid entities?
+			if (entity.start < i) {				
+				InternalUtils.log("jtwitter", "#escalate bogus entity ordering in "+tweet.getId()+" "+entity+" in "+_text);
+				continue;
+			}
+			if (i > _text.length() || entity.start > _text.length()) {
+				String raw = tweet instanceof Status? ((Status)tweet)._rawtext : null;
+				InternalUtils.log("jtwitter", "#escalate bogus entity in "+tweet.getId()+" "+tweet.getClass().getSimpleName()+" "+entity+" in "+_text+" raw:"+raw);
+				continue;
+			}
+			// replace the short-url with the display version
 			sb.append(_text.substring(i, entity.start));
 			sb.append(entity.displayVersion());
 			i = entity.end;
