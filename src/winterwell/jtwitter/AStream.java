@@ -138,7 +138,17 @@ public abstract class AStream implements Closeable {
 		int chop = MAX_BUFFER / 10;
 		for (int i = 0; i < chop; i++) {
 			Object gone = incoming.remove(0);
-			InternalUtils.log("twitter.forget", gone);
+			// We're dropping a tweet, so let's log something of that
+			try {
+				if (gone instanceof ITweet) {
+					ITweet twt = (ITweet) gone;
+					BigInteger id = twt.getId();
+					String who = twt.getUser().getScreenName();
+					InternalUtils.log("twitter.forget", id+" @"+who+": "+twt.getText());	
+				}
+			} catch(Exception ex) {
+				// ignore -- paranoia really about nulls
+			}
 		}
 		return chop;
 	}

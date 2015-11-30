@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.1.10:
+ - Tweak to logging: improved for overfull stream twitter.forget messages. 
+
 3.1.9:
  - Long DM handling
  - Robustness checks for bad entity String index exception
