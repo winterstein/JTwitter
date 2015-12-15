@@ -52,6 +52,14 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(user);
 	}
 	
+
+	public void testReQuote() {
+		Twitter jtwit = newTestTwitter();
+		Status danSaid = jtwit.show("winterstein").status;
+		Status s = jtwit.retweetWithComment(danSaid, "Interesting");		
+		System.out.println(jtwit+" "+s+" "+s.getUrl());
+	}
+	
 	public void testDoesBeckiFollowCoop() {
 		Twitter jtwit = newTestTwitter();
 		boolean f = jtwit.users().isFollower("beckishort", "coopbankuk_help");

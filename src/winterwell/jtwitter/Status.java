@@ -582,4 +582,8 @@ public final class Status implements ITweet {
 		}
 		return sb.toString();
 	}
+
+	public String getUrl() {
+		return "https://twitter.com/"+user.screenName+"/status/"+id;
+	}
 }
