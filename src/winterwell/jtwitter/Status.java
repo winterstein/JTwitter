@@ -554,12 +554,16 @@ public final class Status implements ITweet {
 	static String getDisplayText2(ITweet tweet) {
 		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
 		String _text = tweet.getText();
+		StringIndexFixer fixer = new StringIndexFixer(_text);
+		
 		if (es==null || es.size()==0) {
 			// Is it a truncated retweet? That should be handled in the constructor.			
 			return _text;
 		}
+		
 		StringBuilder sb = new StringBuilder(200);
-		int i=0;
+		int i = 0;
+		
 		// sort by 
 		for (TweetEntity entity : es) {
 			// What? there are invalid entities?
@@ -567,19 +571,62 @@ public final class Status implements ITweet {
 				InternalUtils.log("jtwitter", "#escalate bogus entity ordering in "+tweet.getId()+" "+entity+" in "+_text);
 				continue;
 			}
+			
 			if (i > _text.length() || entity.start > _text.length()) {
 				String raw = tweet instanceof Status? ((Status)tweet)._rawtext : null;
 				InternalUtils.log("jtwitter", "#escalate bogus entity in "+tweet.getId()+" "+tweet.getClass().getSimpleName()+" "+entity+" in "+_text+" raw:"+raw);
 				continue;
 			}
+			
 			// replace the short-url with the display version
-			sb.append(_text.substring(i, entity.start));
+			sb.append(_text.substring(i, fixer.getIndex(entity.start)));
 			sb.append(entity.displayVersion());
-			i = entity.end;
+			i = fixer.getIndex(entity.end);
 		}					
 		if (i < _text.length()) {
 			sb.append(_text.substring(i));
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * Java String indices work on the assumption that every character is 2 bytes wide.
+	 * Characters outside the Basic Multilingual Plane are 4 bytes wide & so occupy two
+	 * chars in a String. This includes most emoji, among others.
+	 * When Twitter presents substring indices (eg for replacing Entities with their
+	 * display equivalents) it treats non-BMP characters as single characters, meaning
+	 * the indices for an entity appearing after a non-BMP char will be off by one.
+	 * (Or two, if there were two non-BMP characters before it, etc.)
+	 * This class returns the corrected indices for the String it is initialised with.
+	 * @author roscoe
+	 *
+	 */
+	private static class StringIndexFixer {
+		int[] indices;
+		
+		/**
+		 * Generates the corrected index array for the supplied String.
+		 * @param string
+		 */
+		public StringIndexFixer(String string) {
+			this.indices = new int[string.length()];
+			int currentOffset = 0;
+			for (int i = 0; i < string.length(); i++) {
+				indices[i] = i + currentOffset;
+				// Is this the first char of a surrogate pair?
+				// Then indices after it are shifted by 1!
+				if(Character.isLowSurrogate(string.charAt(i))) currentOffset++;
+			}
+		}
+		
+		/**
+		 * Return the corrected index for the initialising String
+		 * @param rawIndex
+		 * @return
+		 */
+		public int getIndex(int rawIndex) {
+			return indices[rawIndex];
+		}
+	}
+	
 }

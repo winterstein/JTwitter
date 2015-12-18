@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
@@ -1711,6 +1712,24 @@ extends TestCase // Comment out to remove the JUnit dependency
 			assert te.toString().length() > 1;
 		}
 	}
+	
+	/**
+	 * Tests for the error seen in Issue #31920 - emoji before url causes incorrect positioning of url in tweet & broken display-text
+	 * Uses tweet https://twitter.com/aihaiku/status/677535325086986240
+	 */
+	@Test
+	public void testEmojiLength() {
+		Twitter twitter = newTestTwitter();
+		
+		Number tweetId = BigInteger.valueOf(677535325086986240L);		
+		Status tweet = twitter.getStatus(tweetId);
+		
+		String expectedDisplayText = "🌲 Season's Greetings Humans http://soda.sh/xWE0 🌲 🌠";
+		String displayText = tweet.getDisplayText();
+		
+		assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";
+	}
+	
 
 	public static Status readStatusFromJson(String json) {
 		return new Status(new JSONObject(json),null);
