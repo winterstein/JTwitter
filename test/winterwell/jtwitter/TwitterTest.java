@@ -1720,14 +1720,55 @@ extends TestCase // Comment out to remove the JUnit dependency
 	@Test
 	public void testEmojiLength() {
 		Twitter twitter = newTestTwitter();
-		
-		Number tweetId = BigInteger.valueOf(677535325086986240L);		
-		Status tweet = twitter.getStatus(tweetId);
-		
-		String expectedDisplayText = "🌲 Season's Greetings Humans http://soda.sh/xWE0 🌲 🌠";
-		String displayText = tweet.getDisplayText();
-		
-		assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";
+		{
+			Number tweetId = BigInteger.valueOf(677535325086986240L);		
+			Status tweet = twitter.getStatus(tweetId);
+			
+			String expectedDisplayText = "🌲 Season's Greetings Humans http://soda.sh/xWE0 🌲 🌠";
+			String displayText = tweet.getDisplayText();
+			
+			assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";
+		}
+		{
+			Number tweetId = BigInteger.valueOf(686570542208552961L);		
+			Status tweet = twitter.getStatus(tweetId);			
+			String expectedDisplayText = "🎀😡🌠🐙🐌";
+			String displayText = tweet.getDisplayText();	
+			assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";			
+		}
+		{	
+			String expectedDisplayText = "🎀🌠 🌏🎨☕🚊⏬Hello World "+new Random().nextInt(1000)+" 🐙🐌";
+			Status tweet = twitter.setStatus(expectedDisplayText);
+			String displayText = tweet.getDisplayText();	
+			assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";			
+		}
+		{	
+			String expectedDisplayText = "🎀🌠 http://sogrow.co.uk 🌏🎨☕🚊⏬Hello World "+new Random().nextInt(1000)+" 🐙🐌";
+			Status tweet = twitter.setStatus(expectedDisplayText);
+			String displayText = tweet.getDisplayText();	
+			assert expectedDisplayText.equals(displayText) : "Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";			
+		}
+		{	
+			String expectedDisplayText = "🎀🌠http://sogrow.co.uk🌏🎨☕🚊⏬Hello World "+new Random().nextInt(1000)+" 🐙🐌";
+			Status tweet = twitter.setStatus(expectedDisplayText);
+			String displayText = tweet.getDisplayText();	
+			assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";			
+		}
+		{	
+			String expectedDisplayText = "🎀🌠http://sogrow.co.uk🌏🎨☕🚊⏬Hello World "+new Random().nextInt(1000)+" http://whatalongurlmightlooklike.com/maybeifitrunson?abitlikethis 🐙🐌";
+			Status tweet = twitter.setStatus(expectedDisplayText);
+			String displayText = tweet.getDisplayText();	
+			assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";			
+		}
+
+		if (false){	// The kitchen sink
+//			https://twitter.com/spoonmcguffin/status/686569009299480576
+			Number tweetId = BigInteger.valueOf(686569897141383168L);		
+			Status tweet = twitter.getStatus(tweetId);			
+			String expectedDisplayText = "😡🎀🌠http://sogrow.co.uk🌏🎨☕🚊⏬🇰🇵🇽️🇳️Hello World http://whatalongurlmightlooklike.com/maybeifitrunson?abitlikethis 📭🐙🐌";
+			String displayText = tweet.getDisplayText();	
+			assert expectedDisplayText.equals(displayText) : "JTwitter is not assembling display-text for this tweet correctly. Expected: \"" + expectedDisplayText + "\", saw \"" + displayText +"\".";			
+		}
 	}
 	
 
