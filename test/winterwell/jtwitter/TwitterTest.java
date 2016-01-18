@@ -1200,11 +1200,23 @@ extends TestCase // Comment out to remove the JUnit dependency
 			assert rt2.text.contains(s2.text) : rt2;
 		}
 	}
+	
+	public void testSearchWithOR() {
+		{
+			Twitter tw = newTestTwitter();
+			String s = "(medio social) OR (atenciaaaan al cliente sociales) OR (digital marketing)";
+			List<Status> javaTweets = tw.search(s);			
+			assert javaTweets.size() != 0;
+			System.out.println(javaTweets);
+			Status tweet = javaTweets.get(0);
+			System.out.println(tweet+"\n\t"+tweet.getUser()+" "+tweet.getUser().followersCount);			
+		}
+	}
 
 	public void testSearch() {		
 		{
 			Twitter tw = newTestTwitter();
-			List<Status> javaTweets = tw.search("java");
+			List<Status> javaTweets = tw.search("java");	
 			assert javaTweets.size() != 0;
 			Status tweet = javaTweets.get(0);
 			System.out.println(tweet+"\n\t"+tweet.getUser()+" "+tweet.getUser().followersCount);
