@@ -598,6 +598,10 @@ public final class Status implements ITweet {
 	 * the indices for an entity appearing after a non-BMP char will be off by one.
 	 * (Or two, if there were two non-BMP characters before it, etc.)
 	 * This class returns the corrected indices for the String it is initialised with.
+	 * 
+	 * TODO If and when we move to Java 8, use CharSequence.codePoints to just get an
+	 * array of code-points-as-ints instead of the dodgy method currently employed.
+	 * http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#codePoints
 	 * @author roscoe
 	 *
 	 */
@@ -609,13 +613,14 @@ public final class Status implements ITweet {
 		 * @param string
 		 */
 		public StringIndexFixer(String string) {
-			this.indices = new int[string.length()];
-			int currentOffset = 0;
-			for (int i = 0; i < string.length(); i++) {
-				indices[i] = i + currentOffset;
-				// Is this the first char of a surrogate pair?
-				// Then indices after it are shifted by 1!
-				if(Character.isLowSurrogate(string.charAt(i))) currentOffset++;
+			this.indices = new int[string.codePointCount(0, string.length())+1];
+			for (int i = 0, count = 0, nextCount; i < string.length(); i++) {
+				nextCount = string.codePointCount(0, i + 1);
+				if(nextCount != count) {
+					indices[count] = i;
+					count = nextCount;
+				}
+				
 			}
 		}
 		
