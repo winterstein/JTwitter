@@ -599,9 +599,6 @@ public final class Status implements ITweet {
 	 * (Or two, if there were two non-BMP characters before it, etc.)
 	 * This class returns the corrected indices for the String it is initialised with.
 	 * 
-	 * TODO If and when we move to Java 8, use CharSequence.codePoints to just get an
-	 * array of code-points-as-ints instead of the dodgy method currently employed.
-	 * http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#codePoints
 	 * @author roscoe
 	 *
 	 */
@@ -613,7 +610,12 @@ public final class Status implements ITweet {
 		 * @param string
 		 */
 		public StringIndexFixer(String string) {
-			this.indices = new int[string.codePointCount(0, string.length())+1];
+			// Index map length = number of complete code points in the string
+			this.indices = new int[string.codePointCount(0, string.length())];
+			// If the code point count over character range [0, i+1) is 
+			// different from the count over range [0, i), that means that
+			// character i is the start of a code point (of whatever width)
+			// and should be recorded in the mapping.
 			for (int i = 0, count = 0, nextCount; i < string.length(); i++) {
 				nextCount = string.codePointCount(0, i + 1);
 				if(nextCount != count) {
