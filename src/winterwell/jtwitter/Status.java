@@ -611,7 +611,7 @@ public final class Status implements ITweet {
 		 */
 		public StringIndexFixer(String string) {
 			// Index map length = number of complete code points in the string
-			this.indices = new int[string.codePointCount(0, string.length())];
+			this.indices = new int[string.codePointCount(0, string.length())+1];
 			// If the code point count over character range [0, i+1) is 
 			// different from the count over range [0, i), that means that
 			// character i is the start of a code point (of whatever width)
