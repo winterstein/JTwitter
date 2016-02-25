@@ -618,12 +618,14 @@ public final class Status implements ITweet {
 			// and should be recorded in the mapping.
 			for (int i = 0, count = 0, nextCount; i < string.length(); i++) {
 				nextCount = string.codePointCount(0, i + 1);
-				if(nextCount != count) {
+				if (nextCount != count) {
 					indices[count] = i;
 					count = nextCount;
 				}
-				
 			}
+			// The above loop misses the final element in this.indices, so:
+			indices[indices.length - 1] = string.length();
+			// i.e. the char16 count over the range [0, string.length()) is string.length()
 		}
 		
 		/**
