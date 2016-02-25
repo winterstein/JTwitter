@@ -500,7 +500,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				if (error != null && error.contains("deleted"))
 					// Note: This is a 403 exception
 					throw new TwitterException.SuspendedUser(error+ "\n"+ url);
-				throw new TwitterException.E404(error + "\n" + url);
+				throw new TwitterException.E404(url+" "+error);
 			}
 			if (code == 406)
 				// Hm: It might be nice to have info on post variables here 

@@ -621,7 +621,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.1.10";
+	public final static String version = "3.1.11";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2096,6 +2096,22 @@ public class Twitter implements Serializable {
 			throw new TwitterException.Parsing(null, e);
 		}
 	}
+	
+
+	/**
+	 * Retweet, adding a comment.
+	 * See https://support.twitter.com/articles/20169873
+	 * @param tweet
+	 * @param comment This must be 116 characters or less, as the retweet counts like a url (which, technically, is what it is here).
+	 * @return the retweet
+	 */
+	public Status retweetWithComment(Status tweet, String comment) {
+		if (comment==null) return retweet(tweet);
+		comment = comment.trim();
+		if (comment.length()==0) return retweet(tweet);
+		Status s = setStatus(comment+" "+tweet.getUrl());
+		return s;
+	}
 
 	/**
 	 * Perform a search of Twitter. Convenience wrapper for
@@ -3049,5 +3065,6 @@ public class Twitter implements Serializable {
 	public Twitter_Users users() {
 		return new Twitter_Users(this);
 	}
+
 
 }

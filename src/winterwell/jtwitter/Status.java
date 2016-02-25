@@ -588,7 +588,11 @@ public final class Status implements ITweet {
 		}
 		return sb.toString();
 	}
-	
+
+	public String getUrl() {
+		return "https://twitter.com/"+user.screenName+"/status/"+id;
+	}
+
 	/**
 	 * Java String indices work on the assumption that every character is 2 bytes wide.
 	 * Characters outside the Basic Multilingual Plane are 4 bytes wide & so occupy two
@@ -637,5 +641,4 @@ public final class Status implements ITweet {
 			return indices[rawIndex];
 		}
 	}
-	
 }
