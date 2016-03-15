@@ -2099,7 +2099,7 @@ public class Twitter implements Serializable {
 	
 
 	/**
-	 * Retweet, adding a comment.
+	 * Retweet, adding a comment. This is also known as a Quote Tweet.
 	 * See https://support.twitter.com/articles/20169873
 	 * @param tweet
 	 * @param comment This must be 116 characters or less, as the retweet counts like a url (which, technically, is what it is here).
