@@ -2,6 +2,7 @@ package winterwell.jtwitter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
@@ -441,6 +442,11 @@ public class Twitter implements Serializable {
 		private final ITweet tweet;
 
 		public final KEntityType type;
+		
+		/**
+		 * Location of the actual image file (if there is one) - used when getting attached images from DMs
+		 */
+		final String mediaUrl;
 
 		/**
 		 * 
@@ -468,6 +474,13 @@ public class Twitter implements Serializable {
 				display = null;
 			}
 			
+			// Init mediaUrl
+			if ( KEntityType.media.equals(this.type)) {
+				this.mediaUrl = obj.getString("media_url");
+			} else {
+				this.mediaUrl = null;
+			}
+			
 			// start, end
 			JSONArray indices = obj.getJSONArray("indices");
 			int _start = indices.getInt(0);
@@ -488,7 +501,7 @@ public class Twitter implements Serializable {
 			// Protect against (rare) dud data from Twitter
 			_end = Math.min(_end, rawText.length());
 			_start = Math.min(_start, _end);
-			if (_start==_end) { // paranoia -- but it happens (last seen Oct 2012; see TwitterTest)
+			if (_start == _end) { // paranoia -- but it happens (last seen Oct 2012; see TwitterTest)
 				// Guess blindly by type!
 				switch(type) {
 				case hashtags:
@@ -527,7 +540,7 @@ public class Twitter implements Serializable {
 				if (i==-1) i = _start; // give up gracefully
 			}
 			start = i; 
-			end = start + _end - _start;		
+			end = start + _end - _start;
 		}
 
 		/**
@@ -539,6 +552,7 @@ public class Twitter implements Serializable {
 			this.start = start;
 			this.type = type;			
 			this.display = display;
+			this.mediaUrl = null;
 		}
 
 		/**
@@ -547,6 +561,10 @@ public class Twitter implements Serializable {
 		 */
 		public String displayVersion() {
 			return display == null ? toString() : display;
+		}
+		
+		public String mediaUrl() {
+			return mediaUrl;
 		}
 
 		/**
@@ -1766,6 +1784,19 @@ public class Twitter implements Serializable {
 			var.put("max_id", maxId.toString());			
 		}
 		return msgs;
+	}
+	
+	public InputStream getDMImage(Message msg) {
+		List<TweetEntity> entities = msg.getTweetEntities(KEntityType.media);
+		if (entities.isEmpty()) return null;
+		String mediaUrl = entities.get(0).mediaUrl();
+		try {
+			HttpURLConnection connection = http.connect(mediaUrl, null, true);
+			return connection.getInputStream();
+			
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	/**
