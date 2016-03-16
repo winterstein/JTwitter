@@ -141,7 +141,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		// user agent
 		// AZ: User-Agent and Host are required for getting gzipped responses  
 		connection.setRequestProperty("User-Agent", "JTwitter/" + Twitter.version);
-		connection.setRequestProperty("Host", "api.twitter.com");
+		connection.setRequestProperty("Host", new URL(url).getHost());
 		if (gzip) {
 			connection.setRequestProperty("Accept-Encoding", "gzip");
 		}
