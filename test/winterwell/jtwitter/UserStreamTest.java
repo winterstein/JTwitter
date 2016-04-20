@@ -7,9 +7,10 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.winterwell.utils.Printer;
+
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.Printer;
 import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.time.TUnit;
