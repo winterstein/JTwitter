@@ -608,13 +608,13 @@ public class Twitter implements Serializable {
 	public static boolean CHECK_TWEET_LENGTH = true;
 
 	/**
-	 * The length of a url after t.co shortening. Currently 22 characters.
-	 * Important: https links are 1 character longer!
+	 * The length of a url after t.co shortening. Currently 23 characters.
+	 * (Used to be 22 for HTTP / 23 for HTTPS but now 23 for all)
 	 * <p>
 	 * Use updateConfiguration()if you want to get the latest settings from
 	 * Twitter.
 	 */
-	public static int LINK_LENGTH = 22;
+	public static int LINK_LENGTH = 23;
 	
 	/**
 	 * The characters used up by an attached image. Currently 23 characters (ie = an https link).
@@ -2811,15 +2811,11 @@ public class Twitter implements Serializable {
 	 */
 	public static int countCharacters(String statusText) {
 		int shortLength = statusText.length();	
-		// Urls count as 22/23
+		// Urls count as 23
 		Matcher m =  Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
 			String grp = m.group();
 			shortLength += LINK_LENGTH - m.group().length();
-			// https? Add another 1 character
-			if (m.group().startsWith("https")) {
-				shortLength++;
-			}
 		}
 		// If a DM, don't count the "d user" microformat
 		Matcher dmm = InternalUtils.DM.matcher(statusText);		
