@@ -2801,7 +2801,7 @@ public class Twitter implements Serializable {
 	
 	/**
 	 * Compute the effective size of a message, given that Twitter treats things that
-	 * smell like a URL as 22 characters.
+	 * smell like a URL as 23 characters.
 	 * This also checks for DM microformat, e.g. "d winterstein Hello", where the d user part isn't counted.
 	 * 
 	 * @param statusText
@@ -2815,7 +2815,7 @@ public class Twitter implements Serializable {
 		Matcher m =  Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
 			String grp = m.group();
-			shortLength += LINK_LENGTH - m.group().length();
+			shortLength += LINK_LENGTH - grp.length();
 		}
 		// If a DM, don't count the "d user" microformat
 		Matcher dmm = InternalUtils.DM.matcher(statusText);		

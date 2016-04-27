@@ -47,6 +47,14 @@ import winterwell.utils.time.Time;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	
+	public void testCountCharacters() {
+		{
+			int cnt = Twitter.countCharacters("The perfect way to spend a Sunday... We suggest a trip to Columbia Road Flower Market. #HarrodsLovesLondon");
+			assert cnt == 106;
+		}
+	}
+	
 	public void testGetTaxiUK() {
 		Twitter jtwit = newTestTwitter();
 		User user = jtwit.users().show(305506258L);
