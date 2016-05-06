@@ -141,7 +141,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		// user agent
 		// AZ: User-Agent and Host are required for getting gzipped responses  
 		connection.setRequestProperty("User-Agent", "JTwitter/" + Twitter.version);
-		connection.setRequestProperty("Host", "api.twitter.com");
+		connection.setRequestProperty("Host", new URL(url).getHost());
 		if (gzip) {
 			connection.setRequestProperty("Accept-Encoding", "gzip");
 		}
@@ -574,7 +574,14 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		return error;
 	}
 
-	private void processError2_403(HttpURLConnection connection, String resource, URL url, String errorPage) {
+	/**
+	 * Throw the right sub-class of error
+	 * @param connection
+	 * @param resource
+	 * @param url
+	 * @param errorPage
+	 */
+	private void processError2_403(HttpURLConnection connection, String resource, URL url, String errorPage) throws TwitterException {
 		// is this a "too old" exception?
 		String _name = name==null? "anon" : name;
 		if (errorPage == null) {
@@ -597,6 +604,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
 		if (errorPage.contains("too recent"))
 			throw new TwitterException.TooRecent(errorPage + "\n" + url);
+		if (errorPage.contains("code 226"))
+			throw new TwitterException.TooSpammy(errorPage + "\n" + url);
 		if (errorPage.contains("already requested to follow"))
 			throw new TwitterException.Repetition(errorPage + "\n" + url);
 		if (errorPage.contains("duplicate"))

@@ -2,6 +2,7 @@ package winterwell.jtwitter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
@@ -441,6 +442,11 @@ public class Twitter implements Serializable {
 		private final ITweet tweet;
 
 		public final KEntityType type;
+		
+		/**
+		 * Location of the actual image file (if there is one) - used when getting attached images from DMs
+		 */
+		final String mediaUrl;
 
 		/**
 		 * 
@@ -468,6 +474,13 @@ public class Twitter implements Serializable {
 				display = null;
 			}
 			
+			// Init mediaUrl
+			if ( KEntityType.media.equals(this.type)) {
+				this.mediaUrl = obj.getString("media_url");
+			} else {
+				this.mediaUrl = null;
+			}
+			
 			// start, end
 			JSONArray indices = obj.getJSONArray("indices");
 			int _start = indices.getInt(0);
@@ -488,7 +501,7 @@ public class Twitter implements Serializable {
 			// Protect against (rare) dud data from Twitter
 			_end = Math.min(_end, rawText.length());
 			_start = Math.min(_start, _end);
-			if (_start==_end) { // paranoia -- but it happens (last seen Oct 2012; see TwitterTest)
+			if (_start == _end) { // paranoia -- but it happens (last seen Oct 2012; see TwitterTest)
 				// Guess blindly by type!
 				switch(type) {
 				case hashtags:
@@ -527,7 +540,7 @@ public class Twitter implements Serializable {
 				if (i==-1) i = _start; // give up gracefully
 			}
 			start = i; 
-			end = start + _end - _start;		
+			end = start + _end - _start;
 		}
 
 		/**
@@ -539,6 +552,7 @@ public class Twitter implements Serializable {
 			this.start = start;
 			this.type = type;			
 			this.display = display;
+			this.mediaUrl = null;
 		}
 
 		/**
@@ -547,6 +561,10 @@ public class Twitter implements Serializable {
 		 */
 		public String displayVersion() {
 			return display == null ? toString() : display;
+		}
+		
+		public String mediaUrl() {
+			return mediaUrl;
 		}
 
 		/**
@@ -590,13 +608,13 @@ public class Twitter implements Serializable {
 	public static boolean CHECK_TWEET_LENGTH = true;
 
 	/**
-	 * The length of a url after t.co shortening. Currently 22 characters.
-	 * Important: https links are 1 character longer!
+	 * The length of a url after t.co shortening. Currently 23 characters.
+	 * (Used to be 22 for HTTP / 23 for HTTPS but now 23 for all)
 	 * <p>
 	 * Use updateConfiguration()if you want to get the latest settings from
 	 * Twitter.
 	 */
-	public static int LINK_LENGTH = 22;
+	public static int LINK_LENGTH = 23;
 	
 	/**
 	 * The characters used up by an attached image. Currently 23 characters (ie = an https link).
@@ -1767,6 +1785,19 @@ public class Twitter implements Serializable {
 		}
 		return msgs;
 	}
+	
+	public InputStream getDMImage(Message msg) {
+		List<TweetEntity> entities = msg.getTweetEntities(KEntityType.media);
+		if (entities.isEmpty()) return null;
+		String mediaUrl = entities.get(0).mediaUrl();
+		try {
+			HttpURLConnection connection = http.connect(mediaUrl, null, true);
+			return connection.getInputStream();
+			
+		} catch (IOException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * @return the latest global trending topics on Twitter
@@ -2099,7 +2130,7 @@ public class Twitter implements Serializable {
 	
 
 	/**
-	 * Retweet, adding a comment.
+	 * Retweet, adding a comment. This is also known as a Quote Tweet.
 	 * See https://support.twitter.com/articles/20169873
 	 * @param tweet
 	 * @param comment This must be 116 characters or less, as the retweet counts like a url (which, technically, is what it is here).
@@ -2770,7 +2801,7 @@ public class Twitter implements Serializable {
 	
 	/**
 	 * Compute the effective size of a message, given that Twitter treats things that
-	 * smell like a URL as 22 characters.
+	 * smell like a URL as 23 characters.
 	 * This also checks for DM microformat, e.g. "d winterstein Hello", where the d user part isn't counted.
 	 * 
 	 * @param statusText
@@ -2780,15 +2811,11 @@ public class Twitter implements Serializable {
 	 */
 	public static int countCharacters(String statusText) {
 		int shortLength = statusText.length();	
-		// Urls count as 22/23
+		// Urls count as 23
 		Matcher m =  Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
 			String grp = m.group();
-			shortLength += LINK_LENGTH - m.group().length();
-			// https? Add another 1 character
-			if (m.group().startsWith("https")) {
-				shortLength++;
-			}
+			shortLength += LINK_LENGTH - grp.length();
 		}
 		// If a DM, don't count the "d user" microformat
 		Matcher dmm = InternalUtils.DM.matcher(statusText);		

@@ -365,6 +365,17 @@ public class TwitterException extends RuntimeException {
 			super(msg);
 		}
 	}
+	
+	/**
+	 * For when Twitter sends a code 226 "this looks like auto junk" response.
+	 */
+	public static class TooSpammy extends E403 {
+		private static final long serialVersionUID = 1L;
+
+		TooSpammy(String msg) {
+			super(msg);
+		}
+	}
 
 	/**
 	 * Exception thrown if something goes wrong with twilonger.com integration

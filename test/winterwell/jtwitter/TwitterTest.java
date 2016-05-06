@@ -22,6 +22,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import winterwell.utils.Printer;
+
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
 import winterwell.jtwitter.Twitter.IHttpClient;
@@ -31,7 +33,6 @@ import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
-import winterwell.utils.Printer;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.time.TUnit;
@@ -47,6 +48,14 @@ import winterwell.utils.time.Time;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+	
+	public void testCountCharacters() {
+		{
+			int cnt = Twitter.countCharacters("The perfect way to spend a Sunday... We suggest a trip to Columbia Road Flower Market. #HarrodsLovesLondon");
+			assert cnt == 106;
+		}
+	}
+	
 	public void testGetTaxiUK() {
 		Twitter jtwit = newTestTwitter();
 		User user = jtwit.users().show(305506258L);
