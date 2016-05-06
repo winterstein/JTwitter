@@ -111,7 +111,7 @@ public class BuildJTwitter extends BuildTask {
 		
 		// Git stuff
 		// Commit changes		
-		GitTask git = new GitTask(GitTask.COMMIT, webDir);
+		GitTask git = new GitTask(GitTask.COMMIT_ALL, webDir);
 		git.setMessage("Publishing JTwitter");
 		git.run();
 		// Pull and rebase
