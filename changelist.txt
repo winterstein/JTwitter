@@ -1,7 +1,12 @@
 # JTwitter Change list 
 
+3.2.0: Due to changes in the Twitter API -- please update to at least this version.
+ - Endpoint for user-streams has changed.
+ - Support for images in DMs.
+ - Update to link-length (http = https = 23 characters)
+ 
 3.1.11:
- - Added retweetWIthCOmment() and Status.getUrl()
+ - Added retweetWithComment() and Status.getUrl()
  
 3.1.10:
  - Tweak to logging: improved for overfull stream twitter.forget messages. 

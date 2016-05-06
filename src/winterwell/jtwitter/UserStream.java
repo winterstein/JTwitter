@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import winterwell.jtwitter.Twitter.ITweet;
 
 /**
+ * See https://dev.twitter.com/streaming/reference/get/user
+ * 
  * @WARNING There are bugs on Twitter's end -- the messages returned by this
  *          stream may not include all the messages to a user. The results vary
  *          from user to user!<br>
@@ -50,7 +52,8 @@ import winterwell.jtwitter.Twitter.ITweet;
  */
 public class UserStream extends AStream {
 
-	boolean withFollowings;
+	private boolean withFollowings;
+	private boolean allReplies;
 
 	public UserStream(Twitter jtwit) {
 		super(jtwit);
@@ -60,12 +63,14 @@ public class UserStream extends AStream {
 	HttpURLConnection connect2() throws IOException {
 		InternalUtils.log(LOGTAG, "connect2()... "+this);
 		connect3_rateLimit();
-		// API version 2?! Yes, this is right.
-		String url = "https://userstream.twitter.com/2/user.json?delimited=length";
-		Map<String, String> vars = new HashMap();
-		if (withFollowings) {
-			vars = InternalUtils.asMap("with",
-					(withFollowings ? "followings" : "user"));
+		String url = "https://userstream.twitter.com/1.1/user.json?delimited=length";
+		// API version 2?! 
+//		"https://userstream.twitter.com/2/user.json?delimited=length";
+		Map<String, String> vars = InternalUtils.asMap(
+				"with", (withFollowings ? "followings" : "user")
+				);
+		if (allReplies) {
+			vars.put("replies", "all");
 		}
 		HttpURLConnection con = client.connect(url, vars, true);
 		return con;
@@ -117,7 +122,7 @@ public class UserStream extends AStream {
 				cnt++;
 			}
 		}
-		if (withFollowings) { // Get your and network stuff.
+		if (withFollowings) { // Get network stuff.
 			// Can't get too many results, rate-limiting is severe (15x20 results per 15 mins) for this resource
 			jtwit2.setMaxResults(100);
 			List<Status> updates = jtwit2.getHomeTimeline();
@@ -131,7 +136,7 @@ public class UserStream extends AStream {
 			}
 			// NB: 100k was the original setting -- see fillInOutages()
 			jtwit2.setMaxResults(100000);
-		} 	else {	// get your traffic
+		} else {	// get your traffic
 			List<Status> updates = jtwit2.getUserTimeline(jtwit2.getScreenName());
 			InternalUtils.log(LOGTAG, "fillIn from-you "+jtwit2.getSinceId()+": "+updates.size());
 			for (Status status : updates) {
@@ -186,6 +191,18 @@ public class UserStream extends AStream {
 	public void setWithFollowings(boolean withFollowings) {
 		assert !isConnected();
 		this.withFollowings = withFollowings;
+	}
+	
+	/**
+	 * @param allReplies
+	 *            By default @replies are only sent from mutual followings. 
+	 *            This enables all @replies by followings.
+	 *            For example, if Alice follows Bob, but Alice doesn’t follow Carol, by default if Bob @replies Carol, 
+	 *            Alice does not see the tweet. The default behavior mimics twitter.com and api.twitter.com behavior. 
+	 */
+	public void setAllReplies(boolean allReplies) {
+		assert !isConnected();
+		this.allReplies = allReplies;
 	}
 
 	@Override
