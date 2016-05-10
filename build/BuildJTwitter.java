@@ -13,7 +13,7 @@ import winterwell.bob.tasks.ZipTask;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterTest;
-import winterwell.utils.io.FileUtils;
+import com.winterwell.utils.io.FileUtils;
 import winterwell.utils.reporting.Log;
 
 
