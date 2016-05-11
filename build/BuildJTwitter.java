@@ -13,7 +13,7 @@ import winterwell.bob.tasks.ZipTask;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterTest;
-import winterwell.utils.io.FileUtils;
+import com.winterwell.utils.io.FileUtils;
 import winterwell.utils.reporting.Log;
 
 
@@ -111,7 +111,7 @@ public class BuildJTwitter extends BuildTask {
 		
 		// Git stuff
 		// Commit changes		
-		GitTask git = new GitTask(GitTask.COMMIT, webDir);
+		GitTask git = new GitTask(GitTask.COMMIT_ALL, webDir);
 		git.setMessage("Publishing JTwitter");
 		git.run();
 		// Pull and rebase
