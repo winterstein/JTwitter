@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
+import com.winterwell.jgeoplanet.BoundingBox;
+import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.jgeoplanet.Location;
+
 import winterwell.json.JSONArray;
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
@@ -639,7 +643,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.2.0";
+	public final static String version = "3.2.1";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2274,8 +2278,8 @@ public class Twitter implements Serializable {
 	 * {@link TwitterTest#testSearchBug()}, {@link TwitterTest#testSearchBug2()}
 	 * 
 	 * @param searchTerm
-	 * @return e.g. "apples OR pears" (near Edinburgh) goes to
-	 *         "apples OR pears -kfz" (near Edinburgh)
+	 * @return e.g. "apples OR pears" goes to
+	 *         "apples OR pears -kfz"
 	 
 	private String search2_bugHack(String searchTerm) {
 //		if (true) return searchTerm; TODO Looks like this is no longer needed (quick test, 4th Nov 2012)
@@ -2481,15 +2485,6 @@ public class Twitter implements Serializable {
 					+ " is not within +/- 180");
 	}
 
-//	/**
-//	 * @param pageNumber
-//	 *            null (the default) returns the first page. Pages are indexed
-//	 *            from 1. This is used once only! Then it is reset to null
-//	 */
-//	public void setPageNumber(Integer pageNumber) {
-//		this.pageNumber = pageNumber;
-//	}
-
 	/**
 	 * Restricts {@link #search(String)} to tweets by users located within a
 	 * given radius of the given latitude/longitude.
@@ -2504,7 +2499,7 @@ public class Twitter implements Serializable {
 	 */
 	public void setSearchLocation(double latitude, double longitude,
 			String radius) {
-		assert radius.endsWith("mi") || radius.endsWith("km") : radius;
+		assert radius.endsWith("mi") || radius.endsWith("km") : radius;		
 		geocode = ((float)latitude) + "," + ((float)longitude) + "," + radius;
 	}
 
@@ -3091,6 +3086,36 @@ public class Twitter implements Serializable {
 	 */
 	public Twitter_Users users() {
 		return new Twitter_Users(this);
+	}
+
+	/**
+	 * 
+	 * @param place Can be null (switches off geo-filtering)
+	 */
+	public void setSearchLocation(IPlace place) {
+		if (place==null) {
+			geocode = null;
+			return;
+		}
+		Location x = place.getCentroid();
+		if (x==null) {
+			throw new IllegalArgumentException("Geo-search needs lat/long coordinates - none in "+place);
+		}
+		BoundingBox bbox = place.getBoundingBox();
+		if (bbox==null) {
+			// default to 10km radius = a 20km diameter
+			setSearchLocation(x.latitude, x.longitude, "10km");
+		}
+		Location ne = bbox.getNorthEast();
+		Location sw = bbox.getSouthWest();
+		assert ne != null && sw != null : bbox;
+		// cast down to m to reduce the sig-figures
+		float diameterInMetres = (int) ne.distance(sw).getValue();
+		float radiusInKm = Math.max(diameterInMetres/2000, 5000);
+		// Warning: cap radius at 2500 (limit imposed by Twitter)
+		radiusInKm = Math.min(radiusInKm, 2499);
+		String radiusInGeoCodeKm = radiusInKm + "km";		
+		setSearchLocation(x.latitude, x.longitude, radiusInGeoCodeKm);		
 	}
 
 

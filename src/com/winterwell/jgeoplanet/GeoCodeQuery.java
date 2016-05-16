@@ -177,6 +177,11 @@ public class GeoCodeQuery {
 				&& locn==null && bbox==null
 				&& city==null && country==null
 				&& (timezone==null || lang==null);
+	}
+
+	public GeoCodeQuery setReqLocn(boolean reqLocn) {
+		this.reqLocn = reqLocn;
+		return this;
 	}	
 
 }
