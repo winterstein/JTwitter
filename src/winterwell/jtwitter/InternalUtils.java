@@ -836,10 +836,12 @@ public class InternalUtils {
 	/**
 	 * Splits a Twitter Snowflake ID into its component numbers, performs arithmetic on the timestamp component, and reconstitutes a synthetic ID for "since_id" and "until_id" purposes.
 	 * Last open-source release of the Snowflake spec: https://github.com/twitter/snowflake/releases/tag/snowflake-2010
-	 * @param time A signed integer - milliseconds to add or subtract from the time
+	 * @param time A signed integer - milliseconds to add or subtract from the time. Can be null.
 	 * @return A synthetic status ID (which does not necessarily correspond to a tweet) {time} msec in the future or past compared to statusId.
+	 * Or null if the input was null.
 	 */
 	public static BigInteger addTimeToStatusId(BigInteger statusId, long time) {
+		if (statusId==null) return null;
 		long id = statusId.longValue();
 		
 		// Timestamp is everything up to the 22 least significant bits

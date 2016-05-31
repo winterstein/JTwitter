@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.2.3: NPE bug fix.
+
 3.2.2:
  - Added set search location by IPlace
 
