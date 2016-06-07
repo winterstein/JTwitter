@@ -789,8 +789,10 @@ extends TestCase // Comment out to remove the JUnit dependency
 		return new Twitter(TEST_USER, client);
 	}	
 	
-	
-	public void _testAuthUser() {
+	/**
+	 * Run this to do an out-of-bounds (no web server) authorisation.
+	 */
+	public void testAuthUser() {
 		OAuthSignpostClient client = new OAuthSignpostClient(
 		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
 		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
@@ -799,7 +801,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(pin);
 		client.setAuthorizationCode(pin);
 		String[] tokens = client.getAccessToken();
-		System.out.println(tokens[0] + " " + tokens[1]);
+		System.out.println("Tokens: "+tokens[0] + " " + tokens[1]);
 	}
 	
 	/**
