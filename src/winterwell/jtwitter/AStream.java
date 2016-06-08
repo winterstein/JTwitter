@@ -49,6 +49,8 @@ public abstract class AStream implements Closeable {
 	 * WARNING: listeners should be fast. They run in the gobbler thread, which
 	 * may be switched off by Twitter if it can't keep up with the flow.
 	 * 
+	 * Listeners can throw exceptions -- which are swallowed.
+	 * 
 	 * @see AStream#popTweets() etc. for pull-based notification.
 	 */
 	public static interface IListen {
@@ -57,7 +59,7 @@ public abstract class AStream implements Closeable {
 		 * @return true to pass this on to any other, earlier-added, listeners.
 		 *         false to stop earlier listeners from hearing this event.
 		 */
-		boolean processEvent(TwitterEvent event);
+		boolean processEvent(TwitterEvent event) throws Exception;
 
 		/**
 		 * @param obj
@@ -65,14 +67,14 @@ public abstract class AStream implements Closeable {
 		 * @return true to pass this on to any other, earlier-added, listeners.
 		 *         false to stop earlier listeners from hearing this event.
 		 */
-		boolean processSystemEvent(Object[] obj);
+		boolean processSystemEvent(Object[] obj) throws Exception;
 
 		/**
 		 * @param tweet
 		 * @return true to pass this on to any other, earlier-added, listeners.
 		 *         false to stop earlier listeners from hearing this event.
 		 */
-		boolean processTweet(ITweet tweet);
+		boolean processTweet(ITweet tweet) throws Exception;
 	}
 
 	/**
@@ -1009,22 +1011,27 @@ final class StreamGobbler extends Thread {
 				JSONObject jo = new JSONObject(json);
 				Object obj = AStream.read3_parse(jo, stream.jtwit);
 				for (IListen listener : stream.listeners) {
-					boolean carryOn;
-					if (obj instanceof ITweet) {
-						carryOn = listener.processTweet((ITweet) obj);
-					} else if (obj instanceof TwitterEvent) {
-						carryOn = listener.processEvent((TwitterEvent) obj);
-					} else {
-						carryOn = listener.processSystemEvent((Object[]) obj);
+					try {
+						boolean carryOn;
+						if (obj instanceof ITweet) {
+							carryOn = listener.processTweet((ITweet) obj);
+						} else if (obj instanceof TwitterEvent) {
+							carryOn = listener.processEvent((TwitterEvent) obj);
+						} else {
+							carryOn = listener.processSystemEvent((Object[]) obj);
+						}
+						// hide from earlier listeners?
+						if (!carryOn) {
+							break;
+						}
+					} catch (Exception e) {
+						// swallow it & keep the stream flowing
+						InternalUtils.log(stream.LOGTAG, e);
 					}
-					// hide from earlier listeners?
-					if (!carryOn) {
-						break;
-					}
-				}
-			} catch (Exception e) {
+				} // end for-listeners
+			} catch (Throwable e) {
 				// swallow it & keep the stream flowing
-				e.printStackTrace();
+				InternalUtils.log(stream.LOGTAG, e);
 			}
 		}
 	}
