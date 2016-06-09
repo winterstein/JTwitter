@@ -3118,5 +3118,21 @@ public class Twitter implements Serializable {
 		setSearchLocation(x.latitude, x.longitude, radiusInGeoCodeKm);		
 	}
 
+	/**
+	 * Convenience for using getHttpClient().getRateLimits()
+	 * @param apiResourceName
+	 * @param defaultIfUnset If the answer is not known, return this value.
+	 * ie. true for conservative behaviour (beware of never getting data), false for optimistic behaviour.
+	 * @return true if rate-limited
+	 */
+	public boolean isRateLimited(String apiResourceName, boolean defaultIfUnset) {
+		Map<String, RateLimit> ratelimits = getHttpClient().getRateLimits();
+		if (ratelimits==null) return defaultIfUnset;
+		RateLimit rl = ratelimits.get(apiResourceName);
+		if (rl==null) return defaultIfUnset;
+		if (rl.isOutOfDate()) return defaultIfUnset;
+		return rl.getRemaining() <= 0;
+	}
+
 
 }
