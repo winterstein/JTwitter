@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+3.3.0: 
+ - Added quoted status support -- use Status.getOriginal() and Status.isQuotedStatus(). 
+ - Added Status.isRetweet().
+
 3.2.3: NPE bug fix.
 
 3.2.2:

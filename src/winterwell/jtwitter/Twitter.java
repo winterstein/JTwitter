@@ -643,7 +643,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.2.2";
+	public final static String version = "3.3.0";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2144,6 +2144,7 @@ public class Twitter implements Serializable {
 		if (comment==null) return retweet(tweet);
 		comment = comment.trim();
 		if (comment.length()==0) return retweet(tweet);
+		// should we mark it in reply to tweet??
 		Status s = setStatus(comment+" "+tweet.getUrl());
 		return s;
 	}

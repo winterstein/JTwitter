@@ -191,7 +191,18 @@ public final class Status implements ITweet {
 
 	private String lang;
 
-	private transient String _rawtext;		
+	private transient String _rawtext;
+
+	private boolean retweet;
+
+	private boolean quotedStatus;
+	
+	public boolean isRetweet() {
+		return retweet;
+	}
+	public boolean isQuotedStatus() {
+		return quotedStatus;
+	}
 	
 	/**
 	 * BCP 47 language identifiers. 
@@ -232,8 +243,9 @@ public final class Status implements ITweet {
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
 			_rawtext = InternalUtils.jsonGet("text", object);
 			// retweet?
-			JSONObject retweeted = object.optJSONObject("retweeted_status");
+			JSONObject retweeted = object.optJSONObject("retweeted_status");			
 			if (retweeted != null) {
+				retweet = true;
 				if (retweeted.has("user")) {
 					original = new Status(retweeted, null);
 				} else {
@@ -247,6 +259,16 @@ public final class Status implements ITweet {
 						// No author info :(
 						original = new Status(retweeted, null);
 					}					
+				}
+			}
+			// quoted tweet?
+			JSONObject quoted = object.optJSONObject("quoted_status");
+			if (quoted != null) {
+				quotedStatus = true;
+				try {
+					original = new Status(quoted, null);
+				} catch	(Throwable ex) {
+					InternalUtils.log("bad.json", "Quoted status could not be parsed: "+ex);
 				}
 			}
 			
@@ -462,7 +484,7 @@ public final class Status implements ITweet {
 	}
 
 	/**
-	 * Only set for official new-style retweets. This is the original retweeted
+	 * Only set for official new-style retweets and quoted tweets. This is the original retweeted
 	 * Status. null otherwise.
 	 */
 	public Status getOriginal() {

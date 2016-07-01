@@ -49,6 +49,16 @@ public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
 	
+	public void testQuotedRetweet() {
+		Twitter jtwit = newTestTwitter();
+		// http://twitter.com/narrator/status/748823821231218688
+		Status s = jtwit.getStatus(new BigInteger("748823821231218688"));
+		System.out.println(s);
+		assert s.getOriginal() != null;
+		assert s.isQuotedStatus();
+//		https://twitter.com/Danacea/status/748812973389385728
+	}
+	
 	public void testCountCharacters() {
 		{
 			int cnt = Twitter.countCharacters("The perfect way to spend a Sunday... We suggest a trip to Columbia Road Flower Market. #HarrodsLovesLondon");
