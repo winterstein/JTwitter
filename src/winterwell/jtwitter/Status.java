@@ -22,6 +22,10 @@ import winterwell.jtwitter.Twitter.TweetEntity;
  * Notes: This is a finalised data object. It exposes its fields for convenient
  * access. If you want to change your status, use
  * {@link Twitter#setStatus(String)} and {@link Twitter#destroyStatus(Status)}.
+ * 
+ * This class reuses part of Twitter's twitter-text project. Taken from Extractor.java
+ * (https://github.com/twitter/twitter-text/blob/master/java/src/com/twitter/Extractor.java)
+ * on 2016-07-14. Reproduced under the Apache license.
  */
 public final class Status implements ITweet {
 	/**
@@ -576,7 +580,7 @@ public final class Status implements ITweet {
 	static String getDisplayText2(ITweet tweet) {
 		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
 		String _text = tweet.getText();
-		StringIndexFixer fixer = new StringIndexFixer(_text);
+		IndexConverter fixer = new IndexConverter(_text);
 		
 		if (es==null || es.size()==0) {
 			// Is it a truncated retweet? That should be handled in the constructor.			
@@ -601,9 +605,9 @@ public final class Status implements ITweet {
 			}
 			
 			// replace the short-url with the display version
-			sb.append(_text.substring(i, fixer.getIndex(entity.start)));
+			sb.append(_text.substring(i, fixer.codePointsToCodeUnits(entity.start)));
 			sb.append(entity.displayVersion());
-			i = fixer.getIndex(entity.end);
+			i = fixer.codePointsToCodeUnits(entity.end);
 		}					
 		if (i < _text.length()) {
 			sb.append(_text.substring(i));
@@ -615,6 +619,7 @@ public final class Status implements ITweet {
 		return "https://twitter.com/"+user.screenName+"/status/"+id;
 	}
 
+
 	/**
 	 * Java String indices work on the assumption that every character is 2 bytes wide.
 	 * Characters outside the Basic Multilingual Plane are 4 bytes wide & so occupy two
@@ -623,44 +628,55 @@ public final class Status implements ITweet {
 	 * display equivalents) it treats non-BMP characters as single characters, meaning
 	 * the indices for an entity appearing after a non-BMP char will be off by one.
 	 * (Or two, if there were two non-BMP characters before it, etc.)
-	 * This class returns the corrected indices for the String it is initialised with.
-	 * 
-	 * @author roscoe
+	 * This class converts the character / code-point indices for the String it is initialised with.
 	 *
+	 * This code is part of Twitter's twitter-text project. Taken from Extractor.java
+	 * (https://github.com/twitter/twitter-text/blob/master/java/src/com/twitter/Extractor.java)
+	 * on 2016-07-14. Reproduced under the Apache license.
+	 *
+	 * An efficient converter of indices between code points and code units.
 	 */
-	private static class StringIndexFixer {
-		int[] indices;
-		
-		/**
-		 * Generates the corrected index array for the supplied String.
-		 * @param string
-		 */
-		public StringIndexFixer(String string) {
-			// Index map length = number of complete code points in the string
-			this.indices = new int[string.codePointCount(0, string.length())+1];
-			// If the code point count over character range [0, i+1) is 
-			// different from the count over range [0, i), that means that
-			// character i is the start of a code point (of whatever width)
-			// and should be recorded in the mapping.
-			for (int i = 0, count = 0, nextCount; i < string.length(); i++) {
-				nextCount = string.codePointCount(0, i + 1);
-				if (nextCount != count) {
-					indices[count] = i;
-					count = nextCount;
-				}
-			}
-			// The above loop misses the final element in this.indices, so:
-			indices[indices.length - 1] = string.length();
-			// i.e. the char16 count over the range [0, string.length()) is string.length()
+	private static final class IndexConverter {
+		protected final String text;
+			// Keep track of a single corresponding pair of code unit and code point
+			// offsets so that we can re-use counting work if the next requested
+			// entity is near the most recent entity.
+			protected int codePointIndex = 0;
+			protected int charIndex = 0;
+			
+			IndexConverter(String text) {
+			this.text = text;
 		}
 		
 		/**
-		 * Return the corrected index for the initialising String
-		 * @param rawIndex
-		 * @return
+		 * @param charIndex Index into the string measured in code units.
+		 * @return The code point index that corresponds to the specified character index.
 		 */
-		public int getIndex(int rawIndex) {
-			return indices[rawIndex];
+		int codeUnitsToCodePoints(int charIndex) {
+			if (charIndex < this.charIndex) {
+				this.codePointIndex -= text.codePointCount(charIndex, this.charIndex);
+			} else {
+				this.codePointIndex += text.codePointCount(this.charIndex, charIndex);
+			}
+			this.charIndex = charIndex;
+			
+			// Make sure that charIndex never points to the second code unit of a
+			// surrogate pair.
+			if (charIndex > 0 && Character.isSupplementaryCodePoint(text.codePointAt(charIndex - 1))) {
+				this.charIndex -= 1;
+			}
+			return this.codePointIndex;
+		}
+		
+		/**
+		 * @param codePointIndex Index into the string measured in code points.
+		 * @return the code unit index that corresponds to the specified code point index.
+		 */
+		int codePointsToCodeUnits(int codePointIndex) {
+			// Note that offsetByCodePoints accepts negative indices.
+			this.charIndex = text.offsetByCodePoints(this.charIndex, codePointIndex - this.codePointIndex);
+			this.codePointIndex = codePointIndex;
+			return this.charIndex;
 		}
 	}
 }
