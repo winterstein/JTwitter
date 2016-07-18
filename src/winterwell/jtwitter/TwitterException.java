@@ -2,6 +2,8 @@ package winterwell.jtwitter;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import winterwell.json.JSONException;
 
@@ -46,7 +48,7 @@ public class TwitterException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public BadParameter(String msg) {
-			super(msg);
+			super(0, msg);
 		}
 	}
 
@@ -75,9 +77,27 @@ public class TwitterException extends RuntimeException {
 	 */
 	public static class E403 extends E40X {
 		private static final long serialVersionUID = 1L;
-
+		/**
+		 * Can be 0 for unset
+		 */
+		public final int code;
+		
 		public E403(String string) {
 			super(string);
+			if (string==null) {
+				code = 0;
+				return;
+			}
+			Matcher m = CODE.matcher(string);
+			if (m.find()) {
+				code = Integer.valueOf(m.group(1));
+			} else code = 0;
+		}
+		
+		static final Pattern CODE = Pattern.compile("code (\\d+):");
+		public E403(int code, String string) {
+			super(string);
+			this.code = code;
 		}
 	}
 
@@ -205,7 +225,7 @@ public class TwitterException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public FollowerLimit(String msg) {
-			super(msg);
+			super(0, msg);
 		}
 	}
 

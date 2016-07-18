@@ -72,6 +72,11 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	private boolean htmlImpliesError = true;
 
 	private boolean gzip = false;
+
+	/**
+	 * Helpful for debugging failed calls.
+	 */
+	private transient Map<String, String> postVars;
 	
 	/**
 	 * Set whether or not to request gzipped responses.
@@ -84,9 +89,11 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	/**
 	 * @param htmlImpliesError default is true. If true, an html response will
 	 * be treated as a server error & generate a TwitterException.E50X 
+	 * @return 
 	 */
-	public void setHtmlImpliesError(boolean htmlImpliesError) {
+	public URLConnectionHttpClient setHtmlImpliesError(boolean htmlImpliesError) {
 		this.htmlImpliesError = htmlImpliesError;
+		return this;
 	}
 
 	public URLConnectionHttpClient() {
@@ -382,6 +389,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	private String post2(String uri, Map<String, String> vars,
 			boolean authenticate) throws Exception 
 	{
+		this.postVars = vars;
 		HttpURLConnection connection = null;
 		try {
 			connection = post2_connect(uri, vars);
@@ -614,7 +622,11 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throw new TwitterException.FollowerLimit(name + " " + errorPage);
 		if (errorPage.contains("application is not allowed to access"))
 			throw new TwitterException.AccessLevel(name + " " + errorPage);
-		throw new TwitterException.E403(errorPage + "\n" + url + " (" + _name+ ")");
+		if (errorPage.contains("code 108:")) { // Cannot find specified user.
+			// Change to 404? No - be consistent with Twitter itself
+			throw new TwitterException.E403(108, url + " (" + _name+ ") posted: "+postVars);
+		}
+		throw new TwitterException.E403(errorPage + "\n" + url + " (" + _name+ ") posted: "+postVars);
 	}
 
 	private void processError2_rateLimit(HttpURLConnection connection, String resource,
