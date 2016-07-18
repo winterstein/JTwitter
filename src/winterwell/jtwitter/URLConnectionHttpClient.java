@@ -626,6 +626,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			// Change to 404? No - be consistent with Twitter itself
 			throw new TwitterException.E403(108, url + " (" + _name+ ") posted: "+postVars);
 		}
+		if (errorPage.contains("code 162:")) { // You have been blocked from following this account at the request of the user.
+			throw new TwitterException.Blocked(errorPage, postVars==null? null : postVars.get("screen_name"));
+		}
 		throw new TwitterException.E403(errorPage + "\n" + url + " (" + _name+ ") posted: "+postVars);
 	}
 

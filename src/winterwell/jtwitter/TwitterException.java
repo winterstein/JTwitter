@@ -345,6 +345,19 @@ public class TwitterException extends RuntimeException {
 	}
 
 	/**
+	 * Exception thrown when trying to follow an account that has blocked you.
+	 */
+	public static class Blocked extends E403 {
+		private static final long serialVersionUID = 1L;
+		public final String targetUser;
+		
+		public Blocked(String msg, String targetUser) {
+			super(msg);		
+			this.targetUser = targetUser;
+		}
+	}
+	
+	/**
 	 * A timeout exception - probably caused by Twitter being overloaded.
 	 */
 	public static class Timeout extends TwitterException.E50X {

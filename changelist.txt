@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.3.1: TwitterException.Blocked 
+ 
 3.3.0: 
  - Added quoted status support -- use Status.getOriginal() and Status.isQuotedStatus(). 
  - Added Status.isRetweet().
