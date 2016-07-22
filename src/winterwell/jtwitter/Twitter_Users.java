@@ -130,13 +130,14 @@ public class Twitter_Users {
 			return new User(new JSONObject(page), null);
 		} catch (SuspendedUser e) {
 			throw e;
-		} catch (TwitterException.Repetition e) {
-			return null;
-		} catch (E403 e) {
+		} catch (TwitterException.UserNotFound e) {
+			throw e;		
+		} catch (E403 e) {			
 			// check if we've tried to follow someone we're already following
 			try {
-				if (isFollowing(username))
+				if (isFollowing(username)) {
 					return null;
+				}
 			} catch (TwitterException e2) {
 				// no extra info then
 			}

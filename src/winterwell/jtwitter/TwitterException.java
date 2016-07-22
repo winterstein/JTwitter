@@ -38,6 +38,18 @@ public class TwitterException extends RuntimeException {
 	}
 
 	/**
+	 * This is very similar to a {@link MissingUser}. 
+	 * Using E403 as the base class, to fit with the code 403 http response that Twitter returns.
+	 */
+	public static class UserNotFound extends E403 {
+		private static final long serialVersionUID = 1L;
+
+		public UserNotFound(String msg) {
+			super(108, msg);
+		}
+	}
+	
+	/**
 	 * Exception thrown when Twitter doesn't like a parameter. E.g. if you set a
 	 * since_id which goes back too far, you'll see this.
 	 * <p>

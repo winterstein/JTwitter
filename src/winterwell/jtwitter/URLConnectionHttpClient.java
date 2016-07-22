@@ -623,8 +623,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		if (errorPage.contains("application is not allowed to access"))
 			throw new TwitterException.AccessLevel(name + " " + errorPage);
 		if (errorPage.contains("code 108:")) { // Cannot find specified user.
-			// Change to 404? No - be consistent with Twitter itself
-			throw new TwitterException.E403(108, url + " (" + _name+ ") posted: "+postVars);
+			// Change to 404.MissingUser? No - be consistent with Twitter itself
+			throw new TwitterException.UserNotFound(url + " (" + _name+ ") posted: "+postVars);
 		}
 		if (errorPage.contains("code 162:")) { // You have been blocked from following this account at the request of the user.
 			throw new TwitterException.Blocked(errorPage, postVars==null? null : postVars.get("screen_name"));
