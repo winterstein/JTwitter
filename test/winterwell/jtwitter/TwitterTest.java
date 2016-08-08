@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import winterwell.utils.Printer;
+import com.winterwell.utils.Printer;
 
 import winterwell.json.JSONException;
 import winterwell.json.JSONObject;
