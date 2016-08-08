@@ -483,8 +483,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	 final void processError(HttpURLConnection connection, String resource) {
 		try {
 			int code = connection.getResponseCode();
-			if (code == 200)
-				return;
+			// Everything's fine!
+			if (code >= 200 && code <= 206) return;
 			URL url = connection.getURL();
 			// any explanation?
 			String error = processError2_reason(connection);
