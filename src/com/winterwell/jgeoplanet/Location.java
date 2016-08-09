@@ -164,7 +164,9 @@ public class Location implements Serializable {
 		return latitude + "," + longitude;
 	}
 	
-	// NB: will not pick up a trailing . See bug #9788
+	/** 
+	 * Latitude, Longitude
+	 * NB: will not pick up a trailing . See bug #9788 */
 	public static final Pattern latLongLocn = Pattern.compile(
 			"(\\S+:)?\\s*(-?[\\d\\.]*\\d),\\s*(-?[\\d\\.]*\\d)\\.?\\s*");
 

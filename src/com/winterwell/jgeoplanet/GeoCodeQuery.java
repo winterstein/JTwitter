@@ -182,6 +182,11 @@ public class GeoCodeQuery {
 	public GeoCodeQuery setReqLocn(boolean reqLocn) {
 		this.reqLocn = reqLocn;
 		return this;
+	}
+
+	public GeoCodeQuery setLatitudeLongitude(double lat, double lng) {
+		this.locn = new Location(lat, lng);
+		return this;
 	}	
 
 }
