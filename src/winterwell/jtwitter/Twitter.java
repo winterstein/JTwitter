@@ -809,7 +809,7 @@ public class Twitter implements Serializable {
 	 * 
 	 * @param name
 	 *            the authenticating user's name, if known. Can be null.
-	 * @param client
+	 * @param client e.g. OAuthSignpostClient
 	 * @see OAuthSignpostClient
 	 */
 	public Twitter(String name, IHttpClient client) {
@@ -1896,7 +1896,8 @@ public class Twitter implements Serializable {
 	 * Returns the most recent statuses from the given user.
 	 * <p>
 	 * This will return 20 results by default, though
-	 * {@link #setMaxResults(int)} can be used to fetch multiple pages.
+	 * {@link #setMaxResults(int)} can be used to fetch multiple pages, or 
+	 * {@link #setUntilId(Number)} can be used to page backwards.
 	 * 
 	 * Note that if you exclude new-style retweets (via
 	 * {@link #setIncludeRTs(boolean)}) then this can return less than 20
