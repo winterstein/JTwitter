@@ -1,0 +1,2321 @@
+The following is a '''list of cities by latitude'''.
+{{Comment|The stated co-ordinates need to be double-checked. See talk}} 
+
+Both the [[latitude]] and [[longitude]] are shown for all [[city|cities]] and sorted by latitude started from the [[North Pole]] down to the [[South Pole]].
+
+Each heading should be considered the exact value. This means that the 70° N heading corresponds to exactly 70°00′00.00″N and everything farther north should be above this heading, while everything farther south should be below it.
+
+In the tables between the various headings, "State" can refer to any second-level political subdivision of a country, whether it is called a "State", "Province" or another term.
+
+{| align="center"
+|-
+| __NOTOC__
+{| class='wikitable sortable'
+|-
+! Table of Contents <!-- Please make sure links point correctly to headers, e.g. [[#90° North (North Pole)]] -->
+|-
+|align="center"| '''North :''' [[#90° North (North Pole)|90°]], [[#80° North|80°]], [[#70° North|70°]], [[#60° North|60°]], [[#50° North|50°]], [[#40° North|40°]], [[#30° North|30°]], [[#20° North|20°]], [[#10° North|10°]]
+|-
+|align="center"| '''[[#Equator|Equator]]'''
+|-
+|align="center"| '''South :''' [[#10° South|10°]], [[#20° South|20°]], [[#30° South|30°]], [[#40° South|40°]], [[#50° South|50°]], [[#60° South|60°]], [[#70° South|70°]], [[#80° South|80°]]
+|-
+|align="center"| [[#Sources|Sources]]
+|-
+|align="center"| [[#See also|See also]]
+|}
+|}
+
+==[[90th parallel north|90° North (North Pole)]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="82.5"| 82°30′N ||data-sort-value="-62.333"| 62°20′W  || [[Alert, Nunavut|Alert]] || {{flag|Nunavut}} || {{CAN}}
+|-
+| data-sort-value="81.6"| 81°36′N ||data-sort-value="-16.667"| 16°40′W  || [[Nord, Greenland|Nord]] || {{flag|Greenland}} || {{DEN}}
+|-
+|}
+
+==[[80th parallel north|80° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="79.983"| 79°59′N ||data-sort-value="-85.933"| 85°56′W  || [[Eureka, Nunavut|Eureka]] || {{flag|Nunavut}} || {{CAN}}
+|-
+| data-sort-value="78.917"| 78°55′N ||data-sort-value="11.933"| 11°56′E  || [[Ny-Ålesund]] || {{flag|Svalbard}} || {{NOR}}
+|-
+| data-sort-value="78.217"| 78°13′N ||data-sort-value="15.65"| 15°39′E  || [[Longyearbyen]] || {{flag|Svalbard}} || {{NOR}}
+|-
+| data-sort-value="77.467"| 77°28′N ||data-sort-value="-69.233"| 69°14′W  || [[Qaanaaq]] || {{flag|Greenland}} || {{DEN}}
+|-
+| data-sort-value="76.417"| 76°25′N ||data-sort-value="-82.9"| 82°54′W  || [[Grise Fiord]] || {{flag|Nunavut}} || {{CAN}}
+|-
+| data-sort-value="73.5"| 73°30′N ||data-sort-value="80.517"| 80°31′E  || [[Dikson (urban-type settlement)|Dikson]] || {{flag|Krasnoyarsk Krai}} || {{RUS}}
+|-
+| data-sort-value="72.783"| 72°47′N ||data-sort-value="-56.15"| 56°09′W  || [[Upernavik]] || {{flag|Greenland}} || {{DEN}}
+|-
+| data-sort-value="71.65"| 71°39′N ||data-sort-value="128.867"| 128°52′E  || [[Tiksi]] || {{flag|Sakha Republic}} || {{RUS}}
+|-
+| data-sort-value="71.533"| 71°32′N ||data-sort-value="52.317"| 52°19′E  || [[Belushya Guba]] || {{flag|Arkhangelsk Oblast}} || {{RUS}}
+|-
+| data-sort-value="71.3"| 71°18′N ||data-sort-value="-156.767"| 156°46′W  || [[Barrow, Alaska|Barrow]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="70.983"| 70°59′N ||data-sort-value="25.983"| 25°59′E  || [[Honningsvåg]] || [[Finnmark]] || {{NOR}}
+|-
+| data-sort-value="70.667"| 70°40′N ||data-sort-value="23.683"| 23°41′E  || [[Hammerfest (town)|Hammerfest]] || [[flag|Finnmark]] || {{NOR}}
+|-
+| data-sort-value="70.2"| 70°12′N ||data-sort-value="-148.517"| 148°31′W  || [[Deadhorse, Alaska|Deadhorse]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="70.083"| 70°05′N ||data-sort-value="27.883"| 27°53′E  || [[Nuorgam]] || [[Lapland, Finland|Lapland]] || {{FIN}}
+|-
+| data-sort-value="70.083"| 70°05′N ||data-sort-value="29.733"| 29°44′E  || [[Vadsø (town)|Vadsø]] || [[flag|Finnmark]] || {{NOR}}
+|-
+|}
+
+==[[70th parallel north|70° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="69.966"| 69°58′N ||data-sort-value="23.26"| 23°16′E || [[Alta (town)|Alta]] || [[Finnmark]] || {{NOR}}
+|-
+| data-sort-value="69.9"| 69°54′N ||data-sort-value="27.017"| 27°01′E  || [[Utsjoki]] || [[Lapland, Finland|Lapland]] || {{FIN}}
+|-
+| data-sort-value="69.716"| 69°43′N ||data-sort-value="30.03"|30°02′E || [[Kirkenes]] || [[Finnmark]] || {{NOR}}
+|-
+| data-sort-value="69.683"| 69°41′N ||data-sort-value="18.95"| 18°57′E  || [[Tromsø]] || [[Troms]] || {{NOR}}
+|-
+| data-sort-value="69.45"| 69°27′N ||data-sort-value="-133.033"| 133°02′W  || [[Tuktoyaktuk]] || {{flag|Northwest Territories}} || {{CAN}}
+|-
+| data-sort-value="69.333"| 69°20′N ||data-sort-value="88.217"| 88°13′E  || [[Norilsk]] || [[Krasnoyarsk Krai]] || {{RUS}}
+|-
+| data-sort-value="68.967"| 68°58′N ||data-sort-value="33.083"| 33°05′E  || [[Murmansk]] || [[Murmansk Oblast]] || {{RUS}}
+|-
+| data-sort-value="68.783"| 68°47′N ||data-sort-value="16.533"| 16°32′E  || [[Harstad]] || [[Troms]] || {{NOR}}
+|-
+| data-sort-value="68.417"| 68°25′N ||data-sort-value="17.567"| 17°34′E  || [[Narvik]] || [[Nordland]] || {{NOR}}
+|-
+| data-sort-value="67.85"| 67°51′N ||data-sort-value="20.217"| 20°13′E  || [[Kiruna]] || [[Norrbotten County|Norrbotten]] || {{SWE}}
+|-
+| data-sort-value="67.55"| 67°33′N ||data-sort-value="133.383"| 133°23′E  || [[Verkhoyansk]] || {{flag|Sakha Republic}} || {{RUS}}
+|-
+| data-sort-value="67.3"| 67°18′N ||data-sort-value="14.55"| 14°33′E  || [[Bodø]] || [[Nordland]] || {{NOR}}
+|-
+| data-sort-value="67.133"| 67°08′N ||data-sort-value="20.667"| 20°40′E  || [[Gällivare]] || [[Norrbotten County|Norrbotten]] || {{SWE}}<!--Was shown as 67°13′N 20°66′E, which is plainly wrong, as there are only 60 minutes of arc in a degree. Googling co-ords gives 67.1300°N 20.6600°E-->
+|-
+| data-sort-value="66.717"| 66°43′N ||data-sort-value="27.433"| 27°26′E  || [[Kemijärvi]] || [[Lapland, Finland|Lapland]] || {{FIN}}
+|-
+| data-sort-value="66.5"| 66°30′N ||data-sort-value="25.733"| 25°44′E  || [[Rovaniemi]] || [[Lapland, Finland|Lapland]] || {{FIN}}
+|-
+| data-sort-value="66.083"| 66°05′N ||data-sort-value="-23.133"| 23°08′W  || [[Ísafjörður]] || [[Westfjords]] || {{ISL}}
+|-
+| data-sort-value="65.967"| 65°58′N ||data-sort-value="29.183"| 29°11′E  || [[Kuusamo]] || [[Northern Ostrobothnia]] || {{FIN}}
+|-
+| data-sort-value="65.85"| 65°51′N ||data-sort-value="24.15"| 24°09′E  || [[Tornio]] || [[Lapland, Finland|Lapland]] || {{FIN}}
+|-
+| data-sort-value="65.833"| 65°50′N ||data-sort-value="21.717"| 21°43′E  || [[Boden, Sweden|Boden]] || [[Norrbotten County|Norrbotten]] || {{SWE}}
+|-
+| data-sort-value="65.833"| 65°50′N ||data-sort-value="24.133"| 24°08′E  || [[Haparanda]] || [[Norrbotten County|Norrbotten]] || {{SWE}}
+|-
+| data-sort-value="65.733"| 65°44′N ||data-sort-value="24.567"| 24°34′E  || [[Kemi]] || [[Lapland, Finland|Lapland]] || {{FIN}}
+|-
+| data-sort-value="65.683"| 65°41′N ||data-sort-value="-18.1"| 18°06′W  || [[Akureyri]] || [[Northeastern Region, Iceland|Northeastern Region]] || {{ISL}}
+|-
+| data-sort-value="65.583"| 65°35′N ||data-sort-value="22.15"| 22°09′E  || [[Luleå]] || [[Norrbotten County|Norrbotten]] || {{SWE}}
+|-
+| data-sort-value="65.367"| 65°22′N ||data-sort-value="27"| 27°00′E  || [[Pudasjärvi]] || [[Northern Ostrobothnia]] || {{FIN}}
+|-
+| data-sort-value="65.333"| 65°20′N ||data-sort-value="21.5"| 21°30′E  || [[Piteå]] || [[Norrbotten County|Norrbotten]] || {{SWE}}
+|-
+| data-sort-value="65.017"| 65°01′N ||data-sort-value="25.467"| 25°28′E  || [[Oulu]] || [[Northern Ostrobothnia]] || {{FIN}}
+|-
+| data-sort-value="64.85"| 64°51′N ||data-sort-value="-147.717"| 147°43′W  || [[Fairbanks, Alaska|Fairbanks]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="64.75"| 64°45′N ||data-sort-value="20.95"| 20°57′E  || [[Skellefteå]] || [[Västerbotten County|Västerbotten]] || {{SWE}}
+|-
+| data-sort-value="64.733"| 64°44′N ||data-sort-value="177.517"| 177°31′E  || [[Anadyr (town)|Anadyr]] || [[Chukotka Autonomous Okrug]] || {{RUS}}
+|-
+| data-sort-value="64.533"| 64°32′N ||data-sort-value="40.533"| 40°32′E  || [[Arkhangelsk]] || [[Arkhangelsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="64.500"| 64°30′N ||data-sort-value="-165.38"| 165°23′W || [[Nome, AK|Nome]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="64.183"| 64°11′N ||data-sort-value="-51.733"| 51°44′W  || [[Nuuk|Nuuk (Godthåb)]] || {{flag|Greenland}} || {{DEN}}
+|-
+| data-sort-value="64.133"| 64°08′N ||data-sort-value="-21.933"| 21°56′W  || [[Reykjavík]] || [[Capital Region (Iceland)|Capital Region]] || {{ISL}}
+|-
+| data-sort-value="63.833"| 63°50′N ||data-sort-value="20.267"| 20°16′E  || [[Umeå]] || [[Västerbotten County|Västerbotten]] || {{SWE}}
+|-
+| data-sort-value="63.75"| 63°45′N ||data-sort-value="-68.517"| 68°31′W  || [[Iqaluit]] || {{flag|Nunavut}} || {{CAN}}
+|-
+| data-sort-value="63.483"| 63°29′N ||data-sort-value="11.167"| 11°10′E  || [[Stjørdal]] || [[Nord-Trøndelag]] || {{NOR}}
+|-
+| data-sort-value="63.433"| 63°26′N ||data-sort-value="10.4"| 10°24′E  || [[Trondheim]] || [[Sør-Trøndelag]] || {{NOR}}
+|-
+| data-sort-value="63.283"| 63°17′N ||data-sort-value="18.733"| 18°44′E  || [[Örnsköldsvik]] || [[Västernorrland County|Västernorrland]] || {{SWE}}
+|-
+| data-sort-value="63.183"| 63°11′N ||data-sort-value="14.667"| 14°40′E  || [[Östersund]] || {{flag|Jämtland}} || {{SWE}}
+|-
+| data-sort-value="63.1"| 63°06′N ||data-sort-value="21.617"| 21°37′E  || [[Vaasa]] || [[Ostrobothnia (region)|Ostrobothnia]] || {{FIN}}
+|-
+| data-sort-value="62.9"| 62°54′N ||data-sort-value="27.683"| 27°41′E  || [[Kuopio]] || [[Pohjois-Savo]] || {{FIN}}
+|-
+| data-sort-value="62.45"| 62°27′N ||data-sort-value="-114.4"| 114°24′W  || [[Yellowknife]] || {{flag|Northwest Territories}} || {{CAN}}
+|-
+| data-sort-value="62.4"| 62°24′N ||data-sort-value="17.317"| 17°19′E  || [[Sundsvall]] || [[Västernorrland County|Västernorrland]] || {{SWE}}
+|-
+| data-sort-value="62.25"| 62°15′N ||data-sort-value="25.75"| 25°45′E  || [[Jyväskylä]] || [[Central Finland]] || {{FIN}}
+|-
+| data-sort-value="62.033"| 62°02′N ||data-sort-value="129.733"| 129°44′E  || [[Yakutsk]] || {{flag|Sakha Republic}} || {{RUS}}
+|-
+| data-sort-value="62.017"| 62°01′N ||data-sort-value="-6.767"| 6°46′W  || [[Tórshavn]] || {{flag|Faroe Islands}} || {{DEN}}
+|-
+| data-sort-value="61.5"| 61°30′N ||data-sort-value="23.767"| 23°46′E  || [[Tampere]] || [[Pirkanmaa]] || {{FIN}}
+|-
+| data-sort-value="61.217"| 61°13′N ||data-sort-value="-149.9"| 149°54′W  || [[Anchorage, Alaska|Anchorage]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="61.133"| 61°08′N ||data-sort-value="10.433"| 10°26′E  || [[Lillehammer]] || [[Oppland]] || {{NOR}}
+|-
+| data-sort-value="60.983"| 60°59′N ||data-sort-value="25.65"| 25°39′E  || [[Lahti]] || [[Päijät-Häme]] || {{FIN}}
+|-
+| data-sort-value="60.717"| 60°43′N ||data-sort-value="-46.033"| 46°02′W  || [[Qaqortoq]] || {{flag|Greenland}} || {{DEN}}
+|-
+| data-sort-value="60.717"| 60°43′N ||data-sort-value="-135.05"| 135°03′W  || [[Whitehorse, Yukon|Whitehorse]] || {{flag|Yukon}} || {{CAN}}
+|-
+| data-sort-value="60.45"| 60°27′N ||data-sort-value="22.267"| 22°16′E  || [[Turku]] || [[Southwest Finland]] || {{FIN}}
+|-
+| data-sort-value="60.383"| 60°23′N ||data-sort-value="5.333"| 5°20′E  || [[Bergen]] || [[Hordaland]] || {{NOR}}
+|-
+| data-sort-value="60.3"| 60°18′N ||data-sort-value="25.033"| 25°02′E  || [[Vantaa]] || [[Uusimaa]] || {{FIN}}
+|-
+| data-sort-value="60.25"| 60°15′N ||data-sort-value="-1.233"| 1°15′W || [[Lerwick]] || {{flag|Shetland}} || {{GBR}}
+|-
+| data-sort-value="60.2"| 60°12′N ||data-sort-value="24.65"| 24°39′E  || [[Espoo]] || [[Uusimaa]] || {{FIN}}
+|-
+| data-sort-value="60.167"| 60°10′N ||data-sort-value="24.933"| 24°56′E  || [[Helsinki]] || [[Uusimaa]] || {{FIN}}
+|-
+|}
+
+==[[60th parallel north|60° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="59.95"| 59°57′N ||data-sort-value="10.75"| 10°45′E  || [[Oslo]] || {{n/a}} || {{NOR}}
+|-
+| data-sort-value="59.95"| 59°57′N ||data-sort-value="30.3"| 30°18′E  || [[Saint Petersburg]] || {{n/a}} || {{RUS}}
+|-
+| data-sort-value="59.85"| 59°51′N ||data-sort-value="17.65"| 17°39′E  || [[Uppsala]] || [[Uppland]] || {{SWE}}
+|-
+| data-sort-value="59.567"| 59°34′N ||data-sort-value="150.8"| 150°48′E  || [[Magadan]] || [[Magadan Oblast]] || {{RUS}}
+|-
+| data-sort-value="59.433"| 59°26′N ||data-sort-value="24.75"| 24°45′E  || [[Tallinn]] || [[Harju County]] || {{EST}}
+|-
+| data-sort-value="59.333"| 59°20′N ||data-sort-value="18.067"| 18°04′E  || [[Stockholm]] || [[Stockholm County]] || {{SWE}}
+|-
+| data-sort-value="59.283"| 59°17′N ||data-sort-value="11.2"| 11°12′E  || [[Sarpsborg]] || {{n/a}} || {{NOR}}
+|-
+| data-sort-value="59.266"| 59°16′N || data-sort-value="15.2" | 15°12′E || [[Örebro]] || [[Närke]] || {{SWE}}
+|-
+| data-sort-value"59.216"| 59°13′N || data-sort-value"39.9" | 39°54′E || [[Vologda]] || [[Vologda Oblast]] || {{RUS}}
+|-
+| data-sort-value="58.6"| 58°36′N ||data-sort-value="16.2"| 16°12′E  || [[Norrköping]] || {{flag|Östergötland}} || {{SWE}}
+|-
+| data-sort-value="58.4"| 58°24′N ||data-sort-value="15.617"| 15°37′E  || [[Linköping]] || {{flag|Östergötland}} || {{SWE}}
+|-
+| data-sort-value="58.383"| 58°23′N ||data-sort-value="26.717"| 26°43′E  || [[Tartu]] || [[Tartu County]] || {{EST}}
+|-
+| data-sort-value="58.3"| 58°18′N ||data-sort-value="-134.417"| 134°25′W  || [[Juneau]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="58.483"| 58°29′N ||data-sort-value="8.783"| 8°47′E  || [[Arendal]] || {{n/a}} || {{NOR}}<!--Was shown as 58°48′N 8°75′E, which is plainly wrong, as there are only 60 minutes of arc in a degree. Googling co-ords gives 58.4822°N 8.7825°E-->
+|-
+| data-sort-value="58.167"| 58°10′N ||data-sort-value="8"| 8°00′E  || [[Kristiansand]] || {{n/a}} || {{NOR}}
+|-
+| data-sort-value="58"| 58°00′N ||data-sort-value="56.317"| 56°19′E  || [[Perm]] || [[Perm Krai]] || {{RUS}}
+|-
+| data-sort-value="57.767"| 57°46′N ||data-sort-value="26.033"| 26°02′E  || [[Valga, Estonia|Valga]] || [[Valga County]] || {{EST}}
+|-
+| data-sort-value="57.7"| 57°42′N ||data-sort-value="11.967"| 11°58′E  || [[Göteborg]] || {{flag|Västergötland}} || {{SWE}}
+|-
+| data-sort-value="57.63"| 57°38′N ||data-sort-value="18.28"| 18°17′E || [[Visby]] || {{flag|Gotland}} || {{SWE}}
+|-
+| data-sort-value="57.617"| 57°37′N ||data-sort-value="39.85"| 39°51′E  || [[Yaroslavl]] || [[Yaroslavl Oblast]] || {{RUS}}
+|-
+| data-sort-value="57.467"| 57°28′N ||data-sort-value="-4.233"| 4°14′W  || [[Inverness]] || {{flag|Scotland}} || {{UK}}
+|-
+| data-sort-value="57.25"| 57°15′N ||data-sort-value="-2.183"| 2°11′W  || [[Aberdeen]] || {{flag|Scotland}} || {{UK}}
+|-
+| data-sort-value="57.05"| 57°03′N ||data-sort-value="-135.333"| 135°20′W  || [[Sitka, Alaska|Sitka]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="56.95"| 56°57′N ||data-sort-value="24.1"| 24°06′E  || [[Riga]] || {{n/a}} || {{LAT}}
+|-
+| data-sort-value="56.833"| 56°50′N ||data-sort-value="53.183"| 53°11′E  || [[Izhevsk]] || [[Udmurt Republic]] || {{RUS}}
+|-
+| data-sort-value="56.833"| 56°50′N ||data-sort-value="60.583"| 60°35′E  || [[Yekaterinburg]] || [[Sverdlovsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="56.733"| 56°44′N ||data-sort-value="-111.383"| 111°23′W  || [[Fort McMurray]] || {{flag|Alberta}} || {{CAN}}
+|-
+| data-sort-value="56.333"| 56°20′N ||data-sort-value="44"| 44°00′E  || [[Nizhny Novgorod]] || [[Nizhny Novgorod Oblast]] || {{RUS}}
+|-
+| data-sort-value="56.15"| 56°09′N ||data-sort-value="-3.933"| 3°56′W  || [[Stirling]] || {{flag|Scotland}} || {{UK}}
+|-
+| data-sort-value="56.117"| 56°07′N ||data-sort-value="101.6"| 101°36′E  || [[Bratsk]] || [[Irkutsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="56.15"| 56°09′N ||data-sort-value="10.217"| 10°13′E  || [[Aarhus]] || {{n/a}} || {{DEN}}
+|-
+| data-sort-value="56.017"| 56°01′N ||data-sort-value="93.067"| 93°04′E  || [[Krasnoyarsk]] || [[Krasnoyarsk Krai]] || {{RUS}}
+|-
+| data-sort-value="55.95"| 55°57′N ||data-sort-value="-3.183"| 3°11′W  || [[Edinburgh]] || {{flag|Scotland}} || {{UK}}
+|-
+| data-sort-value="55.85"| 55°51′N ||data-sort-value="-4.267"| 4°16′W  || [[Glasgow]] || {{flag|Scotland}} || {{UK}}
+|-
+| data-sort-value="55.783"| 55°47′N ||data-sort-value="49.133"| 49°08′E  || [[Kazan]] || {{flag|Tatarstan}} || {{RUS}}
+|-
+| data-sort-value="55.75"| 55°45′N ||data-sort-value="37.617"| 37°37′E  || [[Moscow]] || {{n/a}} || {{RUS}}
+|-
+| data-sort-value="55.683"| 55°41′N ||data-sort-value="12.567"| 12°34′E  || [[Copenhagen]] || {{n/a}} || {{DNK}}
+|-
+| data-sort-value="55.583"| 55°35′N ||data-sort-value="13.033"| 13°02′E  || [[Malmö]] || {{flag|Scania}} || {{SWE}}
+|-
+| data-sort-value="55.483"| 55°29′N ||data-sort-value="8.45"| 8°27′E  || [[Esbjerg]] || {{n/a}} || {{DNK}}
+|-
+| data-sort-value="55.4"| 55°24′N ||data-sort-value="10.383"| 10°23′E  || [[Odense]] || {{n/a}} || {{DNK}}
+|-
+| data-sort-value="55.167"| 55°10′N ||data-sort-value="-118.8"| 118°48′W  || [[Grande Prairie]] || {{flag|Alberta}} || {{CAN}}
+|-
+| data-sort-value="55.15"| 55°09′N ||data-sort-value="61.383"| 61°23′E  || [[Chelyabinsk]] || [[Chelyabinsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="55.017"| 55°01′N ||data-sort-value="82.933"| 82°56′E  || [[Novosibirsk]] || [[Novosibirsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="55"| 55°00′N ||data-sort-value="-7.3"| 7°18′W  || [[Derry]] || [[Northern Ireland]] || {{UK}}<!--Was shown as 54°99′N 73°07′E, which is plainly wrong, as: i) there are only 60 minutes of arc in a degree and ii) Derry is a few degrees west of Greenwich, not east! Googling co-ords gives 54.9958°N 7.3074°W--><!--Northern Ireland is not part of Great Britain; it is part of the United Kingdom of Great Britain and Northern Ireland. Great Britain is the island to the east of Ireland that is divided between England, Scotland and Wales.-->
+|-
+| data-sort-value="54.983"| 54°59′N ||data-sort-value="73.367"| 73°22′E  || [[Omsk]] || [[Omsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="54.967"| 54°58′N ||data-sort-value="-1.617"| 1°37′W  || [[Newcastle upon Tyne]] || {{ENG}} || {{UK}}<!--I make it 1°36′W based on 1.6000° W-->
+|-
+| data-sort-value="54.906"| 54°54′N ||data-sort-value="-1.382"| 1°23′W  || [[Sunderland, Tyne and Wear|Sunderland]] || {{ENG}} || {{UK}}<!-- -->
+|-
+| data-sort-value="54.883"| 54°53′N ||data-sort-value="69.166"| 69°10′E || [[Petropavl]] || [[North Kazakhstan Region|North Kazakhstan]] || {{KAZ}}
+|-
+| data-sort-value="54.783"| 54°47′N ||data-sort-value="9.433"| 9°26′E  || [[Flensburg]] || {{flag|Schleswig-Holstein}} || {{DEU}}
+|-
+| data-sort-value="54.75"| 54°45′N ||data-sort-value="55.967"| 55°58′E  || [[Ufa]] || [[Republic of Bashkortostan]] || {{RUS}}
+|-
+| data-sort-value="54.717"| 54°43′N ||data-sort-value="20.517"| 20°31′E  || [[Kaliningrad]] || [[Kaliningrad Oblast]] || {{RUS}}
+|-
+| data-sort-value="54.683"| 54°41′N ||data-sort-value="25.283"| 25°17′E  || [[Vilnius]] || {{n/a}} || {{LTU}}
+|-
+| data-sort-value="54.6"| 54°36′N ||data-sort-value="-5.933"| 5°56′W  || [[Belfast]] || [[flag|Northern Ireland]] || {{UK}}
+|-
+| data-sort-value="54.576"| 54°34′N || data-sort-value="-1.235"| 1°14′W || [[Middlesbrough]] || {{flag|England}} || {{UK}}
+|-
+| data-sort-value="54.5"| 54°30′N ||data-sort-value="18.55"| 18°33′E  || [[Gdynia]] || [[Pomeranian Voivodeship]] || {{POL}}
+|-
+| data-sort-value="54.367"| 54°22′N ||data-sort-value="18.633"| 18°38′E  || [[Gdańsk]] || [[Pomeranian Voivodeship]] || {{POL}}
+|-
+| data-sort-value="54.333"| 54°20′N ||data-sort-value="10.133"| 10°08′E  || [[Kiel]] || {{flag|Schleswig-Holstein}} || {{DEU}}
+|-
+| data-sort-value="54.15"| 54°09′N ||data-sort-value="-4.483"| 4°29′W  || [[Douglas, Isle of Man|Douglas]] || {{flag|Isle of Man}} || {{GBR}}
+|-
+| data-sort-value="54.083"| 54°05′N ||data-sort-value="12.13"| 12°8′E || [[Rostock]] || {{flag|Mecklenburg-Vorpommern}} || {{GER}}
+|-
+| data-sort-value="54.05"| 54°03′N ||data-sort-value="-2.8"| 2°48′W  || [[Lancaster, Lancashire|Lancaster]] || {{ENG}} || {{UK}}<!--Was shown as 54°05′N 2°80′W, which is plainly wrong, as there are only 60 minutes of arc in a degree. Googling co-ords gives 54.0470°N 2.8010°W-->
+|-
+| data-sort-value="53.95"| 53°57′N ||data-sort-value="-1.067"| 1°4′W  || [[York]] || {{ENG}} || {{UK}}<!--I make this 1°5′W based on a longitude of 1.0803°W-->
+|-
+| data-sort-value="53.9"| 53°54′N ||data-sort-value="27.567"| 27°34′E  || [[Minsk]] || {{n/a}} || {{BLR}}
+|-
+| data-sort-value="53.8"| 53°48′N ||data-sort-value="-1.75"| 1°45′W  || [[Bradford]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="53.8"| 53°48′N ||data-sort-value="-1.55"| 1°33′W  || [[Leeds]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="53.567"| 53°34′N ||data-sort-value="10"| 10°00′E  || [[Hamburg]] || {{flag|Hamburg}} || {{DEU}}
+|-
+| data-sort-value="53.533"| 53°32′N ||data-sort-value="-113.5"| 113°30′W  || [[Edmonton]] || {{flag|Alberta}} || {{CAN}}
+|-
+| data-sort-value="53.517"| 53°31′N ||data-sort-value="49.417"| 49°25′E  || [[Tolyatti]] || [[Samara Oblast]] || {{RUS}}
+|-
+| data-sort-value="53.467"| 53°28′N ||data-sort-value="-2.233"| 2°14′W  || [[Manchester]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="53.4"| 53°24′N ||data-sort-value="-2.983"| 2°59′W  || [[Liverpool]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="53.383"| 53°23′N ||data-sort-value="-1.467"| 1°28′W  || [[Sheffield]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="53.35"| 53°21′N ||data-sort-value="-6.267"| 6°16′W  || [[Dublin]] || {{flag|Leinster}} || {{IRL}}
+|-
+| data-sort-value="53.217"| 53°13′N ||data-sort-value="6.55"| 6°33′E  || [[Groningen (city)|Groningen]] || {{flag|Groningen}} || {{NLD}}
+|-
+| data-sort-value="53.2"| 53°12′N ||data-sort-value="50.133"| 50°08′E  || [[Samara, Russia|Samara]] || [[Samara Oblast]] || {{RUS}}
+|-
+| data-sort-value="53.083"| 53°05′N ||data-sort-value="8.8"| 8°48′E  || [[Bremen]] || {{flag|Bremen}} || {{DEU}}
+|-
+| data-sort-value="53.017"| 53°01′N ||data-sort-value="158.65"| 158°39′E  || [[Petropavlovsk-Kamchatsky]] || [[Kamchatka Krai]] || {{RUS}}
+|-
+| data-sort-value="52.95"| 52°57′N ||data-sort-value="-1.133"| 1°08′W  || [[Nottingham]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.917"| 52°55′N ||data-sort-value="-1.467"| 1°28′W  || [[Derby]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.633"| 52°38′N ||data-sort-value="-1.133"| 1°08′W  || [[Leicester]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.633"| 52°38′N ||data-sort-value="1.3"| 1°18′E  || [[Norwich]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.583"| 52°35′N ||data-sort-value="-0.25"| 0°15′W  || [[Peterborough]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.517"| 52°31′N ||data-sort-value="13.383"| 13°23′E  || [[Berlin]] || {{flag|Berlin}} || {{DEU}}
+|-
+| data-sort-value="52.483"| 52°29′N ||data-sort-value="-1.9"| 1°54′W  || [[Birmingham]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.440"| 52°26′N||data-sort-value="30.983"|30°59′E || [[Gomel]] || [[Gomel Voblast]] || {{BLR}}
+|-
+| data-sort-value="52.4"| 52°24′N ||data-sort-value="-1.517"| 1°31′W  || [[Coventry]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.4"| 52°24′N ||data-sort-value="16.917"| 16°55′E  || [[Poznań]] || [[Greater Poland]] || {{POL}}
+|-
+| data-sort-value="52.383"| 52°23′N ||data-sort-value="4.633"| 4°38′E  || [[Haarlem]] || {{flag|North Holland}} || {{NLD}}
+|-
+| data-sort-value="52.367"| 52°22′N ||data-sort-value="4.9"| 4°54′E  || [[Amsterdam]] || {{flag|North Holland}} || {{NLD}}
+|-
+| data-sort-value="52.367"| 52°22′N ||data-sort-value="9.717"| 9°43′E  || [[Hannover]] || {{flag|Lower Saxony}} || {{DEU}}
+|-
+| data-sort-value="52.317"| 52°19′N ||data-sort-value="104.3"| 104°18′E  || [[Irkutsk]] || [[Irkutsk Oblast]] || {{RUS}}
+|-
+| data-sort-value="52.233"| 52°14′N ||data-sort-value="21.017"| 21°01′E  || [[Warsaw]] || [[Masovian Voivodship]] || {{POL}}
+|-
+| data-sort-value="52.217"| 52°13′N ||data-sort-value="6.9"| 6°54′E  || [[Enschede]] || {{flag|Overijssel}} || {{NLD}}
+|-
+| data-sort-value="52.2"| 52°12′N ||data-sort-value="0.117"| 0°07′E  || [[Cambridge]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="52.167"| 52°10′N ||data-sort-value="4.483"| 4°29′E  || [[Leiden]] || {{flag|South Holland}} || {{NLD}}
+|-
+| data-sort-value="52.133"| 52°08′N ||data-sort-value="-106.683"| 106°41′W  || [[Saskatoon]] || {{flag|Saskatchewan}} || {{CAN}}
+|-
+| data-sort-value="52.1"| 52°06′N ||data-sort-value="5.117"| 5°07′E  || [[Utrecht (city)|Utrecht]] || {{flag|Utrecht}} || {{NLD}}
+|-
+| data-sort-value="52.083"| 52°05′N ||data-sort-value="4.317"| 4°19′E  || [[The Hague]] || {{flag|South Holland}} || {{NLD}}
+|-
+| data-sort-value="51.95"| 51°57′N ||data-sort-value="7.617"| 7°37′E  || [[Münster]] || {{flag|North Rhine-Westphalia}} || {{DEU}}
+|-
+| data-sort-value="51.933"| 51°56′N ||data-sort-value="4.483"| 4°29′E  || [[Rotterdam]] || {{flag|South Holland}} || {{NLD}}
+|-
+| data-sort-value="51.9"| 51°54′N ||data-sort-value="-8.467"| 8°28′W  || [[Cork (city)|Cork]] || {{flag|Munster}} || {{IRL}}
+|-
+| data-sort-value="51.883"| 51°53′N ||data-sort-value="-176.65"| 176°39′W  || [[Adak, Alaska|Adak]] || {{flag|Alaska}} || {{USA}}
+|-
+| data-sort-value="51.867"| 51°52′N ||data-sort-value="-2.233"| 2°14′W  || [[Gloucester]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.75"| 51°45′N ||data-sort-value="-1.25"| 1°15′W  || [[Oxford]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.667"| 51°40′N ||data-sort-value="39.217"| 39°13′E  || [[Voronezh]] || [[Voronezh Oblast]] || {{RUS}}
+|-
+| data-sort-value="51.617"| 51°37′N ||data-sort-value="-3.95"| 3°57′W  || [[Swansea]] || {{flag|Wales}} || {{UK}}
+|-
+| data-sort-value="51.533"| 51°32′N ||data-sort-value="46.017"| 46°01′E  || [[Saratov]] || [[Saratov Oblast]] || {{RUS}}
+|-
+| data-sort-value="51.5"| 51°30′N ||data-sort-value="-0.133"| 0°08′W  || [[London]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.483"| 51°29′N ||data-sort-value="-3.183"| 3°11′W  || [[Cardiff]] || {{flag|Wales}} || {{UK}}
+|-
+| data-sort-value="51.483"| 51°29′N ||data-sort-value="0"| 0°00′E/W  || [[Greenwich]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.45"| 51°27′N ||data-sort-value="-2.583"| 2°35′W  || [[Bristol]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.383"| 51°23′N ||data-sort-value="-2.367"| 2°22′W  || [[Bath, Somerset|Bath]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.333"| 51°20′N ||data-sort-value="12.383"| 12°23′E  || [[Leipzig]] || {{flag|Saxony}} || {{DEU}}
+|-
+| data-sort-value="51.233"| 51°14′N ||data-sort-value="6.783"| 6°47′E  || [[Düsseldorf]] || {{flag|North Rhine-Westphalia}} || {{DEU}}
+|-
+| data-sort-value="51.217"| 51°13′N ||data-sort-value="4.4"| 4°24′E  || [[Antwerp]] || {{flag|Flanders}} || {{BEL}}
+|-
+| data-sort-value="51.167"| 51°10′N ||data-sort-value="71.433"| 71°26′E  || [[Astana]] || {{n/a}} || {{KAZ}}
+|-
+| data-sort-value="51.1"| 51°06′N ||data-sort-value="1.5"| 1°30′E  || [[Winchester]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="51.05"| 51°03′N ||data-sort-value="-114.067"| 114°04′W  || [[Calgary]] || {{flag|Alberta}} || {{CAN}}
+|-
+| data-sort-value="51.05"| 51°03′N ||data-sort-value="3.733"| 3°44′E  || [[Ghent]] || {{flag|Flanders}} || {{BEL}}
+|-
+| data-sort-value="51.033"| 51°02′N ||data-sort-value="13.733"| 13°44′E  || [[Dresden]] || {{flag|Saxony}} || {{DEU}}
+|-
+| data-sort-value="50.99"| 50°59′N ||data-sort-value="11.033"| 11°02′E || [[Erfurt]] || {{flag|Thuringia}} || {{DEU}}
+|-
+| data-sort-value="50.95"| 50°57′N ||data-sort-value="6.967"| 6°58′E  || [[Cologne]] || {{flag|North Rhine-Westphalia}} || {{DEU}}
+|-
+| data-sort-value="50.9"| 50°54′N ||data-sort-value="-1.4"| 1°24′W  || [[Southampton]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="50.85"| 50°51′N ||data-sort-value="5.683"| 5°41′E  || [[Maastricht]] || {{Flag|Limburg (Netherlands)}} || {{NLD}}
+|-
+| data-sort-value="50.85"| 50°51′N ||data-sort-value="4.35"| 4°21′E  || [[Brussels]] || {{flag|Brussels}} || {{BEL}}
+|-
+| data-sort-value="50.833"| 50°50′N ||data-sort-value="-0.15"| 0°09′W  || [[Brighton and Hove]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="50.817"| 50°49′N ||data-sort-value="-1.083"| 1°05′W  || [[Portsmouth]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="50.717"| 50°43′N ||data-sort-value="-3.533"| 3°32′W  || [[Exeter]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="50.683"| 50°41′N ||data-sort-value="-120.333"| 120°20′W  || [[Kamloops]] || {{flag|British Columbia}} || {{CAN}}
+|-
+| data-sort-value="50.633"| 50°38′N ||data-sort-value="3.05"| 3°03′E  || [[Lille]] || {{flag|Nord-Pas-de-Calais}} || {{FRA}}
+|-
+| data-sort-value="50.45"| 50°27′N ||data-sort-value="-104.6"| 104°36′W  || [[Regina, Saskatchewan|Regina]] || {{flag|Saskatchewan}} || {{CAN}}
+|-
+| data-sort-value="50.45"| 50°27′N ||data-sort-value="30.517"| 30°31′E  || [[Kiev]] || {{flag|Kiev Oblast}} || {{UKR}}
+|-
+| data-sort-value="50.367"| 50°22′N ||data-sort-value="-4.15"| 4°09′W  || [[Plymouth]] || {{ENG}} || {{UK}}
+|-
+| data-sort-value="50.117"| 50°07′N ||data-sort-value="8.683"| 8°41′E  || [[Frankfurt|Frankfurt am Main]] || {{flag|Hesse}} || {{DEU}}
+|-
+| data-sort-value="50.083"| 50°05′N ||data-sort-value="14.417"| 14°25′E  || [[Prague]] || {{n/a}} || {{CZE}}
+|-
+| data-sort-value="50.067"| 50°04′N ||data-sort-value="19.933"| 19°56′E  || [[Kraków]] || [[Lesser Poland]] || {{POL}}
+|-
+| data-sort-value="50"| 50°00′N ||data-sort-value="36.233"| 36°14′E  || [[Kharkiv]] || {{flag|Kharkiv Oblast}} || {{UKR}}
+|-
+|}
+
+==[[50th parallel north|50° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="49.9"| 49°54′N ||data-sort-value="-97.133"| 97°08′W  || [[Winnipeg]] || {{flag|Manitoba}} || {{CAN}}
+|-
+| data-sort-value="49.883"| 49°53′N ||data-sort-value="-119.5"| 119°30′W  || [[Kelowna]] || {{flag|British Columbia}} || {{CAN}}
+|-
+| data-sort-value="49.85"| 49°51′N ||data-sort-value="24.017"| 24°01′E  || [[Lviv]] || {{flag|Lviv Oblast}} || {{UKR}}
+|-
+| data-sort-value="49.617"| 49°37′N ||data-sort-value="6.117"| 6°07′E  || [[Luxembourg (city)|Luxembourg]] || {{n/a}} || {{LUX}}
+|-
+| data-sort-value"49.45"| 49°27′N ||data-sort-value="11.083"| 11°05′E || [[Nuremberg]] || {{flag|Bavaria}} || {{GER}}
+|-
+| data-sort-value="49.25"| 49°15′N ||data-sort-value="-123.1"| 123°06′W  || [[Vancouver]] || {{flag|British Columbia}} || {{CAN}}
+|-
+| data-sort-value="48.85"| 48°51′N ||data-sort-value="2.35"| 2°21′E  || [[Paris]] || {{flag|Île-de-France}} || {{FRA}}
+|-
+| data-sort-value="48.783"| 48°47′N ||data-sort-value="9.183"| 9°11′E  || [[Stuttgart]] || {{flag|Baden-Württemberg}} || {{DEU}}
+|-
+| data-sort-value="48.750178"| 48°45′N ||data-sort-value="-122.474975"| 122°28′30"W  || [[Bellingham,_Washington|Bellingham]] || {{flag|Washington}} || {{USA}}
+|-
+| data-sort-value="48.7"| 48°42′N ||data-sort-value="44.517"| 44°31′E  || [[Volgograd]] || [[Volgograd Oblast]] || {{RUS}}
+|-
+| data-sort-value="48.583"| 48°35′N ||data-sort-value="7.75"| 7°45′E  || [[Strasbourg]] || {{flag|Alsace}} || {{FRA}}
+|-
+| data-sort-value="48.45"| 48°24′N ||data-sort-value="34.98"| 34°59′E || [[Dnipropetrovsk]] || {{n/a}} || {{UKR}}
+|-
+| data-sort-value="48.433"| 48°26′N ||data-sort-value="-123.367"| 123°22′W  || [[Victoria, British Columbia|Victoria]] || {{flag|British Columbia}} || {{CAN}}
+|-
+| data-sort-value="48.416"| 48°25′N ||data-sort-value"-71.06"| 71°4′W || [[Saguenay, Quebec|Saguenay]] || {{flag|Quebec}} || {{CAN}}
+|-
+| data-sort-value="48.383"| 48°23′N ||data-sort-value="-89.25"| 89°15′W  || [[Thunder Bay]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="48.3"| 48°18′N ||data-sort-value="14.283"| 14°17′E  || [[Linz]] || {{flag|Upper Austria}} || {{AUT}}
+|-
+| data-sort-value="48.217"| 48°13′N ||data-sort-value="16.367"| 16°22′E  || [[Vienna]] || {{flag|Vienna}} || {{AUT}}
+|-
+| data-sort-value="48.15"| 48°09′N ||data-sort-value="17.117"| 17°07′E  || [[Bratislava]] || {{n/a}} || {{SVK}}
+|-
+| data-sort-value="48.133"| 48°08′N ||data-sort-value="11.567"| 11°34′E  || [[Munich]] || {{flag|Bavaria}} || {{DEU}}
+|-
+| data-sort-value="48"| 48°00′N ||data-sort-value="37.8"| 37°48′E  || [[Donetsk]] || {{flag|Donetsk Oblast}} || {{UKR}}
+|-
+| data-sort-value="47.917"| 47°55′N ||data-sort-value="106.917"| 106°55′E  || [[Ulan Bator]] || {{n/a}} || {{MNG}}
+|-
+| data-sort-value="47.8"| 47°48′N ||data-sort-value="13.033"| 13°02′E  || [[Salzburg]] || {{flag|Salzburg}} || {{AUT}}
+|-
+| data-sort-value="47.617"| 47°37′N ||data-sort-value="-122.333"| 122°20′W  || [[Seattle]] || {{flag|Washington}} || {{USA}}
+|-
+| data-sort-value="47.567"| 47°34′N ||data-sort-value="-52.7"| 52°42′W  || [[St. John's, Newfoundland and Labrador|St. John's]] || {{flag|Newfoundland and Labrador}} || {{CAN}}
+|-
+| data-sort-value="47.567"| 47°34′N ||data-sort-value="7.6"| 7°36′E  || [[Basel]] || {{n/a}} || {{CHE}}
+|-
+| data-sort-value="47.467"| 47°28′N ||data-sort-value="19.05"| 19°03′E  || [[Budapest]] || {{n/a}} || {{HUN}}
+|-
+| data-sort-value="47.433"| 47°26′N ||data-sort-value="123.45"| 123°27′E  || [[Qiqihar]] || [[Heilongjiang]] || {{PRC}}
+|-
+| data-sort-value="47.367"| 47°22′N ||data-sort-value="8.55"| 8°33′E  || [[Zürich]] || {{n/a}} || {{CHE}}
+|-
+| data-sort-value="47.267"| 47°16′N ||data-sort-value="11.383"| 11°23′E  || [[Innsbruck]] || {{flag|Tyrol}} || {{AUT}}
+|-
+| data-sort-value="47.233"| 47°14′N ||data-sort-value="39.7"| 39°42′E  || [[Rostov-on-Don]] || [[Rostov Oblast]] || {{RUS}}
+|-
+| data-sort-value="47.217"| 47°13′N ||data-sort-value="-1.55"| 1°33′W  || [[Nantes]] || {{flag|Pays de la Loire}} || {{FRA}}
+|-
+| data-sort-value="47.133"| 47°08′N ||data-sort-value="9.517"| 9°31′E  || [[Vaduz]] || {{n/a}} || {{LIE}}
+|-
+| data-sort-value="47.116"| 47°07′N||data-sort-value="51.883"|51°53′E || [[Atyrau]] || [[Atyrau Region]] || {{KAZ}}
+|-
+| data-sort-value="47.067"| 47°04′N ||data-sort-value="15.433"| 15°26′E  || [[Graz]] || {{flag|Styria}} || {{AUT}}
+|-
+| data-sort-value="47"| 47°00′N ||data-sort-value="28.917"| 28°55′E  || [[Chişinău]] || {{n/a}} || {{MDA}}
+|-
+| data-sort-value="46.95"| 46°57′N ||data-sort-value="7.45"| 7°27′E  || [[Bern]] || {{n/a}} || {{CHE}}
+|-
+| data-sort-value="46.85"| 46°51′N ||data-sort-value="29.633"| 29°38′E  || [[Tiraspol]] || {{flag|Transnistria}} || {{MDA}}
+|-
+| data-sort-value="46.817"| 46°49′N ||data-sort-value="-71.217"| 71°13′W  || [[Quebec City]] || {{flag|Quebec}} || {{CAN}}
+|-
+| data-sort-value="46.817"| 46°49′N ||data-sort-value="-100.783"| 100°47′W  || [[Bismarck, North Dakota|Bismarck]] || {{flag|North Dakota}} || {{USA}}
+|-
+| data-sort-value="46.783"| 46°47′N ||data-sort-value="-56.183"| 56°11′W  || [[Saint-Pierre, Saint Pierre and Miquelon|Saint-Pierre]] || [[Saint Pierre and Miquelon]] || {{FRA}}
+|-
+| data-sort-value="46.767"| 46°46′N ||data-sort-value="23.583"| 23°35′E  || [[Cluj-Napoca]] || [[Cluj County]] || {{ROM}}
+|-
+| data-sort-value="46.733"| 46°44′N ||data-sort-value="-117"| 117°0′W  || [[Moscow, Idaho|Moscow]] || {{flag|Idaho}} || {{USA}}
+|-
+| data-sort-value="46.6"| 46°36′N ||data-sort-value="-112.033"| 112°02′W  || [[Helena, Montana|Helena]] || {{flag|Montana}} || {{USA}}
+|-
+| data-sort-value="46.533"| 46°32′N ||data-sort-value="-84.35"| 84°21′W  || [[Sault Ste. Marie, Ontario|Sault Ste. Marie]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="46.517"| 46°31′N ||data-sort-value="6.633"| 6°38′E  || [[Lausanne]] || [[Vaud]] || {{CHE}}
+|-
+| data-sort-value="46.483"| 46°29′N ||data-sort-value="-81.017"| 81°01′W  || [[Greater Sudbury|Sudbury]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="46.467"| 46°28′N ||data-sort-value="30.733"| 30°44′E  || [[Odessa]] || {{flag|Odessa Oblast}} || {{UKR}}
+|-
+| data-sort-value="46.3"| 46°18′N ||data-sort-value="-79.45"| 79°27′W  || [[North Bay, Ontario|North Bay]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="46.233"| 46°14′N ||data-sort-value="-63.15"| 63°09′W  || [[Charlottetown]] || {{flag|Prince Edward Island}} || {{CAN}}
+|-
+| data-sort-value="46.2"| 46°12′N ||data-sort-value="6.15"| 6°09′E  || [[Geneva]] || {{n/a}} || {{CHE}}
+|-
+| data-sort-value="46.133"| 46°08′N ||data-sort-value="-64.767"| 64°46′W  || [[Moncton]] || {{flag|New Brunswick}} || {{CAN}}
+|-
+| data-sort-value="47.333"| 46°80′N ||data-sort-value="-92.167"| 92°10′W  || [[Duluth]] || {{flag|Minnesota}} || {{USA}}
+|-
+| data-sort-value="46.05"| 46°03′N ||data-sort-value="14.517"| 14°31′E  || [[Ljubljana]] || {{n/a}} || {{SVN}}
+|-
+| data-sort-value="45.983"| 45°59′N ||data-sort-value="-63.067"| 62°64′W  || [[New Glasgow, Nova Scotia|New Glasgow]] || {{flag|Nova Scotia}} || {{CAN}}
+|-
+| data-sort-value="45.95"| 45°57′N ||data-sort-value="-66.667"| 66°40′W  || [[Fredericton]] || {{flag|New Brunswick}} || {{CAN}}
+|-
+| data-sort-value="45.817"| 45°49′N ||data-sort-value="15.983"| 15°59′E  || [[Zagreb]] || {{n/a}} || {{CRO}}
+|-
+| data-sort-value="45.767"| 45°46′N ||data-sort-value="4.85"| 4°51′E  || [[Lyon]] || {{flag|Rhône-Alpes}} || {{FRA}}
+|-
+| data-sort-value="45.75"| 45°45′N ||data-sort-value="126.633"| 126°38′E  || [[Harbin]] || [[Heilongjiang]] || {{PRC}}
+|-
+| data-sort-value="45.517"| 45°31′N ||data-sort-value="-122.683"| 122°41′W  || [[Portland, Oregon|Portland]] || {{flag|Oregon}} || {{USA}}
+|-
+| data-sort-value="45.5"| 45°30′N ||data-sort-value="-73.567"| 73°34′W  || [[Montreal]] || {{flag|Quebec}} || {{CAN}}
+|-
+| data-sort-value="45.467"| 45°28′N ||data-sort-value="9.183"| 9°11′E  || [[Milan]] || {{flag|Lombardy}} || {{ITA}}
+|-
+| data-sort-value="45.433"| 45°26′N ||data-sort-value="12.333"| 12°20′E  || [[Venice]] || {{flag|Veneto}} || {{ITA}}
+|-
+| data-sort-value="45.417"| 45°25′N ||data-sort-value="-75.683"| 75°41′W  || [[Ottawa]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="45.417"| 45°25′N ||data-sort-value="141.667"| 141°40′E  || [[Wakkanai, Hokkaido|Wakkanai]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="45.283"| 45°17′N ||data-sort-value="-66.083"| 66°05′W  || [[Saint John, New Brunswick|Saint John]] || {{flag|New Brunswick}} || {{CAN}}
+|-
+| data-sort-value="45.25"| 45°15′N ||data-sort-value="19.85"| 19°51′E  || [[Novi Sad]] || {{flag|Vojvodina}} || {{SRB}}
+|-
+| data-sort-value="45.067"| 45°04′N ||data-sort-value="7.7"| 7°42′E  || [[Turin]] || {{flag|Piedmont}} || {{ITA}}
+|-
+| data-sort-value="45.033"| 45°02′N ||data-sort-value="38.967"| 38°58′E  || [[Krasnodar]] || [[Krasnodar Krai]] || {{RUS}}
+|-
+| data-sort-value="44.983"| 44°59′N ||data-sort-value="-93.267"| 93°16′W  || [[Minneapolis]] || {{flag|Minnesota}} || {{USA}}
+|-
+| data-sort-value="44.95"| 44°57′N ||data-sort-value="34.1"| 34°06′E  || [[Simferopol]] || {{flag|Crimea}} || {{UKR}}/{{RUS}} (disputed)
+|-
+| data-sort-value="44.85"| 44°51′N ||data-sort-value="-63.2"| 63°12′W  || [[Halifax Regional Municipality|Halifax]] || {{flag|Nova Scotia}} || {{CAN}} 
+|-
+| data-sort-value="44.833"| 44°50′N ||data-sort-value="-0.583"| 0°35′W  || [[Bordeaux]] || {{flag|Aquitaine}} || {{FRA}}
+|-
+| data-sort-value="44.817"| 44°49′N ||data-sort-value="20.467"| 20°28′E  || [[Belgrade]] || {{n/a}} || {{SRB}}
+|-
+| data-sort-value="44.75"| 44°45′N ||data-sort-value="19.7"| 19°42′E  || [[Šabac]] || {{n/a}} || {{SRB}}
+|-
+| data-sort-value="44.5"| 44°30′N ||data-sort-value="11.35"| 11°21′E  || [[Bologna]] || {{flag|Emilia-Romagna}} || {{ITA}}
+|-
+| data-sort-value="44.433"| 44°26′N ||data-sort-value="26.1"| 26°06′E  || [[Bucharest]] || {{n/a}} || {{ROM}}
+|-
+| data-sort-value="44.417"| 44°25′N ||data-sort-value="12.2"| 12°12′E  || [[Ravenna]] || {{flag|Emilia-Romagna}} || {{ITA}}
+|-
+|data-sort-value="44.4" | 44°24′N ||data-sort-value"8.91"| 8°55′E || [[Genoa]] || {{flag|Liguria}} || {{ITA}}
+|-
+| data-sort-value="44.367"| 44°22′N ||data-sort-value="-100.333"| 100°20′W  || [[Pierre, South Dakota|Pierre]] || {{flag|South Dakota}} || {{USA}}
+|-
+| data-sort-value="44.333"| 44°20′N ||data-sort-value="23.817"| 23°49′E  || [[Craiova]] || {{n/a}} || {{ROM}}
+|-
+| data-sort-value="44.317"| 44°19′N ||data-sort-value="-69.783"| 69°47′W  || [[Augusta, Maine|Augusta]] || {{flag|Maine}} || {{USA}}
+|-
+| data-sort-value="44.25"| 44°15′N ||data-sort-value="-72.567"| 72°34′W  || [[Montpelier, Vermont|Montpelier]] || {{flag|Vermont}} || {{USA}}
+|-
+| data-sort-value="43.917"| 43°55′N ||data-sort-value="-69.817"| 69°49′W  || [[Bath, Maine|Bath]] || {{flag|Maine}} || {{USA}}<!--Was shown as 43°91′N 69°82′W, which is plainly wrong, as there are only 60 minutes of arc in a degree. Googling co-ords gives 43.9106353°N 69.8206023°W-->
+|-
+| data-sort-value="43.933"| 43°56′N ||data-sort-value="12.45"| 12°27′E  || [[San Marino, San Marino|San Marino]] || {{n/a}} || {{SMR}}
+|-
+| data-sort-value="43.9"| 43°54′N ||data-sort-value="125.2"| 125°12′E  || [[Changchun]] || [[Jilin]] || {{PRC}}
+|-
+| data-sort-value="43.85"| 43°51′N ||data-sort-value="18.35"| 18°21′E  || [[Sarajevo]] || {{n/a}} || {{BIH}}
+|-
+| data-sort-value="43.833"| 43°50′N ||data-sort-value="-66.117"| 66°07′W  || [[Yarmouth, Nova Scotia|Yarmouth]] || {{flag|Nova Scotia}} || {{CAN}} 
+|-
+| data-sort-value="43.833"| 43°50′N ||data-sort-value="87.6"| 87°36′E  || [[Ürümqi]] || [[Xinjiang]] || {{PRC}}
+|-
+| data-sort-value="43.783"| 43°47′N ||data-sort-value="11.25"| 11°15′E  || [[Florence]] || {{flag|Tuscany}} || {{ITA}}
+|-
+| data-sort-value="43.767"| 43°46′N ||data-sort-value="142.367"| 142°22′E  || [[Asahikawa, Hokkaido|Asahikawa]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="43.733"| 43°44′N ||data-sort-value="7.417"| 7°25′E  || [[Monaco]] || {{n/a}} || {{MCO}}
+|-
+| data-sort-value="43.7"| 43°42′N ||data-sort-value="7.267"| 7°16′E  || [[Nice]] || {{flag|Provence-Alpes-Côte d'Azur}} || {{FRA}}
+|-
+| data-sort-value="43.7"| 43°42′N ||data-sort-value="-79.4"| 79°24′W  || [[Toronto]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="43.617"| 43°37′N ||data-sort-value="-116.2"| 116°12′W  || [[Boise, Idaho|Boise]] || {{flag|Idaho}} || {{USA}}
+|-
+| data-sort-value="43.6"| 43°36′N ||data-sort-value="1.45"| 1°27′E  || [[Toulouse]] || {{flag|Midi-Pyrénées}} || {{FRA}}
+|-
+| data-sort-value="43.583"| 43°35′N ||data-sort-value="39.717"| 39°43′E  || [[Sochi]] || [[Krasnodar Krai]] || {{RUS}}
+|-
+| data-sort-value="43.55"| 43°33′N ||data-sort-value="-7.017"| 7°01′W  || [[Cannes]] || {{flag|Provence-Alpes-Côte d'Azur}} || {{FRA}}
+|-
+| data-sort-value="43.533"| 43°32′N ||data-sort-value="-5.65"| 5°39′W  || [[Gijón]] || {{flag|Principado de Asturias}} || {{ESP}}
+|-
+|data-sort-value="43.533"| 43°32′N ||data-sort-value"-96.71"| 96°43′W || [[Sioux Falls, South Dakota|Sioux Falls]] || {{flag|South Dakota}} || {{USA}}
+|-
+| data-sort-value="43.5"| 43°30′N ||data-sort-value="16.433"| 16°26′E  || [[Split (city)|Split]] || {{n/a}} || {{CRO}}
+|-
+| data-sort-value="43.333"| 43°20′N ||data-sort-value="145.583"| 145°35′E  || [[Nemuro, Hokkaido|Nemuro]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="43.317"| 43°19′N ||data-sort-value="-2"| 2°00′W  || [[San Sebastián]] || {{flag|Basque Country}} || {{ESP}}
+|-
+| data-sort-value="43.3"| 43°18′N ||data-sort-value="5.367"| 5°22′E  || [[Marseille]] || {{flag|Provence-Alpes-Côte d'Azur}} || {{FRA}}
+|-
+| data-sort-value="43.283"| 43°17′N ||data-sort-value="76.9"| 76°54′E  || [[Almaty]] || {{n/a}} || {{KAZ}}
+|-
+| data-sort-value="43.25"| 43°15′N ||data-sort-value="-2.917"| 2°55′W  || [[Bilbao]] || {{flag|Basque Country}} || {{ESP}}
+|-
+| data-sort-value="43.2"| 43°12′N ||data-sort-value="-71.533"| 71°32′W  || [[Concord, New Hampshire|Concord]] || {{flag|New Hampshire}} || {{USA}}
+|-
+| data-sort-value="43.167"| 43°10′N ||data-sort-value="-77.617"| 77°37′W  || [[Rochester, NY|Rochester]] || {{flag|New York}} || {{USA}}
+|-
+| data-sort-value="43.133"| 43°08′N ||data-sort-value="131.9"| 131°54′E  || [[Vladivostok]] || [[Primorsky Krai]] || {{RUS}}
+|-
+| data-sort-value="43.067"| 43°04′N ||data-sort-value="141.35"| 141°21′E  || [[Sapporo]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="43.05"| 43°03′N ||data-sort-value="-87.95"| 87°57′W  || [[Milwaukee]] || {{flag|Wisconsin}} || {{USA}}
+|-
+| data-sort-value="43"| 43°00′N ||data-sort-value="41.017"| 41°01′E  || [[Sukhumi]] || {{flag|Abkhazia}} || {{GEO}}
+|-
+| data-sort-value="42.983"| 42°59′N ||data-sort-value="144.383"| 144°23′E  || [[Kushiro, Hokkaido|Kushiro]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="42.933"| 42°56′N ||data-sort-value="10.767"| 10°46′E  || [[Follonica]] || {{flag|Tuscany}} || {{ITA}}
+|-
+| data-sort-value="42.917"| 42°55′N ||data-sort-value="143.2"| 143°12′E  || [[Obihiro, Hokkaido|Obihiro]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="42.9"| 42°54′N ||data-sort-value="-78.85"| 78°51′W  || [[Buffalo, New York|Buffalo]] || {{flag|New York}} || {{USA}}
+|-
+| data-sort-value="42.883"| 42°53′N ||data-sort-value="-8.533"| 8°32′W  || [[Santiago de Compostela]] || {{flag|Galicia}} || {{ESP}}
+|-
+| data-sort-value="42.867"| 42°52′N ||data-sort-value="74.617"| 74°37′E  || [[Bishkek]] || {{n/a}} || {{KGZ}}
+|-
+| data-sort-value="42.85"| 42°51′N ||data-sort-value="-2.683"| 2°41′W  || [[Vitoria-Gasteiz]] || {{flag|Basque Country}} || {{ESP}}
+|-
+| data-sort-value="42.7"| 42°42′N ||data-sort-value="23.333"| 23°20′E  || [[Sofia]] || {{n/a}} || {{BGR}}
+|-
+| data-sort-value="42.667"| 42°40′N ||data-sort-value="21.167"| 21°10′E  || [[Pristina]] || {{flag|Kosovo}} || {{SRB}} {{flag|Kosovo}} (disputed)
+|-
+| data-sort-value="42.5"| 42°30′N ||data-sort-value="1.5"| 1°30′E  || [[Andorra la Vella]] || {{n/a}} || {{AND}}
+|-
+| data-sort-value="42.467"| 42°28′N ||data-sort-value="59.6"| 59°36′E  || [[Nukus]] || {{flag|Karakalpakstan}} || {{UZB}}
+|-
+| data-sort-value="42.433"| 42°26′N ||data-sort-value="19.267"| 19°16′E  || [[Podgorica]] || {{n/a}} || {{MNE}}
+|-
+| data-sort-value="42.35"| 42°21′N ||data-sort-value="-71.067"| 71°04′W  || [[Boston]] || {{flag|Massachusetts}} || {{USA}}
+|-
+| data-sort-value="42.333"| 42°20′N ||data-sort-value="-83.05"| 83°03′W  || [[Detroit]] || {{flag|Michigan}} || {{USA}}
+|-
+| data-sort-value="42.283"| 42°17′N ||data-sort-value="-83"| 83°00′W  || [[Windsor, Ontario|Windsor]] || {{flag|Ontario}} || {{CAN}}
+|-
+| data-sort-value="42.233"| 42°14′N ||data-sort-value="-8.717"| 8°43′W  || [[Vigo]] || {{flag|Galicia}} || {{ESP}}
+|-
+| data-sort-value="42.233"| 42°14′N ||data-sort-value="43.967"| 43°58′E  || [[Tskhinvali]] || {{flag|South Ossetia}} || {{GEO}}
+|-
+| data-sort-value="42.033"| 42°02′N ||data-sort-value="13.417"| 13°25′E  || [[Avezzano]] || {{flag|Abruzzo}} || {{ITA}}
+|-
+| data-sort-value="42"| 42°00′N ||data-sort-value="21.433"| 21°26′E  || [[Skopje]] || {{n/a}} || {{MKD}}
+|-
+| data-sort-value="41.9"| 41°54′N ||data-sort-value="12.5"| 12°30′E  || [[Rome]] || {{flag|Lazio}} || {{ITA}}
+|-
+| data-sort-value="41.9"| 41°54′N ||data-sort-value="12.45"| 12°27′E  || [[Vatican City]] || {{n/a}} || {{VAT}}
+|-
+| data-sort-value="41.883"| 41°53′N ||data-sort-value="-87.633"| 87°38′W  || [[Chicago]] || {{flag|Illinois}} || {{USA}}
+|-
+| data-sort-value="41.817"| 41°49′N ||data-sort-value="-71.417"| 71°25′W  || [[Providence, Rhode Island|Providence]] || {{flag|Rhode Island}} || {{USA}}
+|-
+| data-sort-value="41.817"| 41°49′N ||data-sort-value="123.417"| 123°25′E  || [[Shenyang]] || [[Liaoning]] || {{PRC}}
+|-
+| data-sort-value="41.8"| 41°48′N ||data-sort-value="129.783"| 129°47′E  || [[Chongjin]] || [[North Hamgyong]] || {{PRK}}
+|-
+| data-sort-value="41.767"| 41°46′N ||data-sort-value="-72.667"| 72°40′W  || [[Hartford, Connecticut|Hartford]] || {{flag|Connecticut}} || {{USA}}
+|-
+| data-sort-value="41.767"| 41°46′N ||data-sort-value="140.733"| 140°44′E  || [[Hakodate, Hokkaido|Hakodate]] || [[Hokkaido]] || {{JPN}}
+|-
+| data-sort-value="41.717"| 41°43′N ||data-sort-value="44.783"| 44°47′E  || [[Tbilisi]] || {{n/a}} || {{GEO}}
+|-
+| data-sort-value="41.667"| 41°40′N ||data-sort-value="-4.717"| 4°43′W  || [[Valladolid]] || {{flag|Castile and León}} || {{ESP}}
+|-
+| data-sort-value="41.65"| 41°39′N ||data-sort-value="-0.883"| 0°53′W  || [[Zaragoza]] || {{flag|Aragon}} || {{ESP}}
+|-
+| data-sort-value="41.583"| 41°35′N ||data-sort-value="-93.617"| 93°37′W  || [[Des Moines, Iowa|Des Moines]] || {{flag|Iowa}} || {{USA}}
+|-
+| data-sort-value="41.55"| 41°33′N ||data-sort-value="-8.41"| 8°25′W || [[Braga]] || [[Braga (district)|Braga District]] || {{POR}}
+|-
+| data-sort-value="41.483"| 41°29′N ||data-sort-value="-81.667"| 81°40′W  || [[Cleveland]] || {{flag|Ohio}} || {{USA}}
+|-
+| data-sort-value="41.383"| 41°23′N ||data-sort-value="2.183"| 2°11′E  || [[Barcelona]] || {{flag|Catalonia}} || {{ESP}}
+|-
+| data-sort-value="41.333"| 41°20′N ||data-sort-value="19.817"| 19°49′E  || [[Tirana]] || {{n/a}} || {{ALB}}
+|-
+| data-sort-value="41.267"| 41°16′N ||data-sort-value="69.217"| 69°13′E  || [[Tashkent]] || {{n/a}} || {{UZB}}
+|-
+| data-sort-value="41.167"| 41°10′N ||data-sort-value="-8.617"| 8°37′W  || [[Porto]] || {{n/a}} || {{POR}}
+|-
+| data-sort-value="41.15"| 41°09′N ||data-sort-value="-104.8"| 104°48′W  || [[Cheyenne, Wyoming|Cheyenne]] || {{flag|Wyoming}} || {{USA}}
+|-
+| data-sort-value="41.11"| 41°07′N ||data-sort-value="16.86" | 16°52′E || [[Bari]] || {{flag|Apulia}} || {{ITA}}
+|-
+| data-sort-value="41.083"| 41°05′N ||data-sort-value="-85.133"| 85°08′W  || [[Fort Wayne, Indiana|Fort Wayne]] || {{flag|Indiana}} || {{USA}}
+|-
+| data-sort-value="41.017"| 41°01′N ||data-sort-value="28.95"| 28°57′E  || [[Istanbul]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value"41"| 41°00′N ||data-sort-value="39.733"|39°44′E || [[Trabzon]] || [[Trabzon Province]] || {{TUR}}
+|-
+| data-sort-value="41"| 41°00′N ||data-sort-value="71.667"| 71°40′E  || [[Namangan]] || {{n/a}} || {{UZB}}
+|-
+| data-sort-value="40.85"| 40°51′N ||data-sort-value="14.267"| 14°16′E  || [[Naples]] || {{flag|Campania}} || {{ITA}}
+|-
+| data-sort-value="40.817"| 40°49′N ||data-sort-value="140.75"| 140°45′E  || [[Aomori, Aomori|Aomori]] || [[Aomori Prefecture|Aomori]] || {{JPN}}
+|-
+| data-sort-value="40.817"| 40°49′N ||data-sort-value="-96.683"| 96°41′W  || [[Lincoln, Nebraska|Lincoln]] || {{flag|Nebraska}} || {{USA}}
+|-
+| data-sort-value="40.8"| 40°48′N ||data-sort-value="-124.15"| 124°09′W  || [[Eureka, California|Eureka]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="40.75"| 40°45′N ||data-sort-value="-111.883"| 111°53′W  || [[Salt Lake City]] || {{flag|Utah}} || {{USA}}
+|-
+| data-sort-value="40.717"| 40°43′N ||data-sort-value="-74.067"| 74°04′W  || [[Jersey City, New Jersey|Jersey City]] || {{flag|New Jersey}} || {{USA}}
+|-
+| data-sort-value="40.667"| 40°40′N ||data-sort-value="-73.933"| 73°56′W  || [[New York City]] || {{flag|New York}} || {{USA}}
+|-
+| data-sort-value="40.65"| 40°39′N ||data-sort-value="22.9"| 22°54′E  || [[Thessaloniki]] || {{flag|Greek Macedonia}} || {{GRC}}
+|-
+| data-sort-value="40.45"| 40°27′N ||data-sort-value="-80"| 80°00′W  || [[Pittsburgh]] || {{flag|Pennsylvania}} || {{USA}}
+|-
+| data-sort-value="40.417"| 40°25′N ||data-sort-value="-3.683"| 3°41′W  || [[Madrid]] || {{flag|Madrid}} || {{ESP}}
+|-
+| data-sort-value="40.4"| 40°24′N ||data-sort-value="49.883"| 49°53′E  || [[Baku]] || {{n/a}} || {{AZE}}
+|-
+| data-sort-value="40.217"| 40°13′N ||data-sort-value="-74.767"| 74°46′W  || [[Trenton, New Jersey|Trenton]] || {{flag|New Jersey}} || {{USA}}
+|-
+| data-sort-value="40.183"| 40°11′N ||data-sort-value="29.05"| 29°03′E  || [[Bursa, Turkey|Bursa]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="40.183"| 40°11′N ||data-sort-value="44.517"| 44°31′E  || [[Yerevan]] || {{n/a}} || {{ARM}}
+|-
+| data-sort-value="40.017"| 40°01′N ||data-sort-value="-105.283"| 105°17′W  || [[Boulder, Colorado|Boulder]] || {{flag|Colorado}} || {{USA}}
+|-
+|}
+
+==[[40th parallel north|40° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="39.933"| 39°56′N ||data-sort-value="32.867"| 32°52′E  || [[Ankara]] || {{n/a}} || {{TUR}}<!--Was shown as 39°93'N 32°86'E, which is plainly wrong, as there are only 60 minutes of arc in a degree. Googling co-ords gives 39.9333°N 32.8667°E-->
+|-
+| data-sort-value="39.983"| 39°59′N ||data-sort-value="-82.983"| 82°59′W  || [[Columbus, Ohio|Columbus]] || {{flag|Ohio}} || {{USA}}
+|-
+| data-sort-value="39.95"| 39°57′N ||data-sort-value="-75.167"| 75°10′W  || [[Philadelphia]] || {{flag|Pennsylvania}} || {{USA}}
+|-
+| data-sort-value="39.9"| 39°54′N ||data-sort-value="116.4"| 116°24′E  || [[Beijing]] || {{n/a}} || {{PRC}}
+|-
+| data-sort-value="39.783"| 39°47′N ||data-sort-value="30.517"| 30°31′E  || [[Eskisehir]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="39.767"| 39°46′N ||data-sort-value="-86.15"| 86°09′W  || [[Indianapolis]] || {{flag|Indiana}} || {{USA}}
+|-
+| data-sort-value="39.733"| 39°44′N ||data-sort-value="-104.983"| 104°59′W  || [[Denver]] || {{flag|Colorado}} || {{USA}}
+|-
+| data-sort-value="39.717"| 39°43′N ||data-sort-value="140.117"| 140°07′E  || [[Akita, Akita|Akita]] || [[Akita Prefecture|Akita]] || {{JPN}}
+|-
+| data-sort-value="39.683"| 39°41′N ||data-sort-value="141.15"| 141°09′E  || [[Morioka]] || [[Iwate Prefecture|Iwate]] || {{JPN}}
+|-
+| data-sort-value="39.567"| 39°34′N ||data-sort-value="2.65"| 2°39′E  || [[Palma, Majorca|Palma]] || {{flag|Balearic Islands}} || {{ESP}}
+|-
+| data-sort-value="39.533"| 39°32′N ||data-sort-value="-119.817"| 119°49′W  || [[Reno, Nevada|Reno]] || {{flag|Nevada}} || {{USA}}
+|-
+| data-sort-value="39.467"| 39°28′N ||data-sort-value="-31.233"| 31°14′W  || [[Flores Island (Azores)|Flores Island]] || {{flag|Azores}} || {{POR}}
+|-
+| data-sort-value="39.467"| 39°28′N ||data-sort-value="-0.383"| 0°23′W  || [[Valencia, Spain|Valencia]] || {{flagcountry|Valencian Community}} || {{ESP}}
+|-
+| data-sort-value="39.283"| 39°17′N ||data-sort-value="-76.617"| 76°37′W  || [[Baltimore]] || {{flag|Maryland}} || {{USA}}
+|-
+| data-sort-value="39.25"| 39°15′N ||data-sort-value="9.05"| 9°03′E  || [[Cagliari]] || {{flag|Sardinia}} || {{ITA}}
+|-
+| data-sort-value="39.167"| 39°10′N ||data-sort-value="-75.533"| 75°32′W  || [[Dover, Delaware|Dover]] || {{flag|Delaware}} || {{USA}}
+|-
+| data-sort-value="39.15"| 39°09′N ||data-sort-value="127.45"| 127°27′E  || [[Wonsan]] || [[Kangwon]] || {{PRK}}
+|-
+| data-sort-value="39.133"| 39°08′N ||data-sort-value="117.183"| 117°11′E  || [[Tianjin]] || {{n/a}} || {{PRC}}
+|-
+| data-sort-value="39.1"| 39°06′N ||data-sort-value="-84.517"| 84°31′W  || [[Cincinnati]] || {{flag|Ohio}} || {{USA}}
+|-
+| data-sort-value="39.1"| 39°06′N ||data-sort-value="-94.583"| 94°35′W  || [[Kansas City, Missouri|Kansas City]] || {{flag|Missouri}} || {{USA}}
+|-
+| data-sort-value="39.017"| 39°01′N ||data-sort-value="125.733"| 125°44′E  || [[Pyongyang]] || {{n/a}} || {{PRK}}
+|-
+| data-sort-value="38.983"| 38°59′N ||data-sort-value="1.433"| 1°26′E  || [[Ibiza]] || {{flag|Balearic Islands}} || {{ESP}}
+|-
+| data-sort-value="38.917"| 38°55′N ||data-sort-value="121.633"| 121°38′E  || [[Dalian]] || [[Liaoning]] || {{PRC}}
+|-
+| data-sort-value="38.9"| 38°54′N ||data-sort-value="-77.033"| 77°02′W  || [[Washington, D.C.|Washington]] || {{flag|District of Columbia}} || {{USA}}
+|-
+| data-sort-value="38.717"| 38°43′N ||data-sort-value="-9.133"| 9°08′W  || [[Lisbon]] || {{n/a}} || {{PRT}}
+|-
+| data-sort-value="38.633"| 38°38′N ||data-sort-value="-90.2"| 90°12′W  || [[St. Louis, Missouri|St. Louis]] || {{flag|Missouri}} || {{USA}}
+|-
+| data-sort-value="38.583"| 38°35′N ||data-sort-value="-28.717"| 28°43′W  || [[Horta (Azores)|Horta]] || {{flag|Azores}} || {{POR}}
+|-
+| data-sort-value="38.55"| 38°33′N ||data-sort-value="-121.467"| 121°28′W  || [[Sacramento, California|Sacramento]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="38.533"| 38°32′N ||data-sort-value="68.783"| 68°47′E  || [[Dushanbe]] || {{n/a}} || {{TJK}}
+|-
+| data-sort-value="38.483"| 38°29′N ||data-sort-value="-27.217"| 27°13′W  || [[Angra do Heroísmo]] || {{flag|Azores}} || {{POR}}
+|-
+| data-sort-value="38.467"| 38°28′N ||data-sort-value="23.6"| 23°36′E  || [[Halkis]] || {{n/a}} || {{GRC}}
+|-
+| data-sort-value="38.433"| 38°26′N ||data-sort-value="27.15"| 27°09′E  || [[İzmir]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="38.35"| 38°21′N ||data-sort-value="-81.633"| 81°38′W  || [[Charleston, West Virginia|Charleston]] || {{flag|West Virginia}} || {{USA}}
+|-
+| data-sort-value="38.333"| 38°20′N ||data-sort-value="-0.467"| 0°28′W  || [[Alicante]] || {{flagcountry|Valencian Community}} || {{ESP}}
+|-
+| data-sort-value="38.267"| 38°16′N ||data-sort-value="140.867"| 140°52′E  || [[Sendai]] || [[Miyagi Prefecture|Miyagi]] || {{JPN}}
+|-
+| data-sort-value="38.25"| 38°15′N ||data-sort-value="-85.767"| 85°46′W  || [[Louisville, Kentucky|Louisville]] || {{flag|Kentucky}} || {{USA}}
+|-
+| data-sort-value="38.25"| 38°15′N ||data-sort-value="140.333"| 140°20′E  || [[Yamagata, Yamagata|Yamagata]] || [[Yamagata Prefecture|Yamagata]] || {{JPN}}
+|-
+| data-sort-value="38.183"| 38°11′N ||data-sort-value="15.55"| 15°33′E  || [[Messina]] || {{flag|Sicily}} || {{ITA}}
+|-
+| data-sort-value="38.117"| 38°07′N ||data-sort-value="13.367"| 13°22′E  || [[Palermo]] || {{flag|Sicily}} || {{ITA}}
+|-
+| data-sort-value="38.067"| 38°04′N ||data-sort-value="46.3"| 46°18′E  || [[Tabriz]] || {{n/a}} || {{IRN}}
+|-
+| data-sort-value="38.05"| 38°03′N ||data-sort-value="114.5"| 114°30′E  || [[Shijiazhuang]] || [[Hebei]] || {{PRC}}
+|-
+| data-sort-value="38.017"| 38°01′N ||data-sort-value="12.5"| 12°30′E  || [[Trapani]] || {{flag|Sicily}} || {{ITA}}
+|-
+| data-sort-value="37.967"| 37°58′N ||data-sort-value="23.717"| 23°43′E  || [[Athens]] || {{n/a}} || {{GRC}}
+|-
+| data-sort-value="37.967"| 37°58′N ||data-sort-value="126.55"| 126°33′E  || [[Kaesong]] || [[North Hwanghae]] || {{PRK}}
+|-
+| data-sort-value="37.933"| 37°56′N ||data-sort-value="58.367"| 58°22′E  || [[Ashgabat]] || {{n/a}} || {{TKM}}
+|-
+| data-sort-value="37.917"| 37°55′N ||data-sort-value="139.033"| 139°02′E  || [[Niigata, Niigata|Niigata]] || [[Niigata Prefecture|Niigata]] || {{JPN}}
+|-
+| data-sort-value="37.867"| 37°52′N ||data-sort-value="112.567"| 112°34′E  || [[Taiyuan]] || [[Shanxi]] || {{PRC}}
+|-
+| data-sort-value="37.867"| 37°52′N ||data-sort-value="32.483"| 32°29′E  || [[Konya]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="37.817"| 37°49′N ||data-sort-value="-25.75"| 25°45′W  || [[Ponta Delgada, São Miguel Island|Ponta Delgada]] || {{flag|Azores}} || {{POR}}
+|-
+| data-sort-value="37.800"| 37°48′N ||data-sort-value="-122.26"| 122°16′W || [[Oakland, California|Oakland]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="37.783"| 37°47′N ||data-sort-value="-122.417"| 122°25′W  || [[San Francisco]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="37.767"| 37°46′N ||data-sort-value="140.467"| 140°28′E  || [[Fukushima, Fukushima|Fukushima]] || [[Fukushima Prefecture|Fukushima]] || {{JPN}}
+|-
+| data-sort-value="37.683"| 37°41′N ||data-sort-value="-97.333"| 97°20′W  || [[Wichita, Kansas|Wichita]] || {{flag|Kansas}} || {{USA}}
+|-
+| data-sort-value="37.567"| 37°34′N ||data-sort-value="126.983"| 126°59′E  || [[Seoul]] || {{n/a}} || {{KOR}}
+|-
+| data-sort-value="37.333"| 37°20′N ||data-sort-value="-121.883"| 121°53′W  || [[San Jose, California|San Jose]] || {{flag|California}} || {{USA}}<!--Was shown as 37°34′N 121°89′W, which is plainly wrong, as there are only 60 minutes of arc in a degree. Googling co-ords gives 37.3382°N 121.8863°W-->
+|-
+| data-sort-value="37.5"| 37°30′N ||data-sort-value="15.083"| 15°05′E  || [[Catania]] || {{flag|Sicily}} || {{ITA}}
+|-
+| data-sort-value="37.483"| 37°29′N ||data-sort-value="126.633"| 126°38′E  || [[Incheon]] || {{n/a}} || {{KOR}}
+|-
+| data-sort-value="37.383"| 37°23′N ||data-sort-value="-5.983"| 5°59′W  || [[Seville]] || {{flag|Andalusia}} || {{ESP}}
+|-
+| data-sort-value="37.217"| 37°13′N ||data-sort-value="28.367"| 28°22′E  || [[Mugla]] || [[Mugla Province|Mugla]] || {{TUR}}
+|-
+| data-sort-value="37.2"| 37°12′N ||data-sort-value="-93.283"| 93°17′W  || [[Springfield, Missouri|Springfield]] || {{flag|Missouri}} || {{USA}}
+|-
+| data-sort-value="37.067"| 37°04′N ||data-sort-value="37.383"| 37°23′E  || [[Gaziantep]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="37"| 37°00′N ||data-sort-value="35.317"| 35°19′E  || [[Adana]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="36.85"| 36°51′N ||data-sort-value="-75.983"| 75°59′W  || [[Virginia Beach]] || {{flag|Virginia}} || {{USA}}
+|-
+| data-sort-value="36.84"| 36°50′N ||data-sort-value="-2.468"| 2°28′W  || [[Almería]] || {{flag|Andalusia}} || {{ESP}}
+|-
+| data-sort-value="36.8"| 36°48′N ||data-sort-value="10.183"| 10°11′E  || [[Tunis]] || {{n/a}} || {{TUN}}
+|-
+| data-sort-value="36.8"| 36°48′N ||data-sort-value="34.633"| 34°38′E  || [[Mersin]] || {{n/a}} || {{TUR}}
+|-
+| data-sort-value="36.767"| 36°46′N ||data-sort-value="3.217"| 3°13′E  || [[Algiers]] || {{n/a}} || {{DZA}}
+|-
+| data-sort-value="36.717"| 36°43′N ||data-sort-value="-4.417"| 4°25′W  || [[Málaga]] || {{flag|Andalusia}} || {{ESP}}
+|-
+| data-sort-value="36.7"| 36°42′N ||data-sort-value="137.217"| 137°13′E  || [[Toyama, Toyama|Toyama]] || [[Toyama Prefecture|Toyama]] || {{JPN}}
+|-
+| data-sort-value="36.667"| 36°40′N ||data-sort-value="116.983"| 116°59′E  || [[Jinan]] || [[Shandong]] || {{PRC}}
+|-
+| data-sort-value="36.633"| 36°38′N ||data-sort-value="138.183"| 138°11′E  || [[Nagano, Nagano|Nagano]] || [[Nagano]] || {{JPN}}
+|-
+| data-sort-value="36.633"| 36°38′N ||data-sort-value="101.767"| 101°46′E  || [[Xining]] || [[Qinghai]] || {{PRC}}
+|-
+| data-sort-value="36.6"| 36°36′N ||data-sort-value="114.483"| 114°29′E  || [[Handan]] || [[Hebei]] || {{PRC}}
+|-
+| data-sort-value="36.567"| 36°34′N ||data-sort-value="136.65"| 136°39′E  || [[Kanazawa, Ishikawa|Kanazawa]] || [[Ishikawa Prefecture|Ishikawa]] || {{JPN}}
+|-
+| data-sort-value="36.55"| 36°33′N ||data-sort-value="139.883"| 139°53′E  || [[Utsunomiya]] || [[Tochigi Prefecture|Tochigi]] || {{JPN}}
+|-
+| data-sort-value="36.383"| 36°23′N ||data-sort-value="139.067"| 139°04′E  || [[Maebashi]] || [[Gunma]] || {{JPN}}
+|-
+| data-sort-value="36.367"| 36°22′N ||data-sort-value="140"| 140°0′E  || [[Mito, Ibaraki|Mito]] || [[Ibaraki Prefecture|Ibaraki]] || {{JPN}}
+|-
+| data-sort-value="36.333"| 36°20′N ||data-sort-value="43.133"| 43°08′E  || [[Mosul]] || {{n/a}} || {{IRQ}}
+|-
+| data-sort-value="36.3"| 36°18′N ||data-sort-value="59.6"| 59°36′E  || [[Mashhad]] || {{n/a}} || {{IRN}}
+|-
+| data-sort-value="36.183"| 36°11′N ||data-sort-value="44.017"| 44°01′E  || [[Arbil]] || {{flag|Iraqi Kurdistan}} || {{IRQ}}
+|-
+| data-sort-value="36.183"| 36°11′N ||data-sort-value="-115.133"| 115°08′W  || [[Las Vegas, Nevada|Las Vegas]] || {{flag|Nevada}} || {{USA}}
+|-
+| data-sort-value="36.167"| 36°10′N ||data-sort-value="-86.783"| 86°47′W  || [[Nashville, Tennessee|Nashville]] || {{flag|Tennessee}} || {{USA}}
+|-
+| data-sort-value="36.133"| 36°08′N ||data-sort-value="-5.35"| 5°21′W  || [[Gibraltar]] || {{flag|Gibraltar}} || {{GBR}}
+|-
+| data-sort-value="36.133"| 36°08′N ||data-sort-value="-95.933"| 95°56′W  || [[Tulsa, Oklahoma|Tulsa]] || {{flag|Oklahoma}} || {{USA}}
+|-
+| data-sort-value="36.067"| 36°04′N ||data-sort-value="136.217"| 136°13′E  || [[Fukui, Fukui|Fukui]] || [[Fukui Prefecture|Fukui]] || {{JPN}}
+|-
+| data-sort-value="36.067"| 36°04′N ||data-sort-value="120.383"| 120°23′E  || [[Qingdao]] || [[Shandong]] || {{PRC}}
+|-
+| data-sort-value="36.033"| 36°02′N ||data-sort-value="103.8"| 103°48′E  || [[Lanzhou]] || [[Gansu]] || {{PRC}}
+|-
+| data-sort-value="35.967"| 35°58′N ||data-sort-value="-83.95"| 83°57′W  || [[Knoxville, Tennessee|Knoxville]] || {{flag|Tennessee}} || {{USA}}
+|-
+| data-sort-value="35.9"| 35°54′N ||data-sort-value="14.517"| 14°31′E  || [[Valletta]] || {{n/a}} || {{MLT}}
+|-
+| data-sort-value="35.9"| 35°54′N ||data-sort-value="14.467"| 14°28′E  || [[Birkirkara]] || {{n/a}} || {{MLT}}
+|-
+| data-sort-value="35.867"| 35°52′N ||data-sort-value="128.6"| 128°36′E  || [[Daegu]] || {{n/a}} || {{KOR}}
+|-
+| data-sort-value="35.817"| 35°49′N ||data-sort-value="-78.65"| 78°39′W  || [[Raleigh, North Carolina|Raleigh]] || {{flag|North Carolina}} || {{USA}}
+|-
+| data-sort-value="35.766"| 35°46′N ||data-sort-value="-5.8"| 5°48′W || [[Tanger]] || [[Tangier-Assilah]] || {{MAR}}
+|-
+| data-sort-value="35.7"| 35°42′N ||data-sort-value="51.417"| 51°25′E  || [[Tehran]] || [[Tehran]] || {{IRN}}
+|-
+| data-sort-value="35.683"| 35°41′N ||data-sort-value="139.7"| 139°42′E  || [[Tokyo]] || {{n/a}} || {{JPN}}
+|-
+| data-sort-value="35.667"| 35°40′N ||data-sort-value="-105.967"| 105°58′W  || [[Santa Fe, New Mexico|Santa Fe]] || {{flag|New Mexico}} || {{USA}}
+|-
+| data-sort-value="35.667"| 35°40′N ||data-sort-value="138.567"| 138°34′E  || [[Kōfu]] || [[Yamanashi Prefecture|Yamanashi]] || {{JPN}}
+|-
+| data-sort-value="35.6"| 35°36′N ||data-sort-value="140.1"| 140°06′E  || [[Chiba, Chiba|Chiba]] || [[Chiba Prefecture|Chiba]] || {{JPN}}
+|-
+| data-sort-value="35.517"| 35°31′N ||data-sort-value="35.783"| 35°47′E  || [[Latakia]] || {{n/a}} || {{SYR}}
+|-
+| data-sort-value="35.517"| 35°31′N ||data-sort-value="139.7"| 139°42′E  || [[Kawasaki, Kanagawa|Kawasaki]] || [[Kanagawa]] || {{JPN}}
+|-
+| data-sort-value="35.5"| 35°30′N ||data-sort-value="134.233"| 134°14′E  || [[Tottori, Tottori|Tottori]] || [[Tottori Prefecture|Tottori]] || {{JPN}}
+|-
+| data-sort-value="35.483"| 35°29′N ||data-sort-value="-97.533"| 97°32′W  || [[Oklahoma City]] || {{flag|Oklahoma}} || {{USA}}
+|-
+| data-sort-value="35.467"| 35°28′N ||data-sort-value="133.05"| 133°03′E  || [[Matsue, Shimane|Matsue]] || [[Shimane]] || {{JPN}}
+|-
+| data-sort-value="35.467"| 35°28′N ||data-sort-value="44.317"| 44°19′E  || [[Kirkuk]] || {{n/a}} || {{IRQ}}
+|-
+| data-sort-value="35.45"| 35°27′N ||data-sort-value="139.633"| 139°38′E  || [[Yokohama]] || [[Kanagawa]] || {{JPN}}
+|-
+| data-sort-value="35.417"| 35°25′N ||data-sort-value="136.767"| 136°46′E  || [[Gifu, Gifu|Gifu]] || [[Gifu Prefecture|Gifu]] || {{JPN}}
+|-
+| data-sort-value="35.333"| 35°20′N ||data-sort-value="25.133"| 25°08′E  || [[Heraklion]] || {{flag|Crete}} || {{GRC}}
+|-
+| data-sort-value="35.283"| 35°17′N ||data-sort-value="-2.933"| 2°56′W  || [[Melilla]] || {{flag|Melilla}} || {{ESP}}
+|-
+| data-sort-value="35.233"| 35°14′N ||data-sort-value="-80.85"| 80°51′W  || [[Charlotte, North Carolina|Charlotte]] || {{flag|North Carolina}} || {{USA}}
+|-
+| data-sort-value="35.183"| 35°11′N ||data-sort-value="136.9"| 136°54′E  || [[Nagoya]] || [[Aichi]] || {{JPN}}
+|-
+| data-sort-value="35.183"| 35°11′N ||data-sort-value="129.083"| 129°05′E  || [[Busan]] || {{n/a}} || {{KOR}} 
+|-
+| data-sort-value="35.167"| 35°10′N ||data-sort-value="33.367"| 33°22′E  || [[Nicosia]] || {{n/a}} || {{CYP}}
+|-
+| data-sort-value="35.117"| 35°07′N ||data-sort-value="-89.967"| 89°58′W  || [[Memphis, Tennessee|Memphis]] || {{flag|Tennessee}} || {{USA}}
+|-
+| data-sort-value="35.117"| 35°07′N ||data-sort-value="-106.617"| 106°37′W  || [[Albuquerque, New Mexico|Albuquerque]] || {{flag|New Mexico}} || {{USA}}
+|-
+| data-sort-value="35.017"| 35°01′N ||data-sort-value="135.85"| 135°51′E  || [[Ōtsu, Shiga|Ōtsu]] || [[Shiga]] || {{JPN}}
+|-
+| data-sort-value="34.983"| 34°59′N ||data-sort-value="138.383"| 138°23′E  || [[Shizuoka, Shizuoka|Shizuoka]] || [[Shizuoka Prefecture|Shizuoka]] || {{JPN}}
+|-
+| data-sort-value="34.767"| 34°46′N ||data-sort-value="113.65"| 113°39′E  || [[Zhengzhou]] || [[Henan]] || {{PRC}}
+|-
+| data-sort-value="34.733"| 34°44′N ||data-sort-value="-92.333"| 92°20′W  || [[Little Rock, Arkansas|Little Rock]] || {{flag|Arkansas}} || {{USA}}
+|-
+| data-sort-value="34.733"| 34°44′N ||data-sort-value="10.767"| 10°46′E  || [[Sfax]] || {{n/a}} || {{TUN}}
+|-
+| data-sort-value="34.717"| 34°43′N ||data-sort-value="136.5"| 136°30′E  || [[Tsu, Mie|Tsu]] || [[Mie Prefecture|Mie]] || {{JPN}}
+|-
+| data-sort-value="34.7"| 34°42′N ||data-sort-value="135.5"| 135°30′E  || [[Osaka]] || [[Osaka]] || {{JPN}}
+|-
+| data-sort-value="34.683"| 34°41′N ||data-sort-value="135.2"| 135°12′E  || [[Kobe|Kōbe]] || [[Hyogo]] || {{JPN}}
+|-
+| data-sort-value="34.683"| 34°41′N ||data-sort-value="135.8"| 135°48′E  || [[Nara, Nara|Nara]] || [[Nara Prefecture|Nara]] || {{JPN}}
+|-
+| data-sort-value="34.65"| 34°39′N ||data-sort-value="133.917"| 133°55′E  || [[Okayama]] || [[Okayama]] || {{JPN}}
+|-
+| data-sort-value="34.533"| 34°32′N ||data-sort-value="69.167"| 69°10′E  || [[Kabul]] || {{n/a}} || {{AFG}}
+|-
+| data-sort-value="34.433"| 34°26′N ||data-sort-value="-119.717"| 119°43′W  || [[Santa Barbara, California|Santa Barbara]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="34.383"| 34°23′N ||data-sort-value="132.45"| 132°27′E  || [[Hiroshima]] || [[Hiroshima]] || {{JPN}}
+|-
+| data-sort-value="34.35"| 34°21′N ||data-sort-value="134.05"| 134°03′E  || [[Takamatsu, Kagawa|Takamatsu]] || [[Kagawa Prefecture|Kagawa]] || {{JPN}}
+|-
+| data-sort-value="34.267"| 34°16′N ||data-sort-value="108.9"| 108°54′E  || [[Xi'an]] || [[Shaanxi]] || {{PRC}}
+|-
+| data-sort-value="34.233"| 34°14′N ||data-sort-value="135.167"| 135°10′E  || [[Wakayama, Wakayama|Wakayama]] || [[Wakayama]] || {{JPN}}
+|-
+| data-sort-value="34.217"| 34°13′N ||data-sort-value="-77.917"| 77°55′W  || [[Wilmington, North Carolina|Wilmington]] || {{flag|North Carolina}} || {{USA}} 
+|-
+| data-sort-value="34.183"| 34°11′N ||data-sort-value="131.467"| 131°28′E  || [[Yamaguchi, Yamaguchi|Yamaguchi]] || [[Yamaguchi Prefecture|Yamaguchi]] || {{JPN}}
+|-
+| data-sort-value="34.083"| 34°05′N ||data-sort-value="74.783"| 74°47′E  || [[Srinagar]] || [[Jammu and Kashmir]] || {{IND}}
+|-
+| data-sort-value="34.067"| 34°04′N ||data-sort-value="134.55"| 134°33′E  || [[Tokushima, Tokushima|Tokushima]] || [[Tokushima]] || {{JPN}}
+|-
+| data-sort-value="34.05"| 34°03′N ||data-sort-value="-118.25"| 118°15′W  || [[Los Angeles]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="34.033"| 34°02′N ||data-sort-value="-6.833"| 6°50′W  || [[Rabat]] || {{n/a}} || {{MAR}}
+|-
+| data-sort-value="34.017"| 34°01′N ||data-sort-value="71.583"| 71°35′E  || [[Peshawar]] || [[Khyber Pakhtunkhwa]] || {{PAK}}
+|-
+| data-sort-value="34"| 34°00′N ||data-sort-value="-81.05"| 81°03′W  || [[Columbia, South Carolina|Columbia]] || {{flag|South Carolina}} || {{USA}}
+|-
+| data-sort-value="33.95"| 33°57′N ||data-sort-value="-117.4"| 117°24′W  || [[Riverside, California|Riverside]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="33.883"| 33°53′N ||data-sort-value="35.517"| 35°31′E  || [[Beirut]] || {{n/a}} || {{LBN}}
+|-
+| data-sort-value="33.833"| 33°50′N ||data-sort-value="132.767"| 132°46′E  || [[Matsuyama, Ehime|Matsuyama]] || [[Ehime]] || {{JPN}}
+|-
+| data-sort-value="33.75"| 33°45′N ||data-sort-value="-84.383"| 84°23′W  || [[Atlanta]] || {{flag|Georgia (U.S. state)|name=Georgia}} || {{USA}}
+|-
+| data-sort-value="33.717"| 33°43′N ||data-sort-value="73.067"| 73°04′E  || [[Islamabad]] || [[Islamabad Capital Territory]] || {{PAK}}
+|-
+| data-sort-value="33.65"| 33°39′N ||data-sort-value="-86.817"| 86°49′W  || [[Birmingham, Alabama|Birmingham]] || {{flag|Alabama}} || {{USA}}
+|-
+| data-sort-value="33.6"| 33°36′N ||data-sort-value="73.033"| 73°02′E  || [[Rawalpindi]] || [[Punjab (Pakistan)|Punjab]] || {{PAK}}
+|-
+| data-sort-value="33.583"| 33°35′N ||data-sort-value="130.4"| 130°24′E  || [[Fukuoka]] || [[Fukuoka]] || {{JPN}}
+|-
+| data-sort-value="33.567"| 33°34′N ||data-sort-value="133.533"| 133°32′E  || [[Kōchi, Kōchi|Kōchi]] || [[Kōchi Prefecture|Kōchi]] || {{JPN}}
+|-
+| data-sort-value="33.533"| 33°32′N ||data-sort-value="-7.583"| 7°35′W  || [[Casablanca]] || {{n/a}} || {{MAR}}
+|-
+| data-sort-value="33.517"| 33°31′N ||data-sort-value="36.3"| 36°18′E  || [[Damascus]] || {{n/a}} || {{SYR}}
+|-
+| data-sort-value="33.45"| 33°27′N ||data-sort-value="-112.067"| 112°04′W  || [[Phoenix, Arizona|Phoenix]] || {{flag|Arizona}} || {{USA}}
+|-
+| data-sort-value="33.333"| 33°20′N ||data-sort-value="44.433"| 44°26′E  || [[Baghdad]] || {{n/a}} || {{IRQ}}
+|-
+| data-sort-value="33.267"| 33°16′N ||data-sort-value="130.3"| 130°18′E  || [[Saga, Saga|Saga]] || [[Saga]] || {{JPN}}
+|-
+| data-sort-value="33.233"| 33°14′N ||data-sort-value="131.6"| 131°36′E  || [[Ōita, Ōita|Ōita]] || [[Ōita Prefecture|Ōita]] || {{JPN}}
+|-
+| data-sort-value="32.9"| 32°54′N ||data-sort-value="13.183"| 13°11′E  || [[Tripoli]] || {{n/a}} || {{LBA}}
+|-
+| data-sort-value="32.783"| 32°47′N ||data-sort-value="-79.933"| 79°56′W  || [[Charleston, South Carolina|Charleston]] || {{flag|South Carolina}} || {{USA}}
+|-
+| data-sort-value="32.783"| 32°47′N ||data-sort-value="-96.8"| 96°48′W  || [[Dallas]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="32.783"| 32°47′N ||data-sort-value="129.867"| 129°52′E  || [[Nagasaki]] || [[Nagasaki]] || {{JPN}}
+|-
+| data-sort-value="32.783"| 32°47′N ||data-sort-value="130.733"| 130°44′E  || [[Kumamoto]] || [[Kumamoto]] || {{JPN}}
+|-
+| data-sort-value="32.717"| 32°43′N ||data-sort-value="-117.167"| 117°10′W  || [[San Diego]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="32.667"| 32°40′N ||data-sort-value="-115.467"| 115°28′W  || [[Mexicali]] || {{flag|Baja California}} || {{MEX}}
+|-
+| data-sort-value="32.65"| 32°39′N ||data-sort-value="-16.917"| 16°55′W  || [[Funchal]] || {{flag|Madeira}} || {{POR}}
+|-
+| data-sort-value="32.633"| 32°38′N ||data-sort-value="-115.55"| 115°33′W  || [[El Centro, California|El Centro]] || {{flag|California}} || {{USA}}
+|-
+| data-sort-value="32.633"| 32°38′N ||data-sort-value="51.65"| 51°39′E  || [[Isfahan (city)|Isfahan]] || {{n/a}} || {{IRN}}
+|-
+| data-sort-value="32.617"| 32°37′N ||data-sort-value="41.033"| 41°02′E  || [[Karbala]] || {{n/a}} || {{IRQ}}
+|-
+| data-sort-value="32.533"| 32°32′N ||data-sort-value="-117.033"| 117°02′W  || [[Tijuana]] || {{flag|Baja California}} || {{MEX}}
+|-
+| data-sort-value="32.467"| 32°28′N ||data-sort-value="-93.7"| 93°42′W  || [[Shreveport, Louisiana|Shreveport]] || {{flag|Louisiana}} || {{USA}}
+|-
+| data-sort-value="32.3"| 32°18′N ||data-sort-value="-90.183"| 90°11′W  || [[Jackson, Mississippi|Jackson]] || {{flag|Mississippi}} || {{USA}}
+|-
+| data-sort-value="32.3"| 32°18′N ||data-sort-value="-64.783"| 64°47′W  || [[Hamilton, Bermuda|Hamilton]] || {{flag|Bermuda}} || {{GBR}}
+|-
+| data-sort-value="32.217"| 32°13′N ||data-sort-value="-110.933"| 110°56′W  || [[Tucson, Arizona|Tucson]] || {{flag|Arizona}} || {{USA}}
+|-
+| data-sort-value="32.117"| 32°07′N ||data-sort-value="20.067"| 20°04′E  || [[Benghazi]] || {{n/a}} || {{LBA}}
+|-
+| data-sort-value="32.067"| 32°04′N ||data-sort-value="34.783"| 34°47′E  || [[Tel Aviv]] || {{n/a}} || {{ISR}}
+|-
+| data-sort-value="32.05"| 32°03′N ||data-sort-value="118.767"| 118°46′E  || [[Nanjing]] || [[Jiangsu]] || {{PRC}}
+|-
+| data-sort-value="32"| 32°00′N ||data-sort-value="44.367"| 44°22′E  || [[Najaf]] || {{n/a}} || {{IRQ}}
+|-
+| data-sort-value="31.933"| 31°56′N ||data-sort-value="35.933"| 35°56′E  || [[Amman]] || {{n/a}} || {{JOR}}
+|-
+| data-sort-value="31.917"| 31°55′N ||data-sort-value="131.417"| 131°25′E  || [[Miyazaki, Miyazaki|Miyazaki]] || [[Miyazaki Prefecture|Miyazaki]] || {{JPN}}
+|-
+| data-sort-value="31.85"| 31°51′N ||data-sort-value="-116.6"| 116°36′W  || [[Ensenada, Baja California|Ensenada]] || {{flag|Baja California}} || {{MEX}} 
+|-
+| data-sort-value="31.783"| 31°47′N ||data-sort-value="-106.417"| 106°25′W  || [[El Paso, Texas|El Paso]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="31.783"| 31°47′N ||data-sort-value="35.217"| 35°13′E  || [[Jerusalem]] || {{n/a}} || {{ISR}} [Disputed]
+|-
+| data-sort-value="31.733"| 31°44′N ||data-sort-value="-106.483"| 106°29′W  || [[Ciudad Juárez]] || {{flag|Chihuahua}} || {{MEX}}
+|-
+| data-sort-value="31.633"| 31°38′N ||data-sort-value="74.867"| 74°52′E  || [[Amritsar]] || [[Punjab (India)|Punjab]] || {{IND}}
+|-
+| data-sort-value="31.633"| 31°38′N ||data-sort-value="-8.017"| 8°01′W  || [[Marrakech]] || {{n/a}} || {{MAR}}
+|-
+| data-sort-value="31.617"| 31°37′N ||data-sort-value="65.717"| 65°43′E  || [[Kandahar]] || {{n/a}} || {{AFG}}
+|-
+| data-sort-value="31.6"| 31°36′N ||data-sort-value="130.55"| 130°33′E  || [[Kagoshima]] || [[Kagoshima]] || {{JPN}}
+|-
+| data-sort-value="31.55"| 31°33′N ||data-sort-value="74.35"| 74°21′E  || [[Lahore]] || [[Punjab, Pakistan|Punjab]] || {{PAK}}
+|-
+| data-sort-value="31.517"| 31°31′N ||data-sort-value="34.45"| 34°27′E  || [[Gaza City|Gaza]] || [[Gaza Strip]] || {{PLE}}
+|-
+| data-sort-value="31.417"| 31°25′N ||data-sort-value="73.083"| 73°05′E  || [[Faisalabad]] || [[Punjab (Pakistan)|Punjab]] || {{PAK}}
+|-
+| data-sort-value="31.25"| 31°15′N ||data-sort-value="32.283"| 32°17′E  || [[Port Said]] || {{n/a}} || {{EGY}}
+|-
+| data-sort-value="31.2"| 31°12′N ||data-sort-value="29.917"| 29°55′E  || [[Alexandria]] || {{n/a}} || {{EGY}}
+|-
+| data-sort-value="31.2"| 31°12′N ||data-sort-value="121.5"| 121°30′E  || [[Shanghai]] || {{n/a}} || {{PRC}}
+|-
+| data-sort-value="31.1"| 31°06′N ||data-sort-value="77.167"| 77°10′E  || [[Shimla]] || [[Himachal Pradesh]] || {{IND}}
+|-
+| data-sort-value="30.917"| 30°55′N ||data-sort-value="75.85"| 75°51′E  || [[Ludhiana]] || [[Punjab (India)|Punjab]] || {{IND}}
+|-
+| data-sort-value="30.75"| 30°45′N ||data-sort-value="76.783"| 76°47′E  || [[Chandigarh]] || {{n/a}} || {{IND}}
+|-
+| data-sort-value="30.7"| 30°42′N ||data-sort-value="-88.05"| 88°03′W  || [[Mobile, Alabama|Mobile]] || {{flag|Alabama}} || {{USA}}
+|-
+| data-sort-value="30.667"| 30°40′N ||data-sort-value="104.067"| 104°04′E  || [[Chengdu]] || [[Sichuan]] || {{PRC}}
+|-
+| data-sort-value="30.583"| 30°35′N ||data-sort-value="114.283"| 114°17′E  || [[Wuhan]] || [[Hubei]] || {{PRC}}
+|-
+| data-sort-value="30.5"| 30°30′N ||data-sort-value="47.817"| 47°49′E  || [[Basra]] || {{n/a}} || {{IRQ}}
+|-
+| data-sort-value="30.433"| 30°26′N || data-sort-value="-9.6"| 9°36′W || [[Agadir]] || [[Agadir-Ida Ou Tanane Prefecture|Agadir Prefecture]] || {{MAR}}
+|-
+| data-sort-value="30.333"| 30°20′N ||data-sort-value="-81.667"| 81°40′W  || [[Jacksonville, Florida|Jacksonville]] || {{flag|Florida}} || {{USA}}
+|-
+| data-sort-value="30.25"| 30°15′N ||data-sort-value="-97.75"| 97°45′W  || [[Austin, Texas|Austin]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="30.25"| 30°15′N ||data-sort-value="120.167"| 120°10′E  || [[Hangzhou]] || [[Zhejiang]] || {{PRC}}
+|-
+| data-sort-value="30.2"| 30°12′N ||data-sort-value="71.467"| 71°28′E  || [[Multan]] || [[Punjab (Pakistan)|Punjab]] || {{PAK}}
+|-
+| data-sort-value="30.05"| 30°3′N ||data-sort-value="31.233"| 31°14′E  || [[Cairo]] || {{n/a}} || {{EGY}}
+|-
+|}
+
+==[[30th parallel north|30° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="29.967"| 29°58′N ||data-sort-value="-90.05"| 90°03′W  || [[New Orleans]] || {{flag|Louisiana}} || {{USA}}
+|-
+| data-sort-value="29.967"| 29°58′N ||data-sort-value="32.55"| 32°33′E  || [[Suez]] || {{n/a}} || {{EGY}}
+|-
+| data-sort-value="29.767"| 29°46′N ||data-sort-value="-95.383"| 95°23′W  || [[Houston]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="29.65"| 29°39′N ||data-sort-value="91.1"| 91°06′E  || [[Lhasa]] || [[Tibet Autonomous Region|Tibet]] || {{PRC}}
+|-
+| data-sort-value="29.567"| 29°34′N ||data-sort-value="106.567"| 106°34′E  || [[Chongqing]] || {{n/a}} || {{PRC}}
+|-
+| data-sort-value="29.55"| 29°33′N ||data-sort-value="34.95"| 34°57′E  || [[Eilat]] || {{n/a}} || {{ISR}}
+|-
+| data-sort-value="29.417"| 29°25′N ||data-sort-value="-98.5"| 98°30′W  || [[San Antonio]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="29.367"| 29°22′N ||data-sort-value="47.983"| 47°59′E  || [[Kuwait City]] || {{n/a}} || {{KWT}}
+|-
+| data-sort-value="29.267"| 29°16′N ||data-sort-value="88.883"| 88°53′E  || [[Shigatse]] || [[Tibet]] || {{PRC}}
+|-
+| data-sort-value="29.1"| 29°06′N ||data-sort-value="-110.95"| 110°57′W  || [[Hermosillo, Sonora|Hermosillo]] || {{flag|Sonora}} || {{MEX}} 
+|-
+| data-sort-value="28.633"| 28°38′N ||data-sort-value="-106.083"| 106°05′W  || [[Chihuahua, Chihuahua|Chihuahua]] || {{flag|Chihuahua}} || {{MEX}}
+|-
+| data-sort-value="28.617"| 28°37′N ||data-sort-value="77.217"| 77°13′E  || [[New Delhi]] || [[Delhi]] || {{IND}}
+|-
+| data-sort-value="28.467"| 28°28′N ||data-sort-value="-16.25"| 16°15′W  || [[Santa Cruz de Tenerife]] || {{flag|Canary Islands}} || {{ESP}}
+|-
+| data-sort-value="28.417"| 28°25′N ||data-sort-value="-81.3"| 81°18′W  || [[Orlando, Florida|Orlando]] || {{flag|Florida}} || {{USA}}
+|-
+| data-sort-value="28.15"| 28°09′N ||data-sort-value="-15.417"| 15°25′W  || [[Las Palmas de Gran Canaria]] || {{flag|Canary Islands}} || {{ESP}}
+|-
+| data-sort-value="27.95"| 27°57′N ||data-sort-value="-82.467"| 82°28′W  || [[Tampa, Florida|Tampa]] || {{flag|Florida}} || {{USA}}
+|-
+| data-sort-value="27.733"| 27°44′N ||data-sort-value="-97.4"| 97°24′W  || [[Corpus Christi, Texas|Corpus Christi]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="27.733"| 27°44′N ||data-sort-value="-15.567"| 15°34′W  || [[Maspalomas]] || {{flag|Canary Islands}} || {{ESP}}
+|-
+| data-sort-value="27.7"| 27°42′N ||data-sort-value="85.333"| 85°20′E  || [[Kathmandu]] || {{n/a}} || {{NEP}}
+|-
+| data-sort-value="27.483"| 27°29′N ||data-sort-value="95"| 95°00′E  || [[Dibrugarh]] || [[Assam]] || {{IND}}
+|-
+| data-sort-value="27.467"| 27°28′N ||data-sort-value="89.65"| 89°39′E  || [[Thimphu]] || {{n/a}} || {{BHU}}
+|-
+| data-sort-value="27.333"| 27°20′N ||data-sort-value="88.617"| 88°37′E  || [[Gangtok]] || [[Sikkim]] || {{IND}}
+|-
+| data-sort-value="27.183"| 27°11′N ||data-sort-value="78.017"| 78°01′E  || [[Agra]] || [[Uttar Pradesh]] || {{IND}}
+|-
+| data-sort-value="27.15"| 27°09′N ||data-sort-value="-13.2"| 13°12′W  || [[El Aaiún]] || {{flag|Western Sahara}} || {{MAR}}
+|-
+| data-sort-value="27.033"| 27°02′N ||data-sort-value="14.433"| 14°26′E  || [[Sabha, Libya|Sabha]] || {{n/a}} || {{LBA}}
+|-
+| data-sort-value="26.933"| 26°56′N ||data-sort-value="75.817"| 75°49′E  || [[Jaipur]] || [[Rajasthan]] || {{IND}}
+|-
+| data-sort-value="26.85"| 26°51′N ||data-sort-value="80.95"| 80°57′E  || [[Lucknow]] || [[Uttar Pradesh]] || {{IND}}
+|-
+| data-sort-value="26.717"| 26°43′N ||data-sort-value="88.433"| 88°26′E  || [[Siliguri]] || [[West Bengal]] || {{IND}}
+|-
+| data-sort-value="26.633"| 26°38′N ||data-sort-value="92.8"| 92°48′E  || [[Tezpur]] || [[Assam]] || {{IND}}
+|-
+| data-sort-value="26.467"| 26°28′N ||data-sort-value="80.333"| 80°20′E  || [[Kanpur]] || [[Uttar Pradesh]] || {{IND}}
+|-
+| data-sort-value="26.283"| 26°17′N ||data-sort-value="50.2"| 50°12′E  || [[Dammam]] || {{n/a}} || {{SAU}}
+|-
+| data-sort-value="26.217"| 26°13′N ||data-sort-value="127.683"| 127°41′E  || [[Naha, Okinawa|Naha]] || [[Okinawa]] || {{JPN}}
+|-
+| data-sort-value="26.217"| 26°13′N ||data-sort-value="50.583"| 50°35′E  || [[Manama]] || {{n/a}} || {{BHR}}
+|-
+| data-sort-value="26.183"| 26°11′N ||data-sort-value="91.733"| 91°44′E  || [[Guwahati]] || [[Assam]] || {{IND}}
+|-
+| data-sort-value="25.917"| 25°55′N ||data-sort-value="-97.483"| 97°29′W  || [[Brownsville, Texas|Brownsville]] || {{flag|Texas}} || {{USA}}
+|-
+| data-sort-value="25.783"| 25°47′N ||data-sort-value="-80.217"| 80°13′W  || [[Miami]] || {{flag|Florida}} || {{USA}}
+|-
+| data-sort-value="25.683"| 25°41′N ||data-sort-value="32.65"| 32°39′E  || [[Luxor]] || {{n/a}} || {{EGY}}
+|-
+| data-sort-value="25.667"| 25°40′N ||data-sort-value="-100.3"| 100°18′W  || [[Monterrey]] || {{flag|Nuevo León}} || {{MEX}}
+|-
+| data-sort-value="25.617"| 25°37′N ||data-sort-value="85.15"| 85°09′E  || [[Patna]] || [[Bihar]] || {{IND}} 
+|-
+| data-sort-value="25.567"| 25°34′N ||data-sort-value="91.883"| 91°53′E  || [[Shillong]] || [[Meghalaya]] || {{IND}}
+|-
+| data-sort-value="25.533"| 25°32′N ||data-sort-value="-103.45"| 103°27′W  || [[Torreón]] || {{flag|Coahuila}} || {{MEX}}
+|-
+| data-sort-value="25.317"| 25°19′N ||data-sort-value="79.633"| 79°38′E  || [[Kulpahar]] || [[Uttar Pradesh]] || {{IND}}
+|-
+| data-sort-value="25.283"| 25°17′N ||data-sort-value="51.533"| 51°32′E  || [[Doha]] || {{n/a}} || {{QAT}}
+|-
+| data-sort-value="25.25"| 25°15′N ||data-sort-value="55.3"| 55°18′E  || [[Dubai]] || {{flag|Dubai}} || {{ARE}}
+|-
+| data-sort-value="25.383"| 25°23′N ||data-sort-value="68.367"| 68°22′E  || [[Hyderabad, Sindh|Hyderabad]] || [[Sindh]] || {{PAK}}
+|-
+| data-sort-value="25.067"| 25°04′N ||data-sort-value="-77.333"| 77°20′W  || [[Nassau, Bahamas|Nassau]] || {{n/a}} || {{BHS}}
+|-
+| data-sort-value="25.067"| 25°04′N ||data-sort-value="102.683"| 102°41′E  || [[Kunming]] || [[Yunnan]] || {{PRC}}
+|-
+| data-sort-value="25.033"| 25°02′N ||data-sort-value="121.633"| 121°38′E  || [[Taipei]] || {{n/a}} || {{ROC-TW}}
+|-
+| data-sort-value="24.867"| 24°52′N ||data-sort-value="67.017"| 67°01′E  || [[Karachi]] || [[Sindh]] || {{PAK}}
+|-
+| data-sort-value="24.8"| 24°48′N ||data-sort-value="-107.383"| 107°23′W  || [[Culiacán]] || {{flag|Sinaloa}} || {{MEX}}
+|-
+| data-sort-value="24.633"| 24°38′N ||data-sort-value="46.717"| 46°43′E  || [[Riyadh]] || {{n/a}} || {{SAU}}
+|-
+| data-sort-value="24.567"| 24°34′N ||data-sort-value="-81.783"| 81°47′W  || [[Key West, Florida|Key West]] || {{flag|Florida}} || {{USA}}
+|-
+| data-sort-value="24.467"| 24°28′N ||data-sort-value="39.6"| 39°36′E  || [[Medina]] || {{n/a}} || {{SAU}}
+|-
+| data-sort-value="24.467"| 24°28′N ||data-sort-value="54.367"| 54°22′E  || [[Abu Dhabi]] || {{flag|Abu Dhabi}} || {{ARE}}
+|-
+| data-sort-value="24.200"| 24°12′N ||data-sort-value="55.73"| 55°44′E || [[Al Ain]] || {{flag|Abu Dhabi}} || {{ARE}}
+|-
+| data-sort-value="24.15"| 24°09′N ||data-sort-value="120.667"| 120°40′E  || [[Taichung]] || {{n/a}} || {{ROC-TW}}
+|-
+| data-sort-value="24.017"| 24°01′N ||data-sort-value="-104.667"| 104°40′W  || [[Durango, Durango|Durango]] || {{flag|Durango}} || {{MEX}}
+|-
+| data-sort-value="23.833"| 23°50′N ||data-sort-value="91.267"| 91°16′E  || [[Agartala]] || [[Tripura]] || {{IND}}
+|-
+| data-sort-value="23.7"| 23°42′N ||data-sort-value="90.383"| 90°23′E  || [[Dhaka]] || {{n/a}} || {{BGD}}
+|-
+| data-sort-value="23.617"| 23°37′N ||data-sort-value="58.6"| 58°36′E  || [[Muscat, Oman|Muscat]] || {{n/a}} || {{OMN}}
+|-
+| data-sort-value="23.133"| 23°08′N ||data-sort-value="-82.383"| 82°23′W  || [[Havana]] || {{n/a}} || {{CUB}}
+|-
+| data-sort-value="23.133"| 23°08′N ||data-sort-value="113.267"| 113°16′E  || [[Guangzhou]] || [[Guangdong]] || {{PRC}}
+|-
+| data-sort-value="23.033"| 23°02′N ||data-sort-value="72.583"| 72°35′E  || [[Ahmedabad]] || [[Gujarat]] || {{IND}} 
+|-
+| data-sort-value="23.033"| 23°02′N ||data-sort-value="113.717"| 113°43′E  || [[Dongguan]] || [[Guangdong]] || {{PRC}}
+|-
+| data-sort-value="22.983"| 22°59′N ||data-sort-value="120.183"| 120°11′E  || [[Tainan]] || {{n/a}} || {{ROC-TW}}
+|-
+| data-sort-value="22.883"| 22°53′N ||data-sort-value="-109.917"| 109°55′W  || [[Cabo San Lucas]] || {{flag|Baja California Sur}} || {{MEX}}
+|-
+| data-sort-value="22.817"| 22°49′N ||data-sort-value="108.317"| 108°19′E  || [[Nanning]] || [[Guangxi]] || {{PRC}}
+|-
+| data-sort-value="22.633"| 22°38′N ||data-sort-value="120.267"| 120°16′E  || [[Kaohsiung]] || {{n/a}} || {{ROC-TW}}
+|-
+| data-sort-value="22.567"| 22°34′N ||data-sort-value="88.367"| 88°22′E  || [[Kolkata|Kolkata (Calcutta)]] || [[West Bengal]] || {{IND}}
+|-
+| data-sort-value="22.55"| 22°33′N ||data-sort-value="114.1"| 114°06′E  || [[Shenzhen]] || [[Guangdong]] || {{PRC}}
+|-
+| data-sort-value="22.367"| 22°22′N ||data-sort-value="91.8"| 91°48′E  || [[Chittagong]] || {{n/a}} || {{BGD}}
+|-
+| data-sort-value="22.283"| 22°17′N ||data-sort-value="114.167"| 114°10′E  || [[Hong Kong]] || {{HKG}} || {{PRC}}
+|-
+| data-sort-value="22.25"| 22°15′N ||data-sort-value="-97.867"| 97°52′W  || [[Tampico]] || {{flag|Tamaulipas}} || {{MEX}}
+|-
+| data-sort-value="22.167"| 22°10′N ||data-sort-value="113.55"| 113°33′E ||[[Macau]]|| {{MAC}} || {{PRC}}
+|-
+| data-sort-value="22.15"| 22°09′N ||data-sort-value="-100.85"| 100°51′W  || [[San Luis Potosí, San Luis Potosí|San Luis Potosí]] || {{flag|San Luis Potosí}} || {{MEX}}
+|-
+| data-sort-value="21.883"| 21°53′N ||data-sort-value="-102.3"| 102°18′W  || [[Aguascalientes, Aguascalientes|Aguascalientes]] || {{flag|Aguascalientes}} || {{MEX}}
+|-
+| data-sort-value="21.55"| 21°33′N ||data-sort-value="39.167"| 39°10′E  || [[Jeddah]] || {{n/a}} || {{SAU}}
+|-
+| data-sort-value="21.467"| 21°28′N ||data-sort-value="-71.133"| 71°08′W  || [[Cockburn Town]] || {{flag|Turks and Caicos Islands}} || {{UK}}
+|-
+| data-sort-value="21.417"| 21°25′N ||data-sort-value="39.817"| 39°49′E  || [[Mecca]] || {{n/a}} || {{SAU}}
+|-
+| data-sort-value="21.317"| 21°19′N ||data-sort-value="-157.833"| 157°50′W  || [[Honolulu]] || {{flag|Hawaii}} || {{USA}}
+|-
+| data-sort-value="21.167"| 21°10′N ||data-sort-value="-86.85"| 86°51′W  || [[Cancún]] || {{flag|Quintana Roo}} || {{MEX}}
+|-
+| data-sort-value="21.167"| 21°10′N ||data-sort-value="72.833"| 72°50′E  || [[Surat, Gujarat|Surat]] || [[Gujarat]] || {{IND}}
+|-
+| data-sort-value="21.133"| 21°08′N ||data-sort-value="79.083"| 79°05′E  || [[Nagpur]] || [[Maharashtra]] || {{IND}}
+|-
+| data-sort-value="21.117"| 21°07′N ||data-sort-value="-101.683"| 101°41′W  || [[León, Guanajuato|León]] || {{flag|Guanajuato}} || {{MEX}}
+|-
+| data-sort-value="21.033"| 21°02′N ||data-sort-value="105.85"| 105°51′E  || [[Hanoi]] || {{n/a}} || {{VIE}}
+|-
+| data-sort-value="20.967"| 20°58′N ||data-sort-value="-89.617"| 89°37′W  || [[Mérida, Yucatán|Mérida]] || {{flag|Yucatán}} || {{MEX}}
+|-
+| data-sort-value="20.85"| 20°51′N ||data-sort-value="106.683"| 106°41′E  || [[Hai Phong]] || {{n/a}} || {{VIE}}
+|-
+| data-sort-value="20.717"| 20°43′N ||data-sort-value="-103.4"| 103°24′W  || [[Zapopan, Jalisco|Zapopan]] || {{flag|Jalisco}} || {{MEX}}
+|-
+| data-sort-value="20.667"| 20°40′N ||data-sort-value="-105.267"| 105°16′W  || [[Puerto Vallarta]] || {{flag|Jalisco}} || {{MEX}}
+|-
+| data-sort-value="20.667"| 20°40′N ||data-sort-value="-103.35"| 103°21′W  || [[Guadalajara, Jalisco|Guadalajara]] || {{flag|Jalisco}} || {{MEX}}
+|-
+| data-sort-value="20.583"| 20°35′N ||data-sort-value="-100.4"| 100°24′W  || [[Santiago de Querétaro|Querétaro]] || {{flag|Querétaro}} || {{MEX}}
+|-
+| data-sort-value="20.067"| 20°04′N ||data-sort-value="110.567"| 110°34′E  || [[Haikou]] || {{flag|Hainan}} || {{PRC}}
+|-
+| data-sort-value="20.017"| 20°01′N ||data-sort-value="-75.817"| 75°49′W  || [[Santiago de Cuba]] || {{n/a}} || {{CUB}}
+|-
+|}
+
+==[[20th parallel north|20° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="19.917"| 19°55′N ||data-sort-value="99.833"| 99°50′E  || [[Chiang Rai]] || [[Chiang Rai Province]] || {{THA}}
+|-
+| data-sort-value="19.75"| 19°45′N ||data-sort-value="96.1"| 96°06′E  || [[Naypyidaw]] || {{n/a}} || {{MYA}}
+|-
+| data-sort-value="19.7"| 19°42′N ||data-sort-value="-155.083"| 155°05′W  || [[Hilo, Hawaii|Hilo]] || {{flag|Hawaii}} || {{USA}}
+|-
+| data-sort-value="19.433"| 19°26′N ||data-sort-value="-99.133"| 99°08′W  || {{flagicon|Mexican Federal District}} [[Mexico City]] || {{n/a}} || {{MEX}}
+|-
+| data-sort-value="19.3"| 19°18′N ||data-sort-value="-81.383"| 81°23′W  || [[George Town, Cayman Islands|George Town]] || {{flag|Cayman Islands}} || {{UK}}
+|-
+| data-sort-value="19.183"| 19°11′N ||data-sort-value="-96.15"| 96°09′W  || [[Veracruz, Veracruz|Veracruz]] || {{flag|Veracruz}} || {{MEX}}
+|-
+| data-sort-value="19.05"| 19°03′N ||data-sort-value="-98.217"| 98°13′W  || [[Puebla, Puebla|Puebla]] || {{flag|Puebla}} || {{MEX}}
+|-
+| data-sort-value="18.983"| 18°59′N ||data-sort-value="72.833"| 72°50′E  || [[Mumbai]] || [[Maharashtra]] || {{IND}}
+|-
+| data-sort-value="18.8"| 18°48′N ||data-sort-value="99"| 99°00′E  || [[Chiang Mai]] || [[Chiang Mai Province]] || {{THA}}
+|-
+| data-sort-value="18.533"| 18°32′N ||data-sort-value="-72.333"| 72°20′W  || [[Port-au-Prince]] || {{n/a}} || {{HAI}}
+|-
+| data-sort-value="18.517"| 18°31′N ||data-sort-value="73.85"| 73°51′E  || [[Pune]] || [[Maharashtra]] || {{IND}}
+|-
+| data-sort-value="18.467"| 18°28′N ||data-sort-value="-69.95"| 69°57′W  || [[Santo Domingo]] || {{n/a}} || {{DOM}}
+|-
+| data-sort-value="18.45"| 18°27′N ||data-sort-value="-66.067"| 66°04′W  || [[San Juan, Puerto Rico|San Juan]] || {{flag|Puerto Rico}} || {{USA}}
+|-
+| data-sort-value="18.433"| 18°26′N ||data-sort-value="-64.617"| 64°37′W  || [[Road Town]] || {{flag|British Virgin Islands}} || {{GBR}}
+|-
+| data-sort-value="18.35"| 18°21′N ||data-sort-value="-64.95"| 64°57′W  || [[Charlotte Amalie, United States Virgin Islands|Charlotte Amalie]] || {{flag|United States Virgin Islands}} || {{USA}}
+|-
+| data-sort-value="18.217"| 18°13′N ||data-sort-value="-63.05"| 63°03′W  || [[The Valley, Anguilla|The Valley]] || {{flag|Anguilla}} || {{GBR}}
+|-
+| data-sort-value="18.1"| 18°06′N ||data-sort-value="-15.95"| 15°57′W  || [[Nouakchott]] || {{n/a}} || {{MRT}}
+|-
+| data-sort-value="17.983"| 17°59′N ||data-sort-value="-76.8"| 76°48′W  || [[Kingston, Jamaica|Kingston]] || {{n/a}} || {{JAM}}
+|-
+| data-sort-value="17.967"| 17°58′N ||data-sort-value="102.6"| 102°36′E  || [[Vientiane]] || {{n/a}} || {{LAO}}
+|-
+| data-sort-value="17.683"| 17°41′N ||data-sort-value="83.217"| 83°13′E  || [[Visakhapatnam]] || [[Andhra Pradesh]] || {{IND}}
+|-
+| data-sort-value="17.5"| 17°30′N ||data-sort-value="-88.183"| 88°11′W  || [[Belize City]] || {{n/a}} || {{BLZ}}
+|-
+| data-sort-value="17.417"| 17°25′N ||data-sort-value="102.75"| 102°45′E  || [[Udon Thani]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="17.367"| 17°22′N ||data-sort-value="78.483"| 78°29′E  || [[Hyderabad, India|Hyderabad]] || [[Telangana]] || {{IND}}
+|-
+| data-sort-value="17.3"| 17°18′N ||data-sort-value="-62.733"| 62°44′W  || [[Basseterre]] || {{n/a}} || {{SKN}}
+|-
+| data-sort-value="17.25"| 17°15′N ||data-sort-value="-88.767"| 88°46′W  || [[Belmopan]] || {{n/a}} || {{BLZ}}
+|-
+| data-sort-value="17.117"| 17°07′N ||data-sort-value="-61.85"| 61°51′W  || [[St. John's, Antigua and Barbuda|St. John's]] || {{n/a}} || {{ATG}}
+|-
+| data-sort-value="17.017"| 17°01′N ||data-sort-value="54.083"| 54°05′E  || [[Salalah]] || {{n/a}} || {{OMN}}
+|-
+| data-sort-value="16.867"| 16°52′N ||data-sort-value="-99.883"| 99°53′W  || [[Acapulco]] || {{flag|Guerrero}} || {{MEX}}
+|-
+| data-sort-value="16.8"| 16°48′N ||data-sort-value="96.15"| 96°09′E  || [[Yangon]] || {{n/a}} || {{MYA}}
+|-
+| data-sort-value="16.783"| 16°47′N ||data-sort-value="-3.017"| 3°01′W  || [[Timbuktu]] || {{n/a}} || {{MLI}}
+|-
+| data-sort-value="16.467"| 16°28′N ||data-sort-value="107.583"| 107°35′E  || [[Huế]] || {{n/a}} || {{VIE}}
+|-
+| data-sort-value="16.433"| 16°26′N ||data-sort-value="102.833"| 102°50′E  || [[Khon Kaen]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="16.067"| 16°04′N ||data-sort-value="108.233"| 108°14′E  || [[Da Nang]] || {{n/a}} || {{VIE}}
+|-
+| data-sort-value="16"| 16°00′N ||data-sort-value="-61.733"| 61°44′W  || [[Basse-Terre]] || [[Guadeloupe]] || {{FRA}}
+|-
+| data-sort-value="15.65"| 15°39′N ||data-sort-value="32.483"| 32°29′E  || [[Omdurman]] || {{n/a}} || {{SDN}}
+|-
+| data-sort-value="15.633"| 15°38′N ||data-sort-value="32.533"| 32°32′E  || [[Khartoum]] || {{n/a}} || {{SDN}}
+|-
+| data-sort-value="15.35"| 15°21′N ||data-sort-value="44.2"| 44°12′E  || [[Sana'a]] || {{n/a}} || {{YEM}}
+|-
+| data-sort-value="15.333"| 15°20′N ||data-sort-value="38.933"| 38°56′E  || [[Asmara]] || {{n/a}} || {{flag|Eritrea}}
+|-
+| data-sort-value="15.3"| 15°18′N ||data-sort-value="-61.383"| 61°23′W  || [[Roseau]] || {{n/a}} || {{DMA}}
+|-
+| data-sort-value="15.183"| 15°11′N ||data-sort-value="145.75"| 145°45′E  || [[Saipan]] || {{flag|Northern Mariana Islands}} || {{USA}}
+|-
+| data-sort-value="15.183"| 15°11′N ||data-sort-value="108.883"| 108°53′E  || [[Son My]] || {{n/a}} || {{VIE}}
+|-
+| data-sort-value="14.983"| 14°59′N ||data-sort-value="102.1"| 102°06′E  || [[Nakhon Ratchasima]] || {{n/a}} || {{THA}} 
+|-
+| data-sort-value="14.917"| 14°55′N ||data-sort-value="-23.517"| 23°31′W  || [[Praia]] || {{n/a}} || {{CPV}} 
+|-
+| data-sort-value="14.9"| 14°54′N ||data-sort-value="-92.267"| 92°16′W  || [[Tapachula]] || {{flag|Chiapas}} || {{MEX}}
+|-
+| data-sort-value="14.833"| 14°50′N ||data-sort-value="-91.517"| 91°31′W  || [[Quetzaltenango]] || {{n/a}} || {{GUA}}
+|-
+| data-sort-value="14.783"| 14°47′N ||data-sort-value="-16.917"| 16°55′W  || [[Thiès]] || {{n/a}} || {{SEN}}
+|-
+| data-sort-value="14.7"| 14°42′N ||data-sort-value="-17.45"| 17°27′W  || [[Dakar]] || {{n/a}} || {{SEN}}
+|-
+| data-sort-value="14.633"| 14°38′N ||data-sort-value="121.033"| 121°02′E  || [[Quezon City]] || [[National Capital Region]] || {{PHL}}
+|-
+| data-sort-value="14.617"| 14°37′N ||data-sort-value="-90.533"| 90°32′W  || [[Guatemala City]] || {{n/a}} || {{GUA}}
+|-
+| data-sort-value="14.6"| 14°36′N ||data-sort-value="-61.083"| 61°05′W  || [[Fort-de-France]] || [[Martinique]] || {{FRA}}
+|-
+| data-sort-value="14.583"| 14°35′N ||data-sort-value="120.967"| 120° 58′E  || [[Manila]] || [[National Capital Region]] || {{PHL}}
+|-
+| data-sort-value="14.55"| 14°33′N ||data-sort-value="121.033"| 121°02′E  || [[Makati]] || [[National Capital Region]] || {{PHL}}
+|-
+| data-sort-value="14.35"| 14°21′N ||data-sort-value="100.567"| 100°34′E  || [[Ayutthaya (city)|Ayutthaya]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="14.1"| 14°06′N ||data-sort-value="-87.217"| 87°13′W  || [[Tegucigalpa]] || {{n/a}} || {{HON}}
+|-
+| data-sort-value="14.017"| 14°01′N ||data-sort-value="-60.983"| 60°59′W  || [[Castries]] || {{n/a}} || {{LCA}}
+|-
+| data-sort-value="13.75"| 13°45′N ||data-sort-value="100.467"| 100°28′E  || [[Bangkok]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="13.683"| 13°41′N ||data-sort-value="-89.183"| 89°11′W  || [[San Salvador]] || {{n/a}} || {{SLV}}
+|-
+| data-sort-value="13.517"| 13°31′N ||data-sort-value="2.1"| 2°06′E  || [[Niamey]] || {{n/a}} || {{NIG}}
+|-
+| data-sort-value="13.517"| 13°31′N ||data-sort-value="144.833"| 144°50′E  || [[Dededo, Guam|Dededo]] || {{flag|Guam}} || {{USA}}
+|-
+| data-sort-value="13.483"| 13°29′N ||data-sort-value="144.75"| 144°45′E  || [[Hagåtña, Guam|Hagåtña]] || {{flag|Guam}} || {{USA}}
+|-
+| data-sort-value="13.45"| 13°27′N ||data-sort-value="-16.583"| 16°35′W  || [[Banjul]] || {{n/a}} || {{GAM}}
+|-
+| data-sort-value="13.433"| 13°26′N ||data-sort-value="-16.667"| 16°40′W  || [[Serekunda]] || {{n/a}} || {{GAM}}
+|-
+| data-sort-value="13.367"| 13°22′N ||data-sort-value="103.867"| 103°52′E  || [[Siem Reap]] || {{n/a}} || {{KHM}}
+|-
+| data-sort-value="13.267"| 13°16′N ||data-sort-value="-16.65"| 16°39′W  || [[Brikama]] || {{n/a}} || {{GAM}}
+|-
+| data-sort-value="13.15"| 13°09′N ||data-sort-value="-61.233"| 61°14′W  || [[Kingstown]] || {{n/a}} || {{VCT}}
+|-
+| data-sort-value="13.1"| 13°06′N ||data-sort-value="-59.617"| 59°37′W  || [[Bridgetown]] || {{n/a}} || {{BRB}}
+|-
+| data-sort-value="13.083"| 13°05′N ||data-sort-value="80.267"| 80°16′E  || [[Chennai|Chennai (Madras)]] || [[Tamil Nadu]] || {{IND}}
+|-
+| data-sort-value="12.967"| 12°58′N ||data-sort-value="77.567"| 77°34′E  || [[Bangalore]] || [[Karnataka]] || {{IND}}
+|-
+| data-sort-value="12.933"| 12°56′N ||data-sort-value="100.883"| 100°53′E  || [[Pattaya]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="12.867"| 12°52′N ||data-sort-value="-7.567"| 7°34′W  || [[Koulikoro]] || {{n/a}} || {{MLI}}
+|-
+| data-sort-value="12.65"| 12°39′N ||data-sort-value="-8"| 8°00′W  || [[Bamako]] || {{n/a}} || {{MLI}}
+|-
+| data-sort-value="12.617"| 12°37′N ||data-sort-value="-87.15"| 87°09′W  || [[Chinandega]] || {{n/a}} || {{NIC}}
+|-
+| data-sort-value="12.517"| 12°31′N ||data-sort-value="-70.033"| 70°02′W  || [[Oranjestad, Aruba|Oranjestad]] || {{flag|Aruba}} || {{NED}}
+|-
+| data-sort-value="12.35"| 12°21′N ||data-sort-value="-1.533"| 1°32′W  || [[Ouagadougou]] || {{n/a}} || {{BUR}}
+|-
+| data-sort-value="12.133"| 12°08′N ||data-sort-value="-86.25"| 86°15′W  || [[Managua]] || {{n/a}} || {{NIC}}
+|-
+| data-sort-value="12.117"| 12°07′N ||data-sort-value="-68.933"| 68°56′W  || [[Willemstad]] || {{flag|Curaçao}} || {{NLD}}
+|-
+| data-sort-value="12.117"| 12°07′N ||data-sort-value="15.05"| 15°03′E  || [[N'Djamena]] || {{n/a}} || {{CHA}}
+|-
+| data-sort-value="12.05"| 12°03′N ||data-sort-value="-61.75"| 61°45′W  || [[St. George's, Grenada|St. George's]] || {{n/a}} || {{GRD}}
+|-
+| data-sort-value="12"| 12°00′N ||data-sort-value="8.517"| 8°31′E  || [[Kano]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="11.85"| 11°51′N ||data-sort-value="-15.567"| 15°34′W  || [[Bissau]] || {{n/a}} || {{flag|Guinea-Bissau}} 
+|-
+| data-sort-value="11.667"| 11°40′N ||data-sort-value="92.767"| 92°46′E  || [[Port Blair]] || [[Andaman and Nicobar Islands]] || {{IND}}
+|-
+| data-sort-value="11.583"| 11°35′N ||data-sort-value="43.15"| 43°09′E  || [[Djibouti, Djibouti|Djibouti]] || {{n/a}} || {{DJI}}
+|-
+| data-sort-value="11.55"| 11°33′N ||data-sort-value="104.917"| 104°55′E  || [[Phnom Penh]] || {{n/a}} || {{KHM}}
+|-
+| data-sort-value="11.183"| 11°11′N ||data-sort-value="-4.283"| 4°17′W  || [[Bobo-Dioulasso]] || {{n/a}} || {{BUR}}
+|-
+| data-sort-value="10.967"| 10°58′N ||data-sort-value="-74.8"| 74°48′W  || [[Barranquilla]] || {{n/a}} || {{COL}}
+|-
+| data-sort-value="10.767"| 10°46′N ||data-sort-value="106.683"| 106°41′E  || [[Ho Chi Minh City]] || {{n/a}} || {{VIE}}
+|-
+| data-sort-value="10.717"| 10°43′N ||data-sort-value="122.567"| 122°34′E  || [[Iloilo City]] || [[Iloilo]] || {{PHL}}
+|-
+| data-sort-value="10.667"| 10°40′N ||data-sort-value="-61.517"| 61°31′W  || [[Port of Spain]] || {{n/a}} || {{TTO}}
+|-
+| data-sort-value="10.65"| 10°39′N ||data-sort-value="-71.633"| 71°38′W  || [[Maracaibo]] || {{n/a}} || {{VEN}}
+|-
+| data-sort-value="10.633"| 10°38′N ||data-sort-value="-85.433"| 85°26′W  || [[Liberia, Costa Rica|Liberia]] || {{n/a}} || {{CRI}}
+|-
+| data-sort-value="10.5"| 10°30′N ||data-sort-value="-66.917"| 66°55′W  || [[Caracas]] || {{n/a}} || {{VEN}}
+|-
+| data-sort-value="10.5"| 10°30′N ||data-sort-value="-61.383"| 61°23′W  || [[Chaguanas]] || {{n/a}} || {{TTO}}
+|-
+| data-sort-value="10.4"| 10°24′N ||data-sort-value="-75.5"| 75°30′W  || [[Cartagena, Colombia|Cartagena]] || {{n/a}} || {{COL}}
+|-
+| data-sort-value="10.283"| 10°17′N ||data-sort-value="-61.467"| 61°28′W  || [[San Fernando, Trinidad and Tobago|San Fernando]] || {{n/a}} || {{TTO}}
+|-
+| data-sort-value="10.283"| 10°17′N ||data-sort-value="123.9"| 123°54′E  || [[Cebu City]] || [[Cebu]] || {{PHL}}
+|-
+| data-sort-value="10.25"| 10°15′N ||data-sort-value="-67.6"| 67°36′W  || [[Maracay]] || {{n/a}} || {{VEN}}
+|-
+| data-sort-value="10.183"| 10°11′N ||data-sort-value="-68"| 68°00′W  || [[Valencia, Venezuela|Valencia]] || [[Carabobo]] || {{VEN}}
+|-
+| data-sort-value="10.017"| 10°01′N ||data-sort-value="-84.217"| 84°13′W  || [[Alajuela]] || {{n/a}} || {{CRI}}
+|-
+|}
+
+==[[10th parallel north|10° North]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="9.55"| 9°33′N ||data-sort-value="44.067"| 44°4′E  || [[Hargeisa]] || {{flag|Somaliland}} || {{SOM}}
+|-
+| data-sort-value="10.1"| 9°66′N ||data-sort-value="80"| 80°00′E  || [[Jaffna]] || {{n/a}} || {{SRI}}
+|-
+| data-sort-value="9.967"| 9°58′N ||data-sort-value="-84.833"| 84°50′W  || [[Puntarenas]] || {{n/a}} || {{CRI}}
+|-
+| data-sort-value="9.967"| 9°58′N ||data-sort-value="76.283"| 76°17′E  || [[Kochi]] || [[Kerala]] || {{IND}}
+|-
+| data-sort-value="9.933"| 9°56′N ||data-sort-value="-84.083"| 84°05′W  || [[San José, Costa Rica|San José]] || {{n/a}} || {{CRI}}
+|-
+| data-sort-value="9.65"| 9°39′N ||data-sort-value="123.85"| 123°51′E  || [[Tagbilaran]] || [[Northern Samar]] || {{PHL}}
+|-
+| data-sort-value="9.517"| 9°31′N ||data-sort-value="-13.717"| 13°43′W  || [[Conakry]] || {{n/a}} || {{GUI}}
+|-
+| data-sort-value="9.4"| 9°24′N ||data-sort-value="-0.85"| 0°51′W  || [[Tamale, Ghana|Tamale]] || {{n/a}} || {{GHA}}
+|-
+| data-sort-value="9.133"| 9°08′N ||data-sort-value="99.333"| 99°20′E  || [[Surat Thani]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="9.067"| 9°04′N ||data-sort-value="7.483"| 7°29′E  || [[Abuja]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="9.033"| 9°02′N ||data-sort-value="38.733"| 38°44′E  || [[Addis Ababa]] || {{n/a}} || {{ETH}}
+|-
+| data-sort-value="8.983"| 8°59′N ||data-sort-value="-79.517"| 79°31′W  || [[Panama City]] || {{n/a}} || {{PAN}}
+|-
+| data-sort-value="8.583"| 8°35′N ||data-sort-value="-71.133"| 71°08′W  || [[Mérida, Mérida|Mérida]] || {{flag|Mérida}} || {{VEN}}
+|-
+| data-sort-value="8.567"| 8°34′N ||data-sort-value="16.083"| 16°05′E  || [[Moundou]] || {{n/a}} || {{CHA}}
+|-
+| data-sort-value="8.483"| 8°29′N ||data-sort-value="76.95"| 76°57′E  || [[Trivandrum]] || [[Kerala]] || {{IND}}
+|-
+| data-sort-value="8.483"| 8°29′N ||data-sort-value="-13.233"| 13°14′W  || [[Freetown]] || {{n/a}} || {{flag|Sierra Leone}}
+|-
+| data-sort-value="8.117"| 8°07′N ||data-sort-value="-63.55"| 63°33′W  || [[Ciudad Bolívar]] || {{n/a}} || {{VEN}}
+|-
+| data-sort-value="7.9"| 7°54′N ||data-sort-value="-72.5"| 72°30′W  || [[Cúcuta]] || {{n/a}} || {{COL}}
+|-
+| data-sort-value="7.883"| 7°53′N ||data-sort-value="98.4"| 98°24′E  || [[Phuket (city)|Phuket]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="7.75"| 7°45′N ||data-sort-value="-72.217"| 72°13′W  || [[San Cristóbal, Táchira|San Cristóbal]] || {{flag|Táchira}} || {{VEN}}
+|-
+| data-sort-value="7.75"| 7°45′N ||data-sort-value="-8.817"| 8°49′W  || [[Nzérékoré]] || {{n/a}} || {{GUI}}
+|-
+| data-sort-value="7.717"| 7°43′N ||data-sort-value="81.7"| 81°42′E  || [[Batticaloa]] || {{n/a}} || {{SRI}}
+|-
+| data-sort-value="7.483"| 7°29′N ||data-sort-value="134.6"| 134°36′E  || [[Melekeok]] || {{n/a}} || {{PLW}}
+|-
+| data-sort-value="7.45"| 7°27′N ||data-sort-value="151.85"| 151°51′E  || [[Weno]] || {{n/a}} || {{FSM}}
+|-
+| data-sort-value="7.4"| 7°24′N ||data-sort-value="3.917"| 3°55′E  || [[Ibadan]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="7.367"| 7°22′N ||data-sort-value="134.483"| 134°29′E  || [[Koror]] || {{n/a}} || {{PLW}}
+|-
+| data-sort-value="7.3"| 7°18′N ||data-sort-value="80.633"| 80°38′E  || [[Kandy]] || {{n/a}} || {{SRI}}
+|-
+| data-sort-value="7.067"| 7°04′N ||data-sort-value="171.267"| 171°16′E  || [[Majuro]] || {{n/a}} || {{MHL}}
+|-
+| data-sort-value="7.067"| 7°04′N ||data-sort-value="125.6"| 125°36′E  || [[Davao City]] || [[Davao del Norte]] || {{PHL}}
+|-
+| data-sort-value="7.017"| 7°01′N ||data-sort-value="100.467"| 100°28′E  || [[Hat Yai]] || {{n/a}} || {{THA}}
+|-
+| data-sort-value="6.933"| 6°56′N ||data-sort-value="79.85"| 79°51′E  || [[Colombo]] || {{n/a}} || {{SRI}}
+|-
+| data-sort-value="6.917"| 6°55′N ||data-sort-value="158.167"| 158°10′E  || [[Palikir]] || {{n/a}} || {{FSM}}
+|-
+| data-sort-value="6.917"| 6°55′N ||data-sort-value="79.883"| 79°53′E  || [[Sri Jayawardenapura-Kotte]] || {{n/a}} || {{SRI}}
+|-
+| data-sort-value="6.9"| 6°54′N ||data-sort-value="122.067"| 122°04′E  || [[Zamboanga City]] || [[Zamboanga del Sur]] || {{PHL}}
+|-
+| data-sort-value="6.817"| 6°49′N ||data-sort-value="-5.283"| 5°17′W  || [[Yamoussoukro]] || {{n/a}} || {{CIV}}
+|-
+| data-sort-value="6.8"| 6°48′N ||data-sort-value="-58.167"| 58°10′W  || [[Georgetown, Guyana|Georgetown]] || {{n/a}} || {{GUY}}
+|-
+| data-sort-value="6.667"| 6°40′N ||data-sort-value="-1.617"| 1°37′W  || [[Kumasi]] || {{n/a}} || {{GHA}} 
+|-
+| data-sort-value="6.5"| 6°30′N ||data-sort-value="2.6"| 2°36′E  || [[Porto-Novo]] || {{n/a}} || {{BEN}}
+|-
+| data-sort-value="6.45"| 6°27′N ||data-sort-value="3.4"| 3°24′E  || [[Lagos]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="6.45"| 6°27′N ||data-sort-value="7.517"| 7°31′E  || [[Enugu]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="6.367"| 6°22′N ||data-sort-value="2.433"| 2°26′E  || [[Cotonou]] || {{n/a}} || {{BEN}}
+|-
+| data-sort-value="6.317"| 6°19′N ||data-sort-value="5.6"| 5°36′E  || [[Benin City]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="6.317"| 6°19′N ||data-sort-value="-10.8"| 10°48′W  || [[Monrovia]] || {{n/a}} || {{LBR}}
+|-
+| data-sort-value="6.233"| 6°14′N ||data-sort-value="-75.583"| 75°35′W  || [[Medellín]] || {{n/a}} || {{COL}}
+|-
+| data-sort-value="6.133"| 6°08′N ||data-sort-value="1.217"| 1°13′E  || [[Lomé]] || {{n/a}} || {{TOG}}
+|-
+| data-sort-value="6.133"| 6°08′N ||data-sort-value="102.25"| 102°15′E  || [[Kota Bharu]] || {{flag|Kelantan}} || {{MAS}}
+|-
+| data-sort-value="6.117"| 6°07′N ||data-sort-value="100.367"| 100°22′E  || [[Alor Setar]] || {{flag|Kedah}} || {{MAS}}
+|-
+| data-sort-value="5.967"| 5°58′N ||data-sort-value="116.1"| 116°06′E  || [[Kota Kinabalu]] || {{flag|Sabah}} || {{MAS}}
+|-
+| data-sort-value="5.867"| 5°52′N ||data-sort-value="-55.167"| 55°10′W  || [[Paramaribo]] || {{n/a}} || {{SUR}}
+|-
+| data-sort-value="5.667"| 5°40′N ||data-sort-value="-67.633"| 67°38′W  || [[Puerto Ayacucho]] || {{n/a}} || {{VEN}}
+|-
+| data-sort-value="5.55"| 5°33′N ||data-sort-value="-0.2"| 0°12′W  || [[Accra]] || [[Greater Accra]] || {{GHA}}
+|-
+| data-sort-value="5.55"| 5°33′N ||data-sort-value="95.317"| 95°19′E  || [[Banda Aceh]] || [[Aceh]] || {{IDN}}
+|-
+| data-sort-value="5.417"| 5°25′N ||data-sort-value="100.317"| 100°19′E  || [[George Town, Penang|George Town]] || {{flag|Penang}} || {{MAS}}
+|-
+| data-sort-value="5.317"| 5°19′N ||data-sort-value="-4.033"| 4°02′W  || [[Abidjan]] || {{n/a}} || {{CIV}}
+|-
+| data-sort-value="4.917"| 4°55′N ||data-sort-value="-52.333"| 52°20′W  || [[Cayenne]] || [[French Guiana]] || {{FRA}}
+|-
+| data-sort-value="4.917"| 4°55′N ||data-sort-value="-1.767"| 1°46′W  || [[Sekondi-Takoradi]] || {{n/a}} || {{GHA}}
+|-
+| data-sort-value="4.883"| 4°53′N ||data-sort-value="114.95"| 114°57′E  || [[Bandar Seri Begawan]] || {{n/a}} || {{BRN}}
+|-
+| data-sort-value="4.85"| 4°51′N ||data-sort-value="31.6"| 31°36′E  || [[Juba]] || {{n/a}} || {{SSD}}
+|-
+| data-sort-value="4.75"| 4°45′N ||data-sort-value="7"| 7°00′E  || [[Port Harcourt]] || {{n/a}} || {{NGA}}
+|-
+| data-sort-value="4.6"| 4°36′N ||data-sort-value="101.067"| 101°04′E  || [[Ipoh, Malaysia|Ipoh]] || {{flag|Perak}} || {{MAS}}
+|-
+| data-sort-value="4.6"| 4°36′N ||data-sort-value="-74.083"| 74°05′W  || [[Bogotá]] || {{n/a}} || {{COL}}
+|-
+| data-sort-value="4.4"| 4°24′N ||data-sort-value="114"| 114°00′E  || [[Miri]] || {{flag|Sarawak}} || {{MAS}}
+|-
+| data-sort-value="4.367"| 4°22′N ||data-sort-value="18.583"| 18°35′E  || [[Bangui]] || {{n/a}} || {{flag|Central African Republic}}
+|-
+| data-sort-value="4.183"| 4°11′N ||data-sort-value="73.517"| 73°31′E  || [[Malé]] || {{n/a}} || {{MDV}}
+|-
+| data-sort-value="4.05"| 4°03′N ||data-sort-value="9.7"| 9°42′E  || [[Douala]] || {{n/a}} || {{CMR}}
+|-
+| data-sort-value="3.867"| 3°52′N ||data-sort-value="11.517"| 11°31′E  || [[Yaoundé]] || {{n/a}} || {{CMR}}
+|-
+| data-sort-value="3.75"| 3°45′N ||data-sort-value="8.783"| 8°47′E  || [[Malabo]] || {{n/a}} || {{flag|Equatorial Guinea}}
+|-
+| data-sort-value="3.583"| 3°35′N ||data-sort-value="98.667"| 98°40′E  || [[Medan]] || [[North Sumatera]] || {{IDN}}
+|-
+| data-sort-value="3.417"| 3°25′N ||data-sort-value="-76.517"| 76°31′W  || [[Santiago de Cali]] || {{n/a}} || {{COL}}
+|-
+| data-sort-value="3.15"| 3°09′N ||data-sort-value="101.7"| 101°42′E  || [[Kuala Lumpur]] || {{flagicon|Federal Territory (Malaysia)}} [[Federal Territory (Malaysia)|Federal Territory]] || {{MAS}}
+|-
+| data-sort-value="2.817"| 2°49′N ||data-sort-value="-60.667"| 60°40′W  || [[Boa Vista, Roraima|Boa Vista]] || {{flag|Roraima}} || {{BRA}}
+|-
+| data-sort-value="2.2"| 2°12′N ||data-sort-value="102.25"| 102°15′E  || [[Malacca Town]] || {{flag|Malacca}} || {{MAS}}
+|-
+| data-sort-value="2.033"| 2°02′N ||data-sort-value="45.35"| 45°21′E  || [[Mogadishu]] || {{n/a}} || {{SOM}}
+|-
+| data-sort-value="1.567"| 1°34′N ||data-sort-value="110.35"| 110°21′E  || [[Kuching]] || {{flag|Sarawak}} || {{MAS}}
+|-
+| data-sort-value="1.483"| 1°29′N ||data-sort-value="103.733"| 103°44′E  || [[Johor Bahru]] || {{flag|Johor}} || {{MAS}}
+|-
+| data-sort-value="1.433"| 1°26′N ||data-sort-value="173"| 173°00′E  || [[South Tarawa]] || {{n/a}} || {{KIR}}
+|-
+| data-sort-value="1.283"| 1°17′N ||data-sort-value="103.833"| 103°50′E  || [[Singapore]] || {{n/a}} || {{SIN}}
+|-
+| data-sort-value="0.533"| 0°32′N ||data-sort-value="101.45"| 101°27′E  || [[Pekanbaru]] || [[Riau]] || {{IDN}}
+|-
+| data-sort-value="0.383"| 0°23′N ||data-sort-value="9.45"| 9°27′E  || [[Libreville]] || {{n/a}} || {{GAB}}
+|-
+| data-sort-value="0.333"| 0°20′N ||data-sort-value="6.683"| 6°41′E  || [[São Tomé]] || {{n/a}} || {{flag|São Tomé and Príncipe}}
+|-
+| data-sort-value="0.317"| 0°19′N ||data-sort-value="32.583"| 32°35′E  || [[Kampala]] || {{n/a}} || {{UGA}}
+|-
+| data-sort-value="0.05"| 0°03′N ||data-sort-value="32.467"| 32°28′E  || [[Entebbe]] || {{n/a}} || {{UGA}}
+|-
+| data-sort-value="0.05"| 0°03′N ||data-sort-value="18.25"| 18°15′E  || [[Mbandaka]] || [[Équateur]] || {{COD}} 
+|-
+| data-sort-value="0.033"| 0°02′N ||data-sort-value="-51.05"| 51°3′59′W  || [[Macapá]] || {{flag|Amapá}}  || {{BRA}}
+|-
+|}
+
+==[[Equator]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="0.017"| 0°01′S ||data-sort-value="109.333"| 109°20′E  || [[Pontianak, Indonesia|Pontianak]] || [[West Kalimantan]] || {{IDN}}
+|-
+| data-sort-value="0.25"| 0°15′S ||data-sort-value="-78.583"| 78°35′W  || [[Quito]] || {{n/a}} || {{ECU}}
+|-
+| data-sort-value="0.35"| 0°21′S ||data-sort-value="42.55"| 42°33′E  || [[Kismayo]] || {{n/a}} || {{SOM}}
+|-
+| data-sort-value="0.55"| 0°33′S ||data-sort-value="166.917"| 166°55′E  || [[Yaren District]] || {{n/a}} || {{NRU}}
+|-
+| data-sort-value="0.95"| 0°57′S ||data-sort-value="100.35"| 100°21′E  || [[Padang, Indonesia|Padang]] || [[West Sumatera]] || {{IDN}}
+|-
+| data-sort-value="-0.733"| 1°16′S ||data-sort-value="116.833"| 116°50′E  || [[Balikpapan]] || [[East Kalimantan]] || {{IDN}}
+|-
+| data-sort-value="-0.717"| 1°17′S ||data-sort-value="36.817"| 36°49′E  || [[Nairobi]] || {{n/a}} || {{KEN}}
+|-
+| data-sort-value="-0.55"| 1°27′S ||data-sort-value="-48.5"| 48°30′W  || [[Belém]] || {{flag|Pará}} || {{BRA}}
+|-
+| data-sort-value="-0.05"| 1°57′S ||data-sort-value="30.067"| 30°04′E  || [[Kigali]] || {{n/a}} || {{RWA}}
+|-
+| data-sort-value="-1.817"| 2°11′S ||data-sort-value="-79.883"| 79°53′W  || [[Guayaquil]] || {{n/a}} || {{ECU}}
+|-
+| data-sort-value="-1.483"| 2°31′S ||data-sort-value="32.9"| 32°54′E  || [[Mwanza]] || {{n/a}} || {{TZA}}
+|-
+| data-sort-value="-1.467"| 2°32′S ||data-sort-value="-44.3"| 44°18′W  || [[São Luís, Maranhão|São Luís]] || {{flag|Maranhão}} || {{BRA}}
+|-
+| data-sort-value="-1.467"| 2°32′S ||data-sort-value="140.717"| 140°43′E  || [[Jayapura]] || [[Papua (province)|Papua]] || {{IDN}}
+|-
+| data-sort-value="-1.017"| 2°59′S ||data-sort-value="104.75"| 104°45′E  || [[Palembang]] || [[South Sumatera]] || {{IDN}}
+|-
+| data-sort-value="-2.9"| 3°06′S ||data-sort-value="-60.017"| 60°01′W  || [[Manaus]] || {{flag|Amazonas}} || {{BRA}}
+|-
+| data-sort-value="-2.617"| 3°23′S ||data-sort-value="29.367"| 29°22′E  || [[Bujumbura]] || {{n/a}} || {{BDI}}
+|-
+| data-sort-value="-2.333"| 3°40′S ||data-sort-value="-40.233"| 40°14′W  || [[Sobral, Ceará|Sobral]] || {{flag|Ceará}} || {{BRA}}
+|-
+| data-sort-value="-2.3"| 3°42′S ||data-sort-value="128.167"| 128°10′E  || [[Ambon, Maluku]] || [[Maluku (province)|Maluku]] || {{IDN}}
+|-
+| data-sort-value="-2.283"| 3°43′S ||data-sort-value="-38.55"| 38°33′W  || [[Fortaleza]] || {{flag|Ceará}} || {{BRA}}
+|-
+| data-sort-value="-2.267"| 3°44′S ||data-sort-value="-73.25"| 73°15′W  || [[Iquitos]] || {{n/a}} || {{PER}}
+|-
+| data-sort-value="-2.15"| 3°51′S ||data-sort-value="-32.417"| 32°25′W  || [[Fernando de Noronha]] || {{flag|Pernambuco}} || {{BRA}}
+|-
+| data-sort-value="-3.95"| 4°03′S ||data-sort-value="39.667"| 39°40′E  || [[Mombasa]] || {{n/a}} || {{KEN}}
+|-
+| data-sort-value="-3.733"| 4°16′S ||data-sort-value="15.3"| 15°18′E  || [[Brazzaville]] || {{n/a}} || {{flag|Republic of the Congo}}
+|-
+| data-sort-value="-3.667"| 4°20′S ||data-sort-value="15.317"| 15°19′E  || [[Kinshasa]] || {{n/a}} || {{COD}}
+|-
+| data-sort-value="-3.383"| 4°37′S ||data-sort-value="55.45"| 55°27′E  || [[Victoria, Seychelles|Victoria]] || {{n/a}} || {{SEY}}
+|-
+| data-sort-value="-4.9"| 5°06′S ||data-sort-value="-42.8"| 42°48′W  || [[Teresina]] || {{flag|Piauí}} || {{BRA}}
+|-
+| data-sort-value="-4.867"| 5°08′S ||data-sort-value="119.417"| 119°25′E  || [[Makassar]] || [[South Sulawesi]] || {{IDN}}
+|-
+| data-sort-value="-4.467"| 5°32′S ||data-sort-value="-47.483"| 47°29′W  || [[Imperatriz]] || {{flag|Maranhão}} || {{BRA}}
+|-
+| data-sort-value="-4.217"| 5°47′S ||data-sort-value="-35.2"| 35°12′W  || [[Natal, Rio Grande do Norte|Natal]] || {{flag|Rio Grande do Norte}} || {{BRA}}
+|-
+| data-sort-value="-5.833"| 6°10′S ||data-sort-value="39.2"| 39°12′E  || [[Zanzibar City]] || {{n/a}} || {{TZA}}
+|-
+| data-sort-value="-5.833"| 6°10′S ||data-sort-value="35.75"| 35°45′E  || [[Dodoma]] || {{n/a}} || {{TZA}}
+|-
+| data-sort-value="-5.8"| 6°12′S ||data-sort-value="106.8"| 106°48′E  || [[Jakarta]] || [[Jakarta]] || {{IDN}}
+|-
+| data-sort-value="-5.4"| 6°36′S ||data-sort-value="106.8"| 106°48′E  || [[Bogor]] || [[West Java]] || {{IDN}}
+|-
+| data-sort-value="-5.2"| 6°48′S ||data-sort-value="39.283"| 39°17′E  || [[Dar es Salaam]] || {{n/a}} || {{TZA}}
+|-
+| data-sort-value="-5.083"| 6°55′S ||data-sort-value="107.617"| 107°37′E  || [[Bandung]] || [[West Java]] || {{IDN}}
+|-
+| data-sort-value="-5.033"| 6°58′S ||data-sort-value="110.417"| 110°25′E  || [[Semarang]] || [[Central Java]] || {{IDN}}
+|-
+| data-sort-value="-6.917"| 7°05′S ||data-sort-value="-34.833"| 34°50′W  || [[João Pessoa, Paraíba|João Pessoa]] || {{flag|Paraíba}} || {{BRA}} 
+|-
+| data-sort-value="-6.8"| 7°12′S ||data-sort-value="-39.333"| 39°20′W  || [[Juazeiro do Norte]] || {{flag|Ceará}} || {{BRA}}
+|-
+| data-sort-value="-6.767"| 7°14′S ||data-sort-value="-35.883"| 35°53′W  || [[Campina Grande]] || {{flag|Paraíba}} || {{BRA}}
+|-
+| data-sort-value="-6.733"| 7°16′S ||data-sort-value="112.75"| 112°45′E  || [[Surabaya]] || [[East Java]] || {{IDN}}
+|-
+| data-sort-value="-6.2"| 7°48′S ||data-sort-value="110.367"| 110°22′E  || [[Yogyakarta (city)|Yogyakarta]] || [[Special Region of Yogyakarta]] || {{IDN}}
+|-
+| data-sort-value="-6.017"| 7°59′S ||data-sort-value="112.617"| 112°37′E  || [[Malang]] || [[East Java]] || {{IDN}}
+|-
+| data-sort-value="-7.95"| 8°03′S ||data-sort-value="-34.9"| 34°54′W  || [[Recife]] || {{flag|Pernambuco}} || {{BRA}}
+|-
+| data-sort-value="-7.883"| 8°07′S ||data-sort-value="-79.033"| 79°02′W  || [[Trujillo, Peru|Trujillo]] || {{n/a}} || {{PER}}
+|-
+| data-sort-value="-7.717"| 8°17′S ||data-sort-value="-35.983"| 35°59′W  || [[Caruaru]] || {{flag|Pernambuco}} || {{BRA}}
+|-
+| data-sort-value="-7.483"| 8°31′S ||data-sort-value="179.217"| 179°13′E  || [[Funafuti]] || {{n/a}} || {{TUV}}
+|-
+| data-sort-value="-7.45"| 8°33′S ||data-sort-value="125.583"| 125°35′E  || [[Dili]] || {{n/a}} || {{TLS}}
+|-
+| data-sort-value="-7.35"| 8°39′S ||data-sort-value="115.217"| 115°13′E  || [[Denpasar]] || [[Bali]] || {{IDN}}
+|-
+| data-sort-value="-7.233"| 8°46′S ||data-sort-value="-63.9"| 63°54′W  || [[Porto Velho]] || {{flag|Rondônia}} || {{BRA}}
+|-
+| data-sort-value="-7.167"| 8°50′S ||data-sort-value="13.233"| 13°14′E  || [[Luanda]] || {{n/a}} || {{AGO}}
+|-
+| data-sort-value="-7.117"| 8°53′S ||data-sort-value="-36.5"| 36°30′W  || [[Garanhuns]] || {{flag|Pernambuco}} || {{BRA}}
+|-
+| data-sort-value="-8.617"| 9°23′S ||data-sort-value="179.85"| 179°51′E  || [[Nukulaelae]] || {{n/a}} || {{TUV}}
+|-
+| data-sort-value="-8.6"| 9°24′S ||data-sort-value="-40.5"| 40°30′W  || [[Petrolina]] || {{flag|Pernambuco}} || {{BRA}}
+|-
+| data-sort-value="-8.533"| 9°28′S ||data-sort-value="159.817"| 159°49′E  || [[Honiara]] || {{n/a}} || {{SOL}} 
+|-
+| data-sort-value="-8.483"| 9°31′S ||data-sort-value="147.217"| 147°13′E  || [[Port Moresby]] || {{n/a}} || {{PNG}}
+|-
+| data-sort-value="-8.333"| 9°40′S ||data-sort-value="-35.733"| 35°44′W  || [[Maceió]] || {{flag|Alagoas}} || {{BRA}}
+|-
+| data-sort-value="-8.033"| 9°58′S ||data-sort-value="-67.817"| 67°49′W  || [[Rio Branco, Acre|Rio Branco]] || {{flag|Acre}} || {{BRA}}
+|-
+|}
+
+==[[10th parallel south|10° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-9.083"| 10°55′S ||data-sort-value="-37.05"| 37°03′W  || [[Aracaju]] || {{flag|Sergipe}} || {{BRA}}
+|-
+| data-sort-value="-10.367"| 11°38′S ||data-sort-value="-79.7"| 79°42′W  || [[Palmas, Tocantins|Palmas]] || {{flag|Tocantins}} || {{BRA}}
+|-
+| data-sort-value="-10.333"| 11°40′S ||data-sort-value="27.467"| 27°28′E  || [[Lubumbashi]] || {{n/a}} || {{COD}}
+|-
+| data-sort-value="-10.25"| 11°45′S ||data-sort-value="43.2"| 43°12′E  || [[Moroni, Comoros|Moroni]] || {{n/a}} || {{COM}}
+|-
+| data-sort-value="-10.133"| 11°52′S ||data-sort-value="-55.5"| 55°30′W  || [[Sinop, Mato Grosso|Sinop]] || {{flag|Mato Grosso}} || {{BRA}}
+|-
+| data-sort-value="-11.95"| 12°03′S ||data-sort-value="-77.033"| 77°02′W  || [[Lima]] ||[[Lima Province]] || {{PER}}
+|-
+| data-sort-value="-11.55"| 12°27′S ||data-sort-value="130.833"| 130°50′E  || [[Darwin, Northern Territory|Darwin]] || {{flag|Northern Territory}} || {{AUS}}
+|-
+| data-sort-value="-11.233"| 12°46′S ||data-sort-value="15.733"| 15°44′E  || [[Huambo]] || {{n/a}} || {{AGO}}
+|-
+| data-sort-value="-11.217"| 12°47′S ||data-sort-value="45.233"| 45°14′E  || [[Mamoudzou]] || [[Mayotte]] || {{FRA}}
+|-
+| data-sort-value="-11.033"| 12°58′S ||data-sort-value="28.633"| 28°38′E  || [[Ndola]] || {{n/a}} || {{ZMB}}
+|-
+| data-sort-value="-11.033"| 12°58′S ||data-sort-value="-38.483"| 38°29′W  || [[Salvador, Bahia|Salvador]] || {{flag|Bahia}} || {{BRA}}
+|-
+| data-sort-value="-12.833"| 13°10′S ||data-sort-value="-74.217"| 74°13′W  || [[Ayacucho]] || {{n/a}} || {{PER}}
+|-
+| data-sort-value="-12.717"| 13°17′S ||data-sort-value="-176.183"| 176°11′W  || [[Mata-Utu]] || [[Wallis and Futuna]] || {{FRA}}
+|-
+| data-sort-value="-12.467"| 13°32′S ||data-sort-value="-71.967"| 71°58′W  || [[Cusco]] || {{n/a}} || {{PER}}
+|-
+| data-sort-value="-12.167"| 13°50′S ||data-sort-value="-171.75"| 171°45′W  || [[Apia]] || {{n/a}} || {{SAM}}
+|-
+| data-sort-value="-12.017"| 13°59′S ||data-sort-value="33.783"| 33°47′E  || [[Lilongwe]] || {{n/a}} || {{MWI}} 
+|-
+| data-sort-value="-13.717"| 14°17′S ||data-sort-value="-170.7"| 170°42′W  || [[Pago Pago]] || {{flag|American Samoa}} || {{USA}}
+|-
+| data-sort-value="-13.217"| 14°47′S ||data-sort-value="-39.05"| 39°03′W  || [[Ilhéus]] || {{flag|Bahia}} || {{BRA}}
+|-
+| data-sort-value="-14.583"| 15°25′S ||data-sort-value="28.283"| 28°17′E  || [[Lusaka]] || {{n/a}} || {{ZMB}}
+|-
+| data-sort-value="-14.4"| 15°36′S ||data-sort-value="-56.1"| 56°06′W  || [[Cuiabá]] || {{flag|Mato Grosso}} || {{BRA}}
+|-
+| data-sort-value="-14.217"| 15°47′S ||data-sort-value="35"| 35°00′E  || [[Blantyre]] || [[Southern Region, Malawi|Southern Region]]||{{MWI}} 
+|-
+| data-sort-value="-14.2"| 15°48′S ||data-sort-value="-47.867"| 47°52′W  || [[Brasília]] || {{flagicon|Distrito Federal (Brazil)}} [[Federal District (Brazil)|Distrito Federal]] || {{BRA}}
+|-
+| data-sort-value="-14.083"| 15°55′S ||data-sort-value="-5.717"| 5°43′W  || [[Jamestown, Saint Helena|Jamestown]] || {{flag|Saint Helena}} || {{GBR}}
+|-
+| data-sort-value="-15.6"| 16°24′S ||data-sort-value="-71.533"| 71°32′W  || [[Arequipa]] || {{n/a}} || {{PER}}
+|-
+| data-sort-value="-15.567"| 16°26′S ||data-sort-value="179.367"| 179°22′E  || [[Labasa]] || {{n/a}} || {{FIJ}}
+|-
+| data-sort-value="-15.5"| 16°30′S ||data-sort-value="-180"| 180°00′W  || [[Rabi Island]] || {{n/a}} || {{FIJ}}
+|-
+| data-sort-value="-15.5"| 16°30′S ||data-sort-value="-68.15"| 68°09′W  || [[La Paz]] || {{n/a}} || {{BOL}}
+|-
+| data-sort-value="-15.333"| 16°40′S ||data-sort-value="-49.25"| 49°15′W  || [[Goiânia]] || {{flag|Goiás}} || {{BRA}}
+|-
+| data-sort-value="-15.067"| 16°56′S ||data-sort-value="145.783"| 145°47′E  || [[Cairns]] || {{flag|Queensland}} || {{AUS}}
+|-
+| data-sort-value="-16.467"| 17°32′S ||data-sort-value="-149.567"| 149°34′W  || [[Papeete]] || {{flag|French Polynesia}} || {{FRA}}
+|-
+| data-sort-value="-16.25"| 17°45′S ||data-sort-value="168.3"| 168°18′E  || [[Port Vila]] || {{n/a}} || {{VUT}}
+|-
+| data-sort-value="-16.2"| 17°48′S ||data-sort-value="-63.167"| 63°10′W  || [[Santa Cruz de la Sierra]] || {{n/a}} || {{BOL}}
+|-
+| data-sort-value="-16.15"| 17°51′S ||data-sort-value="25.867"| 25°52′E  || [[Livingstone, Zambia|Livingstone]] || {{n/a}} || {{ZMB}}
+|-
+| data-sort-value="-16.133"| 17°52′S ||data-sort-value="31.033"| 31°02′E  || [[Harare]] || [[Harare Province|Harare]] || {{ZIM}}
+|-
+| data-sort-value="-17.867"| 18°08′S ||data-sort-value="178.45"| 178°27′E  || [[Suva]] || {{n/a}} || {{FIJ}}
+|-
+| data-sort-value="-17.517"| 18°29′S ||data-sort-value="-70.333"| 70°20′W  || [[Arica]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-17.15"| 18°51′S ||data-sort-value="-41.933"| 41°56′W  || [[Governador Valadares]] || {{flag|Minas Gerais}} || {{BRA}}
+|-
+| data-sort-value="-17.083"| 18°55′S ||data-sort-value="-48.283"| 48°17′W  || [[Uberlândia]] || {{flag|Minas Gerais}} || {{BRA}}
+|-
+| data-sort-value="-17.067"| 18°56′S ||data-sort-value="47.517"| 47°31′E  || [[Antananarivo]] || {{n/a}} || {{MAD}}
+|-
+| data-sort-value="-17.033"| 18°58′S ||data-sort-value="32.633"| 32°38′E  || [[Mutare]] || [[Manicaland Province|Manicaland]] || {{ZIM}}
+|-
+| data-sort-value="-18.95"| 19°03′S ||data-sort-value="-65.25"| 65°15′W  || [[Sucre]] || {{n/a}} || {{BOL}}
+|-
+| data-sort-value="-18.95"| 19°03′S ||data-sort-value="-169.917"| 169°55′W  || [[Alofi]] || {{NIU}} || {{NZL}}
+|-
+| data-sort-value="-18.75"| 19°15′S ||data-sort-value="146.817"| 146°49′E  || [[Townsville]] || {{flag|Queensland}} || {{AUS}}
+|-
+| data-sort-value="-18.55"| 19°27′S ||data-sort-value="29.8"| 29°48′E  || [[Gweru]] || [[Midlands Province|Midlands]] || {{ZIM}}
+|-
+| data-sort-value="-18.083"| 19°55′S ||data-sort-value="-43.933"| 43°56′W  || [[Belo Horizonte]] || {{flag|Minas Gerais}} || {{BRA}}
+|-
+|}
+
+==[[20th parallel south|20° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-19.833"| 20°10′S ||data-sort-value="57.5"| 57°30′E  || [[Port Louis]] || {{n/a}} || {{MUS}}
+|-
+| data-sort-value="-19.833"| 20°10′S ||data-sort-value="28.583"| 28°35′E  || [[Bulawayo]] || [[Bulawayo Province|Bulawayo]] || {{ZIM}}
+|-
+| data-sort-value="-19.783"| 20°13′S ||data-sort-value="-70.15"| 70°09′W  || [[Iquique]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-19.683"| 20°19′S ||data-sort-value="118.6"| 118°36′E  || [[Port Hedland, Western Australia|Port Hedland]] || {{flag|Western Australia}} || {{AUS}}
+|-
+| data-sort-value="-19.683"| 20°19′S ||data-sort-value="-40.333"| 40°20′W  || [[Vitória, Brazil|Vitória]] || {{flag|Espírito Santo}} || {{BRA}}
+|-
+| data-sort-value="-19.533"| 20°28′S ||data-sort-value="-54.617"| 54°37′W  || [[Campo Grande]] || {{flag|Mato Grosso do Sul}} || {{BRA}}
+|-
+| data-sort-value="-19.2"| 20°48′S ||data-sort-value="-49.383"| 49°23′W  || [[São José do Rio Preto]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-19.117"| 20°53′S ||data-sort-value="55.45"| 55°27′E  || [[Saint-Denis, Réunion|Saint-Denis]] || [[Réunion]] || {{FRA}}
+|-
+| data-sort-value="-20.867"| 21°08′S ||data-sort-value="-175.2"| 175°12′W  || [[Nukuʻalofa]] || {{n/a}} || {{TON}}
+|-
+| data-sort-value="-20.833"| 21°10′S ||data-sort-value="27.517"| 27°31′E  || [[Francistown]] || {{n/a}} || {{BOT}}
+|-
+| data-sort-value="-20.817"| 21°11′S ||data-sort-value="-47.8"| 47°48′W  || [[Ribeirão Preto]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-20.8"| 21°12′S ||data-sort-value="-159.767"| 159°46′W  || [[Avarua]] || {{flag|Cook Islands}} || {{NZL}}
+|-
+| data-sort-value="-20.233"| 21°46′S ||data-sort-value="-43.35"| 43°21′W  || [[Juiz de Fora]] || {{flag|Minas Gerais}} || {{BRA}}
+|-
+| data-sort-value="-20.217"| 21°47′S ||data-sort-value="-46.567"| 46°34′W  || [[Poços de Caldas]] || {{flag|Minas Gerais}} || {{BRA}}
+|-
+| data-sort-value="-20.2"| 21°48′S ||data-sort-value="-48.183"| 48°11′W  || [[Araraquara]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-21.717"| 22°17′S ||data-sort-value="166.45"| 166°27′E  || [[Nouméa]] || {{flag|New Caledonia}} || {{FRA}}
+|-
+| data-sort-value="-21.683"| 22°19′S ||data-sort-value="-49.067"| 49°04′W  || [[Bauru]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-21.533"| 22°28′S ||data-sort-value="-68.933"| 68°56′W  || [[Calama, Chile|Calama]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-21.433"| 22°34′S ||data-sort-value="17.083"| 17°05′E  || [[Windhoek]] || {{n/a}} || {{NAM}}
+|-
+| data-sort-value="-21.333"| 22°40′S ||data-sort-value="-50.417"| 50°25′W  || [[Assis]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-21.1"| 22°54′S ||data-sort-value="-47.05"| 47°03′W  || [[Campinas]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-21.083"| 22°55′S ||data-sort-value="-43.2"| 43°12′W  || [[Rio de Janeiro]] || {{flag|Rio de Janeiro}} || {{BRA}}
+|-
+| data-sort-value="-22.817"| 23°11′S ||data-sort-value="-45.883"| 45°53′W  || [[São José dos Campos]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-22.617"| 23°23′S ||data-sort-value="150.517"| 150°31′E  || [[Rockhampton]] || {{flag|Queensland}} || {{AUS}}
+|-
+| data-sort-value="-22.45"| 23°33′S ||data-sort-value="-46.633"| 46°38′W  || [[São Paulo]] || {{flag|São Paulo}} || {{BRA}}
+|-
+| data-sort-value="-22.35"| 23°39′S ||data-sort-value="-70.4"| 70°24′W  || [[Antofagasta]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-22.1"| 23°54′S ||data-sort-value="29.45"| 29°27′E  || [[Polokwane]] || [[Limpopo]] || {{ZAF}}
+|-
+| data-sort-value="-23.35"| 24°39′S ||data-sort-value="25.917"| 25°55′E  || [[Gaborone]] || {{n/a}} || {{BOT}}
+|-
+| data-sort-value="-23.217"| 24°47′S ||data-sort-value="-65.417"| 65°25′W  || [[Salta]] || {{flag|Salta}} || {{ARG}}
+|-
+| data-sort-value="-24.933"| 25°04′S ||data-sort-value="-130.1"| 130°06′W  || [[Adamstown, Pitcairn Islands|Adamstown]] || {{flag|Pitcairn Islands}} || {{UK}}
+|-
+| data-sort-value="-24.717"| 25°17′S ||data-sort-value="-57.633"| 57°38′W  || [[Asunción]] || {{n/a}} || {{PAR}}
+|-
+| data-sort-value="-24.583"| 25°25′S ||data-sort-value="-49.25"| 49°15′W  || [[Curitiba]] || {{flag|Paraná}} || {{BRA}}
+|-
+| data-sort-value="-24.533"| 25°28′S ||data-sort-value="30.983"| 30°59′E  || [[Nelspruit]] || [[Mpumalanga]] || {{ZAF}}
+|-
+| data-sort-value="-24.483"| 25°31′S ||data-sort-value="-54.617"| 54°37′W  || [[Ciudad del Este]] || {{n/a}} || {{PAR}}
+|-
+| data-sort-value="-24.25"| 25°45′S ||data-sort-value="28.183"| 28°11′E  || [[Pretoria]] || [[Gauteng]] || {{ZAF}}
+|-
+| data-sort-value="-24.15"| 25°51′S ||data-sort-value="25.633"| 25°38′E  || [[Mafikeng]] || [[North West (South African province)|North West]] || {{ZAF}}
+|-
+| data-sort-value="-24.033"| 25°58′S ||data-sort-value="32.583"| 32°35′E  || [[Maputo]] || {{n/a}} || {{MOZ}}
+|-
+| data-sort-value="-25.8"| 26°12′S ||data-sort-value="28.05"| 28°03′E  || [[Johannesburg]] || [[Gauteng]] || {{ZAF}}
+|-
+| data-sort-value="-25.683"| 26°19′S ||data-sort-value="31.133"| 31°08′E  || [[Mbabane]] || {{n/a}} || {{SWZ}}
+|-
+| data-sort-value="-25.583"| 26°25′S ||data-sort-value="31.167"| 31°10′E  || [[Lobamba]] || {{n/a}} || {{SWZ}}
+|-
+| data-sort-value="-25.517"| 26°29′S ||data-sort-value="31.367"| 31°22′E  || [[Manzini, Swaziland|Manzini]] || {{n/a}} || {{SWZ}}
+|-
+| data-sort-value="-25.183"| 26°49′S ||data-sort-value="-65.217"| 65°13′W  || [[San Miguel de Tucumán]] || {{flag|Tucumán}} || {{ARG}}
+|-
+| data-sort-value="-26.85"| 27°09′S ||data-sort-value="-109.433"| 109°26′W  || [[Hanga Roa]] || [[Easter Island]] || {{CHI}}
+|-
+| data-sort-value="-26.633"| 27°22′S ||data-sort-value="-70.333"| 70°20′W  || [[Copiapó]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-26.533"| 27°28′S ||data-sort-value="153.033"| 153°02′E  || [[Brisbane]] || {{flag|Queensland}} || {{AUS}}
+|-
+| data-sort-value="-26.517"| 27°29′S ||data-sort-value="-58.817"| 58°49′W  || [[Corrientes]] || {{flag|Corrientes}} || {{ARG}}
+|-
+| data-sort-value="-26.167"| 27°50′S ||data-sort-value="-48.417"| 48°25′W  || [[Florianópolis]] || {{flag|Santa Catarina}} || {{BRA}}
+|-
+| data-sort-value="-27.983"| 28°01′S ||data-sort-value="153.4"| 153°24′E  || [[Gold Coast, Queensland|Gold Coast]] || {{flag|Queensland}} || {{AUS}}
+|-
+| data-sort-value="-27.25"| 28°45′S ||data-sort-value="24.767"| 24°46′E  || [[Kimberley, Northern Cape|Kimberley]] || [[Northern Cape]] || {{ZAF}}
+|-
+| data-sort-value="-28.933"| 29°04′S ||data-sort-value="167.967"| 167°58′E  || [[Kingston, Norfolk Island|Kingston]] || {{flag|Norfolk Island}} || {{AUS}}
+|-
+| data-sort-value="-28.883"| 29°07′S ||data-sort-value="26.217"| 26°13′E  || [[Bloemfontein]] || [[Free State (South African province)|Free State]] || {{ZAF}}
+|-
+| data-sort-value="-28.683"| 29°19′S ||data-sort-value="27.483"| 27°29′E  || [[Maseru]] || {{n/a}} || {{LES}}
+|-
+| data-sort-value="-28.383"| 29°37′S ||data-sort-value="30.383"| 30°23′E  || [[Pietermaritzburg]] || [[KwaZulu-Natal]] || {{ZAF}}
+|-
+| data-sort-value="-28.117"| 29°53′S ||data-sort-value="31.05"| 31°03′E  || [[Durban]] || [[KwaZulu-Natal]] || {{ZAF}}
+|-
+| data-sort-value="-28.1"| 29°54′S ||data-sort-value="-71.25"| 71°15′W  || [[La Serena, Chile|La Serena]] || {{n/a}} || {{CHL}}
+|-
+|}
+
+==[[30th parallel south|30° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City/City !! Province/State !! Country
+|-
+| data-sort-value="-29.967"| 30°02′S ||data-sort-value="-51.233"| 51°14′W  || [[Porto Alegre]] || {{flag|Rio Grande do Sul}} || {{BRA}}
+|-
+| data-sort-value="-30.583"| 31°25′S ||data-sort-value="-64.183"| 64°11′W  || [[Córdoba, Argentina|Córdoba]] || {{flag|Córdoba}} || {{ARG}}
+|-
+| data-sort-value="-30.367"| 31°38′S ||data-sort-value="-60.7"| 60°42′W  || [[Santa Fe, Argentina|Santa Fe]] || {{flag|Santa Fe}} || {{ARG}}
+|-
+| data-sort-value="-30.233"| 31°46′S ||data-sort-value="-52.35"| 52°21′W  || [[Pelotas]] || {{flag|Rio Grande do Sul}} || {{BRA}}
+|-
+| data-sort-value="-30.05"| 31°57′S ||data-sort-value="115.867"| 115°52′E  || [[Perth, Western Australia|Perth]] || {{flag|Western Australia}} || {{AUS}}
+|-
+| data-sort-value="-31.467"| 32°32′S ||data-sort-value="115.717"| 115°43′E  || [[Mandurah]] || {{flag|Western Australia}} || {{AUS}}
+|-
+| data-sort-value="-31.15"| 32°51′S ||data-sort-value="27.433"| 27°26′E  || [[Bhisho]] || [[Eastern Cape]] || {{ZAF}}
+|-
+| data-sort-value="-31.117"| 32°53′S ||data-sort-value="-68.817"| 68°49′W  || [[Mendoza, Argentina|Mendoza]] || {{flag|Mendoza}} || {{ARG}}
+|-
+| data-sort-value="-31.083"| 32°55′S ||data-sort-value="151.75"| 151°45′E  || [[Newcastle, New South Wales|Newcastle]] || {{flag|New South Wales}} || {{AUS}} 
+|-
+| data-sort-value="-31.05"| 32°57′S ||data-sort-value="-60.667"| 60°40′W  || [[Rosario, Santa Fe|Rosario]] || {{flag|Santa Fe}} || {{ARG}}
+|-
+| data-sort-value="-33.00"| 33°00′S ||data-sort-value="-71.517"| 71°31′W  || [[Viña del Mar]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-32.95"| 33°03′S ||data-sort-value="-71.617"| 71°37′W  || [[Valparaíso]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-32.55"| 33°27′S ||data-sort-value="-70.667"| 70°40′W  || [[Santiago, Chile|Santiago]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-32.317"| 33°41′S ||data-sort-value="-53.45"| 53°27′W  || [[Chuí, Rio Grande do Sul|Chuí]] || {{flag|Rio Grande do Sul}} || {{BRA}}
+|-
+| data-sort-value="-32.133"| 33°52′S ||data-sort-value="151.217"| 151°13′E  || [[Sydney]] || {{flag|New South Wales}} || {{AUS}}
+|-
+| data-sort-value="-32.067"| 33°56′S ||data-sort-value="18.417"| 18°25′E  || [[Cape Town]] || [[Western Cape]] || {{ZAF}}
+|-
+| data-sort-value="-32.05"| 33°57′S ||data-sort-value="25.6"| 25°36′E  || [[Port Elizabeth]] || [[Eastern Cape]] || {{ZAF}}
+|-
+| data-sort-value="-33.567"| 34°26′S ||data-sort-value="150.883"| 150°53′E  || [[Wollongong]] || {{flag|New South Wales}} || {{AUS}}
+|-
+| data-sort-value="-33.4"| 34°36′S ||data-sort-value="-58.383"| 58°23′W  || {{flag|Buenos Aires}} || || {{ARG}}
+|-
+| data-sort-value="-33.117"| 34°53′S ||data-sort-value="-56.183"| 56°11′W  || [[Montevideo]] || {{n/a}} || {{URY}}
+|-
+| data-sort-value="-33.067"| 34°56′S ||data-sort-value="138.6"| 138°36′E  || [[Adelaide]] || {{flag|South Australia}} || {{AUS}}
+|-
+| data-sort-value="-34.7"| 35°18′S ||data-sort-value="149.117"| 149°07′E  || [[Canberra]] || {{flag|Australian Capital Territory}} || {{AUS}}
+|-
+| data-sort-value="-35.167"| 36°50′S ||data-sort-value="-73.05"| 73°03′W  || [[Concepción, Chile|Concepción]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-35.167"| 36°50′S ||data-sort-value="174.733"| 174°44′E  || [[Auckland]] || {{n/a}} || {{NZL}}
+|-
+| data-sort-value="-36.066"| 37°04′S ||data-sort-value="-12.316"| 12°19′W || [[Edinburgh of the Seven Seas]] || {{flag|Tristan da Cunha}} || {{GBR}}
+|-
+| data-sort-value="-36.217"| 37°47′S ||data-sort-value="175.283"| 175°17′E  || [[Hamilton, New Zealand|Hamilton]] || {{n/a}} || {{NZL}}
+|-
+| data-sort-value="-36.183"| 37°49′S ||data-sort-value="144.967"| 144°58′E  || [[Melbourne]] || {{flagicon|Victoria}} [[Victoria (Australia)|Victoria]] || {{AUS}}
+|-
+| data-sort-value="-38.0"| 38°00′S ||data-sort-value="-57.55"| 57°33′W  || [[Mar del Plata]] || {{flag|Buenos Aires Province}} || {{ARG}}
+|-
+| data-sort-value="-37.85"| 38°09′S ||data-sort-value="144.35"| 144°21′E  || [[Geelong]] || {{flag|Victoria}} || {{AUS}}
+|-
+| data-sort-value="-37.283"| 38°43′S ||data-sort-value="-62.267"| 62°16′W  || [[Bahía Blanca]] || {{flag|Buenos Aires Province}} || {{ARG}}
+|-
+| data-sort-value="-37.25"| 38°45′S ||data-sort-value="-72.667"| 72°40′W  || [[Temuco, Chile|Temuco]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-37.05"| 38°57′S ||data-sort-value="-68.05"| 68°03′W  || [[Neuquén]] || {{flag|Neuquén}} || {{ARG}}
+|-
+| data-sort-value="-38.35"| 39°39′S ||data-sort-value="176.833"| 176°50′E  || [[Hastings, New Zealand|Hastings]] || {{n/a}} || {{NZL}}
+|-
+| data-sort-value="-38.183"| 39°49′S ||data-sort-value="-73.25"| 73°15′W  || [[Valdivia, Chile|Valdivia]] || {{n/a}} || {{CHL}}
+|-
+|}
+
+==[[40th parallel south|40° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-40.85"| 41°09′S ||data-sort-value="-71.3"| 71°18′W  || [[San Carlos de Bariloche]] || {{flagicon|Río Negro (Argentina)}} [[Río Negro Province|Río Negro]] || {{ARG}}
+|-
+| data-sort-value="-40.733"| 41°16′S ||data-sort-value="173.283"| 173°17′E  || [[Nelson, New Zealand|Nelson]] || {{n/a}} || {{NZL}}
+|-
+| data-sort-value="-40.717"| 41°17′S ||data-sort-value="174.783"| 174°47′E  || [[Wellington]] || [[Wellington Region]] || {{NZL}}
+|-
+| data-sort-value="-40.533"| 41°28′S ||data-sort-value="-72.933"| 72°56′W  || [[Puerto Montt]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-41.117"| 42°53′S ||data-sort-value="147.333"| 147°20′E  || [[Hobart]] || {{flag|Tasmania}} || {{AUS}}
+|-
+| data-sort-value="-42.75"| 43°15′S ||data-sort-value="-65.3"| 65°18′W  || [[Trelew]] || {{flag|Chubut}} || {{ARG}}
+|-
+| data-sort-value="-42.467"| 43°32′S ||data-sort-value="172.617"| 172°37′E  || [[Christchurch]] || [[Canterbury, New Zealand|Canterbury]] || {{NZL}}
+|-
+| data-sort-value="-42.05"| 43°57′S ||data-sort-value="176.55"| 176°33′E || [[Waitangi, Chatham Islands|Waitangi]] || {{flag|Chatham Islands}} || {{NZL}}
+|-
+| data-sort-value="-44.6"| 45°24′S ||data-sort-value="-72.683"| 72°41′W  || [[Puerto Aisén]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-44.433"| 45°34′S ||data-sort-value="-72.067"| 72°04′W  || [[Coihaique]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-44.133"| 45°52′S ||data-sort-value="-67.483"| 67°29′W  || [[Comodoro Rivadavia]] || {{flag|Chubut}} || {{ARG}}
+|-
+| data-sort-value="-44.133"| 45°52′S ||data-sort-value="170.5"| 170°30′E  || [[Dunedin]] || [[Otago]] || {{NZL}}
+|-
+| data-sort-value="-45.583"| 46°25′S ||data-sort-value="168.35"| 168°21′E  || [[Invercargill]] || [[Southland, New Zealand|Southland]] || {{NZL}}
+|-
+|}
+
+==[[50th parallel south|50° South]]==
+{{main|Southernmost settlements}}
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-50.367"| 51°38′S ||data-sort-value="-69.217"| 69°13′W  || [[Río Gallegos, Santa Cruz|Río Gallegos]] || {{flag|Santa Cruz}} || {{ARG}} 
+|-
+| data-sort-value="-50.3"| 51°42′S ||data-sort-value="-57.867"| 57°52′W  || [[Stanley, Falkland Islands|Stanley]] || {{flagcountry|Falkland Islands}} || {{UK}}
+|-
+| data-sort-value="-52.833"| 53°10′S ||data-sort-value="-70.933"| 70°56′W  || [[Punta Arenas]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-53.717"| 54°17′S ||data-sort-value="-36.5"| 36°30′W  || [[Grytviken]] || {{flagcountry|South Georgia and the South Sandwich Islands}} || {{UK}}
+|-
+| data-sort-value="-53.2"| 54°48′S ||data-sort-value="-68.3"| 68°18′W  || [[Ushuaia]] || {{flag|Tierra del Fuego}} || {{ARG}}
+|-
+| data-sort-value="-53.067"| 54°56′S ||data-sort-value="-67.617"| 67°37′W  || [[Puerto Williams]] || {{n/a}} || {{CHL}}
+|-
+| data-sort-value="-54.917"| 55°05′S ||data-sort-value="-67.083"| 67°05′W  || [[Puerto Toro]] || {{n/a}} || {{CHL}}
+|-
+|}
+
+==[[60th parallel south|60° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-61.8"| 62°12′S ||data-sort-value="-58.967"| 58°58′W  || [[Villa Las Estrellas]] || {{flag|Antártica Chilena Province}} || {{CHI}}
+|-
+| data-sort-value="-62.6"| 63°24′S ||data-sort-value="-56.983"| 56°59′W  || [[Esperanza Base|Esperanza]] || {{flag|Argentine Antarctica}} || {{ARG}}
+|-
+| data-sort-value="-66.433"| 67°34′S ||data-sort-value="-68.133"| 68°08′W  || [[Rothera Research Station|Rothera]] || {{flag|British Antarctic Territory}} || {{UK}}
+|-
+|}
+
+==[[70th parallel south|70° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-74.9"| 75°06′S ||data-sort-value="-123.333"| 123°20′W  || [[Concordia Station|Concordia]] || {{n/a}} || 
+|-
+| data-sort-value="-76.15"| 77°51′S ||data-sort-value="-166.667"| 166°40′W  || [[McMurdo Station|McMurdo]] || {{n/a}} || {{USA}}
+|-
+|}
+
+==[[80th parallel south|80° South]]==
+{| class="wikitable sortable"
+|-
+! Latitude !! Longitude !! City !! Province/State !! Country
+|-
+| data-sort-value="-90"| 90°00′S ||data-sort-value="0"| 0°00′E  || {{n/a}} || {{n/a}} || {{n/a}}
+|}
+
+==Sources==
+''Sources include [http://www.infoplease.com/almanacs.html Information Please Almanac] ([http://www.infoplease.com/ipa/A0001769.html] and [http://www.infoplease.com/ipa/A0001796.html]) and a range of atlases and Wikipedia entries used by different contributors''
+
+==See also==
+*[[List of cities by longitude]]
+*[[Northernmost settlements]]
+*[[Southernmost settlements]]
+*[[List of metropolitan areas by population]]
+*[[List of national capitals]]
+*[[List of towns]]
+*[[Lists of neighborhoods by city]]
+*[[List of towns and cities with 100,000 or more inhabitants]]
+*[[The world's most northern]]
+*[[The world's most southern]]
+*[[Research stations in Antarctica]]
+*[[Latitude and longitude of cities, A-H]]
+*[[Latitude and longitude of cities, I-P]]
+*[[Latitude and longitude of cities, Q-Z]]
+
+<!--Categories-->
+[[Category:Lists of cities]]
