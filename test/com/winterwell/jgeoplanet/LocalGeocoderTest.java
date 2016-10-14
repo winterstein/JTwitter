@@ -13,6 +13,12 @@ public class LocalGeocoderTest {
 	@Test
 	public void testFindArabia() throws Exception {		
 		LocalGeocoder lg = new LocalGeocoder();
+		{	// malaysia			
+			Location locn = new Location(1.29306, 103.856); 
+			IPlace place = lg.getPlace(locn);
+			System.out.println(place+" "+place.getCountryCode());
+			assert ! place.getCountryCode().equals("MA") : place;
+		}
 		{
 			Location locn = new Location(24.2992, 54.6973); // Abu Dhabi
 			IPlace place = lg.getPlace(locn);

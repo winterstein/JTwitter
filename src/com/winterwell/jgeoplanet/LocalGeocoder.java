@@ -113,16 +113,25 @@ public class LocalGeocoder implements IGeoCode {
 			// Convert the (slightly ad-hoc) Wikipedia codes into proper country codes.
 			String truncateAndHope = country.substring(0, 2);
 			switch(country) {
+			case "DZA": truncateAndHope = "Algeria"; break;
 			case "ARE": truncateAndHope = "United Arab Emirates"; break;
+			case "BUR": truncateAndHope = "Burma"; break;
 			case "DEN": case "DNK": truncateAndHope = "Denmark"; break;
+			case "DJI": truncateAndHope = "Djibouti"; break;
+			case "EGY": truncateAndHope = "Egypt"; break;
 			case "GER": truncateAndHope = "Germany"; break;
 			case "SWE": truncateAndHope = "Sweden"; break;
 			case "KAZ": truncateAndHope = "Kazakhstan"; break;
+			case "MAS": truncateAndHope = "Malaysia"; break;
+			case "MRT": truncateAndHope = "Mauritania"; break;
 			case "POL": truncateAndHope = "Poland"; break;
 			case "SIN": truncateAndHope = "Singapore"; break;
 			case "SAM": truncateAndHope = "Samoa"; break;
+			case "SOM": truncateAndHope = "Somalia"; break;
+			case "IRQ": truncateAndHope = "Iraq"; break;
 			case "ISR": case "ISR Disputed": truncateAndHope = "Israel"; break;
-			case "PLE": truncateAndHope = "Palestine"; break;
+			case "PSE": case "PLE": truncateAndHope = "Palestine"; break;
+			case "COM": truncateAndHope = "Comoros"; break;
 			case "CRO": truncateAndHope = "Croatia"; break;
 			case "PRC": truncateAndHope = "China"; break;
 			case "TUN": truncateAndHope = "Tunisia"; break;
