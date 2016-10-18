@@ -184,8 +184,19 @@ public class GeoCodeQuery {
 		return this;
 	}
 
+	public GeoCodeQuery setLocation(Location locn) {
+		this.locn = locn;
+		return this;
+	}
+	
+	/**
+	 * Convenience for {@link #setLocation(Location)}
+	 * @param lat
+	 * @param lng
+	 * @return
+	 */
 	public GeoCodeQuery setLatitudeLongitude(double lat, double lng) {
-		this.locn = new Location(lat, lng);
+		setLocation(new Location(lat, lng));
 		return this;
 	}	
 

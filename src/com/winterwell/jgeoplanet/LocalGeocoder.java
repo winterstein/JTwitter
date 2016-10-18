@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import com.winterwell.utils.BestOne;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.StrUtils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
 
 import winterwell.jtwitter.InternalUtils;
@@ -181,33 +182,8 @@ public class LocalGeocoder implements IGeoCode {
 	 * bounding-box algorithm.
 	 */
 	public IPlace getPlace(Location location) throws PlaceNotFoundException {
-		// check the bounding boxes
-		List<IPlace> possible = new ArrayList();
-		// TODO a quad-tree??
-		// 30km
-		Dx cityRadius = new Dx(40000);
-		for(IPlace place : places) {
-			BoundingBox bbox = place.getBoundingBox();
-			if (bbox==null) {
-				if (place.getCentroid()==null) continue;
-				// city check
-				Dx dist = location.distance(place.getCentroid());
-				if (dist.isShorterThan(cityRadius)) {
-					return place;
-				}
-				continue;
-			}
-			if (bbox.contains(location)) {
-				possible.add(place);
-			}
-		}
-		if (possible.size()==1) return possible.get(0);
-		if (possible.size()==0) {
-			throw new PlaceNotFoundException(location.toString());
-		}
-		// pick one, if same country
-		
-		throw new PlaceNotFoundException("Not unique:"+possible); // just guess?
+		GeoCodeQuery query = new GeoCodeQuery().setLocation(location);
+		return getBestPlace(query);
 	}
 		
 	@Override
@@ -223,8 +199,8 @@ public class LocalGeocoder implements IGeoCode {
 		Location locn = query.locn;
 		if (locn==null) locn = Location.parse(locnDesc);
 		if (locn!=null) {
-			IPlace p = getPlace(locn);
-			return Collections.singletonMap(p, 0.95);
+			Map<IPlace, Double> pmap = getPlace2(locn);
+			return pmap;
 		}
 		// by name?
 		String ld = canonical(locnDesc);
@@ -235,6 +211,37 @@ public class LocalGeocoder implements IGeoCode {
 		throw new PlaceNotFoundException(locnDesc);
 	}
 	
+	private Map<IPlace, Double> getPlace2(Location locn) {
+		// check the bounding boxes
+		List<IPlace> possible = new ArrayList();
+		// TODO a quad-tree??
+		// 30km
+		Dx cityRadius = new Dx(40000);
+		for(IPlace place : places) {
+			BoundingBox bbox = place.getBoundingBox();
+			if (bbox==null) {
+				if (place.getCentroid()==null) continue;
+				// city check
+				Dx dist = locn.distance(place.getCentroid());
+				if (dist.isShorterThan(cityRadius)) {
+					return Collections.singletonMap(place, 0.98);
+				}
+				continue;
+			}
+			if (bbox.contains(locn)) {
+				possible.add(place);
+			}
+		}
+		if (possible.size()==0) {
+			throw new PlaceNotFoundException(locn.toString());
+		}
+		Map<IPlace, Double> map = new HashMap();
+		for(IPlace p : possible) {
+			map.put(p, 0.95);
+		}
+		return map;
+	}
+
 	/**
 	 * @param locnDesc
 	 * @return place or null 
