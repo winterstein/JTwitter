@@ -128,7 +128,7 @@ public final class ISO3166 {
 
 	/**
 	 * 
-	 * @param countryNameOrCode Can be null (returns null)
+	 * @param countryNameOrCode Can be null (returns null). This covers alternative names (English & native-language).
 	 * @return uppercase 2 letter code, e.g. "GB", or null if unknown
 	 */
 	public String getCountryCode(String countryNameOrCode) {
