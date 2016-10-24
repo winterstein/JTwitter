@@ -6,8 +6,9 @@ import java.io.File;
 
 import org.junit.Test;
 
+import com.winterwell.utils.gui.GuiUtils;
+
 import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.utils.gui.GuiUtils;
 
 public class Twitter_AccountTest {
 
