@@ -33,7 +33,7 @@ public interface IPlace {
 
 	/**
 	 * @return the centroid (centre of mass) of this Place.
-	 * Often approximate!
+	 * Often approximate! Can be null.
 	 */
 	Location getCentroid();
 	

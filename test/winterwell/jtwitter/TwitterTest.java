@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -147,7 +148,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			ts.close();
 		}
 		assert ! distro.isEmpty();
-		List<String> keys = Containers.getSortedKeys(distro);
+		Collection<String> keys = distro.keySet();
 		for (String app : keys) {
 			System.out.println(app+"\t"+distro.get(app));
 		}

@@ -124,6 +124,19 @@ public class GeoCodeQuery {
 	}
 	
 	/**
+	 * Near/in this place
+	 * @param locn
+	 */
+	public GeoCodeQuery(IPlace place) {
+		setLocation(place.getCentroid());
+		if (locn==null) {
+			desc = place.getName();
+		}
+		country = place.getCountryCode();
+		bbox = place.getBoundingBox();
+	}
+
+	/**
 	 * Free form text description.
 	 */
 	public String desc;

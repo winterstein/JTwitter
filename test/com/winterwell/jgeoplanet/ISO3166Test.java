@@ -11,6 +11,12 @@ public class ISO3166Test {
 	@Test
 	public void testUAE() {
 		ISO3166 iso = new ISO3166();
+		// Q from Fadi
+		String syria1 = iso.getCountryCode("سورية");
+		String syria2 = iso.getCountryCode("سوريا");
+		assert syria1.equals("SY");
+		assert syria2.equals("SY");
+		// UAE
 		String ae = iso.getCountryCode("United Arab Emirates");
 		Assert.assertEquals("AE", ae);
 	}

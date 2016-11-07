@@ -2,7 +2,7 @@
 Afghanistan	AF	AFG	004	ISO 3166-2:AF
 Åland Islands	AX	ALA	248	ISO 3166-2:AX
 Albania	AL	ALB	008	ISO 3166-2:AL
-Algeria	DZ	DZA	012	ISO 3166-2:DZ
+Algeria	DZ	DZA	012	ISO 3166-2:DZ	Algérie;الجزائر
 American Samoa	AS	ASM	016	ISO 3166-2:AS
 Andorra	AD	AND	020	ISO 3166-2:AD
 Angola	AO	AGO	024	ISO 3166-2:AO
@@ -103,11 +103,11 @@ Hungary	HU	HUN	348	ISO 3166-2:HU
 Iceland	IS	ISL	352	ISO 3166-2:IS
 India	IN	IND	356	ISO 3166-2:IN	Bhārat Gaṇarājya;Bhārat
 Indonesia	ID	IDN	360	ISO 3166-2:ID
-Iran, Islamic Republic of	IR	IRN	364	ISO 3166-2:IR	Iran;ایران	Iran
+Iran, Islamic Republic of	IR	IRN	364	ISO 3166-2:IR	Iran;ایران;ایران;إیران	Iran
 Iraq	IQ	IRQ	368	ISO 3166-2:IQ	Al-'Iraq;العراق
 Ireland	IE	IRL	372	ISO 3166-2:IE	Éire;Republic of Ireland
 Isle of Man	IM	IMN	833	ISO 3166-2:IM
-Israel	IL	ISR	376	ISO 3166-2:IL	ישראל
+Israel	IL	ISR	376	ISO 3166-2:IL	ישראל;اسرائيل;إسرائيل
 Italy	IT	ITA	380	ISO 3166-2:IT	Italia
 Jamaica	JM	JAM	388	ISO 3166-2:JM
 Japan	JP	JPN	392	ISO 3166-2:JP
@@ -118,11 +118,11 @@ Kenya	KE	KEN	404	ISO 3166-2:KE
 Kiribati	KI	KIR	296	ISO 3166-2:KI
 Korea, Democratic People's Republic of	KP	PRK	408	ISO 3166-2:KP	North Korea;N Korea	North Korea
 Korea, Republic of	KR	KOR	410	ISO 3166-2:KR	South Korea;S Korea;Korea	South Korea
-Kuwait	KW	KWT	414	ISO 3166-2:KW	Al-Kuwayt;الكويت
+Kuwait	KW	KWT	414	ISO 3166-2:KW	alkuwayt;Al-Kuwayt;الكويت
 Kyrgyzstan	KG	KGZ	417	ISO 3166-2:KG
 Lao People's Democratic Republic	LA	LAO	418	ISO 3166-2:LA	Laos
 Latvia	LV	LVA	428	ISO 3166-2:LV
-Lebanon	LB	LBN	422	ISO 3166-2:LB	Lubnān;لبنان
+Lebanon	LB	LBN	422	ISO 3166-2:LB	Lubnān;liban;لبنان
 Lesotho	LS	LSO	426	ISO 3166-2:LS
 Liberia	LR	LBR	430	ISO 3166-2:LR
 Libyan Arab Jamahiriya	LY	LBY	434	ISO 3166-2:LY	Libya;Lībiyā;ليبيا	Libya
@@ -149,7 +149,7 @@ Monaco	MC	MCO	492	ISO 3166-2:MC
 Mongolia	MN	MNG	496	ISO 3166-2:MN
 Montenegro	ME	MNE	499	ISO 3166-2:ME
 Montserrat	MS	MSR	500	ISO 3166-2:MS
-Morocco	MA	MAR	504	ISO 3166-2:MA	Al-Maghrib;المغرب
+Morocco	MA	MAR	504	ISO 3166-2:MA	maroc;Al-Maghrib;المغرب
 Mozambique	MZ	MOZ	508	ISO 3166-2:MZ
 Myanmar	MM	MMR	104	ISO 3166-2:MM
 Namibia	NA	NAM	516	ISO 3166-2:NA
@@ -193,7 +193,7 @@ Saint Vincent and the Grenadines	VC	VCT	670	ISO 3166-2:VC
 Samoa	WS	WSM	882	ISO 3166-2:WS
 San Marino	SM	SMR	674	ISO 3166-2:SM
 Sao Tome and Principe	ST	STP	678	ISO 3166-2:ST
-Saudi Arabia	SA	SAU	682	ISO 3166-2:SA	Saudi;Sa‘ūdiyyah;السعودي
+Saudi Arabia	SA	SAU	682	ISO 3166-2:SA	Saudi;Sa‘ūdiyyah;السعودية;السعودي
 Senegal	SN	SEN	686	ISO 3166-2:SN
 Serbia	RS	SRB	688	ISO 3166-2:RS
 Seychelles	SC	SYC	690	ISO 3166-2:SC
@@ -206,7 +206,7 @@ Solomon Islands	SB	SLB	090	ISO 3166-2:SB
 Somalia	SO	SOM	706	ISO 3166-2:SO	Soomaaliya;aş-Şūmāl;الصومال
 South Africa	ZA	ZAF	710	ISO 3166-2:ZA
 South Georgia and the South Sandwich Islands	GS	SGS	239	ISO 3166-2:GS
-South Sudan	SS	SSD	728	ISO 3166-2:SS
+South Sudan	SS	SSD	728	ISO 3166-2:SS	
 Spain	ES	ESP	724	ISO 3166-2:ES	España
 Sri Lanka	LK	LKA	144	ISO 3166-2:LK
 Sudan	SD	SDN	729	ISO 3166-2:SD	As-Sudan;السودان
@@ -215,7 +215,7 @@ Svalbard and Jan Mayen	SJ	SJM	744	ISO 3166-2:SJ
 Swaziland	SZ	SWZ	748	ISO 3166-2:SZ
 Sweden	SE	SWE	752	ISO 3166-2:SE
 Switzerland	CH	CHE	756	ISO 3166-2:CH
-Syrian Arab Republic	SY	SYR	760	ISO 3166-2:SY	Syria;Suriyah;سورية
+Syrian Arab Republic	SY	SYR	760	ISO 3166-2:SY	Syria;Suriyah;سوريا;سورية
 Taiwan, Province of China	TW	TWN	158	ISO 3166-2:TW	Taiwan
 Tajikistan	TJ	TJK	762	ISO 3166-2:TJ
 Tanzania, United Republic of	TZ	TZA	834	ISO 3166-2:TZ	Tanzania
@@ -225,14 +225,14 @@ Togo	TG	TGO	768	ISO 3166-2:TG
 Tokelau	TK	TKL	772	ISO 3166-2:TK
 Tonga	TO	TON	776	ISO 3166-2:TO
 Trinidad and Tobago	TT	TTO	780	ISO 3166-2:TT
-Tunisia	TN	TUN	788	ISO 3166-2:TN
-Turkey	TR	TUR	792	ISO 3166-2:TR	Türkiye
+Tunisia	TN	TUN	788	ISO 3166-2:TN	Tunisie;تونس;
+Turkey	TR	TUR	792	ISO 3166-2:TR	Türkiye;تركيا
 Turkmenistan	TM	TKM	795	ISO 3166-2:TM
 Turks and Caicos Islands	TC	TCA	796	ISO 3166-2:TC
 Tuvalu	TV	TUV	798	ISO 3166-2:TV
 Uganda	UG	UGA	800	ISO 3166-2:UG
 Ukraine	UA	UKR	804	ISO 3166-2:UA
-United Arab Emirates	AE	ARE	784	ISO 3166-2:AE	Abu Dhabi;UAE;أبوظبي;Dubai;دبيّ‎
+United Arab Emirates	AE	ARE	784	ISO 3166-2:AE	Abu Dhabi;Emirates;UAE;أبوظبي;Dubai;ابوظبي;أبوظبي;uae;unitedarabemirates;Emirates;دبي;الإمارات;الامارات];دبيّ‎
 United Kingdom	GB	GBR	826	ISO 3166-2:GB	Britain;UK
 United States	US	USA	840	ISO 3166-2:US	USA;United States of America;America
 United States Minor Outlying Islands	UM	UMI	581	ISO 3166-2:UM

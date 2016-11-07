@@ -212,6 +212,10 @@ public class LocalGeocoder implements IGeoCode {
 	}
 	
 	private Map<IPlace, Double> getPlace2(Location locn) {
+		// 0? Special case 'cos it almost certainly means unset
+		if (locn.latitude==0 && locn.longitude==0) {
+			return Collections.emptyMap(); // TODO Should we have a North Pole constant for this?
+		}
 		// check the bounding boxes
 		List<IPlace> possible = new ArrayList();
 		// TODO a quad-tree??

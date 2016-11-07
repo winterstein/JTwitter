@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import winterwell.utils.containers.ArraySet;
 
 import com.winterwell.utils.StrUtils;
 
@@ -35,6 +38,18 @@ public final class ISO3166 {
 	static Map<String, String> code2name;
 	static Map<String, String> code2everydayName;
 	static Map<String, String> name2code;
+	
+	public List<String> getAllNames(String codeOrName) {
+		String code = getCountryCode(codeOrName);
+		if (code==null) throw new IllegalArgumentException(codeOrName);
+		ArraySet names = new ArraySet();
+		for (Entry<String, String> e : name2code.entrySet()) {
+			if (code.equals(e.getValue())) {
+				names.add(e.getKey());
+			}
+		}
+		return names.asList();
+	}
 	
 	/**
 	 * 2-letter Country Codes.
