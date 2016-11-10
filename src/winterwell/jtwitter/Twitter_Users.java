@@ -131,7 +131,9 @@ public class Twitter_Users {
 		} catch (SuspendedUser e) {
 			throw e;
 		} catch (TwitterException.UserNotFound e) {
-			throw e;		
+			throw e;
+		} catch (TwitterException.AgeScreen e) {
+			throw e;
 		} catch (E403 e) {			
 			// check if we've tried to follow someone we're already following
 			try {
