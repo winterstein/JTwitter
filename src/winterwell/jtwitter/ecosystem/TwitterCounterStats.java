@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 public class TwitterCounterStats {
 

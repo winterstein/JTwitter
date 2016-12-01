@@ -7,9 +7,10 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.TweetEntity;

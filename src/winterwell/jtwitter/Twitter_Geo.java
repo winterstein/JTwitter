@@ -5,13 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
-
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 /**
  * Twitter's geolocation support. Use {@link Twitter#geo()} to get one of these

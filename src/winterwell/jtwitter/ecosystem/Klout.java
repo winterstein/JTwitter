@@ -2,7 +2,8 @@ package winterwell.jtwitter.ecosystem;
 
 import java.util.Map;
 
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONObject;
+
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.URLConnectionHttpClient;

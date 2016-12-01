@@ -17,10 +17,10 @@ import java.util.regex.Matcher;
 import com.winterwell.jgeoplanet.BoundingBox;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;

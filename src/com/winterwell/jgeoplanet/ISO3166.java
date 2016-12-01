@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import winterwell.utils.containers.ArraySet;
-
 import com.winterwell.utils.StrUtils;
 
 /**
@@ -42,13 +40,13 @@ public final class ISO3166 {
 	public List<String> getAllNames(String codeOrName) {
 		String code = getCountryCode(codeOrName);
 		if (code==null) throw new IllegalArgumentException(codeOrName);
-		ArraySet names = new ArraySet();
+		ArrayList<String> names = new ArrayList();
 		for (Entry<String, String> e : name2code.entrySet()) {
-			if (code.equals(e.getValue())) {
+			if (code.equals(e.getValue()) && ! names.contains(e.getKey())) {
 				names.add(e.getKey());
 			}
 		}
-		return names.asList();
+		return names;
 	}
 	
 	/**

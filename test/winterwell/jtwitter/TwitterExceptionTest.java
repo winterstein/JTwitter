@@ -2,7 +2,8 @@ package winterwell.jtwitter;
 
 import org.junit.Test;
 
-import winterwell.json.JSONException;
+import com.winterwell.json.JSONException;
+
 import winterwell.jtwitter.TwitterException.Parsing;
 
 

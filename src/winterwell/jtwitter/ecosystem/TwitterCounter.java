@@ -3,8 +3,9 @@ package winterwell.jtwitter.ecosystem;
 import java.text.ParseException;
 import java.util.Map;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.TwitterException;

@@ -1,7 +1,7 @@
 package com.winterwell.jgeoplanet;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 
 /**

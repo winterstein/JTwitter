@@ -21,8 +21,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONObject;
+
 import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.guts.Base64Encoder;
 

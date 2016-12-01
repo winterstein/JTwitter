@@ -1,8 +1,9 @@
 package winterwell.jtwitter.ecosystem;
 
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.IHttpClient;

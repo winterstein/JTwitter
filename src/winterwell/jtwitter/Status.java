@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.TweetEntity;

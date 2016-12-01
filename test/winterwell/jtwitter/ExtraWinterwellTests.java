@@ -9,7 +9,7 @@ import org.junit.Test;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.TweetEntity;
-import winterwell.utils.io.XStreamBinaryConverter;
+import com.winterwell.utils.io.XStreamBinaryConverter;
 
 public class ExtraWinterwellTests {
 

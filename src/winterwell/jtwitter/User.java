@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 /**
  * A Twitter user. Fields are null if unset.

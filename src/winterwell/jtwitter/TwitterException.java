@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.json.JSONException;
+import com.winterwell.json.JSONException;
 
 /**
  * A runtime exception for when Twitter requests don't work. All {@link Twitter}

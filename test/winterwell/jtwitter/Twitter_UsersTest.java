@@ -6,7 +6,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import winterwell.json.JSONException;
+import com.winterwell.json.JSONException;
+
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
