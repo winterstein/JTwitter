@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import static org.junit.Assert.fail;
 
@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.winterwell.utils.gui.GuiUtils;
 
-import winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
 
 public class Twitter_AccountTest {
 

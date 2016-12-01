@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,14 +18,14 @@ import com.winterwell.jgeoplanet.BoundingBox;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
-import winterwell.jtwitter.TwitterException.E401;
-import winterwell.jtwitter.TwitterException.E403;
-import winterwell.jtwitter.TwitterException.E404;
-import winterwell.jtwitter.TwitterException.SuspendedUser;
-import winterwell.jtwitter.ecosystem.TwitLonger;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+import com.winterwell.jtwitter.TwitterException.E401;
+import com.winterwell.jtwitter.TwitterException.E403;
+import com.winterwell.jtwitter.TwitterException.E404;
+import com.winterwell.jtwitter.TwitterException.SuspendedUser;
+import com.winterwell.jtwitter.ecosystem.TwitLonger;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}

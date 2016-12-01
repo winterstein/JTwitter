@@ -1,8 +1,8 @@
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import org.junit.Test;
 
-import winterwell.jtwitter.ecosystem.Topsy.UrlInfo;
+import com.winterwell.jtwitter.ecosystem.Topsy.UrlInfo;
 
 public class TopsyTest {
 

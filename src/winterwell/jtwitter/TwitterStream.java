@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.net.HttpURLConnection;
 import java.util.HashMap;

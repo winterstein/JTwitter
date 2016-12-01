@@ -1,4 +1,4 @@
-package winterwell.jtwitter.android;
+package com.winterwell.jtwitter.android;
 
 public interface android {
 

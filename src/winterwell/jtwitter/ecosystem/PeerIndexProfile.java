@@ -1,11 +1,11 @@
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 /**
  * See http://dev.peerindex.com/docs/profile/show

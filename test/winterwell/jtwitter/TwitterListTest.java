@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import junit.framework.TestCase;
-import winterwell.jtwitter.TwitterException.E404;
+import com.winterwell.jtwitter.TwitterException.E404;
 
 /**
  * Partial unit tests for TwitterList

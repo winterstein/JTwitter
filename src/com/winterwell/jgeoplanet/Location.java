@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.InternalUtils;
 
 /**
  * A geographical point-location expressed as a latitude and longitude.

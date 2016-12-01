@@ -1,6 +1,6 @@
 package com.winterwell.jgeoplanet;
 
-import winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.InternalUtils;
 
 
 

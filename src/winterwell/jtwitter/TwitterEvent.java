@@ -1,9 +1,9 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.util.Date;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 /**
  * User events, like following someone or being added to a list.

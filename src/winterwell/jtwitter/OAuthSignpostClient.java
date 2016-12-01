@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +26,8 @@ import oauth.signpost.http.HttpParameters;
 import oauth.signpost.http.HttpRequest;
 import oauth.signpost.signature.AuthorizationHeaderSigningStrategy;
 import oauth.signpost.signature.SigningStrategy;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.guts.ClientHttpRequest;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.guts.ClientHttpRequest;
 
 
 /**

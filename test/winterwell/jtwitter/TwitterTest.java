@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 
 import java.io.BufferedReader;
@@ -25,19 +25,19 @@ import org.junit.Test;
 
 import com.winterwell.utils.Printer;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.jtwitter.Twitter.KEntityType;
-import winterwell.jtwitter.Twitter.KRequestType;
-import winterwell.jtwitter.Twitter.TweetEntity;
-import winterwell.jtwitter.TwitterException.E403;
-import winterwell.jtwitter.TwitterException.E404;
-import winterwell.utils.Utils;
-import winterwell.utils.containers.Containers;
-import winterwell.utils.time.TUnit;
-import winterwell.utils.time.Time;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.Twitter.ITweet;
+import com.winterwell.jtwitter.Twitter.KEntityType;
+import com.winterwell.jtwitter.Twitter.KRequestType;
+import com.winterwell.jtwitter.Twitter.TweetEntity;
+import com.winterwell.jtwitter.TwitterException.E403;
+import com.winterwell.jtwitter.TwitterException.E404;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.Time;
 
 /**
  * Unit tests for JTwitter.

@@ -1,6 +1,6 @@
 /* Package changed from haustein to avoid potential versioning conflicts.
  */
-package winterwell.jtwitter.guts;
+package com.winterwell.jtwitter.guts;
 
 import java.io.ByteArrayOutputStream;
 

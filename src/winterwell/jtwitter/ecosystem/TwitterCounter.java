@@ -1,14 +1,14 @@
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import java.text.ParseException;
 import java.util.Map;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
-import winterwell.jtwitter.InternalUtils;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.TwitterException;
-import winterwell.jtwitter.URLConnectionHttpClient;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+import com.winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.TwitterException;
+import com.winterwell.jtwitter.URLConnectionHttpClient;
 
 /**
  * Client for the twittercounter.com service

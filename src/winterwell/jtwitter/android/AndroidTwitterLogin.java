@@ -1,9 +1,9 @@
-package winterwell.jtwitter.android;
+package com.winterwell.jtwitter.android;
 
 import java.net.URI;
 
-import winterwell.jtwitter.OAuthSignpostClient;
-import winterwell.jtwitter.Twitter;
+import com.winterwell.jtwitter.OAuthSignpostClient;
+import com.winterwell.jtwitter.Twitter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;

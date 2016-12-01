@@ -1,8 +1,8 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.util.Date;
 
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONObject;
 
 /**
  * Info on your Twitter API usage - how many calls do you have to use?

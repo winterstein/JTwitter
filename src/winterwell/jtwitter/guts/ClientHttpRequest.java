@@ -1,6 +1,6 @@
 /* Package changed from myjavatools to avoid potential versioning conflicts.
  */
-package winterwell.jtwitter.guts;
+package com.winterwell.jtwitter.guts;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-import winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.InternalUtils;
 
 /**
  * <p>Title: MyJavaTools: Client HTTP Request class</p>

@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.TwitterException.E403;
-import winterwell.jtwitter.TwitterException.SuspendedUser;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.TwitterException.E403;
+import com.winterwell.jtwitter.TwitterException.SuspendedUser;
 
 /**
  * API calls relating to users and relationships (the social network). Use

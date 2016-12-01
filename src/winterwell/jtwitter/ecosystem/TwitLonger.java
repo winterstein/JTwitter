@@ -1,15 +1,15 @@
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.jtwitter.InternalUtils;
-import winterwell.jtwitter.Status;
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.TwitterException;
-import winterwell.jtwitter.URLConnectionHttpClient;
+import com.winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.Status;
+import com.winterwell.jtwitter.Twitter;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.TwitterException;
+import com.winterwell.jtwitter.URLConnectionHttpClient;
 
 public class TwitLonger {
 	

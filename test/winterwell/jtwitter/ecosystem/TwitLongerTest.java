@@ -1,11 +1,11 @@
 /**
  * 
  */
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
-import winterwell.jtwitter.Status;
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterTest;
+import com.winterwell.jtwitter.Status;
+import com.winterwell.jtwitter.Twitter;
+import com.winterwell.jtwitter.TwitterTest;
 
 /**
  * @author daniel

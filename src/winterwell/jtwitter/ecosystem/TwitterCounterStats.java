@@ -1,4 +1,4 @@
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
 
 public class TwitterCounterStats {
 

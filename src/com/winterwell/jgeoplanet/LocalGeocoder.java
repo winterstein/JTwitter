@@ -21,7 +21,7 @@ import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
 
-import winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.InternalUtils;
 
 /**
  * Use a local dataset to do some geocoding.

@@ -1,4 +1,4 @@
-package winterwell.json;
+package com.winterwell.json;
 
 import java.io.IOException;
 import java.io.Writer;

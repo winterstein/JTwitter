@@ -1,4 +1,4 @@
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import org.junit.Test;
 

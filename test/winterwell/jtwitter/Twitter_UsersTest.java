@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import winterwell.json.JSONException;
-import winterwell.jtwitter.TwitterException.E401;
-import winterwell.jtwitter.TwitterException.E403;
-import winterwell.jtwitter.TwitterException.E404;
-import winterwell.jtwitter.TwitterException.SuspendedUser;
+import com.winterwell.json.JSONException;
+import com.winterwell.jtwitter.TwitterException.E401;
+import com.winterwell.jtwitter.TwitterException.E403;
+import com.winterwell.jtwitter.TwitterException.E404;
+import com.winterwell.jtwitter.TwitterException.SuspendedUser;
 
 
 public class Twitter_UsersTest {

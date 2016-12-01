@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import winterwell.jtwitter.Twitter.IHttpClient;
-import winterwell.jtwitter.Twitter.KEntityType;
-import winterwell.jtwitter.Twitter.TweetEntity;
-import winterwell.utils.io.XStreamBinaryConverter;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.jtwitter.Twitter.KEntityType;
+import com.winterwell.jtwitter.Twitter.TweetEntity;
+import com.winterwell.utils.io.XStreamBinaryConverter;
 
 public class ExtraWinterwellTests {
 

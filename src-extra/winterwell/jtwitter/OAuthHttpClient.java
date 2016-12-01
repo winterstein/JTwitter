@@ -1,5 +1,5 @@
-package winterwell.jtwitter;
-//package winterwell.jtwitter;
+package com.winterwell.jtwitter;
+//package com.winterwell.jtwitter;
 //import java.util.Map;
 //
 //import javax.jws.soap.SOAPBinding.ParameterStyle;

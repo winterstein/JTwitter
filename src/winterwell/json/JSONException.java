@@ -1,4 +1,4 @@
-package winterwell.json;
+package com.winterwell.json;
 
 /**
  * The JSONException is thrown by the JSON.org classes then things are amiss.

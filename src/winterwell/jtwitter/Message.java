@@ -1,4 +1,4 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 
-import winterwell.json.JSONArray;
-import winterwell.json.JSONException;
-import winterwell.json.JSONObject;
-import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.jtwitter.Twitter.KEntityType;
-import winterwell.jtwitter.Twitter.TweetEntity;
+import com.winterwell.json.JSONArray;
+import com.winterwell.json.JSONException;
+import com.winterwell.json.JSONObject;
+import com.winterwell.jtwitter.Twitter.ITweet;
+import com.winterwell.jtwitter.Twitter.KEntityType;
+import com.winterwell.jtwitter.Twitter.TweetEntity;
 
 /**
  * A Twitter direct message. Fields are null if unset.

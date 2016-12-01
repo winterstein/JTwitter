@@ -1,11 +1,11 @@
 /**
  * 
  */
-package winterwell.jtwitter.ecosystem;
+package com.winterwell.jtwitter.ecosystem;
 
 import org.junit.Test;
 
-import winterwell.jtwitter.User;
+import com.winterwell.jtwitter.User;
 
 /**
  * @author daniel

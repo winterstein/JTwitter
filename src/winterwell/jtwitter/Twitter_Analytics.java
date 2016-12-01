@@ -1,9 +1,9 @@
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.util.Map;
 
-import winterwell.json.JSONObject;
-import winterwell.jtwitter.Twitter.IHttpClient;
+import com.winterwell.json.JSONObject;
+import com.winterwell.jtwitter.Twitter.IHttpClient;
 
 /**
  * Example Usage:

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import winterwell.jtwitter.Twitter.ITweet;
+import com.winterwell.jtwitter.Twitter.ITweet;
 
 /**
  * See https://dev.twitter.com/streaming/reference/get/user

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import winterwell.jtwitter.InternalUtils;
+import com.winterwell.jtwitter.InternalUtils;
 
 public class LocalGeocoderTest {
 

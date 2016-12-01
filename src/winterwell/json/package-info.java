@@ -10,4 +10,4 @@
  * <p>
  * The JTwitter / winterwell.web files should be kept in exact sync with each other.
  */
-package winterwell.json;
+package com.winterwell.json;

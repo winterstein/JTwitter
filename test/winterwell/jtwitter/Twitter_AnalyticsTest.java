@@ -1,7 +1,7 @@
 /**
  * 
  */
-package winterwell.jtwitter;
+package com.winterwell.jtwitter;
 
 import org.junit.Test;
 

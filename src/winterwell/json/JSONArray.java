@@ -1,4 +1,4 @@
-package winterwell.json;
+package com.winterwell.json;
 
 /*
 Copyright (c) 2002 JSON.org
