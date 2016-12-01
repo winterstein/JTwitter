@@ -36,8 +36,8 @@ import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
-import com.winterwell.utils.time.TUnit;
-import com.winterwell.utils.time.Time;
+import winterwell.utils.time.TUnit;
+import winterwell.utils.time.Time;
 
 /**
  * Unit tests for JTwitter.

@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.winterwell.bob.BuildTask;
-import com.winterwell.bob.tasks.CopyTask;
-import com.winterwell.bob.tasks.GitTask;
-import com.winterwell.bob.tasks.JarTask;
-import com.winterwell.bob.tasks.JavaDocTask;
-import com.winterwell.bob.tasks.ZipTask;
+import winterwell.bob.BuildTask;
+import winterwell.bob.tasks.CopyTask;
+import winterwell.bob.tasks.GitTask;
+import winterwell.bob.tasks.JarTask;
+import winterwell.bob.tasks.JavaDocTask;
+import winterwell.bob.tasks.ZipTask;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterTest;
