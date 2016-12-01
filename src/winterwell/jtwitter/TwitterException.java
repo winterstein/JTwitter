@@ -421,6 +421,18 @@ public class TwitterException extends RuntimeException {
 			super(msg);
 		}
 	}
+	
+	/**
+	 * For when Twitter sends a code 250 "this account is age-locked and the user hasn't given their age" response.
+	 * See https://support.twitter.com/articles/20169945
+	 */
+	public static class AgeScreen extends E403 {
+		private static final long serialVersionUID = 1L;
+
+		AgeScreen(String msg) {
+			super(msg);
+		}
+	}
 
 	/**
 	 * Exception thrown if something goes wrong with twilonger.com integration

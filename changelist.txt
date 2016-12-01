@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.4.1:
+ - TwitterException.AgeScreen
+
 3.4.0: 
  - Yahoo have switched of GeoPlanet, so lets move jGeoPlanet code in here
 

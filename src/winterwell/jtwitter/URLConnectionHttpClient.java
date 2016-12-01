@@ -615,6 +615,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throw new TwitterException.TooRecent(errorPage + "\n" + url);
 		if (errorPage.contains("code 226"))
 			throw new TwitterException.TooSpammy(errorPage + "\n" + url);
+		if (errorPage.contains("code 250"))
+			throw new TwitterException.AgeScreen(errorPage + "\n" + url);
 		if (errorPage.contains("already requested to follow"))
 			throw new TwitterException.Repetition(errorPage + "\n" + url);
 		if (errorPage.contains("duplicate"))
