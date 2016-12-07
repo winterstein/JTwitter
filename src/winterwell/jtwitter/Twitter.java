@@ -474,6 +474,9 @@ public class Twitter implements Serializable {
 			case user_mentions:
 				display = obj.getString("name");
 				break;
+			case media:
+				display = obj.getString("display_url");
+				break;
 			default:
 				display = null;
 			}
