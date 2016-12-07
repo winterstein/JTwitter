@@ -201,6 +201,11 @@ public final class Status implements ITweet {
 	private boolean retweet;
 
 	private boolean quotedStatus;
+
+	/**
+	 * A debugging convenience: Keep the raw json object (but don't save it).
+	 */
+	private transient JSONObject raw;
 	
 	public boolean isRetweet() {
 		return retweet;
@@ -243,6 +248,7 @@ public final class Status implements ITweet {
 	 */
 	@SuppressWarnings("deprecation")
 	Status(JSONObject object, User user) throws TwitterException {
+		this.raw = object;
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
