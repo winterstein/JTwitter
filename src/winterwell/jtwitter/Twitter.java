@@ -2876,22 +2876,16 @@ public class Twitter implements Serializable {
 	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId, boolean withMedia) 
 	{
 		// check for length
-		int max = withMedia? MAX_CHARS - MEDIA_LENGTH : MAX_CHARS;
-		if (statusText.length() > max 
+		if (statusText.length() > MAX_CHARS
 				&& TWITTER_URL.contains("twitter") // Hack: allow long posts to WordPress
 				&& CHECK_TWEET_LENGTH)  
 		{
 			int shortLength = countCharacters(statusText);
-			if (shortLength > max) {
+			if (shortLength > MAX_CHARS) {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
 					throw new IllegalArgumentException(
 							"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
-									+ statusText.length() + " " + statusText);
-				}
-				if (withMedia) {
-					throw new IllegalArgumentException(
-							"Status-with-media text must be "+max+" characters or less: "
 									+ statusText.length() + " " + statusText);
 				}
 				throw new IllegalArgumentException(
