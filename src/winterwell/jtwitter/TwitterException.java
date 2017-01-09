@@ -334,7 +334,7 @@ public class TwitterException extends RuntimeException {
 			super("Already tweeted! " + tweet);
 		}
 	}
-
+	
 	/**
 	 * Exception thrown when trying to query a suspended account. Note that
 	 * *deleted* accounts may generate an E404 instead.

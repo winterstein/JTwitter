@@ -629,6 +629,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			// Change to 404.MissingUser? No - be consistent with Twitter itself
 			throw new TwitterException.UserNotFound(url + " (" + _name+ ") posted: "+postVars);
 		}
+		if (errorPage.contains("code 158:")) { // You can't follow yourself.
+			throw new TwitterException.Repetition(errorPage);
+		}
 		if (errorPage.contains("code 162:")) { // You have been blocked from following this account at the request of the user.
 			throw new TwitterException.Blocked(errorPage, postVars==null? null : postVars.get("screen_name"));
 		}

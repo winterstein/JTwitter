@@ -134,7 +134,10 @@ public class Twitter_Users {
 		} catch (TwitterException.UserNotFound e) {
 			throw e;
 		} catch (TwitterException.AgeScreen e) {
-			throw e;
+			throw e;			
+		} catch(TwitterException.Repetition e) {
+			// treat the same as already-following
+			return null;
 		} catch (E403 e) {			
 			// check if we've tried to follow someone we're already following
 			try {
