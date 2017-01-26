@@ -805,15 +805,23 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testAuthUser() {
 		OAuthSignpostClient client = new OAuthSignpostClient(
-		OAuthSignpostClient.JTWITTER_OAUTH_KEY,
-		OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
+				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,"oob");
 		client.authorizeDesktop();
 		String pin = client.askUser("The Pin?");
 		System.out.println(pin);
 		client.setAuthorizationCode(pin);
 		String[] tokens = client.getAccessToken();
 		System.out.println("Tokens: "+tokens[0] + " " + tokens[1]);
+		
+		OAuthSignpostClient authdClient = new OAuthSignpostClient(
+				OAuthSignpostClient.JTWITTER_OAUTH_KEY,
+				OAuthSignpostClient.JTWITTER_OAUTH_SECRET,
+				tokens[0], tokens[1]);
+		System.out.println(new Twitter(null, authdClient).getSelf());
 	}
+	
+	
 	
 	/**
 	 * A second test account (for testing messaging)
