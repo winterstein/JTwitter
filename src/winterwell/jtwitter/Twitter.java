@@ -2388,7 +2388,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * 
-	 * @param status The status to favorite. Technical note: Only the ID is needed, so you can use a "fake" Status object here. 
+	 * @param status The status to favorite. 
+	 * Technical note: Only the ID is needed, so you can use a "fake" Status object here e.g. new Status(id). 
 	 * @param isFavorite
 	 * @return updated Status, or null if you'd already starred this status. 
 	 */
