@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.5.1:
+ - Status.favoriteCount
+ 
 3.4.1:
  - TwitterException.AgeScreen
 
