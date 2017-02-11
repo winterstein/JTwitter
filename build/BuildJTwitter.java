@@ -56,10 +56,16 @@ public class BuildJTwitter extends BuildTask {
 //			doctask.setDoclintFlag(true);
 			doctask.run();
 		} catch(Exception ex) {
-			// Probably Java 8 badness -- try again
-			JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);			
-			doctask.setDoclintFlag(true);
-			doctask.run();
+			try {
+				// Probably Java 8 badness -- try again
+				JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);			
+				doctask.setDoclintFlag(true);
+				doctask.run();
+			} catch(Exception ex2) {
+				// WTF?
+				System.err.println(ex);
+				System.err.println(ex2);
+			}
 		}
 		
 		// zip
