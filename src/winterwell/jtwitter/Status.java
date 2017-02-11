@@ -167,6 +167,10 @@ public final class Status implements ITweet {
 	 * _new-style_ retweets. -1 if unknown.
 	 */
 	public final int retweetCount;
+	/**
+	 * Number of likes for this tweet. -1 if unknown.
+	 */
+	public final int favoriteCount;
 	
 	boolean sensitive;
 
@@ -201,6 +205,11 @@ public final class Status implements ITweet {
 	private boolean retweet;
 
 	private boolean quotedStatus;
+
+	/**
+	 * A debugging convenience: Keep the raw json object (but don't save it).
+	 */
+	private transient JSONObject raw;
 	
 	public boolean isRetweet() {
 		return retweet;
@@ -243,6 +252,7 @@ public final class Status implements ITweet {
 	 */
 	@SuppressWarnings("deprecation")
 	Status(JSONObject object, User user) throws TwitterException {
+		this.raw = object;
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
@@ -343,6 +353,7 @@ public final class Status implements ITweet {
 			lang = "und".equals(_lang)? null : _lang;
 
 			retweetCount = object.optInt("retweet_count", -1);
+			favoriteCount = object.optInt("favorite_count", -1);
 			// favourites??
 			
 			// ignore this as it can be misleading: true is reliable, false isn't
@@ -425,6 +436,7 @@ public final class Status implements ITweet {
 		inReplyToStatusId = null;
 		source = FAKE;
 		retweetCount = -1;
+		favoriteCount = -1;
 	}
 
 	/**

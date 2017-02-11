@@ -264,7 +264,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	private AbstractOAuthProvider provider;
 
 	/**
-	 * 
+	 * This is for doing the initial authorisation.
 	 * @param consumerKey
 	 * @param consumerSecret
 	 * @param callbackUrl

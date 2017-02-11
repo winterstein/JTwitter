@@ -474,6 +474,9 @@ public class Twitter implements Serializable {
 			case user_mentions:
 				display = obj.getString("name");
 				break;
+			case media:
+				display = obj.getString("display_url");
+				break;
 			default:
 				display = null;
 			}
@@ -643,7 +646,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.5.0";
+	public final static String version = "3.5.1";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2385,7 +2388,8 @@ public class Twitter implements Serializable {
 
 	/**
 	 * 
-	 * @param status The status to favorite. Technical note: Only the ID is needed, so you can use a "fake" Status object here. 
+	 * @param status The status to favorite. 
+	 * Technical note: Only the ID is needed, so you can use a "fake" Status object here e.g. new Status(id). 
 	 * @param isFavorite
 	 * @return updated Status, or null if you'd already starred this status. 
 	 */
@@ -2876,22 +2880,16 @@ public class Twitter implements Serializable {
 	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId, boolean withMedia) 
 	{
 		// check for length
-		int max = withMedia? MAX_CHARS - MEDIA_LENGTH : MAX_CHARS;
-		if (statusText.length() > max 
+		if (statusText.length() > MAX_CHARS
 				&& TWITTER_URL.contains("twitter") // Hack: allow long posts to WordPress
 				&& CHECK_TWEET_LENGTH)  
 		{
 			int shortLength = countCharacters(statusText);
-			if (shortLength > max) {
+			if (shortLength > MAX_CHARS) {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
 					throw new IllegalArgumentException(
 							"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
-									+ statusText.length() + " " + statusText);
-				}
-				if (withMedia) {
-					throw new IllegalArgumentException(
-							"Status-with-media text must be "+max+" characters or less: "
 									+ statusText.length() + " " + statusText);
 				}
 				throw new IllegalArgumentException(
