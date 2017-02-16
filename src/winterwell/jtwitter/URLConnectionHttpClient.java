@@ -47,6 +47,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 
 	private Map<String, List<String>> headers;
 
+	/**
+	 * Use this to protect your Twitter API rate-limit. E.g. if you want to keep
+	 * some credit in reserve for core activity. 0 by default. 
+	 * this http client object will start pre-emptively throwing rate-limit
+	 * exceptions when it gets down to the specified level.
+	 */
 	int minRateLimit;
 
 	protected String name;
@@ -439,8 +445,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		if (limit != null && limit.getRemaining() <= minRateLimit
 			&& ! limit.isOutOfDate()) 
 		{
-			throw new TwitterException.PreEmptiveRateLimit(
-					"Pre-emptive rate-limit block for "+limit+" for "+url+ " based on minimum limit"+ minRateLimit);
+			String msg = "Pre-emptive rate-limit block for "+limit+" for request "+url;
+			if (minRateLimit>0) msg += " based on minimum limit "+ minRateLimit;
+			throw new TwitterException.PreEmptiveRateLimit(msg);
 		}
 		return resource;
 	}
