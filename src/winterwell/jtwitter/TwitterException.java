@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.winterwell.json.JSONException;
+import com.winterwell.utils.log.Log;
 
 /**
  * A runtime exception for when Twitter requests don't work. All {@link Twitter}
@@ -319,6 +320,7 @@ public class TwitterException extends RuntimeException {
 
 		public PreEmptiveRateLimit(String string) {
 			super(string);
+			Log.d("PreEmptiveRateLimit", "Usage stats: "+winterwell.jtwitter.RateLimit.getAPIUsageStats());
 		}
 	}
 

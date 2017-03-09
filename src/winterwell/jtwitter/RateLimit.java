@@ -1,6 +1,7 @@
 package winterwell.jtwitter;
 
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.winterwell.json.JSONObject;
 
@@ -42,6 +43,7 @@ public final class RateLimit {
 	private String remaining;
 	private String reset;
 	private transient Date _reset;
+	static ConcurrentHashMap<String, Long> usage;
 
 	public RateLimit(String limit, String remaining, String reset) {
 		this.limit = limit;
@@ -99,6 +101,69 @@ public final class RateLimit {
 			// wrap this for convenience??
 			throw new TwitterException(e);
 		}
+	}
+
+	/**
+	 * Note: this is a global JVM wide setting, intended for debugging.
+	 * @param on
+	 *            true to activate {@link getAPIUsageStats}. false to switch
+	 *            stats off. false by default
+	 */
+	static public void setTrackAPIUsage(boolean on) {
+		if (!on) {
+			usage = null;
+			return;
+		}
+		if (usage != null)
+			return;
+		usage = new ConcurrentHashMap<String, Long>();
+	}
+
+	/**
+	 * Count API usage for api usage stats.
+	 * 
+	 * @param url
+	 */
+	static void count(String url) {
+		if (usage == null)
+			return;
+		// ignore parameters
+		int i = url.indexOf("?");
+		if (i != -1) {
+			url = url.substring(0, i);
+		}
+		// for clarity
+		i = url.indexOf("/1/");
+		if (i != -1) {
+			url = url.substring(i + 3);
+		}
+		// some calls - eg statuses/show - include the tweet id
+		url = url.replaceAll("\\d+", "");
+		// non-blocking (we could just ignore the race condition I suppose)
+		for (int j = 0; j < 100; j++) { // give up if you lose >100 races
+			Long v = usage.get(url);
+			boolean done;
+			if (v == null) {
+				Long old = usage.putIfAbsent(url, 1L);
+				done = old == null;
+			} else {
+				long nv = v + 1;
+				done = usage.replace(url, v, nv);
+			}
+			if (done) {
+				break;
+			}
+		}
+	}
+
+	/**
+	 * @return a map of API endpoint to count-of-calls. null if switched off
+	 *         (which is the default).
+	 * 
+	 * @see RateLimit#setTrackAPIUsage(boolean)
+	 */
+	static public ConcurrentHashMap<String, Long> getAPIUsageStats() {
+		return usage;
 	}
 
 	/**

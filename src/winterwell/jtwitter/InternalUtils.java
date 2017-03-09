@@ -32,7 +32,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,8 +156,6 @@ public class InternalUtils {
 	public static final Pattern DM = Pattern.compile("^dm? (\\w+)\\b", Pattern.CASE_INSENSITIVE);
 	
 	
-	static ConcurrentHashMap<String, Long> usage;
-
 	/**
 	 * Create a map from a list of key, value pairs. An easy way to make small
 	 * maps, basically the equivalent of {@link Arrays#asList(Object...)}. If
@@ -208,43 +205,6 @@ public class InternalUtils {
 		}
 	}
 
-	/**
-	 * Count API usage for api usage stats.
-	 * 
-	 * @param url
-	 */
-	static void count(String url) {
-		if (usage == null)
-			return;
-		// ignore parameters
-		int i = url.indexOf("?");
-		if (i != -1) {
-			url = url.substring(0, i);
-		}
-		// for clarity
-		i = url.indexOf("/1/");
-		if (i != -1) {
-			url = url.substring(i + 3);
-		}
-		// some calls - eg statuses/show - include the tweet id
-		url = url.replaceAll("\\d+", "");
-		// non-blocking (we could just ignore the race condition I suppose)
-		for (int j = 0; j < 100; j++) { // give up if you lose >100 races
-			Long v = usage.get(url);
-			boolean done;
-			if (v == null) {
-				Long old = usage.putIfAbsent(url, 1L);
-				done = old == null;
-			} else {
-				long nv = v + 1;
-				done = usage.replace(url, v, nv);
-			}
-			if (done) {
-				break;
-			}
-		}
-	}
-
 	static String encode(Object x) {
 		String encd;
 		try {
@@ -256,16 +216,6 @@ public class InternalUtils {
 		// v1.1 doesn't like *
 		encd = encd.replace("*", "%2A");
 		return encd.replace("+", "%20");
-	}
-
-	/**
-	 * @return a map of API endpoint to count-of-calls. null if switched off
-	 *         (which is the default).
-	 * 
-	 * @see #setTrackAPIUsage(boolean)
-	 */
-	static public ConcurrentHashMap<String, Long> getAPIUsageStats() {
-		return usage;
 	}
 
 	/**
@@ -402,22 +352,6 @@ public class InternalUtils {
 		}
 	}
 
-	/**
-	 * Note: this is a global JVM wide setting, intended for debugging.
-	 * @param on
-	 *            true to activate {@link #getAPIUsageStats()}. false to switch
-	 *            stats off. false by default
-	 */
-	static public void setTrackAPIUsage(boolean on) {
-		if (!on) {
-			usage = null;
-			return;
-		}
-		if (usage != null)
-			return;
-		usage = new ConcurrentHashMap<String, Long>();
-	}
-	
 	/**
 	 * We assume that UTF8 is supported everywhere!
 	 */

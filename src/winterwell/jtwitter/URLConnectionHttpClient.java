@@ -267,7 +267,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			boolean authenticate) throws TwitterException 
 	{		
 		assert url != null;
-		InternalUtils.count(url);
+		RateLimit.count(url);
 		// This method handles the retry behaviour.
 		try {
 			// Do the actual work
@@ -364,7 +364,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	public final String post(String uri, Map<String, String> vars,
 			boolean authenticate) throws TwitterException 
 	{		
-		InternalUtils.count(uri);
+		RateLimit.count(uri);
 		try {
 			// do the actual work
 			String json = post2(uri, vars, authenticate);
@@ -414,7 +414,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throws Exception 
 	{
 		String resource = checkRateLimit(uri);
-		InternalUtils.count(uri);
+		RateLimit.count(uri);
 		HttpURLConnection connection = (HttpURLConnection) new URL(uri)
 				.openConnection();
 		connection.setRequestMethod("POST");

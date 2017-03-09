@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.5.2:
+ - Moved usage stats into RateLimit.
 3.5.1:
  - Status.favoriteCount
  
