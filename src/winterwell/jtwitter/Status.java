@@ -205,6 +205,18 @@ public final class Status implements ITweet {
 	private boolean retweet;
 
 	private boolean quotedStatus;
+	
+	/**
+	 * The current Twitter spec states that leading @mentions will be displayed
+	 * as a separate element (of the form "in reply to Full Name") on the web
+	 * interface - likewise, attachment URLs will be hidden.
+	 * This has not been rolled out but some users report seeing it in A/B
+	 * testing (as of March 2017).
+	 * The display_text_range property denotes which regions of the tweet text
+	 * are which.
+	 */
+	private int displayStart;
+	private int displayEnd;
 
 	/**
 	 * A debugging convenience: Keep the raw json object (but don't save it).
@@ -256,12 +268,42 @@ public final class Status implements ITweet {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
+			
+			// Extended tweets: REST API mode
 			// Depending on whether this was obtained with param tweet_mode=extended,
 			// either "text" or "full_text" might be present.
 			_rawtext = InternalUtils.jsonGet("full_text", object);
 			if (_rawtext == null) {
 				_rawtext = InternalUtils.jsonGet("text", object);
 			}
+			
+			// Entities (switched on by Twitter.setIncludeTweetEntities(true))
+			JSONObject jsonEntities = object.optJSONObject("entities");
+			
+			// Display range: Start and end of region of tweet text which should actually be displayed.
+			JSONArray displayRange = object.optJSONArray("display_text_range");
+			
+			// Streaming API bundles all extended-tweet data into its own field.
+			JSONObject extended = object.optJSONObject("extended_tweet");
+			if (extended != null) {
+				String fullText = extended.optString("full_text");
+				if (fullText != null) _rawtext = fullText;
+				
+				JSONObject _entities = object.optJSONObject("extended_entities");
+				if (_entities != null) jsonEntities = _entities;
+						
+				JSONArray _displayRange = extended.optJSONArray("display_text_range");
+				if (_displayRange != null) displayRange = _displayRange;
+			}
+			
+			// Extract display range
+			if (displayRange != null) {
+				Integer _displayStart = displayRange.optInt(0);
+				if (_displayStart != null) displayStart = _displayStart;
+				Integer _displayEnd = displayRange.optInt(0);
+				if (_displayEnd != null) displayEnd = _displayEnd;
+			}
+			
 			// retweet?
 			JSONObject retweeted = object.optJSONObject("retweeted_status");			
 			if (retweeted != null) {
@@ -281,6 +323,7 @@ public final class Status implements ITweet {
 					}					
 				}
 			}
+			
 			// quoted tweet?
 			JSONObject quoted = object.optJSONObject("quoted_status");
 			if (quoted != null) {
@@ -364,8 +407,6 @@ public final class Status implements ITweet {
 			// ignore this as it can be misleading: true is reliable, false isn't
 			// retweeted = object.optBoolean("retweeted");
 			
-			// Entities (switched on by Twitter.setIncludeTweetEntities(true))
-			JSONObject jsonEntities = object.optJSONObject("entities");
 			// Note: Twitter filters out dud @names
 			if (jsonEntities != null) {
 				entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(
