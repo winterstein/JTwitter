@@ -646,7 +646,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.5.2";
+	public final static String version = "3.5.3";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -766,6 +766,8 @@ public class Twitter implements Serializable {
 	private String sourceApp = "jtwitterlib";
 
 	boolean tweetEntities = true;
+	
+	boolean extendedMode = true;
 
 	@Deprecated // Keeping for backwards compatibility of serialised form until Q2 2013
 	private transient String twitlongerApiKey;
@@ -863,15 +865,15 @@ public class Twitter implements Serializable {
 		return new Twitter_Analytics(http);
 	}
 
+	
 	/**
-	 * Add in since_id, page and count, if set. This is called by methods that
+	 * Add in since_id, page and count, if set. For methods that
 	 * return lists of statuses or messages.
 	 * 
 	 * @param vars
 	 * @return vars
-	 */
-	Map<String, String> addStandardishParameters(
-			Map<String, String> vars) {
+	 */	
+	Map<String, String> addListParameters(Map<String, String> vars) {
 		if (sinceId != null && sinceId.doubleValue() != 0) {
 			String s = sinceId.toString();
 			vars.put("since_id", s);
@@ -882,6 +884,17 @@ public class Twitter implements Serializable {
 		if (count != null) {
 			vars.put("count", count.toString());
 		}
+		return vars;
+	}
+	
+	
+	/**
+	 * Adds include_entities, include_rts and tweet_mode. For methods
+	 * that return single or lists of statuses or messages.
+	 * @param vars
+	 * @return
+	 */
+	Map<String, String> addTweetParameters (Map<String, String> vars) {
 		if (tweetEntities) {
 			vars.put("include_entities", "1"); // TODO remove after testing -- this is the new default
 		} else {
@@ -890,6 +903,23 @@ public class Twitter implements Serializable {
 		if ( ! includeRTs) {
 			vars.put("include_rts", "0"); // On is the new default
 		}
+		if (extendedMode) {
+			vars.put("tweet_mode", "extended"); // Ask for non-truncated tweets with full_text replacing text
+		}
+		return vars;
+	}
+	
+	
+	/**
+	 * Adds all necessary parameters for retrieving lists of tweets.
+	 * 
+	 * @param vars
+	 * @return vars
+	 */
+	Map<String, String> addStandardishParameters(
+			Map<String, String> vars) {
+		addListParameters(vars);
+		addTweetParameters(vars);
 		return vars;
 	}
 
@@ -1666,7 +1696,9 @@ public class Twitter implements Serializable {
 	 * *just* called updateStatus(), then getStatus() may not match.  
 	 */
 	public Status getStatus() throws TwitterException {
-		Map<String, String> vars = InternalUtils.asMap("count", 6);
+		Map<String, String> vars = standardishParameters();
+		vars.put("count", "6");
+		
 		String json = http.getPage(
 				TWITTER_URL + "/statuses/user_timeline.json", vars, true);
 		List<Status> statuses = Status.getStatuses(json);
@@ -1684,8 +1716,8 @@ public class Twitter implements Serializable {
 	 */
 	public Status getStatus(Number id) throws TwitterException {
 		boolean auth = InternalUtils.authoriseIn11(this);
-		Map vars = tweetEntities ? InternalUtils.asMap("include_entities", "1")
-				: null;
+		Map<String, String> vars = standardishParameters();
+		
 		String json = http.getPage(TWITTER_URL + "/statuses/show/" + id
 				+ ".json", vars, auth);
 		try {
@@ -1706,8 +1738,7 @@ public class Twitter implements Serializable {
 		// new-style retweets can cause blanks in your timeline
 		// show(username).status is just as vulnerable
 		// grab a few tweets to give some robustness
-		Map<String, String> vars = InternalUtils.asMap("id", username, "count",
-				6);
+		Map<String, String> vars = InternalUtils.asMap("id", username, "count", 6);
 		String json = http.getPage(
 				TWITTER_URL + "/statuses/user_timeline.json", vars, http.canAuthenticate());
 		List<Status> statuses = Status.getStatuses(json);
@@ -2624,6 +2655,16 @@ public class Twitter implements Serializable {
 	
 	public BigInteger getSinceId() {
 		return sinceId;
+	}
+	
+	/**
+	 * Compatibility setting: if your app can't work with new-style
+	 * "140 characters + attachment" tweets, turn this off to only
+	 * receive truncated results.
+	 * @param extendedMode
+	 */
+	public void setExtendedMode(Boolean extendedMode) {
+		this.extendedMode = extendedMode;
 	}
 
 	/**

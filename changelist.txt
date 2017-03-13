@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.5.3
+ - Ask Twitter for "tweet_mode=extended" (do not truncate 140+ character tweets with attachments) and handle "extended" JSON structure when creating Status objects.
 3.5.2:
  - Moved usage stats into RateLimit.
 3.5.1:

@@ -256,7 +256,12 @@ public final class Status implements ITweet {
 		try {
 			String _id = object.optString("id_str");
 			id = new BigInteger(_id == "" ? object.get("id").toString() : _id);
-			_rawtext = InternalUtils.jsonGet("text", object);
+			// Depending on whether this was obtained with param tweet_mode=extended,
+			// either "text" or "full_text" might be present.
+			_rawtext = InternalUtils.jsonGet("full_text", object);
+			if (_rawtext == null) {
+				_rawtext = InternalUtils.jsonGet("text", object);
+			}
 			// retweet?
 			JSONObject retweeted = object.optJSONObject("retweeted_status");			
 			if (retweeted != null) {
