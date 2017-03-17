@@ -32,6 +32,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,14 @@ import com.winterwell.json.JSONObject;
  */
 public class InternalUtils {
 
+	@Deprecated
+	static public void setTrackAPIUsage(boolean on) {
+		RateLimit.setTrackAPIUsage(on);
+	}
+	@Deprecated
+	static public ConcurrentHashMap<String, Long> getAPIUsageStats() {
+		return RateLimit.getAPIUsageStats();
+	}
 	/**
 	 * Utility method for {@link IGeoCode}rs
 	 * @param query
