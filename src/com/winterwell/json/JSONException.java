@@ -8,7 +8,6 @@ package com.winterwell.json;
  * @version 2
  */
 public class JSONException extends RuntimeException {
-    private Throwable cause;
 
     /**
      * Constructs a JSONException with an explanatory message.
@@ -19,12 +18,7 @@ public class JSONException extends RuntimeException {
     }
 
     public JSONException(Throwable t) {
-        super(t.getMessage());
-        this.cause = t;
+        super(t);
     }
-
-    @Override
-	public Throwable getCause() {
-        return this.cause;
-    }
+    
 }
