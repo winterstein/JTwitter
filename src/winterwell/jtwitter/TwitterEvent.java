@@ -123,11 +123,11 @@ public class TwitterEvent {
 	 * <code>event.is(TwitterEvent.Type.FOLLOW)</code> to pick out follow
 	 * events.
 	 * 
-	 * @param type
+	 * @param _type
 	 * @return true if this is an event of the given type.
 	 */
-	public boolean is(String type) {
-		return this.type.equals(type);
+	public boolean is(String _type) {
+		return this.type.equals(_type);
 	}
 
 	@Override

@@ -708,33 +708,33 @@ public final class Status implements ITweet {
 		}
 		
 		/**
-		 * @param charIndex Index into the string measured in code units.
+		 * @param _charIndex Index into the string measured in code units.
 		 * @return The code point index that corresponds to the specified character index.
 		 */
-		int codeUnitsToCodePoints(int charIndex) {
-			if (charIndex < this.charIndex) {
-				this.codePointIndex -= text.codePointCount(charIndex, this.charIndex);
+		int codeUnitsToCodePoints(int _charIndex) {
+			if (_charIndex < this.charIndex) {
+				this.codePointIndex -= text.codePointCount(_charIndex, this.charIndex);
 			} else {
-				this.codePointIndex += text.codePointCount(this.charIndex, charIndex);
+				this.codePointIndex += text.codePointCount(this.charIndex, _charIndex);
 			}
-			this.charIndex = charIndex;
+			this.charIndex = _charIndex;
 			
 			// Make sure that charIndex never points to the second code unit of a
 			// surrogate pair.
-			if (charIndex > 0 && Character.isSupplementaryCodePoint(text.codePointAt(charIndex - 1))) {
+			if (_charIndex > 0 && Character.isSupplementaryCodePoint(text.codePointAt(_charIndex - 1))) {
 				this.charIndex -= 1;
 			}
 			return this.codePointIndex;
 		}
 		
 		/**
-		 * @param codePointIndex Index into the string measured in code points.
+		 * @param _codePointIndex Index into the string measured in code points.
 		 * @return the code unit index that corresponds to the specified code point index.
 		 */
-		int codePointsToCodeUnits(int codePointIndex) {
+		int codePointsToCodeUnits(int _codePointIndex) {
 			// Note that offsetByCodePoints accepts negative indices.
-			this.charIndex = text.offsetByCodePoints(this.charIndex, codePointIndex - this.codePointIndex);
-			this.codePointIndex = codePointIndex;
+			this.charIndex = text.offsetByCodePoints(this.charIndex, _codePointIndex - this.codePointIndex);
+			this.codePointIndex = _codePointIndex;
 			return this.charIndex;
 		}
 	}
