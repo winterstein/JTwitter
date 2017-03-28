@@ -646,7 +646,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.5.3";
+	public final static String version = "3.5.4";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -3146,6 +3146,7 @@ public class Twitter implements Serializable {
 		if (bbox==null) {
 			// default to 10km radius = a 20km diameter
 			setSearchLocation(x.latitude, x.longitude, "10km");
+			return;
 		}
 		Location ne = bbox.getNorthEast();
 		Location sw = bbox.getSouthWest();
