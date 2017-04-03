@@ -289,9 +289,9 @@ public final class Status implements ITweet {
 				String fullText = extended.optString("full_text");
 				if (fullText != null) _rawtext = fullText;
 				
-				JSONObject _entities = object.optJSONObject("extended_entities");
+				JSONObject _entities = extended.optJSONObject("entities");
 				if (_entities != null) jsonEntities = _entities;
-						
+				
 				JSONArray _displayRange = extended.optJSONArray("display_text_range");
 				if (_displayRange != null) displayRange = _displayRange;
 			}
@@ -348,7 +348,7 @@ public final class Status implements ITweet {
 			} else {
 				_text = InternalUtils.unencode(_text); // bugger - this screws up the indices in tweet entities
 			}
-			text = _text; 
+			text = _text;
 			
 			// date
 			String c = InternalUtils.jsonGet("created_at", object);
