@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.winterwell.jgeoplanet.BoundingBox;
 import com.winterwell.jgeoplanet.IPlace;
@@ -2851,14 +2852,24 @@ public class Twitter implements Serializable {
 	 * @return 
 	 * 			The effective message length in characters
 	 */
-	public static int countCharacters(String statusText) {
-		int shortLength = statusText.length();	
+	public static int countCharacters(String statusText, Status inReplyTo) {
+		int shortLength = statusText.length();
+		
 		// Urls count as 23
-		Matcher m =  Regex.VALID_URL.matcher(statusText);
+		Matcher m = Regex.VALID_URL.matcher(statusText);
 		while(m.find()) {
 			String grp = m.group();
 			shortLength += LINK_LENGTH - grp.length();
 		}
+		
+		if (inReplyTo != null /*&& statusText.startsWith("@" + inReplyTo.getUser().screenName)*/) {
+			Matcher tagAts = Pattern.compile("^(@(\\w){1,15}\\s+){0,50}").matcher(statusText);
+			while(tagAts.find()) {
+				String grp = tagAts.group();
+				shortLength -= grp.length();
+			}
+		}
+		
 		// If a DM, don't count the "d user" microformat
 		Matcher dmm = InternalUtils.DM.matcher(statusText);		
 		if (dmm.find()) {
@@ -2925,17 +2936,34 @@ public class Twitter implements Serializable {
 				&& TWITTER_URL.contains("twitter") // Hack: allow long posts to WordPress
 				&& CHECK_TWEET_LENGTH)  
 		{
-			int shortLength = countCharacters(statusText);
+			// Too long for a regular tweet - but might be OK under the new "initial @s in replies don't count" rules
+			int shortLength = countCharacters(statusText, null);
 			if (shortLength > MAX_CHARS) {
-				// bogus - send a helpful error
-				if (statusText.startsWith("RT")) {
+				Status inReplyToStatus = null;
+				if (inReplyToStatusId != null) {
+					// Okay, we don't have access to the previous Status...
+					// ...but let's pretend momentarily that this is a legitimate reply,
+					// do an optimistic character-count on that basis, and try to post.
+					String firstUserTag = statusText.split("\\s")[0];
+
+					if (firstUserTag.matches("@(\\w){1,15}")) {
+						// Synthesise a fake status that this might be responding to
+						String irtUsername = firstUserTag.substring(1);
+						inReplyToStatus = new Status(new User(irtUsername), "", inReplyToStatusId, null);
+					}
+				}
+				
+				if (countCharacters(statusText, inReplyToStatus) > MAX_CHARS) {
+					// bogus - send a helpful error
+					if (statusText.startsWith("RT")) {
+						throw new IllegalArgumentException(
+								"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
+										+ statusText.length() + " " + statusText);
+					}
 					throw new IllegalArgumentException(
-							"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
+							"Status text must be 140 characters or less: "
 									+ statusText.length() + " " + statusText);
 				}
-				throw new IllegalArgumentException(
-						"Status text must be 140 characters or less: "
-								+ statusText.length() + " " + statusText);
 			}
 		}
 		

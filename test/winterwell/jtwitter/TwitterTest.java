@@ -62,7 +62,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	public void testCountCharacters() {
 		{
-			int cnt = Twitter.countCharacters("The perfect way to spend a Sunday... We suggest a trip to Columbia Road Flower Market. #HarrodsLovesLondon");
+			int cnt = Twitter.countCharacters("The perfect way to spend a Sunday... We suggest a trip to Columbia Road Flower Market. #HarrodsLovesLondon", null);
 			assert cnt == 106;
 		}
 	}
