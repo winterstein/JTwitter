@@ -36,14 +36,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import winterwell.jtwitter.Twitter.ITweet;
-
 import com.winterwell.jgeoplanet.GeoCodeQuery;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
+
+import winterwell.jtwitter.Twitter.ITweet;
 
 /**
  * Utility methods used in Twitter. This class is public in case anyone else

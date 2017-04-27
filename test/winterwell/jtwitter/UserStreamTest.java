@@ -8,13 +8,13 @@ import java.util.Random;
 import org.junit.Test;
 
 import com.winterwell.utils.Printer;
+import com.winterwell.utils.StrUtils;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.time.Time;
 
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.ITweet;
-import com.winterwell.utils.StrUtils;
-import com.winterwell.utils.Utils;
-import com.winterwell.utils.time.TUnit;
-import com.winterwell.utils.time.Time;
+import winterwell.utils.time.TUnit;
 
 public class UserStreamTest {
 

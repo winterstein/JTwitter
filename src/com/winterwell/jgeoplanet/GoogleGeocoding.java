@@ -7,17 +7,16 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
-import com.winterwell.utils.containers.ArrayMap;
 
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.URLConnectionHttpClient;
+import winterwell.utils.web.WebUtilsTest;
 
 /**
  * Sketch code for a Google-based alternative to Yahoo {@link GeoPlanet}.

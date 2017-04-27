@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
@@ -19,14 +18,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
 import com.winterwell.utils.Printer;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.time.Time;
 
+import junit.framework.TestCase;
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
@@ -34,10 +35,7 @@ import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
-import com.winterwell.utils.Utils;
-import com.winterwell.utils.containers.Containers;
-import com.winterwell.utils.time.TUnit;
-import com.winterwell.utils.time.Time;
+import winterwell.utils.time.TUnit;
 
 /**
  * Unit tests for JTwitter.

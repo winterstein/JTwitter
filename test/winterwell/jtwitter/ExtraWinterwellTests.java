@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.winterwell.utils.io.XStreamBinaryConverter;
+
 import winterwell.jtwitter.Twitter.IHttpClient;
 import winterwell.jtwitter.Twitter.KEntityType;
 import winterwell.jtwitter.Twitter.TweetEntity;
-import com.winterwell.utils.io.XStreamBinaryConverter;
 
 public class ExtraWinterwellTests {
 

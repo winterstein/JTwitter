@@ -631,6 +631,12 @@ public class Twitter implements Serializable {
 	 */
 	public static int MEDIA_LENGTH = 23;
 
+	/**
+	 * 3mb
+	 * <br>
+	 * https://dev.twitter.com/rest/media/uploading-media
+	 * Note: "It is possible to upload a 5 MB image, but the Tweet creation requires images to be <= 3 MB"
+	 */
 	public static long PHOTO_SIZE_LIMIT = 3145728L; // 3mb
 
 	public static final String SEARCH_MIXED = "mixed";
@@ -646,7 +652,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.5.4";
+	public final static String version = "3.5.5";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -3027,7 +3033,7 @@ public class Twitter implements Serializable {
 
 
 	/**
-	 * Updates the user's status with an image (or other media file / attachment).
+	 * Updates the user's status with a single image.
 	 * 
 	 * @param statusText
 	 * @param inReplyToStatusId Can be null.
@@ -3068,6 +3074,7 @@ public class Twitter implements Serializable {
 	
 	/**
 	 * Updates the user's status with multiple images.
+	 * This does NOT work for video.
 	 * 
 	 * @param statusText
 	 * @param inReplyToStatusId Can be null.
@@ -3081,7 +3088,7 @@ public class Twitter implements Serializable {
 	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<File> mediaFiles) {
 		// Upload each file, and get a media_id for it
 		// List.toString() outputs "[item1, ..., itemN]" but Twitter wants "item1,...,itemN" so we do it the hard way 
-		StringBuilder fileIds = new StringBuilder();
+		List<String> fileIds = new ArrayList();
 		for (File file: mediaFiles) {
 			if (file == null || ! file.isFile()) {
 				throw new IllegalArgumentException("Invalid file: " + file);
@@ -3093,11 +3100,64 @@ public class Twitter implements Serializable {
 			String result = ((OAuthSignpostClient)http).postMultipartForm(url, vars);
 			JSONObject response = new JSONObject(result);
 			String id = response.optString("media_id_string");
-			if (id != null) fileIds.append(id + ",");
+			if (id != null) fileIds.add(id);
 		}
+		return updateStatusWithUploadedMedia(statusText, inReplyToStatusId, fileIds);
+	}
+	
+	/**
+	 * See https://dev.twitter.com/rest/media/uploading-media#chunkedupload
+	 * @param video
+	 * @return
+	 */
+	public String uploadVideo(File video) {
+		// Video mime-types: 
+		String ftype = video.getName().substring(video.getName().lastIndexOf('.'));
+		String mimetype = (String) InternalUtils.asMap(
+				".mov", "video/quicktime",
+				".avi",	"video/x-msvideo",
+				".wmv",	"video/x-ms-wmv",
+				".m4v",	"video/mp4"
+				).get(ftype);
+		if (mimetype==null) mimetype = "video/"+ftype;
+		return uploadVideo(video, mimetype);
+	}
+	
+	public String uploadVideo(File video, String mimeType) {
+		// init
+		long tb = video.length();
+		Map<String, String> vars = InternalUtils.asMap("command", "INIT", "media_type", mimeType, "total_bytes", tb);
+		String initresp = http.post(TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT, vars, true);
+		JSONObject response = new JSONObject(initresp);
+		String id = response.optString("media_id_string");
+
+		// append (using 1 big chunk for now) This sets a max of 5mb!
+		// https://dev.twitter.com/rest/reference/post/media/upload-append
+		Map avars = InternalUtils.asMap("command", "APPEND", "media_id", id, "segment_index", 0);
+		avars.put("media", video);
+		String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
+		String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);
 		
+		// finalize
+		Map<String, String> fvars = InternalUtils.asMap("command", "FINALIZE", "media_id", id);
+		String fresp = http.post(TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT, fvars, true);
+		JSONObject fresponse = new JSONObject(fresp);
+		String fid = fresponse.optString("media_id_string");
+		return fid;
+	}
+	
+	/**
+	 * Updates the user's status with one video, or multiple images.
+	 * @param statusText
+	 * @param inReplyToStatusId Can be null
+	 * @param mediaFileIds As returned by {@link #uploadVideo(File, String)}
+	 */
+	public Status updateStatusWithUploadedMedia(String statusText, BigInteger inReplyToStatusId, List<String> mediaFileIds) {
 		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, true);
-		if(fileIds.length() > 0) vars.put("media_ids", fileIds.substring(0, fileIds.length() - 1));
+		if(mediaFileIds!=null && ! mediaFileIds.isEmpty()) {
+			String mediaIds = InternalUtils.join(mediaFileIds.toArray(new String[0]));
+			vars.put("media_ids", mediaIds);
+		}
 		
 		String result = null;
 		try {			

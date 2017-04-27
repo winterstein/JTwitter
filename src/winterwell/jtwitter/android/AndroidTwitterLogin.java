@@ -2,8 +2,6 @@ package winterwell.jtwitter.android;
 
 import java.net.URI;
 
-import winterwell.jtwitter.OAuthSignpostClient;
-import winterwell.jtwitter.Twitter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
@@ -16,6 +14,8 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import winterwell.jtwitter.OAuthSignpostClient;
+import winterwell.jtwitter.Twitter;
 
 /**
  * A View for easily getting Twitter authorisation or doing login-by-Twitter.

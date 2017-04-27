@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.5.5:
+ - Video upload! Added Twitter.uploadVideo(), which can then be used with Twitter.
 3.5.4
  - NPE fix in setSearchLocation
 3.5.3
