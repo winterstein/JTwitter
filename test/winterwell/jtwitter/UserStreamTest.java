@@ -14,7 +14,7 @@ import com.winterwell.utils.time.Time;
 
 import winterwell.jtwitter.AStream.IListen;
 import winterwell.jtwitter.Twitter.ITweet;
-import winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.TUnit;
 
 public class UserStreamTest {
 

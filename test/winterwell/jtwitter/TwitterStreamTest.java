@@ -17,7 +17,7 @@ import com.winterwell.utils.time.Time;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.TwitterException.E413;
-import winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.TUnit;
 
 public class TwitterStreamTest {
 
