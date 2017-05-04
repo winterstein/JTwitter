@@ -16,7 +16,6 @@ import com.winterwell.json.JSONObject;
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.URLConnectionHttpClient;
-import com.winterwell.utils.web.WebUtilsTest;
 
 /**
  * Sketch code for a Google-based alternative to Yahoo {@link GeoPlanet}.
