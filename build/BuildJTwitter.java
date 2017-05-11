@@ -21,11 +21,17 @@ import winterwell.jtwitter.TwitterTest;
 
 public class BuildJTwitter extends BuildTask {
 
+	
+	private File base;
+
+	public BuildJTwitter() {
+		// The project directory
+		base = new File(FileUtils.getWinterwellDir(), "jtwitter"); // FileUtils.getWorkingDirectory();
+		assert base.isDirectory() : base;
+	}
 
 	@Override
 	public void doTask() throws Exception {
-		// The project directory
-		File base = FileUtils.getWorkingDirectory();
 		File projectDir = base;
 		System.out.println(base.getAbsolutePath());
 		File bin = new File(base, "bin");
@@ -39,7 +45,7 @@ public class BuildJTwitter extends BuildTask {
 //		compile.setSourceVersion("1.5");
 //		compile.run();
 		// Jar
-		File jarFile = new File(base, "jtwitter.jar");
+		File jarFile = getJar();
 //		File oauth = new File("OAuthHttpClient.java");
 //		JarTask jarMisc = new JarTask(jarFile, Arrays.asList(oauth), new File(""));
 //		jarMisc.run();
@@ -129,14 +135,18 @@ public class BuildJTwitter extends BuildTask {
 		git.run();
 
 		// Tweet!
-		OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, 
-				OAuthSignpostClient.JTWITTER_OAUTH_SECRET, 
-				TwitterTest.TEST_ACCESS_TOKEN[0], TwitterTest.TEST_ACCESS_TOKEN[1]);
-		Twitter twitter = new Twitter("jtwit", client);
-		twitter.setStatus("Released a new version of JTwitter Java library: v"+Twitter.version
-				+" http://winterwell.com/software/jtwitter.php");
-		twitter.setStatus("Thanks to jake & Vicent @GitHub for awesome-grade customer service :)");
-
+		try {
+			OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, 
+					OAuthSignpostClient.JTWITTER_OAUTH_SECRET, 
+					TwitterTest.TEST_ACCESS_TOKEN[0], TwitterTest.TEST_ACCESS_TOKEN[1]);
+			Twitter twitter = new Twitter("jtwit", client);
+			twitter.setStatus("Released a new version of JTwitter Java library: v"+Twitter.version
+					+" http://winterwell.com/software/jtwitter.php");
+			twitter.setStatus("Thanks to jake & Vicent @GitHub for awesome-grade customer service :)");
+		} catch (Exception e) {
+			// oh well
+			Log.w("build", e);
+		}
 		try {
 			Twitter identica = new Twitter("jtwit", TwitterTest.TEST_PASSWORD);
 			identica.setAPIRootUrl("http://identi.ca/api");
@@ -144,13 +154,17 @@ public class BuildJTwitter extends BuildTask {
 					+" http://winterwell.com/software/jtwitter.php");
 		} catch(Exception ex) {
 			// oh well
-			Log.e("build", ex);
+			Log.w("build", ex);
 		}
 		
 //		// copy in utils lib		??
 //		utils = new File(FileUtils.getWinterwellDir(), "code/lib/winterwell.utils.jar")
 //		FileUtils.copy(utils, 
 //				new File("winterwell.utils.jar"));
+	}
+
+	public File getJar() {
+		return new File(base, "jtwitter.jar");
 	}
 
 
