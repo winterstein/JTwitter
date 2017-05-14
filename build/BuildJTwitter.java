@@ -91,49 +91,53 @@ public class BuildJTwitter extends BuildTask {
 		zipTask.run();
 		
 		// Publish to www
-		// FIXME: Hardcoded path
-		File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
-		assert jarFile.exists();
-		FileUtils.copy(jarFile, webDir);
-								
-		File zip2 = FileUtils.copy(zipFile, webDir);
-		// ... clean out the old zips
-		zips = FileUtils.ls(webDir, "jtwitter.+zip");
-		for (File file : zips) {
-			if (file.getName().equals(zip2.getName())) continue;
-			FileUtils.delete(file);
+		try {
+			// FIXME: Hardcoded path
+			File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
+			assert jarFile.exists();
+			FileUtils.copy(jarFile, webDir);
+									
+			File zip2 = FileUtils.copy(zipFile, webDir);
+			// ... clean out the old zips
+			zips = FileUtils.ls(webDir, "jtwitter.+zip");
+			for (File file : zips) {
+				if (file.getName().equals(zip2.getName())) continue;
+				FileUtils.delete(file);
+			}
+			// git add
+			GitTask git0 = new GitTask(GitTask.ADD, zip2);
+			git0.run();
+			
+			FileUtils.copy(new File(src, "winterwell/jtwitter/Twitter.java"), webDir);
+			FileUtils.copy(new File(base,"changelist.txt"), webDir);
+			CopyTask copydoc = new CopyTask(doc, new File(webDir, "javadoc"));
+			copydoc.run();
+			// Update the version number
+			File webPageFile = new File(webDir, "../jtwitter.php");
+			String webpage = FileUtils.read(webPageFile);
+			Pattern pattern = Pattern.compile("<span class='version'>[0-9\\.]+</span>");
+			Matcher m = pattern.matcher(webpage);
+			assert m.find();
+			webpage = webpage.replaceAll("<span class='version'>[0-9\\.]+</span>", 
+										"<span class='version'>"+Twitter.version+"</span>");
+			webpage = webpage.replaceAll("jtwitter-[0-9\\-\\.]+\\.zip", zipFile.getName());
+			FileUtils.write(webPageFile, webpage);
+		
+			// Git stuff
+			// Commit changes		
+			GitTask git = new GitTask(GitTask.COMMIT_ALL, webDir);
+			git.setMessage("Publishing JTwitter");
+			git.run();
+			// Pull and rebase
+			git = new GitTask(GitTask.PULL, webDir);
+			git.run();
+			// Push up to webserver (this publishes the site automagically)
+			git = new GitTask(GitTask.PUSH, webDir);
+			git.run();
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
-		// git add
-		GitTask git0 = new GitTask(GitTask.ADD, zip2);
-		git0.run();
 		
-		FileUtils.copy(new File(src, "winterwell/jtwitter/Twitter.java"), webDir);
-		FileUtils.copy(new File(base,"changelist.txt"), webDir);
-		CopyTask copydoc = new CopyTask(doc, new File(webDir, "javadoc"));
-		copydoc.run();
-		// Update the version number
-		File webPageFile = new File(webDir, "../jtwitter.php");
-		String webpage = FileUtils.read(webPageFile);
-		Pattern pattern = Pattern.compile("<span class='version'>[0-9\\.]+</span>");
-		Matcher m = pattern.matcher(webpage);
-		assert m.find();
-		webpage = webpage.replaceAll("<span class='version'>[0-9\\.]+</span>", 
-									"<span class='version'>"+Twitter.version+"</span>");
-		webpage = webpage.replaceAll("jtwitter-[0-9\\-\\.]+\\.zip", zipFile.getName());
-		FileUtils.write(webPageFile, webpage);
-		
-		// Git stuff
-		// Commit changes		
-		GitTask git = new GitTask(GitTask.COMMIT_ALL, webDir);
-		git.setMessage("Publishing JTwitter");
-		git.run();
-		// Pull and rebase
-		git = new GitTask(GitTask.PULL, webDir);
-		git.run();
-		// Push up to webserver (this publishes the site automagically)
-		git = new GitTask(GitTask.PUSH, webDir);
-		git.run();
-
 		// Tweet!
 		try {
 			OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, 
