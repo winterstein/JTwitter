@@ -382,6 +382,17 @@ public class TwitterException extends RuntimeException {
 	}
 
 	/**
+	 * A video upload was too big or too long.
+	 */
+	public static class UploadTooBig extends TwitterException.E40X {
+		public UploadTooBig(String msg) {
+			super(msg);
+		}
+
+		private static final long serialVersionUID = 1L;
+	}
+	
+	/**
 	 * A code 420 error indicates that the account has been logging in too
 	 * often. This code will be the indication that the account has exceeded the
 	 * per-account-per-application connection limit. This situation should be

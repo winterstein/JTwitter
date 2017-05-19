@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 import com.winterwell.json.JSONArray;
@@ -537,6 +539,11 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			if (code>299 && code<400) {
 				String locn = connection.getHeaderField("Location");
 				throw new TwitterException(code + " " + error + " " + url+" -> "+locn);
+			}
+			if (error!=null && error.startsWith("code 324: Duration too long")) {
+				Matcher m = Pattern.compile("maximum:(\\d+), actual:(\\d+)").matcher(error);
+				
+				throw new TwitterException.UploadTooBig(error);
 			}
 			
 			// just report it as a vanilla exception
