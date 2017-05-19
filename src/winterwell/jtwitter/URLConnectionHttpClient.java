@@ -541,8 +541,12 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				throw new TwitterException(code + " " + error + " " + url+" -> "+locn);
 			}
 			if (error!=null && error.startsWith("code 324: Duration too long")) {
-				Matcher m = Pattern.compile("maximum:(\\d+), actual:(\\d+)").matcher(error);
-				
+				Matcher m = Pattern.compile("maximum:(\\d+)000, actual:(\\d+)000").matcher(error);
+				if (m.find()) {
+					String max = m.group(1);
+					String actual = m.group(2);
+					throw new TwitterException.UploadTooBig("Video: Duration too long. This video is "+actual+"s, but the maximum is "+max+"s.");
+				}
 				throw new TwitterException.UploadTooBig(error);
 			}
 			
