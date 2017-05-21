@@ -1,6 +1,8 @@
 package winterwell.jtwitter;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -26,6 +28,7 @@ import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.jtwitter.ecosystem.TwitLonger;
+import winterwell.jtwitter.guts.Base64Encoder;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -637,7 +640,17 @@ public class Twitter implements Serializable {
 	 * https://dev.twitter.com/rest/media/uploading-media
 	 * Note: "It is possible to upload a 5 MB image, but the Tweet creation requires images to be <= 3 MB"
 	 */
-	public static long PHOTO_SIZE_LIMIT = 3145728L; // 3mb
+	public static long PHOTO_SIZE_LIMIT 		= 3145728L; // 3mb
+
+	/**
+	 * 15mb
+	 */
+	public static long VIDEO_SIZE_LIMIT 		= 15 * 1024L * 1024L; // 15mb
+
+	/**
+	 * 5mb (conservative 1024 x 5000 - could probably be higher)
+	 */
+	private static final long MAX_CHUNK_SIZE 	= 5120000L;
 
 	public static final String SEARCH_MIXED = "mixed";
 
@@ -652,7 +665,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.5.5";
+	public final static String version = "3.5.6";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -672,7 +685,7 @@ public class Twitter implements Serializable {
 	 */
 	static final String MEDIA_UPLOAD_ENDPOINT = "/media/upload.json";
 
-	public static final int MAX_DM_LENGTH = 10000;
+	public static int MAX_DM_LENGTH = 10000;
 
 	/**
 	 * @deprecated Not used at present
@@ -2804,6 +2817,12 @@ public class Twitter implements Serializable {
 				if (lmt != PHOTO_SIZE_LIMIT) change = true;
 				PHOTO_SIZE_LIMIT = lmt;
 			}
+			// NB: video size limit and other video limits are not sent
+			{
+				int lmt = jo.getInt("dm_text_character_limit");
+				if (lmt != MAX_DM_LENGTH) change = true;
+				MAX_DM_LENGTH = lmt;
+			}
 			// photo_sizes
 			// short_url_length_https
 			return change;
@@ -3123,20 +3142,60 @@ public class Twitter implements Serializable {
 		return uploadVideo(video, mimetype);
 	}
 	
+
+	/**
+	 * See https://dev.twitter.com/rest/media/uploading-media#chunkedupload
+	 * @param video
+	 * @return
+	 */
 	public String uploadVideo(File video, String mimeType) {
 		// init
 		long tb = video.length();
+		if (tb > VIDEO_SIZE_LIMIT) {
+			throw new TwitterException.UploadTooBig("File "+video+" is "+(tb/(1024*1024))+"mb which exceeds the maximum video upload of "+(VIDEO_SIZE_LIMIT/(1024*1024)));
+		}
 		Map<String, String> vars = InternalUtils.asMap("command", "INIT", "media_type", mimeType, "total_bytes", tb);
 		String initresp = http.post(TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT, vars, true);
 		JSONObject response = new JSONObject(initresp);
 		String id = response.optString("media_id_string");
 
-		// append (using 1 big chunk for now) This sets a max of 5mb!
+		// append (the core data upload)
 		// https://dev.twitter.com/rest/reference/post/media/upload-append
-		Map avars = InternalUtils.asMap("command", "APPEND", "media_id", id, "segment_index", 0);
-		avars.put("media", video);
-		String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
-		String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);
+		if (tb < MAX_CHUNK_SIZE) {
+			// append (using 1 big chunk for now) This sets a max of 5mb!			
+			Map avars = InternalUtils.asMap(
+					"command", "APPEND", "media_id", id, "segment_index", 0);
+			avars.put("media", video);
+			String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
+			String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);	
+		} else {
+			// append in chunks
+			InputStream stream = null;
+			try {
+				int segmentIndex = 0;
+				final int CHUNK_SIZE = (int) MAX_CHUNK_SIZE;
+				assert MAX_CHUNK_SIZE < Integer.MAX_VALUE;
+				stream = new FileInputStream(video);
+				int offset = 0;
+				byte[] bytes = new byte[CHUNK_SIZE];
+				while(stream.available() > 0) {
+					offset += CHUNK_SIZE;				
+					int bytesRead = stream.read(bytes, offset, CHUNK_SIZE);
+					StringBuilder buf = Base64Encoder.encode(bytes, 0, bytesRead, null);
+					Map avars = InternalUtils.asMap(
+							"command", "APPEND", "media_id", id, "segment_index", segmentIndex);				
+					avars.put("media_data", buf.toString());
+					String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
+					String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);
+					segmentIndex++;
+				}				
+			} catch(IOException ex) {
+				// ?? retry on some errors??				
+				throw new TwitterException(ex);
+			} finally {
+				InternalUtils.close(stream);
+			}
+		}
 		
 		// finalize
 		Map<String, String> fvars = InternalUtils.asMap("command", "FINALIZE", "media_id", id);

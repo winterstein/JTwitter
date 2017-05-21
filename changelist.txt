@@ -1,13 +1,20 @@
 # JTwitter Change list 
 
+3.5.6:
+ - Video upload for upto 15mb.
+ 
 3.5.5:
  - Video upload! Added Twitter.uploadVideo(), which can then be used with Twitter.
+
 3.5.4
  - NPE fix in setSearchLocation
+
 3.5.3
  - Ask Twitter for "tweet_mode=extended" (do not truncate 140+ character tweets with attachments) and handle "extended" JSON structure when creating Status objects.
+
 3.5.2:
  - Moved usage stats into RateLimit.
+
 3.5.1:
  - Status.favoriteCount
  
