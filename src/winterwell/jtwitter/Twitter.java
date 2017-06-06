@@ -14,6 +14,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 
 import com.winterwell.jgeoplanet.BoundingBox;
@@ -3139,7 +3144,7 @@ public class Twitter implements Serializable {
 				".m4v",	"video/mp4"
 				).get(ftype);
 		if (mimetype==null) mimetype = "video/"+ftype;
-		return uploadVideo(video, mimetype);
+		return uploadVideo(video, mimetype, video.length() < 15000000L);
 	}
 	
 
@@ -3148,16 +3153,20 @@ public class Twitter implements Serializable {
 	 * @param video
 	 * @return
 	 */
-	public String uploadVideo(File video, String mimeType) {
+	public String uploadVideo(File video, String mimeType, boolean async) {
 		// init
 		long tb = video.length();
 		if (tb > VIDEO_SIZE_LIMIT) {
 			throw new TwitterException.UploadTooBig("File "+video+" is "+(tb/(1024*1024))+"mb which exceeds the maximum video upload of "+(VIDEO_SIZE_LIMIT/(1024*1024)));
 		}
-		Map<String, String> vars = InternalUtils.asMap("command", "INIT", "media_type", mimeType, "total_bytes", tb);
+		Map<String, String> vars = InternalUtils.asMap(
+				"command", "INIT", 
+				"media_type", mimeType, 
+				"total_bytes", tb);
 		String initresp = http.post(TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT, vars, true);
 		JSONObject response = new JSONObject(initresp);
 		String id = response.optString("media_id_string");
+		final String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
 
 		// append (the core data upload)
 		// https://dev.twitter.com/rest/reference/post/media/upload-append
@@ -3166,35 +3175,9 @@ public class Twitter implements Serializable {
 			Map avars = InternalUtils.asMap(
 					"command", "APPEND", "media_id", id, "segment_index", 0);
 			avars.put("media", video);
-			String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
 			String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);	
 		} else {
-			// append in chunks
-			InputStream stream = null;
-			try {
-				int segmentIndex = 0;
-				final int CHUNK_SIZE = (int) MAX_CHUNK_SIZE;
-				assert MAX_CHUNK_SIZE < Integer.MAX_VALUE;
-				stream = new FileInputStream(video);
-				int offset = 0;
-				byte[] bytes = new byte[CHUNK_SIZE];
-				while(stream.available() > 0) {
-					offset += CHUNK_SIZE;				
-					int bytesRead = stream.read(bytes, offset, CHUNK_SIZE);
-					StringBuilder buf = Base64Encoder.encode(bytes, 0, bytesRead, null);
-					Map avars = InternalUtils.asMap(
-							"command", "APPEND", "media_id", id, "segment_index", segmentIndex);				
-					avars.put("media_data", buf.toString());
-					String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
-					String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);
-					segmentIndex++;
-				}				
-			} catch(IOException ex) {
-				// ?? retry on some errors??				
-				throw new TwitterException(ex);
-			} finally {
-				InternalUtils.close(stream);
-			}
+			uploadVideo2_chunks(video, async, id);
 		}
 		
 		// finalize
@@ -3202,7 +3185,72 @@ public class Twitter implements Serializable {
 		String fresp = http.post(TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT, fvars, true);
 		JSONObject fresponse = new JSONObject(fresp);
 		String fid = fresponse.optString("media_id_string");
+		// status
+		{
+			String statusResp = http.getPage(url, InternalUtils.asMap(
+					"command", "STATUS",
+				     "media_id", id), 
+					true);
+			JSONObject status = new JSONObject(statusResp);
+			Object procInfo = status.get("processing_info");
+			System.out.println(procInfo);
+		}
 		return fid;
+	}
+
+	private void uploadVideo2_chunks(File video, boolean async, String id) {
+		// append in chunks
+		InputStream stream = null;
+		ExecutorService threadPool = async? Executors.newFixedThreadPool(10) : null;
+		final AtomicReference<Exception> err = new AtomicReference<Exception>();
+		try {
+			int segmentIndex = 0;
+			final int CHUNK_SIZE = (int) MAX_CHUNK_SIZE;
+			assert MAX_CHUNK_SIZE < Integer.MAX_VALUE;
+			stream = new FileInputStream(video);
+			int offset = 0;
+			byte[] bytes = new byte[CHUNK_SIZE];
+			
+			while(stream.available() > 0 && err.get()==null) {
+				offset += CHUNK_SIZE;				
+				int bytesRead = stream.read(bytes, offset, CHUNK_SIZE);
+				StringBuilder buf = Base64Encoder.encode(bytes, 0, bytesRead, null);
+				final Map avars = InternalUtils.asMap(
+						"command", "APPEND", 
+						"media_id", id, 
+						"segment_index", segmentIndex);				
+				avars.put("media_data", buf.toString());
+				final String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
+				segmentIndex++;
+				if (async) {
+					threadPool.submit(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);							
+							} catch(Exception ex) {
+								err.set(ex);
+							}
+						}
+					});
+				} else {
+					String appendResult = ((OAuthSignpostClient)http).postMultipartForm(url, avars);						
+				}
+			}				
+			// all data sending
+			if (threadPool!=null) {
+				threadPool.shutdown();
+				threadPool.awaitTermination(2, TimeUnit.MINUTES);
+			}
+			if (err.get()!=null) throw err.get();
+			// success :)
+		} catch(Exception ex) {
+			// ?? retry on some errors??				
+			throw new TwitterException(ex);
+		} finally {
+			InternalUtils.close(stream);
+			if (threadPool!=null) threadPool.shutdownNow();
+		}
 	}
 	
 	/**
