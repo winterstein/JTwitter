@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -545,6 +546,26 @@ extends TestCase // Comment out to remove the JUnit dependency
 	};
 	
 	
+	public void testSmallShortVideoUpload() {
+		Twitter jtwit = newTestTwitter();
+//		String upload = jtwit.uploadVideo();
+//		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/ingreedies_720p.m4v");
+		// 10 seconds
+		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/simba-10s-288p.m4v");
+		String mediaId = jtwit.uploadVideo(f);
+		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
+		System.out.println(s);
+	}
+	
+	
+	public void testLargerVideoUpload() {
+		Twitter jtwit = newTestTwitter();
+		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/ingreedies_720p.m4v");
+		String mediaId = jtwit.uploadVideo(f);
+		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a medium video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
+		System.out.println(s);
+	}
+
 
 	public static void main(String[] args) {
 		TwitterTest tt = new TwitterTest();

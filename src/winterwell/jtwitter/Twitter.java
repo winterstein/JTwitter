@@ -9,11 +9,13 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -3055,6 +3057,19 @@ public class Twitter implements Serializable {
 ////						+ "\" but got " + s2);
 //	}
 
+	/**
+	 * Convenience for using 
+	 * {@link #uploadVideo(File)}
+	 *  + {@link #updateStatusWithUploadedMedia(String, BigInteger, List)}
+	 * @param text
+	 * @param video
+	 * @return the video-post
+	 */
+	public Status updateStatusWithVideo(String text, File video) {
+		String mediaId = uploadVideo(video);
+		Status s = updateStatusWithUploadedMedia(text, null, Arrays.asList(mediaId));
+		return s;
+	}
 
 	/**
 	 * Updates the user's status with a single image.
@@ -3144,7 +3159,8 @@ public class Twitter implements Serializable {
 				".m4v",	"video/mp4"
 				).get(ftype);
 		if (mimetype==null) mimetype = "video/"+ftype;
-		return uploadVideo(video, mimetype, video.length() < 15000000L);
+		boolean async = false; // might also be needed for longer duration || video.length() > 15000000L;
+		return uploadVideo(video, mimetype, async);
 	}
 	
 
@@ -3162,7 +3178,9 @@ public class Twitter implements Serializable {
 		Map<String, String> vars = InternalUtils.asMap(
 				"command", "INIT", 
 				"media_type", mimeType, 
-				"total_bytes", tb);
+				"total_bytes", tb,
+			    "media_category", "tweet_video"
+			    );		
 		String initresp = http.post(TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT, vars, true);
 		JSONObject response = new JSONObject(initresp);
 		String id = response.optString("media_id_string");
@@ -3171,7 +3189,7 @@ public class Twitter implements Serializable {
 		// append (the core data upload)
 		// https://dev.twitter.com/rest/reference/post/media/upload-append
 		if (tb < MAX_CHUNK_SIZE) {
-			// append (using 1 big chunk for now) This sets a max of 5mb!			
+			// append using 1 big chunk This sets a max of 5mb!			
 			Map avars = InternalUtils.asMap(
 					"command", "APPEND", "media_id", id, "segment_index", 0);
 			avars.put("media", video);
@@ -3186,7 +3204,12 @@ public class Twitter implements Serializable {
 		JSONObject fresponse = new JSONObject(fresp);
 		String fid = fresponse.optString("media_id_string");
 		// status
-		{
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		if (false) { // this throws an "invalid mediaId" error?!
 			String statusResp = http.getPage(url, InternalUtils.asMap(
 					"command", "STATUS",
 				     "media_id", id), 
@@ -3203,18 +3226,23 @@ public class Twitter implements Serializable {
 		InputStream stream = null;
 		ExecutorService threadPool = async? Executors.newFixedThreadPool(10) : null;
 		final AtomicReference<Exception> err = new AtomicReference<Exception>();
-		try {
-			int segmentIndex = 0;
+		try {			
 			final int CHUNK_SIZE = (int) MAX_CHUNK_SIZE;
 			assert MAX_CHUNK_SIZE < Integer.MAX_VALUE;
-			stream = new FileInputStream(video);
-			int offset = 0;
+			stream = new FileInputStream(video);			
 			byte[] bytes = new byte[CHUNK_SIZE];
 			
-			while(stream.available() > 0 && err.get()==null) {
-				offset += CHUNK_SIZE;				
-				int bytesRead = stream.read(bytes, offset, CHUNK_SIZE);
-				StringBuilder buf = Base64Encoder.encode(bytes, 0, bytesRead, null);
+			for(int segmentIndex = 0; segmentIndex<100000; segmentIndex++) {
+				// check for errors from async requests
+				if (err.get()!=null) break;
+				// read in a chunk
+				int offset = 0;
+				while(stream.available() > 0 && offset < CHUNK_SIZE) {								
+					int bytesRead = stream.read(bytes, offset, CHUNK_SIZE);
+					offset += bytesRead;
+				}
+				// encode it
+				StringBuilder buf = Base64Encoder.encode(bytes, 0, offset, null);
 				final Map avars = InternalUtils.asMap(
 						"command", "APPEND", 
 						"media_id", id, 
