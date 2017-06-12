@@ -107,6 +107,12 @@ import winterwell.jtwitter.guts.ClientHttpRequest;
 public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		IHttpClient, Serializable {
 
+	/**
+	 * @return the consumer, which
+	 */
+	public OAuthConsumer getConsumer() {
+		return consumer;
+	}
 	
 	/**
 	 * @param uri
@@ -474,6 +480,9 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	/**
 	 * Set the authorisation code (aka the verifier).
 	 * 
+	 * This must be the same object as you used to create the authorisation redirect!
+	 * Otherwise the temporary token/secret will not be set, and you'll get an error.
+	 * 
 	 * @param verifier
 	 *            a pin code which Twitter gives the user (with the oob method),
 	 *            or which you get from the callback response as the parameter
@@ -482,6 +491,21 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	 *             throws an exception if the verifier is invalid
 	 */
 	public void setAuthorizationCode(String verifier) throws TwitterException {
+		setAuthorizationCode(verifier, null, null);
+	}
+	
+	/**
+	 * Set the authorisation code (aka the verifier).
+	 * 
+	 * @param verifier
+	 *            a pin code which Twitter gives the user (with the oob method),
+	 *            or which you get from the callback response as the parameter
+	 *            "oauth_verifier".
+	 * @throws RuntimeException
+	 *             throws an exception if the verifier is invalid
+	 */
+	public void setAuthorizationCode(String verifier, String oauth_token, String oauth_token_secret) throws TwitterException 
+	{
 		// Lets allow reset (but we need fresh signpost objects)
 		if (accessToken!=null) {
 			// Create fresh consumer & provider objects
@@ -489,6 +513,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			init();
 		}
 		try {
+			if (oauth_token!=null) consumer.setTokenWithSecret(oauth_token, oauth_token_secret);
 			provider.retrieveAccessToken(consumer, verifier);
 			accessToken = consumer.getToken();
 			accessTokenSecret = consumer.getTokenSecret();
