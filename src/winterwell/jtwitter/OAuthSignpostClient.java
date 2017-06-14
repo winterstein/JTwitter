@@ -14,7 +14,10 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.winterwell.utils.Printer;
 
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.AbstractOAuthProvider;
@@ -125,8 +128,9 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			throws TwitterException 
 	{
 		String resource = checkRateLimit(url);
+		HttpURLConnection connection = null;
 		try {			
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection = (HttpURLConnection) new URL(url).openConnection();
 			connection.setRequestMethod("POST");
 			connection.setReadTimeout(timeout);
 			connection.setConnectTimeout(timeout);
@@ -174,7 +178,11 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 		} catch (IOException e) {
 			// Probably a server error (see issue #4621)
 			if (e.getMessage()!=null && e.getMessage().contains("HTTP response code: 500")) {
-				throw new TwitterException.E50X(e.toString());	
+				throw new TwitterException.E50X(e.toString());				
+			}
+			if (connection!=null) {
+				// throw a more helpful error message
+				processError(connection, resource);
 			}
 			throw new TwitterException(e);
 		} catch (Exception e) {

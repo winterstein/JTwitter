@@ -3,6 +3,7 @@ package winterwell.jtwitter;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -652,7 +653,7 @@ public class Twitter implements Serializable {
 	/**
 	 * 15mb
 	 */
-	public static long VIDEO_SIZE_LIMIT 		= 15 * 1024L * 1024L; // 15mb
+	public static long VIDEO_SIZE_LIMIT 		= 10*15 * 1024L * 1024L; // 10*15mb
 
 	/**
 	 * 5mb (conservative 1024 x 5000 - could probably be higher)
@@ -3170,6 +3171,7 @@ public class Twitter implements Serializable {
 	 * @return
 	 */
 	public String uploadVideo(File video, String mimeType, boolean async) {
+		if ( ! video.isFile()) throw new RuntimeException(new FileNotFoundException(video.getAbsolutePath()));
 		// init
 		long tb = video.length();
 		if (tb > VIDEO_SIZE_LIMIT) {
@@ -3209,7 +3211,7 @@ public class Twitter implements Serializable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if (false) { // this throws an "invalid mediaId" error?!
+		try { // this throws an "invalid mediaId" error?!
 			String statusResp = http.getPage(url, InternalUtils.asMap(
 					"command", "STATUS",
 				     "media_id", id), 
@@ -3217,6 +3219,9 @@ public class Twitter implements Serializable {
 			JSONObject status = new JSONObject(statusResp);
 			Object procInfo = status.get("processing_info");
 			System.out.println(procInfo);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			// oh well
 		}
 		return fid;
 	}
@@ -3241,15 +3246,17 @@ public class Twitter implements Serializable {
 					int bytesRead = stream.read(bytes, offset, CHUNK_SIZE);
 					offset += bytesRead;
 				}
+				// done?
+				if (offset==0) break;
 				// encode it
 				StringBuilder buf = Base64Encoder.encode(bytes, 0, offset, null);
 				final Map avars = InternalUtils.asMap(
 						"command", "APPEND", 
 						"media_id", id, 
-						"segment_index", segmentIndex);				
+						"segment_index", segmentIndex);	
+				System.out.println("segment "+segmentIndex);
 				avars.put("media_data", buf.toString());
-				final String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;
-				segmentIndex++;
+				final String url = TWITTER_UPLOAD_URL + MEDIA_UPLOAD_ENDPOINT;		
 				if (async) {
 					threadPool.submit(new Runnable() {
 						@Override
@@ -3272,6 +3279,8 @@ public class Twitter implements Serializable {
 			}
 			if (err.get()!=null) throw err.get();
 			// success :)
+		} catch(TwitterException ex) {
+			throw ex;
 		} catch(Exception ex) {
 			// ?? retry on some errors??				
 			throw new TwitterException(ex);

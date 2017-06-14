@@ -565,6 +565,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a medium video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
 		System.out.println(s);
 	}
+	
+
+	public void testBigVideoUpload() {
+		Twitter jtwit = newTestTwitter();
+		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/Fugu.mp4");
+		String mediaId = jtwit.uploadVideo(f);
+		System.out.println("Uplaod of "+mediaId);
+		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a medium video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
+		System.out.println(s);
+	}
 
 
 	public static void main(String[] args) {
