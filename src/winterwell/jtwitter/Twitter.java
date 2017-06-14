@@ -3206,23 +3206,26 @@ public class Twitter implements Serializable {
 		JSONObject fresponse = new JSONObject(fresp);
 		String fid = fresponse.optString("media_id_string");
 		// status
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		try { // this throws an "invalid mediaId" error?!
-			String statusResp = http.getPage(url, InternalUtils.asMap(
-					"command", "STATUS",
-				     "media_id", id), 
-					true);
-			JSONObject status = new JSONObject(statusResp);
-			Object procInfo = status.get("processing_info");
-			System.out.println(procInfo);
+			while(true) {		
+				Thread.sleep(50);
+				String statusResp = http.getPage(url, InternalUtils.asMap(
+						"command", "STATUS",
+					     "media_id", id), 
+						true);
+				JSONObject status = new JSONObject(statusResp);
+				JSONObject procInfo = status.getJSONObject("processing_info");
+				String state = procInfo.getString("state");
+				int secs = procInfo.optInt("check_after_secs");
+				System.out.println(procInfo);
+				if ( ! "in_progress".equals(state)) break;
+				// pause at least 1/2 second
+				Thread.sleep(Math.max(2*secs, 1) * 500);
+			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
-			// oh well
-		}
+			// oh well		
+		}		
 		return fid;
 	}
 
