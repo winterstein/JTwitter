@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.6.0
+ - Full video upload (although it needs testing across more videos)
+
 3.5.6:
  - Video upload for upto 15mb.
  
