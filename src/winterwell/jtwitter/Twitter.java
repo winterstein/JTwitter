@@ -3157,10 +3157,13 @@ public class Twitter implements Serializable {
 				".mov", "video/quicktime",
 				".avi",	"video/x-msvideo",
 				".wmv",	"video/x-ms-wmv",
-				".m4v",	"video/mp4"
+				".m4v",	"video/mp4",
+				".mp4",	"video/mp4"
 				).get(ftype);
 		if (mimetype==null) mimetype = "video/"+ftype;
-		boolean async = false; // might also be needed for longer duration || video.length() > 15000000L;
+		boolean async = 
+//				false; // might also be needed for longer duration || 
+				video.length() > 15000000L;
 		return uploadVideo(video, mimetype, async);
 	}
 	
