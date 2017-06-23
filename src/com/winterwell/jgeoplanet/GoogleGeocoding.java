@@ -160,6 +160,11 @@ public class GoogleGeocoding implements IGeoCode {
 		}
 		
 		@Override
+		public Class<? extends IGeoCode> getGeoCoder() {		
+			return GoogleGeocoding.class;
+		}
+		
+		@Override
 		public IPlace getParent() {
 			// TODO Is this available??
 			return null;

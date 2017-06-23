@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.winterwell.jgeoplanet.BoundingBox;
+import com.winterwell.jgeoplanet.GoogleGeocoding;
+import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;
 import com.winterwell.json.JSONArray;
@@ -29,13 +31,20 @@ public class Place implements IPlace, Serializable {
 
 	private String type;
 	private Place parent;
+	Class<? extends IGeoCode> geocoder;
 
 	@Override
 	public IPlace getParent() {
 		return parent;
 	}
 	
-	public Place(JSONObject _place) throws JSONException {
+	@Override
+	public Class<? extends IGeoCode> getGeoCoder() {		
+		return geocoder;
+	}
+	
+	public Place(JSONObject _place, IGeoCode geocoder) throws JSONException {
+		this.geocoder = geocoder==null? null : geocoder.getClass();
 		// e.g. {"id":"0a3e119020705b64","place_type":"city",
 		// "bounding_box":{"type":"Polygon",
 		// "coordinates":[[[-95.519568,37.303542],[-95.227853,37.303542],[-95.227853,37.383978],[-95.519568,37.383978]]]},
@@ -65,7 +74,7 @@ public class Place implements IPlace, Serializable {
 			_parent = pa.length()==0? null : pa.get(0);
 		}
 		if (_parent!=null) {
-			this.parent = new Place((JSONObject) _parent);
+			this.parent = new Place((JSONObject) _parent, geocoder);
 		}
 		// bounding box
 		Object bbox = _place.opt("bounding_box");

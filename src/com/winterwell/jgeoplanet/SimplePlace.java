@@ -24,9 +24,20 @@ public class SimplePlace implements IPlace, Serializable {
 	 * null unless {@link #setRaw(String)} is called.
 	 */
 	private String raw;
+
+	private Class<? extends IGeoCode> geocoder;
 	
 	public String getRaw() {
 		return raw;
+	}
+	
+	@Override
+	public Class<? extends IGeoCode> getGeoCoder() {
+		return geocoder;
+	}
+	
+	public void setGeocoder(Class<? extends IGeoCode> geocoder) {
+		this.geocoder = geocoder;
 	}
 	
 	private BoundingBox bbox;

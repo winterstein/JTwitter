@@ -123,7 +123,8 @@ public final class Status implements ITweet {
 		}
 		// Twitter place
 		if (_place != null) {
-			Place place = new Place(_place);
+			Place place = new Place(_place, null);
+			place.geocoder = Twitter_Geo.class;
 			return place;
 		}
 		JSONObject geo = object.optJSONObject("geo");

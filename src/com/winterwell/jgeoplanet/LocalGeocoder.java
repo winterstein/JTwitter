@@ -149,6 +149,7 @@ public class LocalGeocoder implements IGeoCode {
 			c2c.put(country, country2+" from "+name);
 			Location posn = new Location(lat, lng);
 			SimplePlace sp = new SimplePlace(shortname, null, ccode);
+			sp.setGeocoder(getClass());
 			sp.type = IPlace.TYPE_CITY;
 			sp.centroid = posn;			
 			places.add(sp);			
@@ -338,11 +339,13 @@ public class LocalGeocoder implements IGeoCode {
 			if (bits.length < 5) {
 				// no geometry :(
 				sp = new SimplePlace(names[0], null, country);
+				sp.setGeocoder(getClass());
 			} else {
 				Location northEast = new Location(Double.valueOf(bits[2]),Double.valueOf(bits[3]));
 				Location southWest = new Location(Double.valueOf(bits[4]),Double.valueOf(bits[5]));
 				BoundingBox bbox = new BoundingBox(northEast, southWest);
 				sp = new SimplePlace(names[0], bbox, country);
+				sp.setGeocoder(getClass());
 			}
 			if (bits.length > 6) {
 				Location centroid = new Location(Double.valueOf(bits[6]),Double.valueOf(bits[7]));

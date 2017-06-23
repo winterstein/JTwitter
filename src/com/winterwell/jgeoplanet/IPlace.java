@@ -8,6 +8,12 @@ package com.winterwell.jgeoplanet;
 public interface IPlace {
 	
 	/**
+	 * Where did this come from? For debugging odd places.
+	 * @return can be null
+	 */
+	Class<? extends IGeoCode> getGeoCoder();
+	
+	/**
 	 * Place-type for cities. Geocoders should try to use this when applicable.
 	 * Users are warned that this is not guaranteed.
 	 */
