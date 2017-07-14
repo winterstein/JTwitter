@@ -522,15 +522,15 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			}
 			if (code == 406)
 				// Hm: It might be nice to have info on post variables here 
-				throw new TwitterException.E406(error + "\n" + url);
+				throw new TwitterException.E406(error + "\n"+getName()+" "+ url);
 			if (code == 413)
-				throw new TwitterException.E413(error + "\n" + url);
+				throw new TwitterException.E413(error + "\n"+getName()+" "+ url);
 			if (code == 416)
-				throw new TwitterException.E416(error + "\n" + url);
+				throw new TwitterException.E416(error + "\n"+getName()+" "+ url);
 			if (code == 420)
-				throw new TwitterException.TooManyLogins(error + "\n" + url);
+				throw new TwitterException.TooManyLogins(error + "\n"+getName()+" "+ url);
 			if (code >= 500 && code < 600)
-				throw new TwitterException.E50X(error + "\n" + url);
+				throw new TwitterException.E50X(error + "\n"+getName()+" "+ url);
 
 			// Over the rate limit?
 			processError2_rateLimit(connection, resource, code, error);
@@ -551,20 +551,20 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			}
 			
 			// just report it as a vanilla exception
-			throw new TwitterException(code + " " + error + " " + url);
+			throw new TwitterException(code + " " + error + " " + getName()+" "+url);
 
 		} catch (SocketTimeoutException e) {
 			URL url = connection.getURL();
 			throw new TwitterException.Timeout(timeout + "milli-secs for "
-					+ url);
+					+ getName()+" "+ url);
 		} catch (ConnectException e) {
 			// probably also a time out
 			URL url = connection.getURL();
-			throw new TwitterException.Timeout(url.toString());
+			throw new TwitterException.Timeout(getName()+" "+url.toString());
 		} catch (SocketException e) {
 			// treat as a server error - because it probably is
 			// (yes, it could also be an error at your end)
-			throw new TwitterException.E50X(e.toString());
+			throw new TwitterException.E50X(getName()+" "+e.toString());
 		} catch (IOException e) {
 			throw new TwitterException(e);
 		}
@@ -618,25 +618,27 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		if (errorPage.startsWith("code 185") || errorPage.contains("Wow, that's a lot of Twittering!")) {
 			// store the rate limit info
 			processHeaders(connection, resource);
-			throw new TwitterException.RateLimit(errorPage);
+			throw new TwitterException.RateLimit(errorPage+" "+getName());
 		}
 		if (errorPage.contains("too old"))
-			throw new TwitterException.BadParameter(errorPage + "\n" + url);
+			throw new TwitterException.BadParameter(errorPage + "\n"+getName()+" "+ url);
 		// is this a suspended user exception?
 		if (errorPage.contains("suspended"))
 			throw new TwitterException.SuspendedUser(errorPage +": "+getName()+"\n" + url);
 		// this can be caused by looking up is-follower wrt a suspended
 		// account
 		if (errorPage.contains("Could not find"))
-			throw new TwitterException.SuspendedUser(errorPage + "\n" + url);
+			throw new TwitterException.SuspendedUser(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("too recent"))
-			throw new TwitterException.TooRecent(errorPage + "\n" + url);
+			throw new TwitterException.TooRecent(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("code 226"))
-			throw new TwitterException.TooSpammy(errorPage + "\n" + url);
+			throw new TwitterException.TooSpammy(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("code 250"))
-			throw new TwitterException.AgeScreen(errorPage + "\n" + url);
+			throw new TwitterException.AgeScreen(errorPage + "\n"+getName()+" "+ url);
+		if (errorPage.contains("code 326"))
+			throw new TwitterException.SuspendedProfile(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("already requested to follow"))
-			throw new TwitterException.Repetition(errorPage + "\n" + url);
+			throw new TwitterException.Repetition(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("duplicate"))
 			throw new TwitterException.Repetition(errorPage);
 		if (errorPage.contains("unable to follow more people"))
@@ -738,7 +740,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			String password) {
 		if (name==null || password==null) {
 			// You probably want to use OAuthSignpostClient!
-			throw new TwitterException.E401("Authentication requested but no authorisation details are set!");
+			throw new TwitterException.E401("Authentication requested but no authorisation details are set! name: "+name);
 		}
 		String token = name + ":" + password;
 		String encoding = Base64Encoder.encode(token);

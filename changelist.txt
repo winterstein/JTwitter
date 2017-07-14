@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.6.2:
+ - Tweaks, such as including username in more exceptions.
+ 
 3.6.0
  - Full video upload (although it needs testing across more videos)
 

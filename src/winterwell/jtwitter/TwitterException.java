@@ -337,7 +337,7 @@ public class TwitterException extends RuntimeException {
 	}
 	
 	/**
-	 * Exception thrown when trying to query a suspended account. Note that
+	 * Exception thrown when trying to QUERY a suspended account (i.e. your own account is fine). Note that
 	 * *deleted* accounts may generate an E404 instead.
 	 * <p>
 	 * This extends E403 because Twitter uses http code 403 (forbidden) to
@@ -346,6 +346,7 @@ public class TwitterException extends RuntimeException {
 	public static class SuspendedUser extends E403 {
 		private static final long serialVersionUID = 1L;
 		/**
+		 * @deprecated Use {@link SuspendedProfile} instead
 		 * If true, it was the calling user (ie you) who is suspended.
 		 * If false, it was *probably* the target user who is suspended.
 		 */
@@ -357,6 +358,19 @@ public class TwitterException extends RuntimeException {
 		}
 	}
 
+	/**
+	 * Exception thrown when trying to USE a suspended account. 
+	 * You need to placate Twitter and change your ways.
+	 */
+	public static class SuspendedProfile extends E403 {
+		private static final long serialVersionUID = 1L;
+
+		public SuspendedProfile(String msg) {
+			super(msg);
+		}
+	}
+
+	
 	/**
 	 * Exception thrown when trying to follow an account that has blocked you.
 	 */
