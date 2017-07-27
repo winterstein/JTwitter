@@ -52,7 +52,8 @@ import winterwell.jtwitter.Twitter.ITweet;
  * JTwitter API, and may be changed or reorganised in future versions.
  * <p>
  * NB: Some of these are copies (sometimes simplified) of methods in
- * winterwell.utils.Utils
+ * com.winterwell.utils.Utils
+ * You can find this code here: https://github.com/sodash/open-code
  * 
  * @author daniel
  * @testedby {@link InternalUtilsTest}
