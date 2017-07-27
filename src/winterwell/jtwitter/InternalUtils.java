@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -617,13 +618,24 @@ public class InternalUtils {
 		return unsure? null : true;
 	}
 
-	private static String toCanonical(String string) {
+	public static String toCanonical(String string) {
+		// use StrUtils if we can
+		init();
+		if (toCanonicalFn!=null) {
+			try {
+				return (String) toCanonicalFn.invoke(null, string);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
 		if (string == null)
 			return "";
 		StringBuilder sb = new StringBuilder();
 		boolean spaced = false;
 		for (int i = 0, n = string.length(); i < n; i++) {
 			char c = string.charAt(i);
+			// sanitise bogus chars
+			if (c==0) continue;			
 			// lowercase letters
 			if (Character.isLetterOrDigit(c)) {
 				spaced = false;
@@ -634,7 +646,7 @@ public class InternalUtils {
 				sb.append(c);
 				continue;
 			}
-			// all else as spaces
+			// Treat all else as spaces (note - this includes wing-dings)
 			// compact whitespace
 			// if (Character.isWhitespace(c)) {
 			if (spaced || sb.length() == 0) {
@@ -644,15 +656,17 @@ public class InternalUtils {
 			spaced = true;
 			// }
 			// ignore punctuation!
-		}		
-		string = sb.toString().trim();
-		// NB: StrUtils would ditch the accents, if we can
+		}
+		if (spaced) {
+			sb.delete(sb.length() - 1, sb.length());
+		}
+		string = sb.toString();
 		return string;
-
 	}
-
+	
 	private static Method logFn;
-	private static boolean logInit;
+	private static Method toCanonicalFn;
+	private static boolean init;
 
 	/**
 	 * Use the Winterwell logger. Reflection-based to avoid a dependency.
@@ -660,7 +674,7 @@ public class InternalUtils {
 	 * @param msg
 	 */
 	public static void log(String tag, Object msg) {
-		logInit();
+		init();
 		if (logFn!=null) {
 			try {
 				logFn.invoke(null, tag, msg);
@@ -671,16 +685,22 @@ public class InternalUtils {
 	}
 
 
-	private static void logInit() {
-		if (logInit) return;
+	private static void init() {
+		if (init) return;
+		init = true;
 		try {
 			// Try to grab the Winterwell Log.w() function
-			Class<?> Log = Class.forName("winterwell.utils.reporting.Log");
+			Class<?> Log = Class.forName("com.winterwell.utils.log.Log");
 			logFn = Log.getMethod("w", String.class, Object.class);
 		} catch(Throwable ex) {
 			// ignore
-		} finally {
-			logInit = true;
+		}				
+		try {
+			// Try to grab the Winterwell toCanoncial function
+			Class<?> Log = Class.forName("com.winterwell.utils.StrUtils");
+			toCanonicalFn = Log.getMethod("toCanonical", String.class);
+		} catch(Throwable ex) {
+			// ignore
 		}
 	}
 
@@ -798,4 +818,29 @@ public class InternalUtils {
 		timestamp += time;
 		return BigInteger.valueOf((timestamp << 22) + identifiers);
 	}
+	
+	/**
+	Trim out whitespace and punctuation from the beginning and end of
+	 * the string.
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static String trimPunctuation(String string) {
+		Pattern puncwrapper = Pattern.compile("^\\p{Punct}*(.*?)\\p{Punct}*$");
+		Matcher m = puncwrapper.matcher(string);
+		if ( ! m.find()) {
+			return string.trim();
+		}
+		String trimmed = m.group(1).trim();
+		return trimmed;
+	}
+	
+	public static String removePunctuation(String string) {
+		Pattern puncwrapper = Pattern.compile("\\p{Punct}+");
+		Matcher m = puncwrapper.matcher(string);
+		String nopunc = m.replaceAll(" ").replaceAll(" +", " ");
+		return nopunc;
+	}
+
 }

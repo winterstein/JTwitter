@@ -18,9 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import com.winterwell.utils.StrUtils;
+import winterwell.jtwitter.InternalUtils;
+
+import java.util.Set;
 
 /**
  * ISO 3166 2-letter Uppercase Country Codes, e.g. "GB" for Britain
@@ -106,7 +107,7 @@ public final class ISO3166 {
 	 * @return mangled but better as a map key
 	 */
 	private static String canon(String name) {
-		return StrUtils.toCanonical(name).replace(" ", "");
+		return InternalUtils.toCanonical(name).replace(" ", "");
 	}
 
 	/**

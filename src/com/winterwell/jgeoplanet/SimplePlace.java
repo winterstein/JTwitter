@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.winterwell.utils.StrUtils;
-
 /**
  * Ad-hoc place info. E.g. if you just have a free-form string
  * & don't want to geocode it. 
@@ -81,7 +79,7 @@ public class SimplePlace implements IPlace, Serializable {
 			if (name!=null) sb.append(name+"_");
 			if (country!=null) sb.append(country+"_");
 			if (centroid!=null) sb.append(centroid+"_");
-			StrUtils.pop(sb,1);
+			if (sb.length()!=0) sb.delete(sb.length() - 1, sb.length());
 			sb.append("@simple");
 			xid = sb.toString();
 		}

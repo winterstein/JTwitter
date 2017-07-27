@@ -15,10 +15,6 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.winterwell.utils.BestOne;
-import com.winterwell.utils.StrUtils;
-import com.winterwell.utils.log.Log;
-
 import winterwell.jtwitter.InternalUtils;
 
 /**
@@ -54,7 +50,7 @@ public class LocalGeocoder implements IGeoCode {
 //			SimplePlace mog = (SimplePlace) getPlace("Mogadishu");
 //			mog.centroid = new Location(2.0469, 45.3182);
 //			loadCSV("worldcities.csv", null);
-			Log.report("geo","LocalGeocoder loaded "+places.size(), Level.FINE);
+			InternalUtils.log("geo","LocalGeocoder loaded "+places.size());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -100,11 +96,11 @@ public class LocalGeocoder implements IGeoCode {
 			String name = bits[2];
 			String[] splitname = name.split("\\|");
 			String shortname = splitname[splitname.length-1].trim();
-			shortname = StrUtils.trimPunctuation(shortname);			
+			shortname = InternalUtils.trimPunctuation(shortname);			
 			// pick the last bit -- the display name 			
 			String country = bits[4];
 			country = country.replaceFirst("<!--.+-->", ""); // no comments
-			country = StrUtils.removePunctuation(country).trim();	
+			country = InternalUtils.removePunctuation(country).trim();	
 			if (country.length()<2) {
 				continue;
 			}
@@ -311,7 +307,7 @@ public class LocalGeocoder implements IGeoCode {
 		// mangle it for easier matching
 		// NB: stripping out spaces proved too much -- it led to false matches
 		// e.g. with Oman/Uman appearing inside strings
-		return StrUtils.toCanonical(locnDesc);
+		return InternalUtils.toCanonical(locnDesc);
 	}
 
 	public LocalGeocoder(BufferedReader csv) throws IOException {
@@ -422,11 +418,15 @@ public class LocalGeocoder implements IGeoCode {
 	 */
 	public IPlace getBestPlace(GeoCodeQuery gq) {
 		Map<IPlace, Double> qplaces = getPlace(gq);
-		BestOne<IPlace> b = new BestOne<>();
+		IPlace best = null;
+		double bestScore = Double.NEGATIVE_INFINITY;
 		for (IPlace p : qplaces.keySet()) {
 			Double s = qplaces.get(p);
-			b.maybeSet(p, s);
+			if (s != null && s > bestScore) {
+				best = p;
+				bestScore = s;
+			}
 		}
-		return b.getBest();
+		return best;
 	}
 }
