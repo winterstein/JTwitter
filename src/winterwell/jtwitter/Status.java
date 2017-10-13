@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
+import com.winterwell.utils.log.Log;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
@@ -638,41 +639,47 @@ public final class Status implements ITweet {
 	 * @return
 	 */
 	static String getDisplayText2(ITweet tweet) {
-		List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
-		String _text = tweet.getText();
-		IndexConverter fixer = new IndexConverter(_text);
-		
-		if (es==null || es.size()==0) {
-			// Is it a truncated retweet? That should be handled in the constructor.			
-			return _text;
-		}
-		
-		StringBuilder sb = new StringBuilder(200);
-		int i = 0;
-		
-		// sort by 
-		for (TweetEntity entity : es) {
-			// What? there are invalid entities?
-			if (entity.start < i) {				
-				InternalUtils.log("jtwitter", "#escalate bogus entity ordering in "+tweet.getId()+" "+entity+" in "+_text);
-				continue;
+		try {
+			List<TweetEntity> es = tweet.getTweetEntities(KEntityType.urls);
+			String _text = tweet.getText();
+			IndexConverter fixer = new IndexConverter(_text);
+			
+			if (es==null || es.size()==0) {
+				// Is it a truncated retweet? That should be handled in the constructor.			
+				return _text;
 			}
 			
-			if (i > _text.length() || entity.start > _text.length()) {
-				String raw = tweet instanceof Status? ((Status)tweet)._rawtext : null;
-				InternalUtils.log("jtwitter", "#escalate bogus entity in "+tweet.getId()+" "+tweet.getClass().getSimpleName()+" "+entity+" in "+_text+" raw:"+raw);
-				continue;
-			}
+			StringBuilder sb = new StringBuilder(200);
+			int i = 0;
 			
-			// replace the short-url with the display version
-			sb.append(_text.substring(i, fixer.codePointsToCodeUnits(entity.start)));
-			sb.append(entity.displayVersion());
-			i = fixer.codePointsToCodeUnits(entity.end);
-		}					
-		if (i < _text.length()) {
-			sb.append(_text.substring(i));
+			// sort by 
+			for (TweetEntity entity : es) {
+				// What? there are invalid entities?
+				if (entity.start < i) {				
+					InternalUtils.log("jtwitter", "#escalate bogus entity ordering in "+tweet.getId()+" "+entity+" in "+_text);
+					continue;
+				}
+				
+				if (i > _text.length() || entity.start > _text.length()) {
+					String raw = tweet instanceof Status? ((Status)tweet)._rawtext : null;
+					InternalUtils.log("jtwitter", "#escalate bogus entity in "+tweet.getId()+" "+tweet.getClass().getSimpleName()+" "+entity+" in "+_text+" raw:"+raw);
+					continue;
+				}
+				
+				// replace the short-url with the display version
+				sb.append(_text.substring(i, fixer.codePointsToCodeUnits(entity.start)));
+				sb.append(entity.displayVersion());
+				i = fixer.codePointsToCodeUnits(entity.end);
+			}					
+			if (i < _text.length()) {
+				sb.append(_text.substring(i));
+			}
+			return sb.toString();
+		} catch(Exception ex) {
+			// paranoid fallback, in case odd characters manage to throw the display text off 
+			Log.e("tweet.text.error", "getDisplayText for "+tweet.getClass()+" "+tweet.getId()+" "+ex+" from "+tweet.getText());
+			return tweet.getText();
 		}
-		return sb.toString();
 	}
 
 	public String getUrl() {
