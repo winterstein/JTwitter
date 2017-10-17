@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+
+3.6.5:
+ - bulkShow uses get not post, to handle increased fussiness from Twitter.
+
 3.6.4:
  - Safety try-catch on getDisplayText
  

@@ -84,7 +84,8 @@ public class Twitter_Users {
 					: "user_id";
 			Map<String, String> vars = InternalUtils.asMap(var, names);
 			try {
-				String json = http.post(jtwit.TWITTER_URL + apiMethod, vars, auth);
+				// NB: method=post was causing an error: TwitterException: 400 code 86: This method requires a GET or HEAD
+				String json = http.getPage(jtwit.TWITTER_URL + apiMethod, vars, auth);
 				List<User> usersi = User.getUsers(json);
 				users.addAll(usersi);
 			} catch (TwitterException.E404 e) {
