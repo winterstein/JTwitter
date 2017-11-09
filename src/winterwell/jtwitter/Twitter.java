@@ -678,7 +678,7 @@ public class Twitter implements Serializable {
 	/**
 	 * The maximum number of characters that a tweet can contain.
 	 */
-	public final static int MAX_CHARS = 140;
+	public final static int MAX_CHARS = 280;
 
 	/** Which version of Twitter API?
 	 * The upgrade to v1.1 implemented here is necessary as of March 2013 */
@@ -1583,8 +1583,8 @@ public class Twitter implements Serializable {
 			// // Should we also do by search and merge the two lists?
 			StringBuilder sq = new StringBuilder();
 			sq.append("\"RT @" + tweet.getUser().getScreenName() + ": ");
-			if (sq.length() + tweet.text.length() + 1 > 140) {
-				int i = tweet.text.lastIndexOf(' ', 140 - sq.length() - 1);
+			if (sq.length() + tweet.text.length() + 1 > MAX_CHARS) {
+				int i = tweet.text.lastIndexOf(' ', MAX_CHARS - sq.length() - 1);
 				String words = tweet.text.substring(0, i);
 				sq.append(words);
 			} else {
@@ -2741,21 +2741,21 @@ public class Twitter implements Serializable {
 	 */
 	public List<String> splitMessage(String longStatus) {
 		// Is it really long?
-		if (longStatus.length() <= 140)
+		if (longStatus.length() <= MAX_CHARS)
 			return Collections.singletonList(longStatus);
 		// Multiple tweets for a longer post
 		List<String> sections = new ArrayList<String>(4);
-		StringBuilder tweet = new StringBuilder(140);
+		StringBuilder tweet = new StringBuilder(MAX_CHARS);
 		String[] words = longStatus.split("\\s+");
 		for (String w : words) {
 			// messages have a max length of 140
 			// plus the last bit of a long tweet tends to be hidden on
 			// twitter.com, so best to chop 'em short too
-			if (tweet.length() + w.length() + 1 > 140) {
+			if (tweet.length() + w.length() + 1 > MAX_CHARS) {
 				// Emit
 				tweet.append("...");
 				sections.add(tweet.toString());
-				tweet = new StringBuilder(140);
+				tweet = new StringBuilder(MAX_CHARS);
 				tweet.append(w);
 			} else {
 				if (tweet.length() != 0) {
