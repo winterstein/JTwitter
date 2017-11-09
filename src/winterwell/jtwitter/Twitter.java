@@ -2993,6 +2993,10 @@ public class Twitter implements Serializable {
 			assert v != 0 && v != -1;
 			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
 		}
+		// If we're making a long post, we want to get the full text back!
+		if (extendedMode) {
+			vars.put("tweet_mode", "extended");
+		}
 		return vars;
 	}
 
