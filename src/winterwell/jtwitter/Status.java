@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
-import com.winterwell.utils.log.Log;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
@@ -677,7 +676,7 @@ public final class Status implements ITweet {
 			return sb.toString();
 		} catch(Exception ex) {
 			// paranoid fallback, in case odd characters manage to throw the display text off 
-			Log.e("tweet.text.error", "getDisplayText for "+tweet.getClass()+" "+tweet.getId()+" "+ex+" from "+tweet.getText());
+			InternalUtils.log("tweet.text.error", "getDisplayText for "+tweet.getClass()+" "+tweet.getId()+" "+ex+" from "+tweet.getText());
 			return tweet.getText();
 		}
 	}
