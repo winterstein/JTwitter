@@ -1,5 +1,7 @@
 # JTwitter Change list 
 
+3.6.6: 
+ - Improved tweet-too-long error message.
 
 3.6.5:
  - bulkShow uses get not post, to handle increased fussiness from Twitter.

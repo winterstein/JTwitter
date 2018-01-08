@@ -673,7 +673,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.6.4";
+	public final static String version = "3.6.6";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2963,11 +2963,11 @@ public class Twitter implements Serializable {
 				// bogus - send a helpful error
 				if (statusText.startsWith("RT")) {
 					throw new IllegalArgumentException(
-							"Status text must be 140 characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
+							"Status text must be "+MAX_CHARS+" characters or less -- use Twitter.retweet() to do new-style retweets which can be a bit longer: "
 									+ statusText.length() + " " + statusText);
 				}
 				throw new IllegalArgumentException(
-						"Status text must be 140 characters or less: "
+						"Status text must be "+MAX_CHARS+" characters or less: "
 								+ statusText.length() + " " + statusText);
 			}
 		}
