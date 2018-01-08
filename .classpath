@@ -9,5 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/signpost-commonshttp4.jar" sourcepath="lib/signpost-commonshttp4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/signpost-core.jar" sourcepath="/middleware/signpost/signpost-core-src.zip"/>
 	<classpathentry kind="lib" path="liblocal/android.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
