@@ -344,6 +344,10 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	}
 
 	/**
+	 * Call Twitter to start the authorisation flow. This will lead to
+	 * (a) this object storing a token secret (needed later for verification)
+	 * and (b) a url to redirect the user to.
+	 * 
 	 * @return url to direct the user to for authorisation. Send the user to
 	 *         this url. They click "OK", then get redirected to your callback
 	 *         url.
