@@ -217,7 +217,8 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	
 	
 	/**
-	 * @deprecated
+	 * @deprecated Please register an app with Twitter and use your own key!
+	 * <p>
 	 * This consumer key (and secret) allows you to get up and running fast.
 	 * However you are strongly advised to register your own app at
 	 * http://dev.twitter.com Then use your own key and secret. This will be
