@@ -23,7 +23,6 @@ public final class Dx implements Comparable<Dx> {
 		return new Dx(0, LengthUnit.METRE);
 	}
 
-
 	private final LengthUnit unit;
 	private final double n;
 
