@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.winterwell.jgeoplanet.BoundingBox;
 import com.winterwell.jgeoplanet.IPlace;
@@ -794,7 +795,11 @@ public class Twitter implements Serializable {
 
 	boolean tweetEntities = true;
 	
+	/** Turn off if your code is broken by seeing e.g. long tweets */
 	boolean extendedMode = true;
+	
+	/** Turn off if your code only generates old-style tweets where every user tagged is explicitly mentioned in message text */
+	boolean autoPopulateReplyMetadata = true;
 
 	@Deprecated // Keeping for backwards compatibility of serialised form until Q2 2013
 	private transient String twitlongerApiKey;
@@ -2693,6 +2698,16 @@ public class Twitter implements Serializable {
 	public void setExtendedMode(Boolean extendedMode) {
 		this.extendedMode = extendedMode;
 	}
+	
+	/**
+	 * Compatibility setting: if your app can't generate new-style
+	 * "previously tagged-in users are implicitly included in replies"
+	 * tweets, turn this off to require users be explicitly tagged in every time.
+	 * @param extendedMode
+	 */
+	public void setAutoPopulateReplyMetadata(Boolean autoPopulateReplyMetadata) {
+		this.autoPopulateReplyMetadata = autoPopulateReplyMetadata;
+	}
 
 	/**
 	 * @deprecated User {@link TwitLonger}
@@ -2902,6 +2917,20 @@ public class Twitter implements Serializable {
 	}
 	
 	/**
+	 * Compatibility wrapper for {@link updateStatus(String, Number, List<Number>)}
+	 * @param statusText
+	 * @param inReplyToStatusId
+	 * @return
+	 * @throws TwitterException
+	 */
+	public Status updateStatus(String statusText, Number inReplyToStatusId)
+			throws TwitterException 
+	{		
+		return updateStatus(statusText, inReplyToStatusId, null);
+	}
+	
+	
+	/**
 	 * Updates the authenticating user's status and marks it as a reply to the
 	 * tweet with the given ID.
 	 * 
@@ -2909,13 +2938,17 @@ public class Twitter implements Serializable {
 	 *            The text of your status update. Must not be more than 140
 	 *            characters (with urls counting as 20 or 21 for https).
 	 * 
-	 * 
 	 * @param inReplyToStatusId
 	 *            The ID of the tweet that this tweet is in response to. The
 	 *            statusText must contain the username (with an "@" prefix) of
 	 *            the owner of the tweet being replied to for Twitter to
 	 *            agree to mark the tweet as a reply. <i>null</i> to leave this
 	 *            unset.
+	 *            
+	 * @param excludeReplyIds
+	 *            A list of numeric user IDs (not @handles) tagged into the
+	 *            previous tweet in the thread who should NOT be tagged into this
+	 *            reply.
 	 * 
 	 * @return The posted status when successful.
 	 *         <p>
@@ -2930,10 +2963,8 @@ public class Twitter implements Serializable {
 	 *             code but the wrong tweet. If this happens, the update may or
 	 *             may not have worked - wait a bit & check.
 	 */
-	public Status updateStatus(String statusText, Number inReplyToStatusId)
-			throws TwitterException 
-	{		
-		Map<String, String> vars = updateStatus2_vars(statusText, inReplyToStatusId, false);
+	public Status updateStatus(String statusText, Number inReplyToStatusId, List<Number> excludeReplyIds) {
+		Map<String, String> vars = updateStatus2_vars(statusText, inReplyToStatusId, excludeReplyIds);
 		String result = http.post(TWITTER_URL + "/statuses/update.json", vars,
 					true);
 		try {
@@ -2951,7 +2982,7 @@ public class Twitter implements Serializable {
 	 * @param inReplyToStatusId
 	 * @return The vars to send
 	 */
-	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId, boolean withMedia) 
+	private Map<String, String> updateStatus2_vars(String statusText, Number inReplyToStatusId, List<Number> excludeReplyIds) 
 	{
 		// check for length
 		if (statusText.length() > MAX_CHARS
@@ -2992,6 +3023,13 @@ public class Twitter implements Serializable {
 			double v = inReplyToStatusId.doubleValue();
 			assert v != 0 && v != -1;
 			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
+			if (this.autoPopulateReplyMetadata) {
+				vars.put("auto_populate_reply_metadata", "true");
+				if (excludeReplyIds != null && !excludeReplyIds.isEmpty()) {
+					String excludes = excludeReplyIds.toString().replaceAll("[\\[\\]\\s]", "");
+					vars.put("exclude_reply_user_ids", excludes);
+				}
+			}
 		}
 		// If we're making a long post, we want to get the full text back!
 		if (extendedMode) {
@@ -3081,6 +3119,7 @@ public class Twitter implements Serializable {
 	 * 
 	 * @param statusText
 	 * @param inReplyToStatusId Can be null.
+	 * @param excludedIds Untag these users (numeric user IDs) from reply
 	 * @param mediaFile
 	 * @return The posted status when successful.
 	 * 
@@ -3088,11 +3127,11 @@ public class Twitter implements Serializable {
 	 */
 	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
 	// c.f. https://dev.twitter.com/discussions/1059
-	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
+	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<Number> excludedIds, File mediaFile) {
 		if (mediaFile==null || ! mediaFile.isFile()) {
 			throw new IllegalArgumentException("Invalid file: "+mediaFile);
 		}		
-		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, true);
+		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, excludedIds);
 		vars.put("media[]", mediaFile);
 		// TODO possibly_sensitive
 		// TODO display_coordinates
@@ -3117,11 +3156,23 @@ public class Twitter implements Serializable {
 	}
 	
 	/**
+	 * Compatibility wrapper for {@link updateStatusWithMedia(String, BigInteger, List<Number>, File) {
+	 * @param statusText
+	 * @param inReplyToStatusId
+	 * @param mediaFile
+	 * @return
+	 */
+	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, File mediaFile) {
+		return updateStatusWithMedia(statusText, inReplyToStatusId, null, mediaFile);
+	}
+	
+	/**
 	 * Updates the user's status with multiple images.
 	 * This does NOT work for video.
 	 * 
 	 * @param statusText
 	 * @param inReplyToStatusId Can be null.
+	 * @param excludedIds Untag these users (numeric user IDs) from reply
 	 * @param mediaFiles
 	 * @return The posted status when successful.
 	 * 
@@ -3129,7 +3180,7 @@ public class Twitter implements Serializable {
 	 */
 	// c.f. https://dev.twitter.com/docs/api/1/post/statuses/update_with_media 	
 	// c.f. https://dev.twitter.com/discussions/1059
-	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<File> mediaFiles) {
+	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<Number> excludedIds, List<File> mediaFiles) {
 		// Upload each file, and get a media_id for it
 		// List.toString() outputs "[item1, ..., itemN]" but Twitter wants "item1,...,itemN" so we do it the hard way 
 		List<String> fileIds = new ArrayList();
@@ -3146,7 +3197,18 @@ public class Twitter implements Serializable {
 			String id = response.optString("media_id_string");
 			if (id != null) fileIds.add(id);
 		}
-		return updateStatusWithUploadedMedia(statusText, inReplyToStatusId, fileIds);
+		return updateStatusWithUploadedMedia(statusText, inReplyToStatusId, excludedIds, fileIds);
+	}
+	
+	/**
+	 * Compatibility wrapper for {@link updateStatusWithMedia(String, BigInteger, List<Number>, List<String>}
+	 * @param statusText
+	 * @param inReplyToStatusId
+	 * @param mediaFiles
+	 * @return
+	 */
+	public Status updateStatusWithMedia(String statusText, BigInteger inReplyToStatusId, List<File> mediaFiles) {
+		return updateStatusWithMedia(statusText, inReplyToStatusId, null, mediaFiles);
 	}
 	
 	/**
@@ -3304,10 +3366,11 @@ public class Twitter implements Serializable {
 	 * Updates the user's status with one video, or multiple images.
 	 * @param statusText
 	 * @param inReplyToStatusId Can be null
+	 * @param excludedIds Untag these users (numeric user IDs) from reply
 	 * @param mediaFileIds As returned by {@link #uploadVideo(File, String)}
 	 */
-	public Status updateStatusWithUploadedMedia(String statusText, BigInteger inReplyToStatusId, List<String> mediaFileIds) {
-		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, true);
+	public Status updateStatusWithUploadedMedia(String statusText, BigInteger inReplyToStatusId, List<Number> excludedIds, List<String> mediaFileIds) {
+		Map vars = updateStatus2_vars(statusText, inReplyToStatusId, excludedIds);
 		if(mediaFileIds!=null && ! mediaFileIds.isEmpty()) {
 			String mediaIds = InternalUtils.join(mediaFileIds.toArray(new String[0]));
 			vars.put("media_ids", mediaIds);
@@ -3332,6 +3395,17 @@ public class Twitter implements Serializable {
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(result, e);
 		}
+	}
+	
+	/**
+	 * Compatibility wrapper for {@link updateStatusWithUploadedMedia(String, BigInteger, List<Number>, List<String>}
+	 * @param statusText
+	 * @param inReplyToStatusId
+	 * @param mediaFileIds
+	 * @return
+	 */
+	public Status updateStatusWithUploadedMedia(String statusText, BigInteger inReplyToStatusId, List<String> mediaFileIds) {
+		return updateStatusWithUploadedMedia(statusText, inReplyToStatusId, null, mediaFileIds);
 	}
 
 	/**
