@@ -11,7 +11,9 @@ public interface IPlace {
 	 * Where did this come from? For debugging odd places.
 	 * @return can be null
 	 */
-	Class<? extends IGeoCode> getGeoCoder();
+	default Class<? extends IGeoCode> getGeoCoder() {
+		return null;
+	}
 	
 	/**
 	 * Place-type for cities. Geocoders should try to use this when applicable.
