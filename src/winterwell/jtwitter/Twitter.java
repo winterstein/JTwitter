@@ -260,6 +260,22 @@ public class Twitter implements Serializable {
 		 */
 		String post(String uri, Map<String, String> vars, boolean authenticate)
 				throws TwitterException;
+		
+		/**
+		 * Send an HTTP DELETE request and return the response body.
+		 * 
+		 * @param uri
+		 *            The uri to post to.
+		 * @param authenticate
+		 *            If true, send user authentication
+		 * @return The response from the server.
+		 * 
+		 * @throws TwitterException
+		 *             for a variety of reasons
+		 * @throws TwitterException.E404
+		 *             for resource-does-not-exist errors
+		 */
+		String delete(String uri, boolean authenticate) throws TwitterException;
 
 		/**
 		 * Lower-level POST method.
@@ -2197,6 +2213,33 @@ public class Twitter implements Serializable {
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(null, e);
 		}
+	}
+	
+	public Boolean subscribeAccountActivity(String url, String envName) {
+		try {
+			Map<String, String> urlVars = new HashMap<String, String>();
+			urlVars.put("url", url);
+			String result = post(
+					TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json",
+					urlVars, true
+			);
+			System.out.println(result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
+	
+	public Boolean unsubscribeAccountActivity(String url, String envName) {
+		try {
+			String result = http.delete(
+					TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json", true
+			);
+			System.out.println(result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
 	}
 	
 

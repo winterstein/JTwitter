@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -484,6 +485,64 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		encodedData.deleteCharAt(encodedData.length() - 1);
 		return encodedData.toString();
 	}
+	
+	@Override
+	public final String delete(String uri, boolean authenticate) throws TwitterException {		
+		
+		try {
+			return delete2(uri, authenticate);
+		} catch (TwitterException.E50X e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return delete2(uri, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (SocketTimeoutException e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return delete2(uri, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (Exception e) {
+			throw getPage2_ex(e, uri);
+		}
+	}
+	
+	private String delete2(String uri, boolean authenticate) throws Exception {
+		HttpURLConnection connection = null;
+		try {
+			String resource = checkRateLimit(uri);
+			RateLimit.count(uri);
+			connection = (HttpURLConnection) new URL(uri).openConnection();
+			connection.setRequestMethod("DELETE");
+			connection.setDoOutput(true);
+			// post methods are always with authentication
+			setAuthentication(connection, name, password);
+		
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded");
+			connection.setReadTimeout(timeout);
+			connection.setConnectTimeout(timeout);
+			
+			// check connection & process the envelope
+			processError(connection, resource);
+			processHeaders(connection, resource);
+			
+			
+			// Get the response
+			String response = InternalUtils.read(connection.getInputStream());
+			return response;
+		} finally {
+			disconnect(connection);
+		}
+	}
+
 
 	/**
 	 * Throw an exception if the connection failed
