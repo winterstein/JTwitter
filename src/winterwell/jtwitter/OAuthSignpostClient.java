@@ -507,6 +507,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	
 	/**
 	 * Set the authorisation code (aka the verifier).
+	 * And get an accessToken + secret
 	 * 
 	 * @param verifier
 	 *            a pin code which Twitter gives the user (with the oob method),
@@ -524,7 +525,9 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			init();
 		}
 		try {
-			if (oauth_token!=null) consumer.setTokenWithSecret(oauth_token, oauth_token_secret);
+			if (oauth_token!=null) {
+				consumer.setTokenWithSecret(oauth_token, oauth_token_secret);
+			}
 			provider.retrieveAccessToken(consumer, verifier);
 			accessToken = consumer.getToken();
 			accessTokenSecret = consumer.getTokenSecret();
