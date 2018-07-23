@@ -45,7 +45,7 @@ public final class Status implements ITweet {
 	 *            can be empty, must not be null
 	 * @throws TwitterException
 	 */
-	static List<Status> getStatuses(String json) throws TwitterException {
+	public static List<Status> getStatuses(String json) throws TwitterException {
 		if (json.trim().equals(""))
 			return Collections.emptyList();
 		try {
@@ -264,7 +264,7 @@ public final class Status implements ITweet {
 	 * @throws TwitterException
 	 */
 	@SuppressWarnings("deprecation")
-	Status(JSONObject object, User user) throws TwitterException {
+	public Status(JSONObject object, User user) throws TwitterException {
 		this.raw = object;
 		try {
 			String _id = object.optString("id_str");

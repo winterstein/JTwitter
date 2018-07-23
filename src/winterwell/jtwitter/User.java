@@ -159,7 +159,7 @@ public final class User implements Serializable {
 	 *            can be null
 	 * @throws TwitterException
 	 */
-	User(JSONObject obj, Status status) throws TwitterException {
+	public User(JSONObject obj, Status status) throws TwitterException {
 		try {
 			id = obj.getLong("id");
 			name = InternalUtils.unencode(InternalUtils.jsonGet("name", obj));

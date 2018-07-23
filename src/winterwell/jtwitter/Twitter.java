@@ -38,6 +38,7 @@ import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.jtwitter.ecosystem.TwitLonger;
 import winterwell.jtwitter.guts.Base64Encoder;
+import winterwell.utils.web.WebUtils;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
@@ -776,6 +777,10 @@ public class Twitter implements Serializable {
 	 */
 	private String geocode;
 	final IHttpClient http;
+	
+	private String appKey;
+	private String appSecret;
+	private String accessToken;
 
 	boolean includeRTs = true;
 
@@ -870,6 +875,8 @@ public class Twitter implements Serializable {
 		http = client;
 		assert client != null;
 	}
+	
+	
 
 	/**
 	 * WARNING: Twitter no longer supports name/password basic authentication.
@@ -2215,13 +2222,104 @@ public class Twitter implements Serializable {
 		}
 	}
 	
-	public Boolean subscribeAccountActivity(String url, String envName) {
+	
+	/**
+	 * Save the application key and secret so this instance can retrieve a bearer token for app-level methods
+	 * (e.g. Account Activity API: set up webhooks, list subscriptions etc)
+	 * @param key The application key
+	 * @param secret The application secret
+	 */
+	public void enableAppAuth(String key, String secret) {
+		this.appKey = key;
+		this.appSecret = secret;
+	}
+	
+	/**
+	 * Save a previously-obtained bearer token so this instance can use app-level methods
+	 * @param token The bearer token
+	 */
+	public void enableAppAuth(String token) {
+		this.accessToken = token;
+	}
+	
+	
+	/**
+	 * Return the bearer token for app-level methods - directly if we have it stored
+	 * Otherwise request one from Twitter using the app key and secret.
+	 * TODO Parse response for error codes
+	 * @return
+	 * @throws Exception If this instance has no bearer token and no key/secret to obtain one
+	 */
+	private String getAccessToken() throws Exception {
+		if (accessToken != null && !accessToken.isEmpty()) {
+			// We've already got one
+			return accessToken;
+		} else {
+			// We don't have any way of getting one!
+			if (appKey == null || appKey.isEmpty() || appSecret == null || appSecret.isEmpty()) {
+				throw new Exception("You must enable app-level auth by calling enableAppAuth() with the application key and secret or a previously-obtained access token before you use this method.");
+			}
+			// Try to retrieve a token...
+			Map<String, String> body = new HashMap<String, String>();
+			body.put("grant_type", "client_credentials");
+			IHttpClient basicClient = new URLConnectionHttpClient(appKey, appSecret);
+			String basicAuthResponse = basicClient.post("https://api.twitter.com/oauth2/token", body, false);
+			Object response = new JSONObject(basicAuthResponse).get("access_token");
+			this.accessToken = response.toString();
+			return accessToken;
+		}
+	}
+	
+	
+	/**
+	 * Register a new Webhooks URL, to which all updates for the specified environment will be sent.
+	 * This Twitter object should be set up with authorisation for the account which owns the application.
+	 * TODO is that correct, or is any user OK?
+	 * TODO Get the webhook ID and return it
+	 * @param webhookUrl
+	 * @param envName
+	 * @return
+	 */
+	public Integer registerWebhook(String webhookUrl, String envName) {
 		try {
-			Map<String, String> urlVars = new HashMap<String, String>();
-			urlVars.put("url", url);
-			String result = post(
-					TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json",
-					urlVars, true
+			String endpointUrl = TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json";
+			String result = http.post(endpointUrl + "?url=" + WebUtils.urlEncode(webhookUrl), null, true);
+			System.out.println(result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	/**
+	 * Unregister a Webhooks URL - updates for the specified environment will no longer be sent to it.
+	 * TODO Parse the response and return success
+	 * @param webhookUrl
+	 * @param envName
+	 * @return
+	 */
+	public Boolean unregisterWebhook(String webhookUrl, String envName) {
+		try {
+			String endpointUrl = TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json";
+			String result = http.delete(endpointUrl + "?url=" + webhookUrl, true);
+			System.out.println(result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
+	
+	/**
+	 * Start sending activity updates for the authorised account to the Webhooks URLs registered to the specified environment.
+	 * TODO Parse the response and return success (or other apropos information?)
+	 * @param envName
+	 * @return
+	 */
+	public Boolean subscribeAccountActivity(String envName) {
+		try {
+			String result = http.post(
+					TWITTER_URL + "/account_activity/all/" + envName + "/subscriptions.json",
+					null, true
 			);
 			System.out.println(result);
 		} catch (Exception e) {
@@ -2230,16 +2328,80 @@ public class Twitter implements Serializable {
 		return false;
 	}
 	
-	public Boolean unsubscribeAccountActivity(String url, String envName) {
+	/**
+	 * Stop sending activity updates for the authorised account to the Webhooks URLs registered to the specified environment.
+	 * TODO Parse the response and return success (or other apropos information?)
+	 * @param envName
+	 * @return
+	 */
+	public Boolean unsubscribeAccountActivity(String envName) {
 		try {
 			String result = http.delete(
-					TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json", true
+					TWITTER_URL + "/account_activity/all/" + envName + "/subscriptions.json", true
 			);
 			System.out.println(result);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return false;
+	}
+	
+	/**
+	 * Return the total number of account activity subscriptions on the specified environment.
+	 * TODO Parse response
+	 * @param envName
+	 * @return
+	 */
+	public Integer countAccountActivitySubscriptions(String envName) {
+		try {
+			String accessToken = getAccessToken();
+			BearerAuthHttpClient baHttp = new BearerAuthHttpClient();
+			baHttp.setBearerToken(accessToken);
+			String result = baHttp.getPage(TWITTER_URL + "/account_activity/all/subscriptions/count.json", null, true);
+			System.out.println(result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return -1;
+	}
+	
+	/**
+	 * Return a list of account activity subscriptions on the specified environment
+	 * TODO Parse response
+	 * @param envName
+	 * @return
+	 */
+	public List<Webhooks.Subscription> listAccountActivitySubscriptions(String envName) {
+		try {
+			String accessToken = getAccessToken();
+			BearerAuthHttpClient baHttp = new BearerAuthHttpClient();
+			baHttp.setBearerToken(accessToken);
+			String result = baHttp.getPage(TWITTER_URL + "/account_activity/all/" + envName + "/subscriptions/list.json", null, true);
+			JSONObject json = new JSONObject(result);
+			Webhooks.SubscriptionList subs = new Webhooks.SubscriptionList(json);
+			return subs.subscriptions;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.EMPTY_LIST;
+	}
+	
+	/**
+	 * Return a list of registered Webhooks for the application
+	 * TODO Parse response
+	 * @return
+	 */
+	public List<String> getWebhooks() {
+		try {
+			String accessToken = getAccessToken();
+			BearerAuthHttpClient baHttp = new BearerAuthHttpClient();
+			baHttp.setBearerToken(accessToken);
+			String result = baHttp.getPage(TWITTER_URL + "/account_activity/all/webhooks.json", null, true);
+			System.out.println(result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return new ArrayList<String>();
 	}
 	
 

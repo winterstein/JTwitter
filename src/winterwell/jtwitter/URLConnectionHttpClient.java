@@ -61,7 +61,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	protected String name;
 
 	private String password;
-
+	
 	private Map<String, RateLimit> rateLimits = Collections.synchronizedMap(new HashMap());
 
 	/**
@@ -121,7 +121,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	public boolean canAuthenticate() {
 		return name != null && password != null;
 	}
-
+	
 	@Override
 	public HttpURLConnection connect(String url, Map<String, String> vars,
 			boolean authenticate) throws IOException 
@@ -152,7 +152,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				.openConnection();
 		// Authenticate
 		if (authenticate) {
-			setAuthentication(connection, name, password);
+			setAuthentication(connection);
 		}
 		// To keep the search API happy - which wants either a referrer or a
 		// user agent
@@ -423,7 +423,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		connection.setRequestMethod("POST");
 		connection.setDoOutput(true);
 		// post methods are alwasy with authentication
-		setAuthentication(connection, name, password);
+		setAuthentication(connection);
 
 		connection.setRequestProperty("Content-Type",
 				"application/x-www-form-urlencoded");
@@ -523,7 +523,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			connection.setRequestMethod("DELETE");
 			connection.setDoOutput(true);
 			// post methods are always with authentication
-			setAuthentication(connection, name, password);
+			setAuthentication(connection);
 		
 			connection.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded");
@@ -795,8 +795,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	/**
 	 * Set a header for basic authentication login.
 	 */
-	protected void setAuthentication(URLConnection connection, String name,
-			String password) {
+	protected void setAuthentication(URLConnection connection) {
 		if (name==null || password==null) {
 			// You probably want to use OAuthSignpostClient!
 			throw new TwitterException.E401("Authentication requested but no authorisation details are set! name: "+name);
@@ -807,7 +806,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		encoding = encoding.replace("\r\n", "");
 		connection.setRequestProperty("Authorization", "Basic " + encoding);
 	}
-
+	
 	/**
 	 * Use this to protect your Twitter API rate-limit. E.g. if you want to keep
 	 * some credit in reserve for core activity. 0 by default. 
