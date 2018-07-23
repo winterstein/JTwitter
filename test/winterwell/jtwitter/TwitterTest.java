@@ -650,7 +650,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testIdenticaAccess() throws InterruptedException {
 		Twitter jtwit = new Twitter(TEST_USER, TEST_PASSWORD);
-		jtwit.setAPIRootUrl("http://identi.ca/api");
+		jtwit.setAPIRootUrl("https://identi.ca/api");
 		int salt = new Random().nextInt(1000);
 		System.out.println(salt);
 		Status s1 = null;
@@ -1720,7 +1720,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testIdentica() {
 		Twitter twitter = new Twitter(TEST_USER, TEST_PASSWORD);
-		twitter.setAPIRootUrl("http://identi.ca/api");
+		twitter.setAPIRootUrl("https://identi.ca/api");
 		String salt = "" + new Random().nextInt(10000);
 		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php "+salt);
 		List<Status> timeline = twitter.getFriendsTimeline();

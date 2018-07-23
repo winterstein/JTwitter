@@ -276,6 +276,10 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	private String consumerSecret;
 	private AbstractOAuthProvider provider;
 
+	public AbstractOAuthProvider getProvider() {
+		return provider;
+	}
+	
 	/**
 	 * This is for doing the initial authorisation.
 	 * @param consumerKey
