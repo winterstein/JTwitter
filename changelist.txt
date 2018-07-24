@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.6.7:
+ - Exposed oauth Provider, as this holds a flag for oauth10a. 
+
 3.6.6: 
  - Improved tweet-too-long error message.
 
