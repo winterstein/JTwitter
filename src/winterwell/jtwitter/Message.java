@@ -40,17 +40,24 @@ public final class Message implements ITweet {
 		if (json.trim().equals(""))
 			return Collections.emptyList();
 		try {
-			List<Message> msgs = new ArrayList<Message>();
-			JSONArray arr = new JSONArray(json);
-			for (int i = 0; i < arr.length(); i++) {
-				JSONObject obj = arr.getJSONObject(i);
-				Message u = new Message(obj);
-				msgs.add(u);
-			}
-			return msgs;
+			JSONArray array = new JSONArray(json);
+			return getMessages(array);
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(json, e);
 		}
+	}
+	
+	public static List<Message> getMessages(JSONArray array) {
+		List<Message> msgs = new ArrayList<Message>();
+		for (Object element : array) {
+			if (JSONObject.NULL.equals(element)) {
+				continue;
+			}
+			JSONObject obj = (JSONObject) element;
+			Message msg = new Message(obj);
+			msgs.add(msg);
+		}
+		return msgs;
 	}
 
 	private final Date createdAt;

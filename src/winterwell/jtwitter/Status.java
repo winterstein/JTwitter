@@ -49,18 +49,8 @@ public final class Status implements ITweet {
 		if (json.trim().equals(""))
 			return Collections.emptyList();
 		try {
-			List<Status> tweets = new ArrayList<Status>();
-			JSONArray arr = new JSONArray(json);
-			for (int i = 0; i < arr.length(); i++) {
-				Object ai = arr.get(i);
-				if (JSONObject.NULL.equals(ai)) {
-					continue;
-				}
-				JSONObject obj = (JSONObject) ai;
-				Status tweet = new Status(obj, null);
-				tweets.add(tweet);
-			}
-			return tweets;
+			JSONArray array = new JSONArray(json);
+			return getStatuses(array);
 		} catch (JSONException e) {
 			// Is it an html error page? E.g. when Twitter is really hosed
 			if (json.startsWith("<")) {
@@ -68,6 +58,21 @@ public final class Status implements ITweet {
 			}
 			throw new TwitterException.Parsing(json, e);
 		}
+	}
+	
+	public static List<Status> getStatuses(JSONArray array) throws TwitterException {
+		List<Status> tweets = new ArrayList<Status>();
+		
+		for (Object element : array) {
+			if (JSONObject.NULL.equals(element)) {
+				continue;
+			}
+			JSONObject obj = (JSONObject) element;
+			Status tweet = new Status(obj, null);
+			tweets.add(tweet);
+		}
+		
+		return tweets;
 	}
 
 	/**
