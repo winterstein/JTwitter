@@ -38,7 +38,7 @@ import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.jtwitter.ecosystem.TwitLonger;
 import winterwell.jtwitter.guts.Base64Encoder;
-import winterwell.utils.web.WebUtils;
+import com.winterwell.utils.web.WebUtils;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
