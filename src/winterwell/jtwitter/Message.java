@@ -36,7 +36,7 @@ public final class Message implements ITweet {
 	 * @return
 	 * @throws TwitterException
 	 */
-	static List<Message> getMessages(String json) throws TwitterException {
+	public static List<Message> getMessages(String json) throws TwitterException {
 		if (json.trim().equals(""))
 			return Collections.emptyList();
 		try {

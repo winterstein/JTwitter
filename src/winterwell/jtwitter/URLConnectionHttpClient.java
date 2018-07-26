@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -60,7 +61,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	protected String name;
 
 	private String password;
-
+	
 	private Map<String, RateLimit> rateLimits = Collections.synchronizedMap(new HashMap());
 
 	/**
@@ -120,7 +121,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	public boolean canAuthenticate() {
 		return name != null && password != null;
 	}
-
+	
 	@Override
 	public HttpURLConnection connect(String url, Map<String, String> vars,
 			boolean authenticate) throws IOException 
@@ -151,7 +152,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				.openConnection();
 		// Authenticate
 		if (authenticate) {
-			setAuthentication(connection, name, password);
+			setAuthentication(connection);
 		}
 		// To keep the search API happy - which wants either a referrer or a
 		// user agent
@@ -422,7 +423,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		connection.setRequestMethod("POST");
 		connection.setDoOutput(true);
 		// post methods are alwasy with authentication
-		setAuthentication(connection, name, password);
+		setAuthentication(connection);
 
 		connection.setRequestProperty("Content-Type",
 				"application/x-www-form-urlencoded");
@@ -484,6 +485,64 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		encodedData.deleteCharAt(encodedData.length() - 1);
 		return encodedData.toString();
 	}
+	
+	@Override
+	public final String delete(String uri, boolean authenticate) throws TwitterException {		
+		
+		try {
+			return delete2(uri, authenticate);
+		} catch (TwitterException.E50X e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return delete2(uri, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (SocketTimeoutException e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return delete2(uri, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (Exception e) {
+			throw getPage2_ex(e, uri);
+		}
+	}
+	
+	private String delete2(String uri, boolean authenticate) throws Exception {
+		HttpURLConnection connection = null;
+		try {
+			String resource = checkRateLimit(uri);
+			RateLimit.count(uri);
+			connection = (HttpURLConnection) new URL(uri).openConnection();
+			connection.setRequestMethod("DELETE");
+			connection.setDoOutput(true);
+			// post methods are always with authentication
+			setAuthentication(connection);
+		
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded");
+			connection.setReadTimeout(timeout);
+			connection.setConnectTimeout(timeout);
+			
+			// check connection & process the envelope
+			processError(connection, resource);
+			processHeaders(connection, resource);
+			
+			
+			// Get the response
+			String response = InternalUtils.read(connection.getInputStream());
+			return response;
+		} finally {
+			disconnect(connection);
+		}
+	}
+
 
 	/**
 	 * Throw an exception if the connection failed
@@ -736,8 +795,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 	/**
 	 * Set a header for basic authentication login.
 	 */
-	protected void setAuthentication(URLConnection connection, String name,
-			String password) {
+	protected void setAuthentication(URLConnection connection) {
 		if (name==null || password==null) {
 			// You probably want to use OAuthSignpostClient!
 			throw new TwitterException.E401("Authentication requested but no authorisation details are set! name: "+name);
@@ -748,7 +806,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		encoding = encoding.replace("\r\n", "");
 		connection.setRequestProperty("Authorization", "Basic " + encoding);
 	}
-
+	
 	/**
 	 * Use this to protect your Twitter API rate-limit. E.g. if you want to keep
 	 * some credit in reserve for core activity. 0 by default. 

@@ -481,8 +481,7 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 	}
 
 	@Override
-	protected void setAuthentication(URLConnection connection, String name,
-			String password) {
+	protected void setAuthentication(URLConnection connection) {
 		// safetyCheck();
 		try {
 			// sign the request
