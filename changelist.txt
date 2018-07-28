@@ -1,6 +1,7 @@
 # JTwitter Change list 
 
 3.6.7:
+ - WebHooks support!
  - Exposed oauth Provider, as this holds a flag for oauth10a. 
 
 3.6.6: 
