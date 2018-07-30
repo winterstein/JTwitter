@@ -1,5 +1,6 @@
 package winterwell.jtwitter;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,6 +107,18 @@ public class Webhooks {
 			user_event = base.optJSONArray("user_event");
 			direct_message_indicate_typing_events = base.optJSONArray("direct_message_indicate_typing_events");
 			direct_message_mark_read_events = base.optJSONArray("direct_message_mark_read_events");
+		}
+		
+		@Override
+		public String toString() {
+			JSONObject thisJson = new JSONObject();
+			for (Field field : this.getClass().getDeclaredFields()) {
+				try {
+					thisJson.accumulate(field.getName(), field.get(this));
+				} catch (IllegalAccessException e) { }
+			}
+			
+			return thisJson.toString();
 		}
 	}
 }
