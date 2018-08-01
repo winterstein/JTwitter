@@ -16,11 +16,45 @@ import com.winterwell.json.JSONObject;
  *
  */
 public class Webhooks {
-	public static class WebhookList {
-		public String environment_name;
-		public List<Webhook> webhooks;
+	
+	/**
+	 * All these classes come from JSON objects and their toString() methods should produce valid JSON too.
+	 * @author roscoe
+	 */
+	private static abstract class FromJson {
+		@Override
+		public String toString() {
+			JSONObject thisJson = new JSONObject();
+			for (Field field : this.getClass().getDeclaredFields()) {
+				try {
+					thisJson.put(field.getName(), field.get(this));
+				} catch (IllegalAccessException e) { }
+			}
+			
+			return thisJson.toString();
+		}
+	}
+	
+	public static class WebhookList extends FromJson {
+		
+		public List<Environment> environments;
 
 		public WebhookList(JSONObject base) {
+			environments = new ArrayList<Environment>();
+			JSONArray baseEnvironments = base.getJSONArray("environments");
+			for (Object baseEnvironment : baseEnvironments) {
+				if (baseEnvironment instanceof JSONObject) {
+					environments.add(new Environment((JSONObject) baseEnvironment ));
+				}
+			}
+		}
+	}
+	
+	public static class Environment extends FromJson {
+		public String environment_name;
+		public List<Webhook> webhooks;
+		
+		public Environment(JSONObject base) {
 			environment_name = base.getString("environment_name");
 			webhooks = new ArrayList<Webhook>();
 			JSONArray baseWebhooks = base.getJSONArray("webhooks");
@@ -32,7 +66,7 @@ public class Webhooks {
 		}
 	}
 
-	public static class Webhook {
+	public static class Webhook extends FromJson {
 		public BigInteger id;
 		public String url;
 		public Boolean valid;
@@ -46,7 +80,7 @@ public class Webhooks {
 		}
 	}
 
-	public static class SubscriptionList {
+	public static class SubscriptionList extends FromJson {
 		public String environment;
 		public BigInteger application_id;
 		public List<Subscription> subscriptions;
@@ -64,7 +98,7 @@ public class Webhooks {
 		}
 	}
 
-	public static class Subscription {
+	public static class Subscription extends FromJson {
 		public BigInteger user_id;
 
 		public Subscription(JSONObject base) {
@@ -72,7 +106,7 @@ public class Webhooks {
 		}
 	}
 
-	public static class SubscriptionsCount {
+	public static class SubscriptionsCount extends FromJson {
 		public String account_name;
 		public Integer subscriptions_count;
 
@@ -82,7 +116,7 @@ public class Webhooks {
 		}
 	}
 
-	public static class WebhookEvent {
+	public static class WebhookEvent extends FromJson {
 		public BigInteger for_user_id;
 		public JSONArray tweet_create_events;
 		public JSONArray tweet_delete_events;
@@ -107,18 +141,6 @@ public class Webhooks {
 			user_event = base.optJSONArray("user_event");
 			direct_message_indicate_typing_events = base.optJSONArray("direct_message_indicate_typing_events");
 			direct_message_mark_read_events = base.optJSONArray("direct_message_mark_read_events");
-		}
-		
-		@Override
-		public String toString() {
-			JSONObject thisJson = new JSONObject();
-			for (Field field : this.getClass().getDeclaredFields()) {
-				try {
-					thisJson.accumulate(field.getName(), field.get(this));
-				} catch (IllegalAccessException e) { }
-			}
-			
-			return thisJson.toString();
 		}
 	}
 }
