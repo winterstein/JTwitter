@@ -2357,14 +2357,13 @@ public class Twitter implements Serializable {
 	 * @throws TwitterException
 	 * @throws IllegalStateException If called without first providing either an app key/secret or bearer token
 	 */
-	public List<Webhooks.Webhook> getWebhooks() throws TwitterException, IllegalStateException {
+	public Webhooks.WebhookList getWebhooks() throws TwitterException, IllegalStateException {
 		String accessToken = getAccessToken();
 		BearerAuthHttpClient baHttp = new BearerAuthHttpClient();
 		baHttp.setBearerToken(accessToken);
 		String responseRaw = baHttp.getPage(TWITTER_URL + "/account_activity/all/webhooks.json", null, true);
 		JSONObject response = new JSONObject(responseRaw);
-		Webhooks.WebhookList webhooks = new Webhooks.WebhookList(response);
-		return webhooks.webhooks;
+		return new Webhooks.WebhookList(response);
 	}
 	
 
