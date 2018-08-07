@@ -128,6 +128,7 @@ public class Webhooks {
 		public JSONArray user_event;
 		public JSONArray direct_message_indicate_typing_events;
 		public JSONArray direct_message_mark_read_events;
+		public JSONObject users;
 
 		public WebhookEvent(JSONObject base) {
 			for_user_id = new BigInteger(base.getString("for_user_id"));

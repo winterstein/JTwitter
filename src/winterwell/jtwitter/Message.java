@@ -142,7 +142,7 @@ public final class Message implements ITweet {
 	 * @param obj The message object
 	 * @param users Map from numeric user IDs to user JSON
 	 */
-	Message(JSONObject obj, JSONObject users) {
+	public Message(JSONObject obj, JSONObject users) {
 		String _id = obj.getString("id");
 		id = new BigInteger(_id);
 		String created_timestamp = obj.getString("created_timestamp");
