@@ -123,11 +123,9 @@ public final class Message implements ITweet {
 		JSONObject jsonEntities = obj.optJSONObject("entities");
 		if (jsonEntities != null) {
 			// Note: Twitter filters out dud @names
-			entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(
-					KEntityType.class);
+			entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(KEntityType.class);
 			for (KEntityType type : KEntityType.values()) {
-				List<TweetEntity> es = TweetEntity.parse(this, _text, type,
-						jsonEntities);
+				List<TweetEntity> es = TweetEntity.parse(this, _text, type,	jsonEntities);
 				entities.put(type, es);
 			}
 		}
@@ -137,6 +135,39 @@ public final class Message implements ITweet {
 		if (_locn instanceof Place) {
 			place = (Place) _locn;
 		}
+	}
+	
+	/**
+	 * Parse a Message from the format we get from webhooks and GET direct_messages/etc
+	 * @param obj The message object
+	 * @param users Map from numeric user IDs to user JSON
+	 */
+	Message(JSONObject obj, JSONObject users) {
+		String _id = obj.getString("id");
+		id = new BigInteger(_id);
+		String created_timestamp = obj.getString("created_timestamp");
+		createdAt = new Date();
+		createdAt.setTime(Long.parseLong(created_timestamp));
+		
+		JSONObject messageCreate = obj.getJSONObject("message_create");
+		String senderId = messageCreate.getString("sender_id");
+		JSONObject target = messageCreate.getJSONObject("target");
+		String recipientId = target.getString("recipient_id");
+		sender = new User(users.getJSONObject(senderId), null);
+		recipient = new User(users.getJSONObject(recipientId), null);
+				
+		JSONObject messageData = messageCreate.getJSONObject("message_data");
+		text = messageData.getString("text");
+		JSONObject jsonEntities = obj.optJSONObject("entities");
+		if (jsonEntities != null) {
+			// Note: Twitter filters out dud @names
+			entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(KEntityType.class);
+			for (KEntityType type : KEntityType.values()) {
+				List<TweetEntity> es = TweetEntity.parse(this, text, type,	jsonEntities);
+				entities.put(type, es);
+			}
+		}
+		// TODO Parse attachment field????
 	}
 
 	/**
