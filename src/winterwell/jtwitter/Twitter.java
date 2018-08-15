@@ -2277,11 +2277,11 @@ public class Twitter implements Serializable {
 	 * @param envName
 	 * @return
 	 */
-	public Integer registerWebhook(String webhookUrl, String envName) throws Exception {
+	public BigInteger registerWebhook(String webhookUrl, String envName) throws Exception {
 		String endpointUrl = TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json";
 		String rawResponse = http.post(endpointUrl + "?url=" + WebUtils.urlEncode(webhookUrl), null, true);
 		JSONObject response = new JSONObject(rawResponse);
-		return response.getInt("id");
+		return new BigInteger(response.getString("id"));
 	}
 	
 	/**
@@ -2289,7 +2289,7 @@ public class Twitter implements Serializable {
 	 * @param webhookId The numeric ID of the webhook to delete
 	 * @param envName The name of the environment to remove the webhook from
 	 */
-	public void unregisterWebhook(Integer webhookId, String envName) throws TwitterException {
+	public void unregisterWebhook(BigInteger webhookId, String envName) throws TwitterException {
 		String endpointUrl = TWITTER_URL + "/account_activity/all/" + envName + "/webhooks/" + webhookId  + ".json";
 		http.delete(endpointUrl, true);
 		// Successful call returns HTTP 204 NO CONTENT - failure throws exception
@@ -2317,7 +2317,6 @@ public class Twitter implements Serializable {
 	
 	/**
 	 * Return the total number of account activity subscriptions on the specified environment.
-	 * TODO Parse response
 	 * @param envName
 	 * @return
 	 */
@@ -2326,12 +2325,13 @@ public class Twitter implements Serializable {
 			String accessToken = getAccessToken();
 			BearerAuthHttpClient baHttp = new BearerAuthHttpClient();
 			baHttp.setBearerToken(accessToken);
-			String result = baHttp.getPage(TWITTER_URL + "/account_activity/all/subscriptions/count.json", null, true);
-			System.out.println(result);
+			String rawResult = baHttp.getPage(TWITTER_URL + "/account_activity/all/subscriptions/count.json", null, true);
+			JSONObject result = new JSONObject(rawResult);
+			return result.getInt("subscriptions_count");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return -1;
+		return null;
 	}
 	
 	/**

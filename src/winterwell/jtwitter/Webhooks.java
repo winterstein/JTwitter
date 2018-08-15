@@ -142,6 +142,7 @@ public class Webhooks {
 			user_event = base.optJSONArray("user_event");
 			direct_message_indicate_typing_events = base.optJSONArray("direct_message_indicate_typing_events");
 			direct_message_mark_read_events = base.optJSONArray("direct_message_mark_read_events");
+			users = base.optJSONObject("users");
 		}
 	}
 }
