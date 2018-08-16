@@ -13,11 +13,11 @@ import com.winterwell.utils.Printer;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.TwitterException.E413;
-import com.winterwell.utils.time.TUnit;
 
 public class TwitterStreamTest {
 

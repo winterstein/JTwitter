@@ -1,6 +1,5 @@
 package winterwell.jtwitter;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,14 +15,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.winterwell.jgeoplanet.BoundingBox;
 import com.winterwell.jgeoplanet.IPlace;
@@ -31,6 +27,7 @@ import com.winterwell.jgeoplanet.Location;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
+import com.winterwell.utils.web.WebUtils;
 
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -38,7 +35,6 @@ import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
 import winterwell.jtwitter.ecosystem.TwitLonger;
 import winterwell.jtwitter.guts.Base64Encoder;
-import com.winterwell.utils.web.WebUtils;
 
 /**
  * Java wrapper for the Twitter API version {@value #version}
