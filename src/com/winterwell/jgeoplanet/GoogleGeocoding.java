@@ -12,6 +12,7 @@ import java.util.Map;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
+import com.winterwell.utils.web.WebUtilsTest;
 
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.TwitterException;

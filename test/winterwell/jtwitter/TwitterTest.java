@@ -26,6 +26,7 @@ import com.winterwell.json.JSONObject;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 
 import junit.framework.TestCase;
@@ -36,7 +37,6 @@ import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
-import com.winterwell.utils.time.TUnit;
 
 /**
  * Unit tests for JTwitter.

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.winterwell.jgeoplanet.BoundingBox;
-import com.winterwell.jgeoplanet.GoogleGeocoding;
 import com.winterwell.jgeoplanet.IGeoCode;
 import com.winterwell.jgeoplanet.IPlace;
 import com.winterwell.jgeoplanet.Location;

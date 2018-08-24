@@ -18,10 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import winterwell.jtwitter.InternalUtils;
-
-import java.util.Set;
 
 /**
  * ISO 3166 2-letter Uppercase Country Codes, e.g. "GB" for Britain
