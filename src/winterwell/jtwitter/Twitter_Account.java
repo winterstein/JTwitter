@@ -253,21 +253,20 @@ public class Twitter_Account {
 	 * 
 	 * NB: The API supports cropping, but we have not implemented this yet.
 	 * @param image
-	 * @return the updated user
+	 * @return Twitter just returns 201 CREATED if this is successful - the HTTP client will throw an exception if not.
 	 */
-	public User setProfileBanner(File image) {
+	public void setProfileBanner(File image) {
 		Map<String, String> vars = InternalUtils.asMap("banner",image);
 		String url = jtwit.TWITTER_URL+"/account/update_profile_banner.json";
-		String result = ((OAuthSignpostClient)jtwit.getHttpClient()).postMultipartForm(url, vars);
-		return InternalUtils.user(result);
+		((OAuthSignpostClient)jtwit.getHttpClient()).postMultipartForm(url, vars);
 	}
 
 	/**
+	 * See setProfileBanner - don't expect a useful response, just "OK" or error
 	 */
-	public User removeProfileBanner() {
+	public void removeProfileBanner() {
 		String url = jtwit.TWITTER_URL+"/account/remove_profile_banner.json";
-		String result = ((OAuthSignpostClient)jtwit.getHttpClient()).post(url, new HashMap(), true);
-		return InternalUtils.user(result);
+		((OAuthSignpostClient)jtwit.getHttpClient()).post(url, new HashMap(), true);
 	}
 
 	/**
