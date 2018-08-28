@@ -27,7 +27,6 @@ import com.winterwell.jgeoplanet.Location;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
-import com.winterwell.utils.web.WebUtils;
 
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -2275,7 +2274,7 @@ public class Twitter implements Serializable {
 	 */
 	public BigInteger registerWebhook(String webhookUrl, String envName) throws Exception {
 		String endpointUrl = TWITTER_URL + "/account_activity/all/" + envName + "/webhooks.json";
-		String rawResponse = http.post(endpointUrl + "?url=" + WebUtils.urlEncode(webhookUrl), null, true);
+		String rawResponse = http.post(endpointUrl + "?url=" + InternalUtils.urlEncode(webhookUrl), null, true);
 		JSONObject response = new JSONObject(rawResponse);
 		return new BigInteger(response.getString("id"));
 	}

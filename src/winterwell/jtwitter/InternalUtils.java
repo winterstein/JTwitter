@@ -419,6 +419,28 @@ public class InternalUtils {
 	}
 
 	/**
+	 * URL encode
+	 *
+	 * @param x
+	 *            can be null (returns ""). Will be turned into a String using
+	 *            String.valueOf()
+	 * @testedby WebUtilsTest#testUrlEncode()
+	 */
+	public static String urlEncode(String x) {
+		if (x == null)
+			return "";
+		String s = String.valueOf(x);
+		try {
+			s = URLEncoder.encode(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			s = URLEncoder.encode(s);
+		}
+		s = s.replace("+", "%20"); // + for " " seems to be out of date.
+//		s = s.replace("/", "%2F"); // Should we encode / eg to protect names in slugs? 
+		return s;
+	}
+	
+	/**
 	 * Convert to a URI, or return null if this is badly formatted
 	 */
 	static URI URI(String uri) {
