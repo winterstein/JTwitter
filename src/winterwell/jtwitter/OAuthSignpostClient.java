@@ -609,4 +609,8 @@ class SimpleOAuthConsumer extends AbstractOAuthConsumer {
 		return new HttpURLConnectionRequestAdapter(
 				(HttpURLConnection) request);
 	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 }
