@@ -148,15 +148,6 @@ public class BuildJTwitter extends BuildTask {
 			// oh well
 			Log.w("build", e);
 		}
-		try {
-			Twitter identica = new Twitter("jtwit", TwitterTest.TEST_PASSWORD);
-			identica.setAPIRootUrl("http://identi.ca/api");
-			identica.setStatus("Released a new version of JTwitter Java library: v"+Twitter.version
-					+" http://winterwell.com/software/jtwitter.php");
-		} catch(Exception ex) {
-			// oh well
-			Log.w("build", ex);
-		}
 		
 //		// copy in utils lib		??
 //		utils = new File(FileUtils.getWinterwellDir(), "code/lib/winterwell.utils.jar")
