@@ -10,6 +10,7 @@ import com.winterwell.bob.tasks.CopyTask;
 import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.tasks.JarTask;
 import com.winterwell.bob.tasks.JavaDocTask;
+import com.winterwell.bob.tasks.SCPTask;
 import com.winterwell.bob.tasks.ZipTask;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
@@ -133,6 +134,20 @@ public class BuildJTwitter extends BuildTask {
 			git.run();
 		} catch(Exception ex) {
 			ex.printStackTrace();
+		}
+		
+		// attempt to upload (copied from BuildWinterwellProject)
+		try {
+			String remoteJar = "/home/winterwell/public-software/"+getJar().getName();
+			SCPTask scp = new SCPTask(getJar(), "winterwell@winterwell.com",				
+					remoteJar);
+			// this is online at: https://www.winterwell.com/software/downloads
+			scp.setMkdirTask(false);
+//			scp.runInThread();
+			scp.run();
+			report.put("scp to remote", "winterwell.com:"+remoteJar);
+		} catch(Throwable ex) {
+			Log.i(LOGTAG, ex); // oh well
 		}
 		
 		// Tweet!
