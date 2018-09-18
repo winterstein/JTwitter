@@ -898,6 +898,9 @@ public class Twitter implements Serializable {
 	 */
 	public Twitter(Twitter jtwit) {
 		this(jtwit.getScreenName(), jtwit.http.copy());
+		this.accessToken = jtwit.accessToken;
+		this.appKey = jtwit.appKey;
+		this.appSecret = jtwit.appSecret;
 	}
 
 	/**

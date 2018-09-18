@@ -137,8 +137,9 @@ public class InternalUtils {
 	 * The date format used by Marko from Marakana. This is needed for *some*
 	 * installs of Status.Net, though not for Identi.ca.
 	 */
-	static final DateFormat dfMarko = new SimpleDateFormat(
-			"EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+	static final DateFormat dfMarko = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+	
+	static final DateFormat almost8601 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZZZ");
 
 	/**
 	 * Matches latitude, longitude, including with the UberTwitter UT: prefix
@@ -351,14 +352,20 @@ public class InternalUtils {
 		try {
 			Date _createdAt = new Date(c);
 			return _createdAt;
-		} catch (Exception e) { // Bug reported by Marakana with *some*
-								// Status.Net sites
-			try {
-				Date _createdAt = InternalUtils.dfMarko.parse(c);
-				return _createdAt;
-			} catch (ParseException e1) {
-				throw new TwitterException.Parsing(c, e1);
-			}
+		} catch (Exception e) { } 
+
+		// Seen when retrieving webhooks
+		try {
+			Date _createdAt = InternalUtils.almost8601.parse(c);
+			return _createdAt;
+		} catch (ParseException e) { }
+		
+		// Bug reported by Marakana with *some* Status.Net sites
+		try {
+			Date _createdAt = InternalUtils.dfMarko.parse(c);
+			return _createdAt;
+		} catch (ParseException e) {
+			throw new TwitterException.Parsing(c, e);
 		}
 	}
 
