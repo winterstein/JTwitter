@@ -739,17 +739,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		assert msgs.size() != 0;
 	}
 
-	/**
-	 * Test method for {@link winterwell.jtwitter.Twitter#getDirectMessagesSent()}.
-	 */
-	public void testGetDirectMessagesSent() {
-		Twitter tw = newTestTwitter();
-		List<Message> msgs = tw.getDirectMessagesSent();
-		for (Message message : msgs) {
-			assert message.getSender().equals(new User(TEST_USER));
-		}
-		assert msgs.size() != 0;
-	}
 
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getFeatured()}.
@@ -1001,28 +990,14 @@ extends TestCase // Comment out to remove the JUnit dependency
 		List<Message> mList1 = jtwit.getDirectMessages();
 		for (Message mess : mList1){
 			if (mess.toString().contains("" + salt)){
-				System.out.println("J1's DMs in : "+ mess);
-			}
-		}
-		
-		List<Message> mSentList1 = jtwit.getDirectMessagesSent();
-		for (Message mess : mSentList1){
-			if (mess.toString().contains("" + salt)){
-				System.out.println("J1's DMs sent : "+ mess);
+				System.out.println("J1's DMs sent/received : "+ mess);
 			}
 		}
 
 		List<Message> mList2 = jtwit2.getDirectMessages();
 		for (Message mess : mList2){
 			if (mess.toString().contains("" + salt)){
-				System.out.println("J2's DMs in : "+ mess);
-			}
-		}
-
-		List<Message> mSentList2 = jtwit2.getDirectMessagesSent();
-		for (Message mess : mSentList2){
-			if (mess.toString().contains("" + salt)) {
-				System.out.println("J2's DMs sent : "+ mess);
+				System.out.println("J2's DMs sent/received : "+ mess);
 			}
 		}
 		

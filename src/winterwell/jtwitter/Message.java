@@ -10,6 +10,7 @@ import java.util.List;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
+import com.winterwell.utils.containers.Pair;
 
 import winterwell.jtwitter.Twitter.ITweet;
 import winterwell.jtwitter.Twitter.KEntityType;
@@ -29,24 +30,7 @@ public final class Message implements ITweet {
 	public String getDisplayText() {
 		return Status.getDisplayText2(this);
 	}
-	
-	/**
-	 * 
-	 * @param json
-	 * @return
-	 * @throws TwitterException
-	 */
-	public static List<Message> getMessages(String json) throws TwitterException {
-		if (json.trim().equals(""))
-			return Collections.emptyList();
-		try {
-			JSONArray array = new JSONArray(json);
-			return getMessages(array);
-		} catch (JSONException e) {
-			throw new TwitterException.Parsing(json, e);
-		}
-	}
-	
+		
 	public static List<Message> getMessages(JSONArray array) {
 		List<Message> msgs = new ArrayList<Message>();
 		for (Object element : array) {
@@ -76,8 +60,10 @@ public final class Message implements ITweet {
 	private String location;
 
 	private Place place;
-	private final User recipient;
-	private final User sender;
+	private User recipient;
+	private User sender;
+	private final BigInteger recipientId;
+	private final BigInteger senderId;
 	public final String text;
 
 	/**
@@ -90,6 +76,9 @@ public final class Message implements ITweet {
 		this.recipient = null;
 		this.createdAt = null;
 		this.text = null;
+		this.senderId = BigInteger.valueOf(dummyUser.id);
+		this.recipientId = null;
+		
 	}
 	
 	/**
@@ -97,6 +86,7 @@ public final class Message implements ITweet {
 	 * @throws JSONException
 	 * @throws TwitterException
 	 */
+	/*
 	Message(JSONObject obj) throws JSONException, TwitterException {
 		String _id = obj.getString("id_str");
 		id = new BigInteger(_id==null? ""+obj.get("id") : _id);
@@ -136,29 +126,27 @@ public final class Message implements ITweet {
 			place = (Place) _locn;
 		}
 	}
+	*/
 	
 	/**
 	 * Parse a Message from the format we get from webhooks and GET direct_messages/etc
-	 * @param obj The message object
-	 * @param users Map from numeric user IDs to user JSON
+	 * @param event The message object
 	 */
-	public Message(JSONObject obj, JSONObject users) {
-		String _id = obj.getString("id");
+	public Message(JSONObject event) {
+		String _id = event.getString("id");
 		id = new BigInteger(_id);
-		String created_timestamp = obj.getString("created_timestamp");
+		String created_timestamp = event.getString("created_timestamp");
 		createdAt = new Date();
 		createdAt.setTime(Long.parseLong(created_timestamp));
 		
-		JSONObject messageCreate = obj.getJSONObject("message_create");
-		String senderId = messageCreate.getString("sender_id");
+		JSONObject messageCreate = event.getJSONObject("message_create");
+		senderId = new BigInteger(messageCreate.getString("sender_id"));
 		JSONObject target = messageCreate.getJSONObject("target");
-		String recipientId = target.getString("recipient_id");
-		sender = new User(users.getJSONObject(senderId), null);
-		recipient = new User(users.getJSONObject(recipientId), null);
+		recipientId = new BigInteger(target.getString("recipient_id"));
 				
 		JSONObject messageData = messageCreate.getJSONObject("message_data");
 		text = messageData.getString("text");
-		JSONObject jsonEntities = obj.optJSONObject("entities");
+		JSONObject jsonEntities = event.optJSONObject("entities");
 		if (jsonEntities != null) {
 			// Note: Twitter filters out dud @names
 			entities = new EnumMap<Twitter.KEntityType, List<TweetEntity>>(KEntityType.class);
@@ -167,8 +155,28 @@ public final class Message implements ITweet {
 				entities.put(type, es);
 			}
 		}
-		// TODO Parse attachment field????
+		// TODO Parse attachment field??
 	}
+	
+	/**
+	 * Set up sender/recipient full objects
+	 * @param users Map from numeric user IDs to user JSON (delivered in webhooks update)
+	 */
+	public void setPeople(JSONObject users) {
+		sender = new User(users.getJSONObject(senderId.toString()), null);
+		recipient = new User(users.getJSONObject(recipientId.toString()), null);
+	}
+	
+	/**
+	 * Set up sender/recipient full objects
+	 * @param sender
+	 * @param recipient
+	 */
+	public void setPeople(User sender, User recipient) {
+		this.sender = sender;
+		this.recipient = recipient;
+	}
+	
 
 	/**
 	 * Tests by class=Message and tweet id number
@@ -225,6 +233,14 @@ public final class Message implements ITweet {
 
 	public User getSender() {
 		return sender;
+	}
+	
+	public Number getSenderId() {
+		return senderId;
+	}
+
+	public Number getRecipientId() {
+		return recipientId;
 	}
 
 	@Override

@@ -257,6 +257,9 @@ public class Twitter implements Serializable {
 		String post(String uri, Map<String, String> vars, boolean authenticate)
 				throws TwitterException;
 		
+		String postJSON(String uri, JSONObject body, boolean authenticate)
+				throws TwitterException;
+		
 		/**
 		 * Send an HTTP DELETE request and return the response body.
 		 * 
@@ -283,6 +286,24 @@ public class Twitter implements Serializable {
 		 */
 		HttpURLConnection post2_connect(String uri, Map<String, String> vars)
 				throws Exception;
+		
+		/**
+		 * Lower-level POST method - stringifies JSON body instead of encoding vars
+		 * @param uri
+		 * @param body
+		 * @return a freshly opened authorised connection
+		 * @throws TwitterException
+		 */
+		HttpURLConnection post2_connect(String uri, JSONObject body) throws Exception;
+		
+		/**
+		 * Lower-level POST method - takes raw string for body
+		 * @param uri
+		 * @param payload
+		 * @return a freshly opened authorised connection
+		 * @throws TwitterException
+		 */
+		HttpURLConnection post2_connect(String uri, String payload) throws Exception;
 
 		/**
 		 * Set the timeout for a single get/post request. This is an optional
@@ -686,7 +707,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.6.7";
+	public final static String version = "3.7.0";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -1165,12 +1186,10 @@ public class Twitter implements Serializable {
 	 */
 	public Message getDirectMessage(Number id) {
 		
-		boolean auth = InternalUtils.authoriseIn11(this);		
-		
+		boolean auth = InternalUtils.authoriseIn11(this);
 		
 		Map vars = InternalUtils.asMap("id", id);
-		String json = http.getPage(TWITTER_URL + "/statuses/show/" + id
-				+ ".json", vars, auth);
+		String json = http.getPage(TWITTER_URL + "/direct_messages/events/show.json", vars, auth);
 		try {
 			Message message = new Message(new JSONObject(json));
 			return message;
@@ -1181,23 +1200,15 @@ public class Twitter implements Serializable {
 	
 	
 	/**
-	 * Returns a list of the direct messages sent to the authenticating user.
+	 * Returns a list of the direct messages to AND from the authenticating user.
 	 * <p>
 	 * Note: the Twitter API makes this available in rss if that's of interest.
 	 */
 	public List<Message> getDirectMessages() {
 		InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+"...");
-		return getMessages(TWITTER_URL + "/direct_messages.json",
-				standardishParameters());
+		return getMessages(standardishParameters());
 	}
 
-	/**
-	 * Returns a list of the direct messages sent *by* the authenticating user.
-	 */
-	public List<Message> getDirectMessagesSent() {
-		return getMessages(TWITTER_URL + "/direct_messages/sent.json",
-				standardishParameters());
-	}
 
 	/**
 	 * The most recent 20 favourite tweets. (Note: This can use page - and page
@@ -1459,50 +1470,67 @@ public class Twitter implements Serializable {
 	/**
 	 * 
 	 * @param url
-	 * @param var
+	 * @param vars
 	 * @param isPublic
 	 *            Value to set for Message.isPublic
 	 * @return
 	 */
-	private List<Message> getMessages(String url, Map<String, String> var) {
+	private List<Message> getMessages(Map<String, String> vars) {
+		String url = TWITTER_URL + "/direct_messages/events/list.json";
+				
 		// Twitter truncates DMs to 140 chars to maintain compatibility with older apps
-		// Add param "full_text=true" to query to get full text
-		if(!var.containsKey("full_text")) {
-			var.put("full_text", "true");
+		// Add param "full_text=true" to query to get full text, unless already set
+		if(!vars.containsKey("full_text")) {
+			vars.put("full_text", "true");
 		}
+		
+		
+		/*
+		if (json.trim().equals(""))
+			return Collections.emptyList();
+		try {
+			JSONArray array = new JSONArray(json);
+			return getMessages(array);
+		} catch (JSONException e) {
+			throw new TwitterException.Parsing(json, e);
+		}
+		*/
+		
+		
 		// Default: 1 page
 		if (maxResults < 1) {			
-			String p = http.getPage(url, var, true);
-			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
-			if (url.contains("direct_messages")) {
-				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var);
+			String json = http.getPage(url, vars, true);
+			JSONObject response = new JSONObject(json);
+			JSONArray events = response.optJSONArray("events");
+			if (events == null || events.length() == 0) {
+				return new ArrayList<Message>();
 			}
-			List<Message> msgs = Message.getMessages(p);
+			List<Message> msgs = Message.getMessages(events);
 			msgs = dateFilter(msgs);
 			return msgs;
 		}
+		
 		// Fetch all pages until we run out
 		// -- or Twitter complains in which case you'll get an exception
-		BigInteger maxId = untilId;
+		String nextCursor = null;
 		List<Message> msgs = new ArrayList<Message>();
 		while (msgs.size() <= maxResults) {
-			// DEBUG Investigating slow delivery to coopbankuk_help TODO delete
-			if (url.contains("direct_messages")) {
-				InternalUtils.log("jtwitter.dm", "as:"+getScreenNameIfKnown()+" "+url+" "+var+" already-got:"+msgs.size());
-			}
-			String p = http.getPage(url, var, true);
-			List<Message> nextpage = Message.getMessages(p);
-			// Next page must start strictly before this one
-			maxId = InternalUtils.getMinId(maxId, nextpage);
-			List<Message> nextpageDateFiltered = dateFilter(nextpage);
-			msgs.addAll(nextpageDateFiltered); 
-			if (nextpage.size() < 20) {
+			String json = http.getPage(url, vars, true);
+			JSONObject response = new JSONObject(json);
+			JSONArray events = response.optJSONArray("events");
+			nextCursor = response.optString("next_cursor");
+			
+			List<Message> page = Message.getMessages(events);
+			
+			List<Message> pageDateFiltered = dateFilter(page);
+			msgs.addAll(pageDateFiltered); 
+			if (nextCursor == null || nextCursor.isEmpty()) {
 				// No more results to get
 				break;
 			}	
 			// TODO Can we stop early if the date-filter kicked in?
-			// Twitter goes most-recent-first, so we could stop now if the sinceDate was actively filtering. 
-			var.put("max_id", maxId.toString());
+			// Twitter goes most-recent-first, so we could stop now if the sinceDate was actively filtering.
+			vars.put("cursor", nextCursor);
 		}
 		return msgs;
 	}
@@ -2179,6 +2207,16 @@ public class Twitter implements Serializable {
 		String page = http.post(uri, vars, authenticate);
 		return page;
 	}
+	
+	
+	/**
+	 * Wrapper for {@link IHttpClient#postJSON(String, JSONOBject, boolean)}.
+	 */
+	private String postJSON(String uri, JSONObject body,
+			boolean authenticate) throws TwitterException {
+		String page = http.postJSON(uri, body, authenticate);
+		return page;
+	}
 
 	/**
 	 * Report a user for being a spammer.
@@ -2543,7 +2581,7 @@ public class Twitter implements Serializable {
 	 * Sends a new direct message (DM) to the specified user from the
 	 * authenticating user. This is a private message!
 	 * 
-	 * @param recipient
+	 * @param recipientId
 	 *            Required. The screen name of the recipient user. This does *not* start with an "@".
 	 * @param text
 	 *            Required. The text of your direct message. Keep it under 140
@@ -2553,37 +2591,53 @@ public class Twitter implements Serializable {
 	 *             if the recipient is not following you. (you can \@mention
 	 *             anyone but you can only dm people who follow you).
 	 */
-	public Message sendMessage(String recipient, String text) throws TwitterException {		
-		assert recipient != null && text != null : recipient + " " + text;
-		assert ! text.startsWith("d " + recipient) : recipient + " " + text;
-		assert ! recipient.startsWith("@") : recipient + " " + text;
+	public Message sendMessage(String recipientId, String text) throws TwitterException {		
+		assert recipientId != null && text != null : recipientId + " " + text;
+		assert ! text.startsWith("d " + recipientId) : recipientId + " " + text;
+		assert ! recipientId.startsWith("@") : recipientId + " " + text;
 		if (text.length() > MAX_DM_LENGTH)
 			throw new IllegalArgumentException("Message is too long.");
-		Map<String, String> vars = InternalUtils.asMap(
-				"screen_name", recipient,
-				"text", text);
-		if (tweetEntities) {
-			vars.put("include_entities", "1");
-		}
+
+		JSONObject body = makeMessageObject(recipientId, text);
+		
 		String result = null;
 		try {
 			// post it
-			result = post(TWITTER_URL + "/direct_messages/new.json", vars, true);
+			result = postJSON(TWITTER_URL + "/direct_messages/events/new.json", body, true);
+			JSONObject msgObject = new JSONObject(result);
+			JSONObject event = msgObject.getJSONObject("event");
+			Message msg = new Message(event);
 			// sadly the response doesn't include rate-limit info
-			return new Message(new JSONObject(result));
+			return msg;
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(result, e);
 		} catch(TwitterException.E403 e) {
 			// repeated DMs get a 403
 			if (e.getMessage()!=null && e.getMessage().startsWith("code 151:")) {
-				throw new TwitterException.Repetition("DM "+recipient+" "+text+" Error:"+e);
+				throw new TwitterException.Repetition("DM "+recipientId+" "+text+" Error:"+e);
 			}
 			throw e;
 		} catch (TwitterException.E404 e) {
 			// Probably a suspended user. But could be a rename or a delete.
 			throw new TwitterException.MissingUser(e.getMessage() + " with recipient="
-					+ recipient + ", text=" + text);
+					+ recipientId + ", text=" + text);
 		}
+	}
+	
+	private JSONObject makeMessageObject(String recipientId, String text) {
+		JSONObject target = new JSONObject();
+		target.put("recipient_id", recipientId);
+		JSONObject messageData = new JSONObject();
+		messageData.put("text", text);
+		JSONObject messageCreate = new JSONObject();
+		messageCreate.put("target", target);
+		messageCreate.put("message_data", messageData);
+		JSONObject event = new JSONObject();
+		event.put("message_create", messageCreate);
+		event.put("type", "message_create");
+		JSONObject object = new JSONObject();
+		object.put("event", event);
+		return object;
 	}
 
 	/**

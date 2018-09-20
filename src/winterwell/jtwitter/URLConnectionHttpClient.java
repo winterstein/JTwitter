@@ -394,7 +394,39 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throw getPage2_ex(e, uri);
 		}
 	}
+	
+	
+	public final String postJSON(String uri, JSONObject body, boolean authenticate) {
+		RateLimit.count(uri);
+		try {
+			// do the actual work
+			String json = post2(uri, body, authenticate);
+			// ?? Test for and treat html as an error??
+			return json;
+		} catch (TwitterException.E50X e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return post2(uri, body, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (SocketTimeoutException e) {
+			if ( ! retryOnError) throw getPage2_ex(e, uri);
+			try {
+				// wait half a second before retrying
+				Thread.sleep(500);
+				return post2(uri, body, authenticate);
+			} catch (Exception e2) {
+				throw getPage2_ex(e, uri);
+			}
+		} catch (Exception e) {
+			throw getPage2_ex(e, uri);
+		}
+	}
 
+	
 	private String post2(String uri, Map<String, String> vars,
 			boolean authenticate) throws Exception 
 	{
@@ -410,10 +442,40 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			disconnect(connection);
 		}
 	}
+	
+	private String post2(String uri, JSONObject body, boolean authenticate) throws Exception 
+	{
+		// this.postVars = vars;
+		HttpURLConnection connection = null;
+		try {
+			connection = post2_connect(uri, body);
+			// Get the response
+			String response = InternalUtils.read(connection.getInputStream());
+			return response;
+		} finally {
+			disconnect(connection);
+		}
+	}
 
 	@Override
 	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
 			throws Exception 
+	{
+		// build the post body
+		String payload = post2_getPayload(vars);
+		return post2_connect(uri, payload);
+	}
+	
+	@Override
+	public HttpURLConnection post2_connect(String uri, JSONObject body) throws Exception 
+	{
+		// build the post body
+		String payload = body.toString();
+		return post2_connect(uri, payload);
+	}
+	
+	@Override
+	public HttpURLConnection post2_connect(String uri, String payload) throws Exception 
 	{
 		String resource = checkRateLimit(uri);
 		RateLimit.count(uri);
@@ -428,8 +490,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 				"application/x-www-form-urlencoded");
 		connection.setReadTimeout(timeout);
 		connection.setConnectTimeout(timeout);
-		// build the post body
-		String payload = post2_getPayload(vars);
+
+		
 		connection.setRequestProperty("Content-Length", "" + payload.length());
 		OutputStream os = connection.getOutputStream();
 		os.write(payload.getBytes());
@@ -440,6 +502,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 		return connection;
 	}
 
+	
 	protected String checkRateLimit(String url) {
 		String resource = RateLimit.getResource(url);
 		RateLimit limit = rateLimits.get(resource);

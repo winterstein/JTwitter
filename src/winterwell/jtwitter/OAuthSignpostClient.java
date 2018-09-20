@@ -16,6 +16,8 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.winterwell.json.JSONObject;
+
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.AbstractOAuthProvider;
 import oauth.signpost.OAuthConsumer;
@@ -444,18 +446,28 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 
 	@Override
 	public HttpURLConnection post2_connect(String uri, Map<String, String> vars)
-			throws IOException, OAuthException 
-	{
+			throws IOException, OAuthException {
+		final String payload = post2_getPayload(vars);
+		return post2_connect(uri, payload, "application/x-www-form-urlencoded");
+	}
+	
+	@Override
+	public HttpURLConnection post2_connect(String uri, JSONObject body) throws IOException, OAuthException {
+		final String payload = body.toString();
+		return post2_connect(uri, payload, "application/json");
+	}
+	
+	
+	private HttpURLConnection post2_connect(String uri, String payload, String contentType) throws IOException, OAuthException {
 		String resource = checkRateLimit(uri);
 		HttpURLConnection connection = (HttpURLConnection) new URL(uri)
 				.openConnection();
 		connection.setRequestMethod("POST");
 		connection.setDoOutput(true);
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded");
+		connection.setRequestProperty("Content-Type", contentType);
 		connection.setReadTimeout(timeout);
 		connection.setConnectTimeout(timeout);
-		final String payload = post2_getPayload(vars);
+		
 		// needed for OAuthConsumer.collectBodyParameters() not to get upset
 		HttpURLConnectionRequestAdapter wrapped = new HttpURLConnectionRequestAdapter(
 				connection) {
@@ -467,7 +479,8 @@ public class OAuthSignpostClient extends URLConnectionHttpClient implements
 			}
 		};
 		// safetyCheck();
-		consumer.sign(wrapped);
+		consumer.sign(wrapped);	
+		
 
 		// add the payload
 		OutputStream os = connection.getOutputStream();
