@@ -1,5 +1,9 @@
 # JTwitter Change list 
 
+3.7.1
+ - Fix bug where pre-emptive rate-limiting applies one shared rate to all /direct_messages/events/* endpoints
+ - Save calls by stopping requests for more DMs from /direct_messages/events/list.json when "since" limit reached
+
 3.7.0:
  - Support for 2018-09-17 changes to DM API
 
