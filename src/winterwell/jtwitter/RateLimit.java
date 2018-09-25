@@ -178,9 +178,21 @@ public final class RateLimit {
 		}
 		int s = Twitter.DEFAULT_TWITTER_URL.length();
 		int e = url.indexOf(".json", s);
-		if (e==-1) return null;
+		if (e == -1) return null;
+		
+		// New DM API has 3-bit paths, all sharing same first 2 bits
+		// Preserve all 3 bits to differentiate them so we don't record
+		// "show" calls using up the same limit as "new" and incorrectly
+		// apply pre-emptive rate-limiting
+		if (url.substring(s,e).startsWith(Twitter.DM_BASE_ENDPOINT)){
+			// show/delete DM urls no longer have the form "/show/654684684354.json"
+			// ID is given as a query param instead - eg "/show.json?id=654684684354
+			// so we don't need special parsing to exclude it
+			return url.substring(s,e);
+		}
+		
 		int e1 = url.indexOf("/", s+1);
-		if (e1==-1 || e1 > e) {			
+		if (e1 == -1 || e1 > e) {
 			return url.substring(s, e);
 		}
 		int e2 = url.indexOf("/", e1+1);

@@ -726,6 +726,8 @@ public class Twitter implements Serializable {
 	 * Uploaded media files will be available for use for 60 minutes before they are flushed from the servers (if not associated with a Tweet or Card).
 	 */
 	static final String MEDIA_UPLOAD_ENDPOINT = "/media/upload.json";
+	
+	static final String DM_BASE_ENDPOINT = "/direct_messages/events";
 
 	public static int MAX_DM_LENGTH = 10000;
 
@@ -1084,9 +1086,7 @@ public class Twitter implements Serializable {
 	 * @param dm
 	 */
 	private void destroyMessage(Message dm) {
-		String page = post(TWITTER_URL + "/direct_messages/destroy/" + dm.id
-				+ ".json", null, true);
-		assert page != null;
+		destroyMessage(dm.id);
 	}
 
 	/**
@@ -1096,8 +1096,9 @@ public class Twitter implements Serializable {
 	 * @see #destroy(ITweet)
 	 */
 	public void destroyMessage(Number id) {
-		String page = post(TWITTER_URL + "/direct_messages/destroy/" + id
-				+ ".json", null, true);
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("id", id.toString());
+		String page = post(TWITTER_URL + DM_BASE_ENDPOINT + "/destroy.json", vars, true);
 		assert page != null;
 	}
 
@@ -1189,7 +1190,7 @@ public class Twitter implements Serializable {
 		boolean auth = InternalUtils.authoriseIn11(this);
 		
 		Map vars = InternalUtils.asMap("id", id);
-		String json = http.getPage(TWITTER_URL + "/direct_messages/events/show.json", vars, auth);
+		String json = http.getPage(TWITTER_URL + DM_BASE_ENDPOINT + "/show.json", vars, auth);
 		try {
 			Message message = new Message(new JSONObject(json));
 			return message;
@@ -1476,7 +1477,7 @@ public class Twitter implements Serializable {
 	 * @return
 	 */
 	private List<Message> getMessages(Map<String, String> vars) {
-		String url = TWITTER_URL + "/direct_messages/events/list.json";
+		String url = TWITTER_URL + DM_BASE_ENDPOINT + "/list.json";
 				
 		// Twitter truncates DMs to 140 chars to maintain compatibility with older apps
 		// Add param "full_text=true" to query to get full text, unless already set
@@ -1523,13 +1524,19 @@ public class Twitter implements Serializable {
 			List<Message> page = Message.getMessages(events);
 			
 			List<Message> pageDateFiltered = dateFilter(page);
-			msgs.addAll(pageDateFiltered); 
-			if (nextCursor == null || nextCursor.isEmpty()) {
-				// No more results to get
+			
+			if (pageDateFiltered.isEmpty()) {
+				// Results are sorted newest first - we've got everything we came for so stop
 				break;
-			}	
-			// TODO Can we stop early if the date-filter kicked in?
-			// Twitter goes most-recent-first, so we could stop now if the sinceDate was actively filtering.
+			}
+			
+			msgs.addAll(pageDateFiltered);
+			
+			if (nextCursor == null || nextCursor.isEmpty()) {
+				// no more messages to retrieve in the last 30 days
+				break;
+			}
+			
 			vars.put("cursor", nextCursor);
 		}
 		return msgs;
@@ -2603,7 +2610,7 @@ public class Twitter implements Serializable {
 		String result = null;
 		try {
 			// post it
-			result = postJSON(TWITTER_URL + "/direct_messages/events/new.json", body, true);
+			result = postJSON(TWITTER_URL + DM_BASE_ENDPOINT + "/new.json", body, true);
 			JSONObject msgObject = new JSONObject(result);
 			JSONObject event = msgObject.getJSONObject("event");
 			Message msg = new Message(event);
