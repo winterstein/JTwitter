@@ -4,7 +4,7 @@ import com.winterwell.bob.BuildTask;
 import com.winterwell.bob.tasks.JarTask;
 
 
-public class BuildDummyAndroid extends BuildTask {
+public class MakeDummyAndroidJar extends BuildTask {
 
 	@Override
 	protected void doTask() throws Exception {

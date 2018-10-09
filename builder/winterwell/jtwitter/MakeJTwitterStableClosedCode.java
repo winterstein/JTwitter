@@ -1,3 +1,4 @@
+package winterwell.jtwitter;
 //package winterwell.jtwitter;
 //import java.io.File;
 //import java.util.Arrays;
@@ -24,7 +25,7 @@
 // * @author daniel
 // *
 // */
-//public class BuildJTwitterStableClosedCode extends BuildTask {
+//public class MakeJTwitterStableClosedCode extends BuildTask {
 //
 //	
 //	private File base;
