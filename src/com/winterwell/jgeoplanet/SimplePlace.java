@@ -109,7 +109,7 @@ public class SimplePlace implements IPlace, Serializable {
 	 * @param country Can be null. For preference, use the ISO3166 2-letter code.
 	 */
 	public SimplePlace(String name, BoundingBox bbox, String country) {
-		assert ! (name==null && bbox==null && country==null);
+		if (name==null && bbox==null && country==null) throw new NullPointerException("all null place");
 		this.name = name;
 		this.bbox = bbox;
 		this.country = country;
