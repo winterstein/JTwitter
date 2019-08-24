@@ -27,6 +27,8 @@ import com.winterwell.jgeoplanet.Location;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
+import com.winterwell.utils.MathUtils;
+import com.winterwell.utils.StrUtils;
 
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -707,7 +709,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.7.1";
+	public final static String version = "3.7.2";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -3244,24 +3246,35 @@ public class Twitter implements Serializable {
 		if (sourceApp != null) {
 			vars.put("source", sourceApp);
 		}
-		if (inReplyToStatusId != null) {
-			// TODO remove this legacy check
-			double v = inReplyToStatusId.doubleValue();
-			assert v != 0 && v != -1;
+		if (inReplyToStatusId != null) {			
 			vars.put("in_reply_to_status_id", inReplyToStatusId.toString());
-			if (this.autoPopulateReplyMetadata) {
-				vars.put("auto_populate_reply_metadata", "true");
-				if (excludeReplyIds != null && !excludeReplyIds.isEmpty()) {
-					String excludes = excludeReplyIds.toString().replaceAll("[\\[\\]\\s]", "");
-					vars.put("exclude_reply_user_ids", excludes);
-				}
-			}
+			updateStatus3_vars2_autopop(vars, excludeReplyIds);
 		}
 		// If we're making a long post, we want to get the full text back!
 		if (extendedMode) {
 			vars.put("tweet_mode", "extended");
 		}
 		return vars;
+	}
+
+	void updateStatus3_vars2_autopop(Map<String, String> vars, List<Number> excludeReplyIds) {		
+		if ( ! this.autoPopulateReplyMetadata)  return;
+		vars.put("auto_populate_reply_metadata", "true");		
+		if (excludeReplyIds != null && ! excludeReplyIds.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			// NB: safety check exclude IDs		
+			for(Object exc : excludeReplyIds) {
+				int exn = (int) MathUtils.getNumber(exc);
+				if (exn<1) {
+					InternalUtils.log("jtwitter.error", "(skip) Invalid exclude_reply_user_ids ID: "+exc);
+					continue;
+				}
+				sb.append(exn);
+				sb.append(",");
+			}
+			StrUtils.pop(sb, 1);
+			vars.put("exclude_reply_user_ids", sb.toString());
+		}		
 	}
 
 //	/**
