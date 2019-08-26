@@ -48,6 +48,20 @@ import winterwell.jtwitter.TwitterException.E404;
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
 {	
+
+	/**
+	 * Bug seen with Kolbi Aug 2019
+	 */
+	public void testExcludeIDsBug() {
+		Twitter jtwit = newTestTwitter();
+		Map vars = new HashMap();
+		List excludeReplyIds = Arrays.asList(0, 187567, 2.3, "@winterstein", "12");
+		jtwit.updateStatus3_vars2_autopop(vars, excludeReplyIds);
+		String exc = (String) vars.get("exclude_reply_user_ids");
+		assert exc.contains("187567");
+		assert exc.contains("2");
+		assert ! exc.contains("winter");
+	}
 	
 	public void testQuotedRetweet() {
 		Twitter jtwit = newTestTwitter();
