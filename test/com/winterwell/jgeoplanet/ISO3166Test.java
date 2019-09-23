@@ -5,6 +5,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.winterwell.utils.io.SysOutCollectorStream;
+
 public class ISO3166Test {
 
 
@@ -32,6 +34,13 @@ public class ISO3166Test {
 		
 		assert iso.getName("SY").startsWith("Syrian") : iso.getName("SY");
 		System.out.println(iso.getName("NO"));
+	}
+	
+	@Test
+	public void testAFew() {
+		ISO3166 iso = new ISO3166();
+		assert iso.getCountryCode("United Kingdom").equals("GB");
+		assert iso.getCountryCode("USA").equals("US");
 	}
 	
 	@Test
