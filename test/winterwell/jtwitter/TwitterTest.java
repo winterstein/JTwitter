@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +39,45 @@ import winterwell.jtwitter.Twitter.KRequestType;
 import winterwell.jtwitter.Twitter.TweetEntity;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
+
+/*
+RM NOTES TO SELF 2019-10-17
+
+DONE testUpdateStatusSpecialChars: added salt against repetition error
+WONTFIX testIdenticaAccess: The identi.ca API is not what it used to be.
+testBigVideoUpload: can't find big video file
+DONE testUpdateStatusLength: needs big rework for DRY & 280 but was comparing BigInteger with ==
+
+DONE testFriendIDs: buncha deprecated shit, big refactor on isFollower
+DONE testCanSend160: salted tweet string so sequential tests don't fail
+DONE testSendMessage: sendMessage needs user id now
+testLargerVideoUpload: video file path specific to DW's computer
+
+testUpdateStatusUnicode: message text salt, was comparing BigInteger IDs with ==
+DONE testGetUserTimelineString: was using @anonpoetry which has deleted all its tweets, switched to @berkherkson
+testSmallShortVideoUpload: video file path specific to DW's computer
+testDoesBeckiFollowCoop: @coopbankuk_help doesn't exist any more
+WONTFIX testIdentica: The identi.ca API is not what it used to be.
+
+testStopFollowing: doesn't return null for stop following not-followed user, may be not-a-bug
+testReQuote: Repetition error, needs salt
+testRetweet: Repetition error, needs salt or un-RT
+testGetDirectMessages: NPE as recipient of at least one message is null
+testSendMention2: Tries to retrieve messages using search but doesn't wait long enough
+WONTFIX testIssue4280: @samdaat doesn't exist, fuck this test
+DONE testFollowerIds: refactor, see testFriendIds
+WONTFIX testMarakana: not a thing
+testPostToTwitterWithMedia: bad test file paths
+testGetUserTimelineWithRetweets: RTs @stephenfry for test, fails on sequential runs. un-rt
+testGetSetFavorite: "no status found with that ID" at first call to twitter.setFavorite, debug test
+testRepetitionRetweet
+
+DONE testSendMessageToSelf: see testSendMessage
+testGetStatusLong: ntwanano has deleted 236109584417292288
+testGetDupeLinks: whoever tweeted 220406085545242624 is suspended
+testDirectMessage2: DMs don't take @ on username
+WONTFIX testAuthUser: not authing that lol
+*/
 
 /**
  * Unit tests for JTwitter.
@@ -226,7 +267,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	/**
 	 * A random user who protects their tweets.
 	 */
-	static String PROTECTED_USER = "laurajarvis_";
+	static String PROTECTED_USER = "berkprivate";
 	
 	/**
 	 * Location + OR = Twitter API fail -- July 2011
@@ -614,14 +655,16 @@ extends TestCase // Comment out to remove the JUnit dependency
 	/**
 	 * Check that you can send 160 chars if you wants.
 	 * Nope: it's 140 now
+	 * ...and now it's 280
+	 * Added a salt so consecutive tests don't cause repetition error
 	 */
 	public void testCanSend160() {
-		String s = "";
-		Twitter tw = newTestTwitter();		
-		for(int i=0; i<14; i++) {
-			s += (i%10)+"23456789 ";			
+		String s = Double.toString(Math.random()).substring(2, 12); // start with a random 10 digit salt
+		Twitter tw = newTestTwitter();
+		for (int i = 0; i < 28; i++) {
 			tw.setStatus(s);
-			System.out.println("SENT "+s.length());
+			System.out.println("SENT " + s.length());
+			s += " " + (i % 10) + "23456789";
 		}				
 	}
 
@@ -692,7 +735,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			// user id = 33036740 is causing the problem
 			// possibly to do with protected updates?
 			try {
-				assert tw.users().isFollower(id.toString(), TEST_USER) : id;
+				assert tw.users().isFollower(id, TEST_USER) : id;
 			} catch (E403 e) {
 				// this seems to be a corner issue with Twitter's API rather than a bug in JTwitter
 				System.out.println(id+" "+e);
@@ -721,16 +764,17 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testFriendIDs() {
 		Twitter tw = newTestTwitter();
-		List<Number> ids = tw.getFriendIDs();
+		Twitter_Users users = tw.users();
+		List<Number> ids = users.getFriendIDs(); // tw.getFriendIDs();
 		for (Number id : ids) {
 			try {
-				assert tw.isFollower(TEST_USER, id.toString());
+				assert users.isFollower(TEST_USER, id); // tw.isFollower(TEST_USER, id.toString());
 			} catch (E403 e) {
 				// ignore
 				e.printStackTrace();
 			}
 		}
-		List<Number> ids2 = tw.getFriendIDs(TEST_USER);
+		List<Number> ids2 = users.getFriendIDs(TEST_USER); //tw.getFriendIDs(TEST_USER);
 		assert ids.equals(ids2);
 	}
 
@@ -985,7 +1029,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 			// This fails, you can't get mentions this way.
 			assert success == 0 : success;
 		}
-		
 	}
 	/**
 	 * This tests two users pinging DMs at each other, it seems to work fine.
@@ -998,8 +1041,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 		String timeStr = (time.getHour()+1) + " " + time.getMinutes() + " " + time.getSeconds();
 		int salt = new Random().nextInt(100000);
 		String messageText = "Dee EMM!" + salt;
-		jtwit.sendMessage("@"+jtwit2.getSelf().screenName, messageText + " I'm jtwit " + time);
-		jtwit2.sendMessage("@"+jtwit.getSelf().screenName, messageText + " I'm jtwittest2 " + time);
+		jtwit.sendMessage(jtwit2.getSelf().id, messageText + " I'm jtwit " + time);
+		jtwit2.sendMessage(jtwit.getSelf().id, messageText + " I'm jtwittest2 " + time);
 		Thread.sleep(10000);
 		List<Message> mList1 = jtwit.getDirectMessages();
 		for (Message mess : mList1){
@@ -1151,7 +1194,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testGetUserTimelineString() {
 		Twitter tw = newTestTwitter();
-		List<Status> ns = tw.getUserTimeline("anonpoetry");
+		// changed user from "anonpoetry" as they've deleted all their tweets
+		List<Status> ns = tw.getUserTimeline("berkherkson");
 		System.out.println(ns.get(0));
 	}
 
@@ -1436,7 +1480,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			System.out.println(wchars);
 		}
 		{
-			Status wchars = tw.updateStatus("Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩");
+			Status wchars = tw.updateStatus("Unicode rocks! ¡sʞɔoᴚ ǝpoɔıu∩" + salt);
 			System.out.println(wchars);
 		}
 	}
@@ -1510,7 +1554,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s.trim()) : s2b.text;
-			assert s2a.id == s2b.id : s2a.id+" != "+s2b.id;
+			assert s2a.id.equals(s2b.id) : s2a.id+" != "+s2b.id;
 		}
 		{	// 130
 			String s = salt;
@@ -1523,7 +1567,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.id.equals(s2b.id);
 		}
 		{	// 140
 			String s = salt;
@@ -1536,7 +1580,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.id.equals(s2b.id);
 		}
 		// uncomment if you wish to test longer statuses
 		if (true) return;
@@ -1551,7 +1595,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.id.equals(s2b.id);
 		}
 		{	// 160
 			String s = salt;
@@ -1564,7 +1608,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.id.equals(s2b.id);
 		}
 		{	// 170
 			String s = salt;
@@ -1577,7 +1621,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status s2a = tw.updateStatus(s);
 			Status s2b = tw.getStatus();
 			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.id.equals(s2b.id);
 		}
 
 	}
@@ -1593,33 +1637,36 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	public void testUpdateStatusUnicode() {
 		Twitter tw = newTestTwitter();
+		
+		String salt = Integer.toString(new Random().nextInt(1000));
+		String s1 = "Katten är hemma. Hur mår du? お元気ですか " + salt;
+		String s2 = salt + " Гладыш Владимир";
+		String s3 = "123\u0416" + salt;
+		
 		{
-			String s = "Katten är hemma. Hur mår du? お元気ですか " +new Random().nextInt(1000) ;
-			Status s2a = tw.updateStatus(s);
+			Status s2a = tw.updateStatus(s1);
 			Status s2b = tw.getStatus();
-			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2b.text.equals(s1) : s2b.text;
+			assert s2a.id.equals(s2b.id);
 		}
 		{
-			String s = new Random().nextInt(1000)+" Гладыш Владимир";
-			Status s2a = tw.updateStatus(s);
+			Status s2a = tw.updateStatus(s2);
 			Status s2b = tw.getStatus();
-			assert s2a.text.equals(s) : s2a.text;
-			assert s2b.text.equals(s) : s2b.text;
-			assert s2a.id == s2b.id;
+			assert s2a.text.equals(s2) : s2a.text;
+			assert s2b.text.equals(s2) : s2b.text;
+			assert s2a.id.equals(s2b.id);
 		}
 		{
-			Status s2a = tw.updateStatus("123\u0416");
-			assert s2a.text.equals("123\u0416") : s2a.getText();
+			Status s2a = tw.updateStatus(s3);
+			assert s2a.text.equals("123\u0416" + salt) : s2a.getText();
 		}
 		{
-			String s = new Random().nextInt(1000)+" Гладыш Владимир";
-			Message s2a = tw.sendMessage("winterstein", s);
-			assert s2a.text.equals(s) : s2a.getText();
+			Message s2a = tw.sendMessage("winterstein", s2);
+			assert s2a.text.equals(s2) : s2a.getText();
 		}
 		{
-			Message s2a = tw.sendMessage("winterstein","123\u0416");
-			assert s2a.text.equals("123\u0416") : s2a.getText();
+			Message s2a = tw.sendMessage("winterstein", s3);
+			assert s2a.text.equals(s3) : s2a.getText();
 		}
 	}
 
@@ -1759,7 +1806,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	
 	@Test
 	public void testBadJSON() throws IOException {
-		String json = readFile("jtwitter/test/winterwell/jtwitter/bad_json.txt");
+		String json = readFile("test/winterwell/jtwitter/bad_json.txt");
 		Status s = readStatusFromJson(json);
 		for (TweetEntity te : s.getTweetEntities(KEntityType.hashtags)){
 			assert te.toString().length() > 1;
@@ -1771,7 +1818,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	@Test
 	public void testBadJSON2_Contents() throws IOException {
-		String json = readFile("jtwitter/test/winterwell/jtwitter/bad_json.txt");
+		String json = readFile("test/winterwell/jtwitter/bad_json.txt");
 		Status s = readStatusFromJson(json);
 		for (TweetEntity te : s.getTweetEntities(KEntityType.hashtags)){
 			assert te.toString().length() > 1;

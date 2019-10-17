@@ -534,15 +534,16 @@ public class Twitter_Users {
 	 * @throws TwitterException.E404
 	 *             if one of the users does not exist
 	 */
-	public boolean isFollower(String followerScreenName,
-			String followedScreenName) {
-		assert followerScreenName != null && followedScreenName != null;
+	private boolean isFollower(Map vars) {
+		String srcName = (String) vars.get("source_screen_name");
+		Number srcId = (Number) vars.get("source_id");
+		String tgtName = (String) vars.get("target_screen_name");
+		Number tgtId = (Number) vars.get("target_id");
+		assert (srcName != null || srcId != null) : "No follower name / ID";
+		assert (tgtName != null || tgtId != null) : "No followed name / ID";
+		
 		try {
-			Map vars = InternalUtils.asMap(
-					"source_screen_name", followerScreenName,
-					"target_screen_name", followedScreenName);
-			String page = http.getPage(jtwit.TWITTER_URL
-					+ "/friendships/show.json", vars, http.canAuthenticate());
+			String page = http.getPage(jtwit.TWITTER_URL + "/friendships/show.json", vars, http.canAuthenticate());
 			JSONObject jo = new JSONObject(page);
 			JSONObject trgt = jo.getJSONObject("relationship").getJSONObject("target");
 			boolean fby = trgt.getBoolean("followed_by");
@@ -550,37 +551,60 @@ public class Twitter_Users {
 		} catch (TwitterException.E403 e) {
 			if (e instanceof SuspendedUser)
 				throw e;
-			// Should this be a suspended user exception instead?
-			// Let's ask Twitter
+			// Is this 403 masking a suspended user exception? Let's ask Twitter.
 			// TODO check rate limits - only do if we have spare capacity
-			String whoFirst = followedScreenName.equals(jtwit.getScreenName()) ? followerScreenName
-					: followedScreenName;
+			
+			Boolean srcIsMe = jtwit.self != null ? jtwit.self.getId().equals(srcId) || jtwit.getScreenName().equals(srcName) : false;
+			Boolean tgtIsMe = jtwit.self != null ? jtwit.self.getId().equals(tgtId) || jtwit.getScreenName().equals(tgtName) : false;
+			
 			try {
-				// this could throw a SuspendedUser exception
-				show(whoFirst);
-				String whoSecond = whoFirst.equals(followedScreenName) ? followerScreenName
-						: followedScreenName;
-				if (whoSecond.equals(jtwit.getScreenName()))
-					throw e;
-				show(whoSecond);
+				// If the 403 above was due to a suspended user, this will throw a SuspendedUser exception
+				// Don't check the authed user - we wouldn't have got this far if they were suspended.
+				if (!srcIsMe) {
+					if (srcId != null) show(srcId);
+					if (srcName != null) show(srcName);
+				}
+				if (!tgtIsMe) {
+					if (tgtId != null) show(tgtId);
+					if (tgtName != null) show(tgtName);
+				}
 			} catch (TwitterException.RateLimit e2) {
 				// ignore
 			}
-			// both shows worked?
+			// both shows worked? 
 			throw e;
 		} catch (TwitterException e) {
 			// FIXME investigating a weird new bug
 			if (e.getMessage() != null
 					&& e.getMessage().contains(
 							"Two user ids or screen_names must be supplied"))
-				throw new TwitterException("WTF? inputs: follower="
-						+ followerScreenName + ", followed="
-						+ followedScreenName + ", call-by="
+				throw new TwitterException("WTF? inputs: " + vars + ", call-by="
 						+ jtwit.getScreenName() + "; " + e.getMessage());
 			throw e;
 		}
 	}
-
+	
+	/** Wrapper for {@link Twitter_Users#isFollower(Map)} */
+	public boolean isFollower(String followerName, String followedName) {
+		return isFollower(InternalUtils.asMap("source_screen_name", followerName, "target_screen_name", followedName));
+	}
+	
+	/** Wrapper for {@link Twitter_Users#isFollower(Map)} */
+	public boolean isFollower(String followerName, Number followedId) {
+		return isFollower(InternalUtils.asMap("source_screen_name", followerName, "target_id", followedId));
+	}
+	
+	/** Wrapper for {@link Twitter_Users#isFollower(Map)} */
+	public boolean isFollower(Number followerId, String followedName) {
+		return isFollower(InternalUtils.asMap("source_id", followerId, "target_screen_name", followedName));
+	}
+	
+	/** Wrapper for {@link Twitter_Users#isFollower(Map)} */
+	public boolean isFollower(Number followerId, Number followedId) {
+		return isFollower(InternalUtils.asMap("source_id", followerId,"target_id", followedId));
+	}
+	
+	
 	/**
 	 * Does the authenticating user <i>follow</i> userB?
 	 * 

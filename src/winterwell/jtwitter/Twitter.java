@@ -2590,7 +2590,7 @@ public class Twitter implements Serializable {
 	 * Sends a new direct message (DM) to the specified user from the
 	 * authenticating user. This is a private message!
 	 * 
-	 * @param recipientId
+	 * @param recipientName
 	 *            Required. The screen name of the recipient user. This does *not* start with an "@".
 	 * @param text
 	 *            Required. The text of your direct message. Keep it under 140
@@ -2600,10 +2600,30 @@ public class Twitter implements Serializable {
 	 *             if the recipient is not following you. (you can \@mention
 	 *             anyone but you can only dm people who follow you).
 	 */
-	public Message sendMessage(String recipientId, String text) throws TwitterException {		
+	public Message sendMessage(String recipientName, String text) throws TwitterException {		
+		User recipient = users().getUser(recipientName);
+		return sendMessage(recipient.id, text);
+	}
+	
+	/**
+	 * Sends a new direct message (DM) to the specified user from the
+	 * authenticating user. This is a private message!
+	 * 
+	 * @param recipientId
+	 *            Required. The numeric ID of the recipient user.
+	 *            If this is unavailable or unknown,{@link Twitter#sendMessage(String, String)}
+	 *            will retrieve it automatically. 
+	 * @param text
+	 *            Required. The text of your direct message. Keep it under 140
+	 *            characters! This should *not* include the "d username" portion
+	 * @return the sent message
+	 * @throws TwitterException.E403
+	 *             if the recipient is not following you. (you can \@mention
+	 *             anyone but you can only dm people who follow you).
+	 */
+	public Message sendMessage(Number recipientId, String text) {
 		assert recipientId != null && text != null : recipientId + " " + text;
 		assert ! text.startsWith("d " + recipientId) : recipientId + " " + text;
-		assert ! recipientId.startsWith("@") : recipientId + " " + text;
 		if (text.length() > MAX_DM_LENGTH)
 			throw new IllegalArgumentException("Message is too long.");
 
@@ -2633,7 +2653,7 @@ public class Twitter implements Serializable {
 		}
 	}
 	
-	private JSONObject makeMessageObject(String recipientId, String text) {
+	private JSONObject makeMessageObject(Number recipientId, String text) {
 		JSONObject target = new JSONObject();
 		target.put("recipient_id", recipientId);
 		JSONObject messageData = new JSONObject();
