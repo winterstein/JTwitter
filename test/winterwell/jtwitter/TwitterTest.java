@@ -45,38 +45,39 @@ RM NOTES TO SELF 2019-10-17
 
 DONE testUpdateStatusSpecialChars: added salt against repetition error
 WONTFIX testIdenticaAccess: The identi.ca API is not what it used to be.
-testBigVideoUpload: can't find big video file
 DONE testUpdateStatusLength: needs big rework for DRY & 280 but was comparing BigInteger with ==
-
 DONE testFriendIDs: buncha deprecated shit, big refactor on isFollower
 DONE testCanSend160: salted tweet string so sequential tests don't fail
 DONE testSendMessage: sendMessage needs user id now
-testLargerVideoUpload: video file path specific to DW's computer
-
-testUpdateStatusUnicode: message text salt, was comparing BigInteger IDs with ==
+DONE testUpdateStatusUnicode: message text salt, was comparing BigInteger IDs with ==
 DONE testGetUserTimelineString: was using @anonpoetry which has deleted all its tweets, switched to @berkherkson
-testSmallShortVideoUpload: video file path specific to DW's computer
-testDoesBeckiFollowCoop: @coopbankuk_help doesn't exist any more
 WONTFIX testIdentica: The identi.ca API is not what it used to be.
-
-testStopFollowing: doesn't return null for stop following not-followed user, may be not-a-bug
-testReQuote: Repetition error, needs salt
-testRetweet: Repetition error, needs salt or un-RT
-testGetDirectMessages: NPE as recipient of at least one message is null
-testSendMention2: Tries to retrieve messages using search but doesn't wait long enough
+DONE testReQuote: Repetition error, needs salt
+DONE testRetweet: Repetition error, needs salt or un-RT
+DONE testDoesBeckiFollowCoop: @coopbankuk_help doesn't exist any more, changed users
+DONE testSendMention2: Tries to retrieve messages using getMentions but doesn't wait long enough - increased timeout
 WONTFIX testIssue4280: @samdaat doesn't exist, fuck this test
 DONE testFollowerIds: refactor, see testFriendIds
 WONTFIX testMarakana: not a thing
-testPostToTwitterWithMedia: bad test file paths
-testGetUserTimelineWithRetweets: RTs @stephenfry for test, fails on sequential runs. un-rt
-testGetSetFavorite: "no status found with that ID" at first call to twitter.setFavorite, debug test
-testRepetitionRetweet
-
 DONE testSendMessageToSelf: see testSendMessage
-testGetStatusLong: ntwanano has deleted 236109584417292288
-testGetDupeLinks: whoever tweeted 220406085545242624 is suspended
-testDirectMessage2: DMs don't take @ on username
 WONTFIX testAuthUser: not authing that lol
+DONE testStopFollowing: doesn't return null for stop following not-followed user, may be not-a-bug
+DONE testGetUserTimelineWithRetweets: RTs @stephenfry for test, fails on sequential runs. un-rt
+DONE testGetStatusLong: dakalom_ doesn't exist any more, using a Berk tweet instead
+DONE testDirectMessage2: 1: DMs don't take @ on username 2: jtwittest2 wasn't following jtwit
+DONE testRepetitionRetweet: New class of 403 error (code 327)
+DONE testGetSetFavorite: API changed, double-unfav throws 404 now
+
+testBigVideoUpload: can't find big video file
+testLargerVideoUpload: video file path specific to DW's computer
+testSmallShortVideoUpload: video file path specific to DW's computer
+testPostToTwitterWithMedia: bad test file paths
+
+testGetDirectMessages: Was throwing NPEs as recipient is unpopulated for most msgs (recipientID is present) - now failing because DM endpoint latency is huge
+
+testGetDupeLinks: whoever tweeted 220406085545242624 is suspended
+
+
 */
 
 /**
@@ -84,7 +85,7 @@ WONTFIX testAuthUser: not authing that lol
  * These only provide partial testing -- sorry.
  *
  *
- * @author daniel
+ * @author danielWONTFIX testIssue4280: @samdaat doesn't exist, fuck this test
  */
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
@@ -131,14 +132,19 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testReQuote() {
 		Twitter jtwit = newTestTwitter();
 		Status danSaid = jtwit.show("winterstein").status;
-		Status s = jtwit.retweetWithComment(danSaid, "Interesting");		
+		String salt = new Random().nextInt(1000)+" ";
+		Status s = jtwit.retweetWithComment(danSaid, salt + "Interesting");		
 		System.out.println(jtwit+" "+s+" "+s.getUrl());
 	}
 	
+	/**
+	 * coopbankuk_help no longer exists - changing this from
+	 * @beckishort and @coopbankuk_help to @berkherkson and @forkmcguffin
+	 */
 	public void testDoesBeckiFollowCoop() {
 		Twitter jtwit = newTestTwitter();
-		boolean f = jtwit.users().isFollower("beckishort", "coopbankuk_help");
-		boolean f2 = jtwit.users().isFollower("coopbankuk_help", "beckishort");
+		boolean f = jtwit.users().isFollower("@berkherkson", "@forkmcguffin");
+		boolean f2 = jtwit.users().isFollower("@forkmcguffin", "@berkherkson");
 		System.out.println(f);
 		System.out.println(f2);
 		assert f && f2;
@@ -358,19 +364,31 @@ extends TestCase // Comment out to remove the JUnit dependency
 		date = InternalUtils.parseDate("Wed Aug 24 11:54:46 +0000 2011");
 	}
 
+	/**
+	 * Previously, attempting to /destroy a friendship that didn't exist
+	 * made Twitter throw an exception & returned null - now Twitter just
+	 * returns the User object as if you'd called /destroy successfully
+	 * So now we use isFollower to test for successful creation/destruction 
+	 */
 	public void testStopFollowing() {
 		Twitter tw = newTestTwitter();
 		{
 			User bieber = new User("justinbieber");
-			tw.follow(bieber);
-			tw.stopFollowing(bieber);
+			tw.users().follow(bieber);
+			Utils.sleep(100);
+			assert tw.users().isFollower(tw.getScreenName(), bieber.getScreenName());
+			tw.users().stopFollowing(bieber);
+			Utils.sleep(100);
+			assert !tw.users().isFollower(tw.getScreenName(), bieber.getScreenName());
 		}
 		{	// Test return null for no-op
-			User bieber = new User("charliesheen");
-			tw.users().stopFollowing(bieber);
-			Utils.sleep(10);
-			User nul = tw.users().stopFollowing(bieber);
-			assert nul == null : nul;
+			User charlie = new User("charliesheen");
+			tw.users().stopFollowing(charlie);
+			Utils.sleep(100);
+			assert !tw.users().isFollower(tw.getScreenName(), charlie.getScreenName());
+			tw.users().stopFollowing(charlie);
+			Utils.sleep(100);
+			assert !tw.users().isFollower(tw.getScreenName(), charlie.getScreenName());
 		}
 	}
 
@@ -483,25 +501,57 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 	
+	/** 
+	 * RM Oct 2019: Calling /favorites/destroy on an unfaved tweet will return a 404
+	 * ...but calling /favorites/create on a faved tweet won't.
+	 * The old comments on this test stated it was the other way around.
+	 * 
+	 * @throws InterruptedException
+	 */
 	public void testGetSetFavorite() throws InterruptedException {
+		boolean doubleFavFails = false;
+		boolean doubleUnfavFails = false;
+		
 		Twitter twitter = newTestTwitter();
-		int salt = new Random().nextInt(100);
+		
 		Status s = twitter.getStatus("winterstein");
 		System.out.println(s);
-//		if (s.isFavorite()) {
-		Status s2 = twitter.setFavorite(s, false);
-		assert ! s2.isFavorite();
-		Thread.sleep(1000);
-		// repeated false is fine
-		twitter.setFavorite(s, false);
-//		}
+		
+		// Unfavorite if it's already favorited so we know where we're starting
+		if (s.isFavorite()) {
+			twitter.setFavorite(s, false);
+			Thread.sleep(1000);
+		}
+		
+		// Confirm favorite works
+		Status s2 = twitter.setFavorite(s, true);
+		assert s2.isFavorite();
 		Thread.sleep(5000);
-		Status s3 = twitter.setFavorite(s, true);
+		// Check if double-fav throws an exception (it shouldn't - but the API might change)
+		try {
+			twitter.setFavorite(s, true);
+		} catch (TwitterException e) {
+			doubleFavFails = true;
+		}
+		
+		// Fetch a fresh copy of the tweet and confirm it's favorited
+		Status s3 = twitter.getStatus(s.id);
 		assert s3.isFavorite();
+		
+		// Confirm unfavorite works
+		Status s4 = twitter.setFavorite(s, false);
+		assert !s4.isFavorite();
 		Thread.sleep(5000);
-//		twitter.setFavorite(s, true); // repeated true throws exception
-		Status s4 = twitter.getStatus("winterstein");
-		assert s4.isFavorite();
+		// Check if double-unfav throws an exception (it should - but the API might change)
+		try {
+			twitter.setFavorite(s, false);
+		} catch (TwitterException e) {
+			doubleUnfavFails = true;
+		}
+		
+		// If these asserts fail the API has changed - just take note and rewrite the test
+		assert !doubleFavFails;
+		assert doubleUnfavFails;
 	}
 
 	
@@ -528,11 +578,14 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status sb = twitter.getStatus();
 			Status s2 = twitter.retweet(tweet);
 			assert false;
-		} catch (TwitterException.Repetition e) {
+		} catch (TwitterException.RepeatRetweet e) {
 			assert true;
 		}
 	}
 
+	/** TODO This test fails because the Tweet referenced by ID in the second half is by a suspended user.
+	 * Ask DW if he remembers what exactly it was testing for, probably remove. RM Oct 2019
+	 */
 	public void testGetDupeLinks(){
 		{	// canned json
 			String json = "{\"created_at\":\"Wed Jul 04 06:38:00 +0000 2012\",\"id\":220406085545242624,\"id_str\":\"220406085545242624\",\"text\":\"RT: Stomach bugs to rise during Olympics: scientists - http:\\/\\/t.co\\/juz2kA1L\\\"&gt;http:\\/\\/t.co\\/juz2kA1L http:\\/\\/t.... http:\\/\\/t.co\\/6q3iWaCf\",\"source\":\"\\u003ca href=\\\"http:\\/\\/twitterfeed.com\\\" rel=\\\"nofollow\\\"\\u003etwitterfeed\\u003c\\/a\\u003e\",\"truncated\":false,\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":372713961,\"id_str\":\"372713961\",\"name\":\"HarpendenRetweet\",\"screen_name\":\"RTHarpenden\",\"location\":\"AL5\",\"description\":\"Retweeting to Harpenden. Do you have a question or a message for Harpenden tweeters? Tweet us for a retweet to our Harpenden followers.\",\"url\":null,\"protected\":false,\"followers_count\":263,\"friends_count\":228,\"listed_count\":2,\"created_at\":\"Tue Sep 13 08:42:43 +0000 2011\",\"favourites_count\":0,\"utc_offset\":null,\"time_zone\":null,\"geo_enabled\":false,\"verified\":false,\"statuses_count\":10872,\"lang\":\"en\",\"contributors_enabled\":false,\"is_translator\":false,\"profile_background_color\":\"C0DEED\",\"profile_background_image_url\":\"http:\\/\\/a0.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_image_url_https\":\"https:\\/\\/si0.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\/\\/a0.twimg.com\\/profile_images\\/1540869827\\/Harpendedn_normal.jpg\",\"profile_image_url_https\":\"https:\\/\\/si0.twimg.com\\/profile_images\\/1540869827\\/Harpendedn_normal.jpg\",\"profile_link_color\":\"0084B4\",\"profile_sidebar_border_color\":\"C0DEED\",\"profile_sidebar_fill_color\":\"DDEEF6\",\"profile_text_color\":\"333333\",\"profile_use_background_image\":true,\"show_all_inline_media\":false,\"default_profile\":true,\"default_profile_image\":false,\"following\":false,\"follow_request_sent\":false,\"notifications\":false},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"retweet_count\":0,\"entities\":{\"hashtags\":[],\"urls\":[{\"url\":\"http:\\/\\/t.co\\/juz2kA1L\",\"expanded_url\":\"http:\\/\\/Telegraph.co.uk\",\"display_url\":\"Telegraph.co.uk\",\"indices\":[55,75]},{\"url\":\"http:\\/\\/t.co\\/juz2kA1L\",\"expanded_url\":\"http:\\/\\/Telegraph.co.uk\",\"display_url\":\"Telegraph.co.uk\",\"indices\":[80,100]},{\"url\":\"http:\\/\\/t.co\\/6q3iWaCf\",\"expanded_url\":\"http:\\/\\/bit.ly\\/R8Qsxg\",\"display_url\":\"bit.ly\\/R8Qsxg\",\"indices\":[114,134]}],\"user_mentions\":[]},\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false}";
@@ -783,18 +836,23 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testGetDirectMessages() {
 		// send one to make sure there is one
-//		Twitter tw0 = new Twitter("winterstein", "");
-//		String salt = Utils.getRandomString(4);
-//		String msg = "Hello "+TEST_USER+" "+salt;
-//		tw0.sendMessage(TEST_USER, msg);
+		Twitter tw2 = newTestTwitter2();
+		String salt = Utils.getRandomString(4);
+		tw2.sendMessage(TEST_USER, "Here's a DM to make sure you have at least one: " + salt);
+		Utils.sleep(3000);
 
 		Twitter tw = newTestTwitter();
 		List<Message> msgs = tw.getDirectMessages();
+		boolean foundMessage = false;
 		for (Message message : msgs) {
-			User recipient = message.getRecipient();
-			assert recipient.equals(new User(TEST_USER));
+			// Find the message just sent to jtwit &
+			if (message.getText().contains(salt)) {
+				assert tw.self.getId().equals(message.getRecipientId());
+				foundMessage = true;
+			}
 		}
 		assert msgs.size() != 0;
+		assert foundMessage : "Didn't find the message jtwittest2 sent to jtwit with salt " + salt;
 	}
 
 
@@ -961,6 +1019,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 	/**
 	 * An exploration test for checking whether the lowest level twitter
 	 * functionality is working. It isn't reliably.
+	 * NB There's a sleep(10000) between posting the messages and retrieving mentions.
+	 * I (RM Oct 2019) set that timeout experimentally - it seems to take that long
+	 * for mentions to propagate & be retrievable now. Maybe it'll be longer in the future.
 	 * @throws InterruptedException 
 	 */
 	public void testSendMention2() throws InterruptedException{
@@ -985,6 +1046,9 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Status s2 = jtwit.setStatus("Public "+ messageText + " " + time + " v2 to @jtwittest2");
 		Thread.sleep(1000);
 		System.out.println(s2);
+		
+		// Try a short delay as most recent mentions aren't showing up in getMentions()
+		Thread.sleep(10000);
 		
 		//Jtwit gets recent mentions.
 		List<Status> aList = jtwit.getMentions();
@@ -1162,8 +1226,8 @@ extends TestCase // Comment out to remove the JUnit dependency
 			Status toreg = tw.getStatus(bi);
 			System.out.println(toreg.text+" by "+toreg.user+" = "+toreg.getDisplayText());
 		}
-		{	// Test a specific tweet ("How are you Ntwanano? RT @Reg_Lulekz: Hello Dakalo @DakaloM_: Hello tweeps..." by dakalom_)
-			BigInteger bi = new BigInteger("236109584417292288");
+		{	// Test a specific tweet ("I'm going to keep on posting until I'm confident this is working reliably. If you're following me..." by berkHerkson)
+			BigInteger bi = new BigInteger("1029742539795062785");
 			Status toreg = tw.getStatus(bi);
 			System.out.println(toreg.text+" by "+toreg.user);
 		}
@@ -1234,8 +1298,20 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testGetUserTimelineWithRetweets() {
 		Twitter tw = newTestTwitter();
 		Status ws = tw.getStatus("stephenfry");
+		
+		// Did the user already RT this? Un-RT it before doing it again.
+		
+		//TODO Pull out the code from testRetweet() that finds and removes a RT because it's way more complicated than this
+		List<Status> rts = tw.search("from:" + tw.getScreenName() + " filter:retweets " + ws.getUser().getScreenName());
+		for (Status rt : rts) {
+			if (rt.getText().contains(ws.getText())) {
+				tw.destroy(rt);
+			}
+		}
+				
 		tw.retweet(ws);
-		List<Status> ns = tw.getUserTimelineWithRetweets(null);
+		tw.setIncludeRTs(true);
+		List<Status> ns = tw.getUserTimeline();
 		System.out.println(ns.get(0));
 		Status rt = ns.get(0);
 		assert rt != null;
@@ -1264,34 +1340,58 @@ extends TestCase // Comment out to remove the JUnit dependency
 	public void testRetweet() {
 		Twitter tw = newTestTwitter();
 		String[] tweeps = new String[]{
-				"stephenfry", "ladygaga", "justinbieber"
+				"stephenfry"/*, "ladygaga", "justinbieber"*/
 //				"winterstein", 
 //				"joehalliwell", "spoonmcguffin", "forkmcguffin", "johnnieingram"
 				};
 		String chosen = tweeps[new Random().nextInt(tweeps.length)];
-		Status s = tw.getStatus(chosen);		
+		Status s = tw.getStatus(chosen);
 		System.out.println("RT @"+chosen+": "+s+"\tBY: "+tw.getScreenName());
-		
+		// Did the user already RT this? Un-RT it before doing it again.
+		// Tried adding the target user's screen name to the search query but it was failing for no apparent reason
+		// ...so we search all recent RTs
+		List<Status> rts = tw.search("from:" + tw.getScreenName() + " filter:retweets");
+		for (Status rt : rts) {
+			if (!rt.isRetweet()) continue; // filter:retweets picks up old-style "RT @username:" retweets which we don't want
+			// We either retweeted an original post by the target user OR a RT by them - in which case
+			// our RT's "original" will point directly to the original post, NOT the target user's RT.
+			// So we need to check against the target tweet ID AND its original's ID if that exists
+			BigInteger ourOriginalId = rt.getOriginal().getId();
+			BigInteger theirId = s.getId();
+			BigInteger theirOriginalId = s.isRetweet() ? s.getOriginal().getId() : null;
+			
+			if (ourOriginalId.equals(theirId) || ourOriginalId.equals(theirOriginalId)) { 
+				tw.destroy(rt);
+			}
+		}/* RT @username blah blah blah*/
+		Utils.sleep(3000);
 		Status rt1 = tw.retweet(s);
-		
 		assert rt1.getDisplayText().contains(s.getDisplayText()) : rt1+ " vs "+s;
 		
 		Status original = rt1.getOriginal();
 		assert original != null;
 		User user = original.getUser();
 
-		List<User> rters = tw.getRetweeters(s);
+		// Retweeters of a retweet get counted against the original, so retrieve RTers for that
+		List<User> rters;
+		if (s.isRetweet()) {
+			rters = tw.getRetweeters(s.getOriginal());
+		} else {
+			rters = tw.getRetweeters(s);
+		}
 		assert rters.contains(new User(TEST_USER)) : rters;
 
 		// user timeline includes RTs
 		List<Status> tweets = tw.getUserTimeline();
-		assert tweets.contains(rt1) : tweets;	
-		
+		assert tweets.contains(rt1) : tweets;
+		/*
+		// (a) Nobody does this any more, (b) it fails on successive test runs due to duplication
 		{
 			Status s2 = tw.getStatus("joehalliwell");
 			Status rt2 = tw.updateStatus("RT @"+s2.user.screenName+" "+s2.text);
 			assert rt2.text.contains(s2.text) : rt2;
 		}
+		*/
 	}
 	
 	public void testSearchWithOR() {
