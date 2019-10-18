@@ -760,6 +760,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient,
 			throw new TwitterException.SuspendedProfile(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("already requested to follow"))
 			throw new TwitterException.Repetition(errorPage + "\n"+getName()+" "+ url);
+		if (errorPage.contains("code 327"))
+			throw new TwitterException.RepeatRetweet(errorPage + "\n"+getName()+" "+ url);
 		if (errorPage.contains("duplicate"))
 			throw new TwitterException.Repetition(errorPage);
 		if (errorPage.contains("unable to follow more people"))

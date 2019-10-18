@@ -337,6 +337,17 @@ public class TwitterException extends RuntimeException {
 	}
 	
 	/**
+	 * Subclass of 403 thrown when you try to RT a tweet you've already RTed
+	 */
+	public static class RepeatRetweet extends E403 {
+		private static final long serialVersionUID = 1L;
+
+		public RepeatRetweet(String error) {
+			super("Already Retweeted! " + error);
+		}
+	}
+	
+	/**
 	 * Exception thrown when trying to QUERY a suspended account (i.e. your own account is fine). Note that
 	 * *deleted* accounts may generate an E404 instead.
 	 * <p>

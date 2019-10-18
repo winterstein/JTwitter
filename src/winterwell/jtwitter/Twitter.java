@@ -1827,7 +1827,10 @@ public class Twitter implements Serializable {
 		// new-style retweets can cause blanks in your timeline
 		// show(username).status is just as vulnerable
 		// grab a few tweets to give some robustness
-		Map<String, String> vars = InternalUtils.asMap("id", username, "count", 6);
+		
+		Map<String, String> vars = standardishParameters();
+		vars.put("id", username);
+		vars.put("count", "6");
 		String json = http.getPage(
 				TWITTER_URL + "/statuses/user_timeline.json", vars, http.canAuthenticate());
 		List<Status> statuses = Status.getStatuses(json);
@@ -2248,9 +2251,10 @@ public class Twitter implements Serializable {
 	 */
 	public Status retweet(Status tweet) {
 		try {
+			Map vars = extendedMode ? InternalUtils.asMap("tweet_mode", "extended") : null;
 			String result = post(
 					TWITTER_URL + "/statuses/retweet/" + tweet.getId()
-							+ ".json", null, true);
+							+ ".json", vars, true);
 			return new Status(new JSONObject(result), null);
 
 			// error handling
