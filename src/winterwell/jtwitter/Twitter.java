@@ -1194,7 +1194,8 @@ public class Twitter implements Serializable {
 		Map vars = InternalUtils.asMap("id", id);
 		String json = http.getPage(TWITTER_URL + DM_BASE_ENDPOINT + "/show.json", vars, auth);
 		try {
-			Message message = new Message(new JSONObject(json));
+			JSONObject response = new JSONObject(json);
+			Message message = new Message(response.getJSONObject("event"));
 			return message;
 		} catch (JSONException e) {
 			throw new TwitterException.Parsing(json, e);
