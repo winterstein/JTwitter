@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,38 +42,39 @@ import winterwell.jtwitter.TwitterException.E404;
 RM NOTES TO SELF 2019-10-17
 
 DONE testUpdateStatusSpecialChars: added salt against repetition error
-WONTFIX testIdenticaAccess: The identi.ca API is not what it used to be.
+
 DONE testUpdateStatusLength: needs big rework for DRY & 280 but was comparing BigInteger with ==
 DONE testFriendIDs: buncha deprecated shit, big refactor on isFollower
 DONE testCanSend160: salted tweet string so sequential tests don't fail
 DONE testSendMessage: sendMessage needs user id now
 DONE testUpdateStatusUnicode: message text salt, was comparing BigInteger IDs with ==
 DONE testGetUserTimelineString: was using @anonpoetry which has deleted all its tweets, switched to @berkherkson
-WONTFIX testIdentica: The identi.ca API is not what it used to be.
 DONE testReQuote: Repetition error, needs salt
 DONE testRetweet: Repetition error, needs salt or un-RT
 DONE testDoesBeckiFollowCoop: @coopbankuk_help doesn't exist any more, changed users
 DONE testSendMention2: Tries to retrieve messages using getMentions but doesn't wait long enough - increased timeout
-WONTFIX testIssue4280: @samdaat doesn't exist, fuck this test
 DONE testFollowerIds: refactor, see testFriendIds
-WONTFIX testMarakana: not a thing
 DONE testSendMessageToSelf: see testSendMessage
-WONTFIX testAuthUser: not authing that lol
 DONE testStopFollowing: doesn't return null for stop following not-followed user, may be not-a-bug
 DONE testGetUserTimelineWithRetweets: RTs @stephenfry for test, fails on sequential runs. un-rt
 DONE testGetStatusLong: dakalom_ doesn't exist any more, using a Berk tweet instead
 DONE testDirectMessage2: 1: DMs don't take @ on username 2: jtwittest2 wasn't following jtwit
 DONE testRepetitionRetweet: New class of 403 error (code 327)
 DONE testGetSetFavorite: API changed, double-unfav throws 404 now
+DONE testGetDirectMessages: Was throwing NPEs as recipient is unpopulated for most msgs (recipientID is present) --> was failing because DM endpoint latency is huge --> now stores ID of sent message & retrieves as ID by recipient to confirm sending worked
+DONE testGetDupeLinks: We have a canned copy, but the original tweet is long gone...
 
-testBigVideoUpload: can't find big video file
-testLargerVideoUpload: video file path specific to DW's computer
-testSmallShortVideoUpload: video file path specific to DW's computer
-testPostToTwitterWithMedia: bad test file paths
+WONTFIX testIdenticaAccess: The identi.ca API is not what it used to be.
+WONTFIX testIdentica: The identi.ca API is not what it used to be.
+WONTFIX testIssue4280: @samdaat doesn't exist, fuck this test
+WONTFIX testMarakana: not a thing
 
-testGetDirectMessages: Was throwing NPEs as recipient is unpopulated for most msgs (recipientID is present) - now failing because DM endpoint latency is huge
+DONE testBigVideoUpload: can't find big video file
+DONE testLargerVideoUpload: Fixed relative file path (still only works for WW/GL devs, but...)
+DONE testSmallShortVideoUpload: Fixed relative file path (still only works for WW/GL devs, but...)
+testPostToTwitterWithMedia: Switched to image files that exist
 
-testGetDupeLinks: whoever tweeted 220406085545242624 is suspended
+
 
 
 */
@@ -85,7 +84,7 @@ testGetDupeLinks: whoever tweeted 220406085545242624 is suspended
  * These only provide partial testing -- sorry.
  *
  *
- * @author danielWONTFIX testIssue4280: @samdaat doesn't exist, fuck this test
+ * @author daniel
  */
 public class TwitterTest
 extends TestCase // Comment out to remove the JUnit dependency
@@ -148,11 +147,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		System.out.println(f);
 		System.out.println(f2);
 		assert f && f2;
-	}
-	
-	public void testIssue4280() {
-		Twitter jtwit = newTestTwitter();
-		List<Status> tweets = jtwit.getUserTimeline("samdaat");
 	}
 	
 	public void testClientClone() {
@@ -606,25 +600,25 @@ extends TestCase // Comment out to remove the JUnit dependency
 				lastEntityEnd = entity.end;
 			}
 		}
-		{
-			// Hopefully this one will keep on existing. Twitter prune these a bit.
-			// The raw text is: "RT: Stomach bugs to rise during Olympics: scientists - http://t.co/juz2kA1L">http://t.co/juz2kA1L http://t.... http://t.co/6q3iWaCf"
-			BigInteger bi = new BigInteger("220406085545242624");
-			Twitter twitter = newTestTwitter();
-			Status badStatus = twitter.getStatus(bi);
-			List<TweetEntity> urlInfo = badStatus.getTweetEntities(KEntityType.urls);
-			int lastEntityEnd = 0;
-			for (TweetEntity entity : urlInfo) {
-				// FIXME
-				if (lastEntityEnd>entity.start) {						
-					System.out.println("end of the one entity occurs before the start of another!:" + lastEntityEnd + " vs " + entity.start);
-					fail();
-				} else {
-					//All's well!
-				}
-				lastEntityEnd = entity.end;
-			}
-		}
+//		{
+//			// Hopefully this one will keep on existing. Twitter prune these a bit.
+//			// The raw text is: "RT: Stomach bugs to rise during Olympics: scientists - http://t.co/juz2kA1L">http://t.co/juz2kA1L http://t.... http://t.co/6q3iWaCf"
+//			BigInteger bi = new BigInteger("220406085545242624");
+//			Twitter twitter = newTestTwitter();
+//			Status badStatus = twitter.getStatus(bi);
+//			List<TweetEntity> urlInfo = badStatus.getTweetEntities(KEntityType.urls);
+//			int lastEntityEnd = 0;
+//			for (TweetEntity entity : urlInfo) {
+//				// FIXME
+//				if (lastEntityEnd>entity.start) {						
+//					System.out.println("end of the one entity occurs before the start of another!:" + lastEntityEnd + " vs " + entity.start);
+//					fail();
+//				} else {
+//					//All's well!
+//				}
+//				lastEntityEnd = entity.end;
+//			}
+//		}
 	}
 	
 
@@ -653,35 +647,57 @@ extends TestCase // Comment out to remove the JUnit dependency
 		"FQkHfEJYY9JuICUp7lj5wbT6yKxYOpnVRvACtiD62ik"
 	};
 	
-	
+	/**
+	 * In my runs, the video tests have failed with a 400 error on the first run and succeeded when run identically again.
+	 * I wasn't able to directly examine the 400 response (it was discarded in the process of throwing the error) so I don't
+	 * know what Twitter's problem was the first time. RM Oct 2019
+	 */
 	public void testSmallShortVideoUpload() {
 		Twitter jtwit = newTestTwitter();
 //		String upload = jtwit.uploadVideo();
 //		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/ingreedies_720p.m4v");
 		// 10 seconds
-		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/simba-10s-288p.m4v");
+		File f = new File("../adserver/web-as/vert/simba-10s-288p.m4v");
 		String mediaId = jtwit.uploadVideo(f);
 		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
 		System.out.println(s);
 	}
 	
-	
+	/** Seems to fail on first run, see testSmallShortVideoUpload above */
 	public void testLargerVideoUpload() {
 		Twitter jtwit = newTestTwitter();
-		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/ingreedies_720p.m4v");
+		File f = new File("../adserver/web-as/vert/ingreedies_720p.m4v");
 		String mediaId = jtwit.uploadVideo(f);
 		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a medium video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
 		System.out.println(s);
 	}
 	
-
+	/** Seems to fail on first run, see testSmallShortVideoUpload above */
 	public void testBigVideoUpload() {
 		Twitter jtwit = newTestTwitter();
-		File f = new File("/home/daniel/winterwell/adserver/web-as/vert/Fugu.mp4");
+		File f = new File("../adserver/web-as/vert/Fugu.mp4");
 		String mediaId = jtwit.uploadVideo(f);
 		System.out.println("Uplaod of "+mediaId);
 		Status s = jtwit.updateStatusWithUploadedMedia("I uploaded a large-ish video with @JTwit :) "+new Random().nextInt(1000), null, Arrays.asList(mediaId));
 		System.out.println(s);
+	}
+	
+	
+	public void testPostToTwitterWithMedia(){
+		{
+			Twitter tw = newTestTwitter();
+			File t = new File("test/winterwell/jtwitter/sodash.jpg");
+			Printer.out(t.getAbsolutePath());
+			tw.updateStatusWithMedia(
+					"A test tweet " + Utils.getRandomString(5), null, t);
+		}
+		{
+			Twitter tw = newTestTwitter();
+			File t = new File("test/winterwell/jtwitter/sodash.png");
+			Printer.out(t.getAbsolutePath());
+			tw.updateStatusWithMedia(
+					"A test tweet " + Utils.getRandomString(5), null, t);
+		}		
 	}
 
 
@@ -758,23 +774,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 	}
 
 
-	public void testIdenticaAccess() throws InterruptedException {
-		Twitter jtwit = new Twitter(TEST_USER, TEST_PASSWORD);
-		jtwit.setAPIRootUrl("https://identi.ca/api");
-		int salt = new Random().nextInt(1000);
-		System.out.println(salt);
-		Status s1 = null;
-		try {
-			s1 = jtwit.updateStatus(salt+" Hello to you shiny open source people");
-		} catch (TwitterException.Timeout e) {
-			// identi.ca has problems
-		}
-		Thread.sleep(2000);
-		Status s2 = jtwit.getStatus();
-		assertEquals(s1.toString(), s2.toString());
-		assert s1.equals(s2);
-	}
-
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getFollowerIDs()}
 	 * and {@link winterwell.jtwitter.Twitter#getFollowerIDs(String)}.
@@ -833,24 +832,33 @@ extends TestCase // Comment out to remove the JUnit dependency
 
 	/**
 	 * Test method for {@link winterwell.jtwitter.Twitter#getDirectMessages()}.
+	 * The latency between sending a message and seeing it on direct_messages/events/list.json
+	 * endpoint is more than a minute - so if it's not there, we fall back to retrieving it
+	 * directly by ID on direct_messages/events/show.json.
 	 */
 	public void testGetDirectMessages() {
 		// send one to make sure there is one
 		Twitter tw2 = newTestTwitter2();
 		String salt = Utils.getRandomString(4);
-		tw2.sendMessage(TEST_USER, "Here's a DM to make sure you have at least one: " + salt);
-		Utils.sleep(3000);
+		Message sent = tw2.sendMessage(TEST_USER, "Here's a DM to make sure you have at least one: " + salt);
+		Utils.sleep(1000);
 
 		Twitter tw = newTestTwitter();
 		List<Message> msgs = tw.getDirectMessages();
 		boolean foundMessage = false;
 		for (Message message : msgs) {
-			// Find the message just sent to jtwit &
+			// Find the message just sent to jtwit
 			if (message.getText().contains(salt)) {
 				assert tw.self.getId().equals(message.getRecipientId());
 				foundMessage = true;
 			}
 		}
+		// Not picked up due to latency? Try fetching it directly
+		if (!foundMessage) {
+			Message received = tw.getDirectMessage(sent.id);
+			foundMessage = received.getText().contains(salt);
+		}
+		
 		assert msgs.size() != 0;
 		assert foundMessage : "Didn't find the message jtwittest2 sent to jtwit with salt " + salt;
 	}
@@ -1300,14 +1308,25 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Status ws = tw.getStatus("stephenfry");
 		
 		// Did the user already RT this? Un-RT it before doing it again.
-		
-		//TODO Pull out the code from testRetweet() that finds and removes a RT because it's way more complicated than this
-		List<Status> rts = tw.search("from:" + tw.getScreenName() + " filter:retweets " + ws.getUser().getScreenName());
+		// Tried adding the target user's screen name to the search query but it was failing for no apparent reason
+		// ...so we search all recent RTs
+		List<Status> rts = tw.search("from:" + tw.getScreenName() + " filter:retweets");
 		for (Status rt : rts) {
-			if (rt.getText().contains(ws.getText())) {
+			// filter:retweets picks up old-style "RT @username:" retweets which we don't want
+			if (!rt.isRetweet()) continue;
+			
+			// We either retweeted an original post by the target user OR a RT by them - in which case
+			// our RT's "original" will point directly to the original post, NOT the target user's RT.
+			// So we need to check against the target tweet ID AND its original's ID if that exists
+			BigInteger ourOriginalId = rt.getOriginal().getId();
+			BigInteger theirId = ws.getId();
+			BigInteger theirOriginalId = ws.isRetweet() ? ws.getOriginal().getId() : null;
+			
+			if (ourOriginalId.equals(theirId) || ourOriginalId.equals(theirOriginalId)) { 
 				tw.destroy(rt);
 			}
 		}
+		Utils.sleep(3000);
 				
 		tw.retweet(ws);
 		tw.setIncludeRTs(true);
@@ -1363,7 +1382,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 			if (ourOriginalId.equals(theirId) || ourOriginalId.equals(theirOriginalId)) { 
 				tw.destroy(rt);
 			}
-		}/* RT @username blah blah blah*/
+		}
 		Utils.sleep(3000);
 		Status rt1 = tw.retweet(s);
 		assert rt1.getDisplayText().contains(s.getDisplayText()) : rt1+ " vs "+s;
@@ -1851,27 +1870,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 	}
 
-	/**
-	 * This works fine
-	 */
-	public void testIdentica() {
-		Twitter twitter = new Twitter(TEST_USER, TEST_PASSWORD);
-		twitter.setAPIRootUrl("https://identi.ca/api");
-		String salt = "" + new Random().nextInt(10000);
-		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php "+salt);
-		List<Status> timeline = twitter.getFriendsTimeline();
-	}
-
-	/**
-	 * But this fails with in Date.parse
-	 */
-	public void testMarakana() {
-		Twitter twitter = new Twitter("student", "password");
-		twitter.setAPIRootUrl("http://yamba.marakana.com/api");
-		String salt = "" + new Random().nextInt(10000);
-		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php"+salt);
-		List<Status> timeline = twitter.getFriendsTimeline();
-	}
 	
 	/**
 	 * Sometimes tweets aren't available for search, but they might show up on mentions. Pass/Fail
@@ -1884,23 +1882,6 @@ extends TestCase // Comment out to remove the JUnit dependency
 			List<String> ms = message.getMentions();
 			assert ! ms.isEmpty();
 		}
-	}
-	
-	public void testPostToTwitterWithMedia(){
-		{
-			Twitter tw = newTestTwitter();
-			File t = new File("test/winterwell/jtwitter/samplejpg.jpg");
-			Printer.out(t.getAbsolutePath());
-			tw.updateStatusWithMedia(
-					"A test tweet " + Utils.getRandomString(5), null, t);
-		}
-		{
-			Twitter tw = newTestTwitter();
-			File t = new File("test/winterwell/jtwitter/samplepng.png");
-			Printer.out(t.getAbsolutePath());
-			tw.updateStatusWithMedia(
-					"A test tweet " + Utils.getRandomString(5), null, t);
-		}		
 	}
 
 	
@@ -2003,5 +1984,53 @@ extends TestCase // Comment out to remove the JUnit dependency
 		}
 		return stringBuilder.toString();
 	}
-
+	
+	
+	/* DEPRECATED TESTS */
+	
+	/** What's Identica? What's Marakana? Well, whatever they were, they doesn't have the same API they used to. */
+//	public void testIdenticaAccess() throws InterruptedException {
+//		Twitter jtwit = new Twitter(TEST_USER, TEST_PASSWORD);
+//		jtwit.setAPIRootUrl("https://identi.ca/api");
+//		int salt = new Random().nextInt(1000);
+//		System.out.println(salt);
+//		Status s1 = null;
+//		try {
+//			s1 = jtwit.updateStatus(salt+" Hello to you shiny open source people");
+//		} catch (TwitterException.Timeout e) {
+//			// identi.ca has problems
+//		}
+//		Thread.sleep(2000);
+//		Status s2 = jtwit.getStatus();
+//		assertEquals(s1.toString(), s2.toString());
+//		assert s1.equals(s2);
+//	}
+//	/**
+//	 * This works fine
+//	 */
+//	/*
+//	public void testIdentica() {
+//		Twitter twitter = new Twitter(TEST_USER, TEST_PASSWORD);
+//		twitter.setAPIRootUrl("https://identi.ca/api");
+//		String salt = "" + new Random().nextInt(10000);
+//		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php "+salt);
+//		List<Status> timeline = twitter.getFriendsTimeline();
+//	}
+//	/**
+//	 * But this fails with in Date.parse
+//	 */
+//	public void testMarakana() {
+//		Twitter twitter = new Twitter("student", "password");
+//		twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+//		String salt = "" + new Random().nextInt(10000);
+//		twitter.setStatus("Testing jTwitter http://winterwell.com/software/jtwitter.php"+salt);
+//		List<Status> timeline = twitter.getFriendsTimeline();
+//	}
+	
+	/** I can't find Issue 4280 on our bug tracker, and @samdaat isn't a user any more. */
+//	public void testIssue4280() {
+//		Twitter jtwit = newTestTwitter();
+//		List<Status> tweets = jtwit.getUserTimeline("samdaat");
+//	}
+	
 }
