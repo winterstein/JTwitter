@@ -115,7 +115,7 @@ public class Twitter_UsersTest {
 
 		// break where no friendship exists
 		User h2 = tw.users().stopFollowing("winterstein");
-		assert h2==null;
+		assert h2 == null;
 
 		// Follow
 		tw.users().follow("winterstein");
@@ -275,14 +275,17 @@ public class Twitter_UsersTest {
 				System.out.println(user.getScreenName()+"\t"+user.getLocation()+"\t"+user.getPlace()+"\t"+user.getId());
 			}
 		}
+		/*
+		// Twitter API v1 is dead.
 		{	// anonymous -- only in version 1			
 			Twitter tw = new Twitter();
-			tw.setAPIRootUrl("http://api.twitter.com/1");
+			tw.setAPIRootUrl("https://api.twitter.com/1");
 			List<User> users = tw.users().show(Arrays.asList("joehalliwell","winterstein"));
 			for (User user : users) {
 				System.out.println(user.getScreenName()+"\t"+user.getLocation()+"\t"+user.getPlace()+"\t"+user.getId());
 			}
 		}
+		*/
 	}
 	
 
