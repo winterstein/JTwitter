@@ -30,6 +30,7 @@ public class TwitterStreamTest {
 			for(int i=0; i<800; i++) {
 				terms.add(Utils.getRandomString(6));
 			}
+			ts.MAX_KEYWORDS = 801; // Override the default 400 safety check so we can force a failure here
 			ts.setTrackKeywords(terms);
 			
 			ts.connect();
@@ -59,6 +60,7 @@ public class TwitterStreamTest {
 		List<Object[]> sys = ts.popSystemEvents();		
 		System.out.println(tweets.size()+"\t"+events.size()+"\t"+sys.size());
 		Printer.out(sys);
+		ts.close(); // clean up for next test
 	}
 
 	@Test
@@ -363,6 +365,9 @@ public class TwitterStreamTest {
 		ts2.setTrackKeywords(blob2);
 		ts2.connect();
 		
+		// Close streams or subsequent tests will fail due to attempted multiple streams
+		ts.close();
+		ts2.close();
 	}
 	
 	@Test
