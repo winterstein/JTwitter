@@ -12,6 +12,7 @@ import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
 import winterwell.jtwitter.TwitterException.E404;
 import winterwell.jtwitter.TwitterException.SuspendedUser;
+import winterwell.jtwitter.TwitterException.UserNotFound;
 
 
 public class Twitter_UsersTest {
@@ -140,30 +141,25 @@ public class Twitter_UsersTest {
 		}
 		try {
 			tw.users().show("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
+		} catch (SuspendedUser | E404 | UserNotFound e) {
 		}
 		List<User> users = tw.bulkShow(Arrays.asList("winterstein", "ykarya35a4wr"));
 		assert ! users.isEmpty();
 		try {
 			tw.users().isFollowing("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
+		} catch (SuspendedUser | E404 | UserNotFound e) {
 		}
 		try {
 			tw.users().follow("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
+		} catch (SuspendedUser | E404 | UserNotFound e) {
 		}
 		try {
 			tw.users().stopFollowing("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
+		} catch (SuspendedUser | E404 | UserNotFound e) {
 		}
 		try {
 			tw.getUserTimeline("ykarya35a4wr");
-		} catch (SuspendedUser e) {
-		} catch (E404 e) {
+		} catch (SuspendedUser | E404 | UserNotFound e) {
 		}
 	}
 

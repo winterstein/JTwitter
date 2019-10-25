@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.8.0
+ - Responding to Twitter API changes - more numerical IDs, some methods removed.
+ 
 3.7.2
  - Fix bug where the Twitter API is requiring numerical IDs more
 
