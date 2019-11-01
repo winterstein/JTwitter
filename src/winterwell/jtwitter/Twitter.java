@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.winterwell.jgeoplanet.BoundingBox;
 import com.winterwell.jgeoplanet.IPlace;
@@ -709,7 +710,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.8.0";
+	public final static String version = "3.8.1";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -2606,9 +2607,16 @@ public class Twitter implements Serializable {
 	 *             anyone but you can only dm people who follow you).
 	 */
 	public Message sendMessage(String recipientName, String text) throws TwitterException {		
+		// HACK: Is recipientName a numerical ID?
+		if (NID.matcher(recipientName).matches()) {
+			InternalUtils.log("DM", "Numerical recipient ID passed as String");
+			return sendMessage(new BigInteger(recipientName), text);
+		}
 		User recipient = users().getUser(recipientName);
 		return sendMessage(recipient.id, text);
 	}
+	
+	static final Pattern NID = Pattern.compile("\\d{6,20}");
 	
 	/**
 	 * Sends a new direct message (DM) to the specified user from the

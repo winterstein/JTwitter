@@ -1497,7 +1497,14 @@ extends TestCase // Comment out to remove the JUnit dependency
 		Message sent2 = tw.sendMessage("winterstein", msg2);
 		System.out.println(""+sent2.getTweetEntities(KEntityType.urls));
 	}
-	
+
+	public void testSendMessage_disguisedNumericalID() {
+		Twitter tw = newTestTwitter();
+		String msg = "Numerical ID in disguise! Please ignore this message. "+new Random().nextInt(1000);
+		Message sent = tw.sendMessage("59714113", msg);
+		System.out.println(""+sent);
+	}
+
 
 	public void testSendMessageToSelf() {
 		Twitter tw = newTestTwitter();
@@ -1542,7 +1549,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testShow() {
 		Twitter tw = newTestTwitter(); //TEST_USER, TEST_PASSWORD);
-		User show = tw.users().show(TEST_USER);
+		User show = tw.users().show("goodloophq");
 		assert show != null;
 		User show2 = tw.users().show("winterstein");
 		assert show2 != null;
