@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.8.1
+ - Catch disguised numerical IDs in Twitter.sendMessage() (aka DM)
+ 
 3.8.0
  - Responding to Twitter API changes - more numerical IDs, some methods removed.
  
