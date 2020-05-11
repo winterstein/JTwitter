@@ -49,8 +49,8 @@ public class BuildJTwitter extends BuildTask {
 //		jarMisc.run();
 		JarTask jar = new JarTask(jarFile, bin);
 //		jar.setAppend(true);|
-		jar.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, Twitter.version);
-		jar.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, Twitter.class.getName());
+		jar.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, "3.8.2"); // Twitter.version
+		jar.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, "winterwell.jtwitter.Twitter");
 		jar.setManifestProperty(JarTask.MANIFEST_TITLE, "JTwitter client library by Winterwell");
 		jar.run();
 		
