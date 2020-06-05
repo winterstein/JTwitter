@@ -14,6 +14,7 @@ import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.tasks.JarTask;
 import com.winterwell.bob.tasks.JavaDocTask;
 import com.winterwell.bob.tasks.SCPTask;
+import com.winterwell.bob.tasks.WinterwellProjectFinder;
 import com.winterwell.bob.tasks.ZipTask;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
@@ -29,7 +30,9 @@ public class BuildJTwitter extends BuildTask {
 
 	public BuildJTwitter() {
 		// The project directory
-		base = new File(FileUtils.getWinterwellDir(), "jtwitter"); // FileUtils.getWorkingDirectory();
+		base = new WinterwellProjectFinder().apply("jtwitter");				
+//				new File(FileUtils.getWinterwellDir(), "jtwitter"); 
+				// FileUtils.getWorkingDirectory();
 		assert base.isDirectory() : base;
 	}
 
