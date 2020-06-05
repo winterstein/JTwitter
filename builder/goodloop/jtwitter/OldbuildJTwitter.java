@@ -24,7 +24,7 @@ import com.winterwell.utils.log.Log;
  * @author daniel
  *
  */
-public class OldBuildJTwitter extends BuildTask {
+public class OldbuildJTwitter extends BuildTask {
 
 	/**
 	 * Copy from Twitter.version
@@ -33,7 +33,7 @@ public class OldBuildJTwitter extends BuildTask {
 	
 	private File base;
 
-	public OldBuildJTwitter() {
+	public OldbuildJTwitter() {
 		// The project directory
 		base = new WinterwellProjectFinder().apply("jtwitter");				
 //				new File(FileUtils.getWinterwellDir(), "jtwitter"); 
