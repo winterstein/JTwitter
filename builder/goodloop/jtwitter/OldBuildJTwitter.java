@@ -16,41 +16,77 @@ import com.winterwell.bob.tasks.JavaDocTask;
 import com.winterwell.bob.tasks.SCPTask;
 import com.winterwell.bob.tasks.WinterwellProjectFinder;
 import com.winterwell.bob.tasks.ZipTask;
-import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.bob.wwjobs.BuildWinterwellProject;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
-
-public class BuildJTwitter extends BuildWinterwellProject {
+/**
+ * OLD - does not use {@link BuildWinterwellProject}
+ * @author daniel
+ *
+ */
+public class OldBuildJTwitter extends BuildTask {
 
 	/**
 	 * Copy from Twitter.version
 	 */
-	private static final String VERSION = "3.8.4";
+	private static final String VERSION = "3.8.3";
 	
-	public BuildJTwitter() {
-		super("jtwitter");
-		setVersion(VERSION);
-		setMainClass("winterwell.jtwitter.Twitter");
-	}	
+	private File base;
+
+	public OldBuildJTwitter() {
+		// The project directory
+		base = new WinterwellProjectFinder().apply("jtwitter");				
+//				new File(FileUtils.getWinterwellDir(), "jtwitter"); 
+				// FileUtils.getWorkingDirectory();
+		assert base.isDirectory() : base;
+	}
 
 	@Override
 	public void doTask() throws Exception {
-		super.doTask();
-		if ( ! (""+BuildHacks.getServerType()).equals("local")) {
-			return;			
-		}
+		File projectDir = base;
+		System.out.println(base.getAbsolutePath());
+		File bin = new File(base, "bin");
+		File src = new File(base, "src");
+		File srcExtra = new File(base, "src-extra");
+		File lib = new File(base, "lib");
+		assert src.isDirectory();
+
+		// Compile
+		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
+		compile.setDepth(getDepth()+1);
+		// classpath
+		EclipseClasspath ec = new EclipseClasspath(projectDir);
+		ec.setIncludeProjectJars(true);
+		Set<File> libs = ec.getCollectedLibs();
+		compile.setClasspath(libs);						
+		compile.setOutputJavaVersion("1.9"); //TargetVersion("1.5");
+		compile.setSrcJavaVersion("1.9");
+		compile.setDebug(true);
+		compile.run();		
+		compile.close();
+		
+		// Jar
+		File jarFile = getJar();
+//		File oauth = new File("OAuthHttpClient.java");
+//		JarTask jarMisc = new JarTask(jarFile, Arrays.asList(oauth), new File(""));
+//		jarMisc.run();
+		JarTask jar = new JarTask(jarFile, bin);
+//		jar.setAppend(true);|
+		jar.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, VERSION); // Twitter.version
+		jar.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, "winterwell.jtwitter.Twitter");
+		jar.setManifestProperty(JarTask.MANIFEST_TITLE, "JTwitter client library by Winterwell + Good-Loop");
+		jar.run();
 		
 		// Doc
-		File doc = new File(projectDir, "doc");
+		File doc = new File(base, "doc");
 		try {			
-			JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", getJavaSrcDir(), doc);			
+			JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);			
 //			doctask.setDoclintFlag(true);
 			doctask.run();
 		} catch(Exception ex) {
 			try {
 				// Probably Java 8 badness -- try again
-				JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", getJavaSrcDir(), doc);			
+				JavaDocTask doctask = new JavaDocTask("winterwell.jtwitter", src, doc);			
 				doctask.setDoclintFlag(true);
 				doctask.run();
 			} catch(Exception ex2) {
@@ -62,28 +98,25 @@ public class BuildJTwitter extends BuildWinterwellProject {
 		
 		// zip
 		// ... clean out the old
-		File[] zips = FileUtils.ls(projectDir, "jtwitter.+zip");
+		File[] zips = FileUtils.ls(base, "jtwitter.+zip");
 		for (File file : zips) {
 			FileUtils.delete(file);
 		}		
-		File zipFile = new File(projectDir, "jtwitter-"+VERSION+".zip");
+		File zipFile = new File(base, "jtwitter-"+VERSION+".zip");
 		List<File> inputFiles = Arrays.asList(
-				getJar(), 
-				getJavaSrcDir(), 
-				new File(projectDir, "lib")
-//				srcExtra
-				);
+				jarFile, 
+				src, 
+				lib, srcExtra);
 //				new File(base, "test"));
-		ZipTask zipTask = new ZipTask(zipFile, inputFiles, projectDir);
+		ZipTask zipTask = new ZipTask(zipFile, inputFiles, base);
 		zipTask.run();
 		
 		// Publish to www
-	
 		try {
 			// FIXME: Hardcoded path
 			File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
-			assert getJar().exists();
-			FileUtils.copy(getJar(), webDir);
+			assert jarFile.exists();
+			FileUtils.copy(jarFile, webDir);
 									
 			File zip2 = FileUtils.copy(zipFile, webDir);
 			// ... clean out the old zips
@@ -96,8 +129,8 @@ public class BuildJTwitter extends BuildWinterwellProject {
 			GitTask git0 = new GitTask(GitTask.ADD, zip2);
 			git0.run();
 			
-			FileUtils.copy(new File(getJavaSrcDir(), "winterwell/jtwitter/Twitter.java"), webDir);
-			FileUtils.copy(new File(projectDir, "changelist.txt"), webDir);
+			FileUtils.copy(new File(src, "winterwell/jtwitter/Twitter.java"), webDir);
+			FileUtils.copy(new File(base,"changelist.txt"), webDir);
 			CopyTask copydoc = new CopyTask(doc, new File(webDir, "javadoc"));
 			copydoc.run();
 			// Update the version number
@@ -138,7 +171,12 @@ public class BuildJTwitter extends BuildWinterwellProject {
 			report.put("scp to remote", "winterwell.com:"+remoteJar);
 		} catch(Throwable ex) {
 			Log.i(LOGTAG, ex); // oh well
-		}						
+		}				
 	}
+
+	public File getJar() {
+		return new File(base, "jtwitter.jar");
+	}
+
 
 }

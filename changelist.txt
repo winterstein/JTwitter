@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.8.4
+ - Updated build
+ 
 3.8.2
  - Make JSONObject.Null package-level visible.
  
