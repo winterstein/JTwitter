@@ -12,7 +12,6 @@ import java.util.Map;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
-import com.winterwell.utils.web.WebUtilsTest;
 
 import winterwell.jtwitter.InternalUtils;
 import winterwell.jtwitter.TwitterException;
@@ -59,7 +58,7 @@ public class GoogleGeocoding implements IGeoCode {
 		try {
 			URLConnectionHttpClient uc = new URLConnectionHttpClient();
 			resp = uc.getPage("http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="
-					+urlEncode(query.desc), null, false);
+					+InternalUtils.urlEncode(query.desc), null, false);
 //			HttpClient hv = new HttpClient();
 //			GetMethod gm = new GetMethod("http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="
 //					+urlEncode(query.desc));
@@ -97,50 +96,6 @@ public class GoogleGeocoding implements IGeoCode {
 		} catch (Exception e) {		
 			throw new GeoPlanetException(e);
 		}
-	}
-	
-	/**
-	 * @param r Will be read and closed
-	 * @return The contents of input
-	 * @throws IOException 
-	 */
-	static String read(InputStream rs) throws IOException {
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(rs));
-			final int bufSize = 8192; // this is the default BufferredReader
-			// buffer size
-			StringBuilder sb = new StringBuilder(bufSize);
-			char[] cbuf = new char[bufSize];
-			while (true) {
-				int chars = reader.read(cbuf);
-				if (chars == -1)
-					break;
-				sb.append(cbuf, 0, chars);
-			}
-			return sb.toString();
-		} finally {
-			rs.close();
-		}
-	}
-
-
-	/**
-	 * URL encode
-	 * 
-	 * @param x can be null
-	 * @testedby {@link WebUtilsTest#testUrlEncode()}
-	 */
-	public static String urlEncode(Object x) {
-		if (x == null)
-			return "";
-		String s = String.valueOf(x);
-		try {
-			s = URLEncoder.encode(s, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			s = URLEncoder.encode(s);
-		}
-		s = s.replace("+", "%20"); // + for " " seems to be out of date.
-		return s;
 	}
 	
 

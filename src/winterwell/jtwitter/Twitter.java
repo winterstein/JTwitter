@@ -29,7 +29,6 @@ import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
 import com.winterwell.utils.MathUtils;
-import com.winterwell.utils.StrUtils;
 
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -710,7 +709,7 @@ public class Twitter implements Serializable {
 	/**
 	 * JTwitter version
 	 */
-	public final static String version = "3.8.2";
+	public final static String version = "3.8.3";
 
 	/**
 	 * The maximum number of characters that a tweet can contain.
@@ -3305,7 +3304,7 @@ public class Twitter implements Serializable {
 				sb.append(exn);
 				sb.append(",");
 			}
-			StrUtils.pop(sb, 1);
+			InternalUtils.pop(sb, 1);
 			vars.put("exclude_reply_user_ids", sb.toString());
 		}		
 	}

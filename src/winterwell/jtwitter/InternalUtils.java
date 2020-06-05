@@ -431,7 +431,7 @@ public class InternalUtils {
 	 * @param x
 	 *            can be null (returns ""). Will be turned into a String using
 	 *            String.valueOf()
-	 * @testedby WebUtilsTest#testUrlEncode()
+	 * See WebUtilsTest#testUrlEncode()
 	 */
 	public static String urlEncode(String x) {
 		if (x == null)
@@ -870,6 +870,9 @@ public class InternalUtils {
 		Matcher m = puncwrapper.matcher(string);
 		String nopunc = m.replaceAll(" ").replaceAll(" +", " ");
 		return nopunc;
+	}
+	public static void pop(StringBuilder sb, int chars) {
+		sb.delete(sb.length() - chars, sb.length());
 	}
 
 }

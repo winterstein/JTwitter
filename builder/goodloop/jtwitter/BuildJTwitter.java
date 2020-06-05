@@ -1,12 +1,15 @@
-package winterwell.jtwitter;
+package goodloop.jtwitter;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.winterwell.bob.BuildTask;
+import com.winterwell.bob.tasks.CompileTask;
 import com.winterwell.bob.tasks.CopyTask;
+import com.winterwell.bob.tasks.EclipseClasspath;
 import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.tasks.JarTask;
 import com.winterwell.bob.tasks.JavaDocTask;
@@ -15,10 +18,12 @@ import com.winterwell.bob.tasks.ZipTask;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 
-
-
 public class BuildJTwitter extends BuildTask {
 
+	/**
+	 * Copy from Twitter.version
+	 */
+	private static final String VERSION = "3.8.3";
 	
 	private File base;
 
@@ -37,11 +42,21 @@ public class BuildJTwitter extends BuildTask {
 		File srcExtra = new File(base, "src-extra");
 		File lib = new File(base, "lib");
 		assert src.isDirectory();
-//		// Compile
-//		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
-//		compile.setTargetVersion("1.5");
-//		compile.setSourceVersion("1.5");
-//		compile.run();
+
+		// Compile
+		CompileTask compile = new CompileTask(new File("src"), new File("bin"));
+		compile.setDepth(getDepth()+1);
+		// classpath
+		EclipseClasspath ec = new EclipseClasspath(projectDir);
+		ec.setIncludeProjectJars(true);
+		Set<File> libs = ec.getCollectedLibs();
+		compile.setClasspath(libs);						
+		compile.setOutputJavaVersion("1.9"); //TargetVersion("1.5");
+		compile.setSrcJavaVersion("1.9");
+		compile.setDebug(true);
+		compile.run();		
+		compile.close();
+		
 		// Jar
 		File jarFile = getJar();
 //		File oauth = new File("OAuthHttpClient.java");
@@ -49,9 +64,9 @@ public class BuildJTwitter extends BuildTask {
 //		jarMisc.run();
 		JarTask jar = new JarTask(jarFile, bin);
 //		jar.setAppend(true);|
-		jar.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, "3.8.2"); // Twitter.version
+		jar.setManifestProperty(JarTask.MANIFEST_IMPLEMENTATION_VERSION, VERSION); // Twitter.version
 		jar.setManifestProperty(JarTask.MANIFEST_MAIN_CLASS, "winterwell.jtwitter.Twitter");
-		jar.setManifestProperty(JarTask.MANIFEST_TITLE, "JTwitter client library by Winterwell");
+		jar.setManifestProperty(JarTask.MANIFEST_TITLE, "JTwitter client library by Winterwell + Good-Loop");
 		jar.run();
 		
 		// Doc
@@ -79,7 +94,7 @@ public class BuildJTwitter extends BuildTask {
 		for (File file : zips) {
 			FileUtils.delete(file);
 		}		
-		File zipFile = new File(base, "jtwitter-"+Twitter.version+".zip");
+		File zipFile = new File(base, "jtwitter-"+VERSION+".zip");
 		List<File> inputFiles = Arrays.asList(
 				jarFile, 
 				src, 
@@ -117,7 +132,7 @@ public class BuildJTwitter extends BuildTask {
 			Matcher m = pattern.matcher(webpage);
 			assert m.find();
 			webpage = webpage.replaceAll("<span class='version'>[0-9\\.]+</span>", 
-										"<span class='version'>"+Twitter.version+"</span>");
+										"<span class='version'>"+VERSION+"</span>");
 			webpage = webpage.replaceAll("jtwitter-[0-9\\-\\.]+\\.zip", zipFile.getName());
 			FileUtils.write(webPageFile, webpage);
 		
@@ -148,26 +163,7 @@ public class BuildJTwitter extends BuildTask {
 			report.put("scp to remote", "winterwell.com:"+remoteJar);
 		} catch(Throwable ex) {
 			Log.i(LOGTAG, ex); // oh well
-		}
-		
-		// Tweet!
-		try {
-			OAuthSignpostClient client = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, 
-					OAuthSignpostClient.JTWITTER_OAUTH_SECRET, 
-					TwitterTest.TEST_ACCESS_TOKEN[0], TwitterTest.TEST_ACCESS_TOKEN[1]);
-			Twitter twitter = new Twitter("jtwit", client);
-			twitter.setStatus("Released a new version of JTwitter Java library: v"+Twitter.version
-					+" http://winterwell.com/software/jtwitter.php");
-			twitter.setStatus("Thanks to jake & Vicent @GitHub for awesome-grade customer service :)");
-		} catch (Exception e) {
-			// oh well
-			Log.w("build", e);
-		}
-		
-//		// copy in utils lib		??
-//		utils = new File(FileUtils.getWinterwellDir(), "code/lib/winterwell.utils.jar")
-//		FileUtils.copy(utils, 
-//				new File("winterwell.utils.jar"));
+		}				
 	}
 
 	public File getJar() {
