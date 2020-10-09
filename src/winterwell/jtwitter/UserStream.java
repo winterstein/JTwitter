@@ -47,7 +47,7 @@ import winterwell.jtwitter.Twitter.ITweet;
  * 
  * 
  * @author Daniel
- * @testedby {@link UserStreamTest}
+ * @testedby  UserStreamTest}
  */
 public class UserStream extends AStream {
 

@@ -24,7 +24,7 @@ import com.winterwell.json.JSONObject;
  * @see Status#getLocation()
  * 
  * @author Daniel Winterstein
- * @testedby {@link Twitter_GeoTest}
+ * @testedby  Twitter_GeoTest}
  */
 public class Twitter_Geo implements IGeoCode {
 

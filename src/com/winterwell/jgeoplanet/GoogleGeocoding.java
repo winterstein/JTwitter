@@ -20,7 +20,7 @@ import winterwell.jtwitter.URLConnectionHttpClient;
 /**
  * Sketch code for a Google-based alternative to Yahoo {@link GeoPlanet}.
  * 
- * @testedby {@link GoogleGeocodingTest}
+ * @testedby  GoogleGeocodingTest}
  * @author daniel
  *
  */

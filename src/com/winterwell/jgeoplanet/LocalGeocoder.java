@@ -27,7 +27,7 @@ import winterwell.jtwitter.InternalUtils;
  * c.f. http://opendata.stackexchange.com/questions/3835/a-list-of-cities-of-each-country
  *  
  * @author daniel
- * @testedby {@link LocalGeocoderTest}
+ * @testedby  LocalGeocoderTest}
  */
 public class LocalGeocoder implements IGeoCode {
 	

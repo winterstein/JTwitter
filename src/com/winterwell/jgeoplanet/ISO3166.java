@@ -28,7 +28,7 @@ import winterwell.jtwitter.InternalUtils;
  * TODO incorporate http://en.wikipedia.org/wiki/List_of_countries_and_capitals_in_native_languages
  * 
  * @author daniel
- * @testedby {@link ISO3166Test}
+ * @testedby  ISO3166Test}
  */
 public final class ISO3166 {
 	

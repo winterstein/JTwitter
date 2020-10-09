@@ -8,7 +8,7 @@ import com.winterwell.json.JSONObject;
 /**
  * Info on your Twitter API usage - how many calls do you have to use?
  * 
- * @testedby {@link RateLimitTest}
+ * @testedby  RateLimitTest}
  * @author daniel
  */
 public final class RateLimit {

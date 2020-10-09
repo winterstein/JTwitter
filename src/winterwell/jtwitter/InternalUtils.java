@@ -55,7 +55,7 @@ import winterwell.jtwitter.Twitter.ITweet;
  * You can find this code here: https://github.com/sodash/open-code
  * 
  * @author daniel
- * @testedby {@link InternalUtilsTest}
+ * @testedby  InternalUtilsTest}
  */
 public class InternalUtils {
 

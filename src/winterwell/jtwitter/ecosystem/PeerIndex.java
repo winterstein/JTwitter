@@ -20,7 +20,7 @@ import winterwell.jtwitter.User;
  
  * 
  * @author daniel
- * @testedby {@link PeerIndexTest}
+ * @testedby  PeerIndexTest}
  */
 public class PeerIndex {
 

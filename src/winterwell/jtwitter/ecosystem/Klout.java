@@ -11,7 +11,7 @@ import winterwell.jtwitter.URLConnectionHttpClient;
 /**
  * Klout influence scores -- not very reliable, but then what is?
  * @author daniel
- * @testedby {@link KloutTest}
+ * @testedby  KloutTest}
  */
 public class Klout {
 
