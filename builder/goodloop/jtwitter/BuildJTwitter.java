@@ -26,7 +26,7 @@ public class BuildJTwitter extends BuildWinterwellProject {
 	/**
 	 * Copy from Twitter.version
 	 */
-	private static final String VERSION = "3.8.4";
+	private static final String VERSION = "3.8.5";
 	
 	public BuildJTwitter() {
 		super("jtwitter");
@@ -37,7 +37,7 @@ public class BuildJTwitter extends BuildWinterwellProject {
 	@Override
 	public void doTask() throws Exception {
 		super.doTask();
-		if ( ! (""+BuildHacks.getServerType()).equals("local")) {
+		if ( ! (""+BuildHacks.getServerType()).equalsIgnoreCase("local")) {
 			return;			
 		}
 		

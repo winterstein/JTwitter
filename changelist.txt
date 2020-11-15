@@ -1,5 +1,8 @@
 # JTwitter Change list 
 
+3.8.5
+ - Removed utils dependency which had sneaked in
+
 3.8.4
  - Updated build
  

@@ -28,7 +28,6 @@ import com.winterwell.jgeoplanet.Location;
 import com.winterwell.json.JSONArray;
 import com.winterwell.json.JSONException;
 import com.winterwell.json.JSONObject;
-import com.winterwell.utils.MathUtils;
 
 import winterwell.jtwitter.TwitterException.E401;
 import winterwell.jtwitter.TwitterException.E403;
@@ -3296,8 +3295,11 @@ public class Twitter implements Serializable {
 			StringBuilder sb = new StringBuilder();
 			// NB: safety check exclude IDs		
 			for(Object exc : excludeReplyIds) {
-				int exn = (int) MathUtils.getNumber(exc);
-				if (exn<1) {
+				if (exc instanceof String) { // paranoia
+					exc = new BigInteger((String)exc);
+				}
+				Number exn = (Number) exc;
+				if (exn.longValue() < 1) {
 					InternalUtils.log("jtwitter.error", "(skip) Invalid exclude_reply_user_ids ID: "+exc);
 					continue;
 				}
