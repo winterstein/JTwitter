@@ -1,7 +1,5 @@
 package com.winterwell.json;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import winterwell.jtwitter.InternalUtils;

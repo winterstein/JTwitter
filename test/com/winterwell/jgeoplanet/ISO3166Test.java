@@ -5,8 +5,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.winterwell.utils.io.SysOutCollectorStream;
-
 public class ISO3166Test {
 
 
