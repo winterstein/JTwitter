@@ -475,7 +475,7 @@ extends TestCase // Comment out to remove the JUnit dependency
 		long bil = bi.longValue();
 //		Long itsLong2 = Long.parseLong(lng);
 		String s = "{\"id\": 10765432100123456789, \"id_str\": \"10765432100123456789\"}";
-//		Map map = (Map) JSON.parse(s);
+//		Map map = (Map) WebUtils2.parseJSON(s);
 		JSONObject jo = new JSONObject(s);
 //		Object joid = jo.get("id");
 //		String ids = jo.getString("id_str");
