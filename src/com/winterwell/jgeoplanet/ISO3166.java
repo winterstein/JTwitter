@@ -37,6 +37,14 @@ public final class ISO3166 {
 	static Map<String, String> code2everydayName;
 	static Map<String, String> name2code;
 	
+	/**
+	 * This is NOT used here -- null is returned instead.
+	 * If you want to explicitly record "unknown country" then XX is the semi-standard designation.
+	 * NB: "XZ" would be "international waters"
+	 * See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#User-assigned_code_elements
+	 */
+	public static final String UNKNOWN_COUNTRY = "XX"; 
+	
 	public List<String> getAllNames(String codeOrName) {
 		String code = getCountryCode(codeOrName);
 		if (code==null) throw new IllegalArgumentException(codeOrName);
