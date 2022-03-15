@@ -20,7 +20,7 @@ public class BuildJTwitter extends BuildWinterwellProject {
 	/**
 	 * Copy from Twitter.version
 	 */
-	private static final String VERSION = "3.8.5";
+	private static final String VERSION = "3.8.6";
 	
 	public BuildJTwitter() {
 		super("jtwitter");
