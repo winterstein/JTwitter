@@ -14,7 +14,7 @@ public class SimplePlace implements IPlace, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final IPlace NO_SUCH_PLACE = new SimplePlace("X");
-	
+		
 	private String xid;
 	private Collection<String> names;
 	private String name;
@@ -112,7 +112,11 @@ public class SimplePlace implements IPlace, Serializable {
 		if (name==null && bbox==null && country==null) throw new NullPointerException("all null place");
 		this.name = name;
 		this.bbox = bbox;
-		this.country = country;
+		if (country==null && name!=null) {
+			// just in case they passed in a country name/code
+			country = new ISO3166().getCountryCode(name);
+		}
+		this.country = country;		
 	}
 	
 	public SimplePlace(String loc) {

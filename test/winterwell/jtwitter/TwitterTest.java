@@ -28,6 +28,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.web.WebUtils2;
 
 import junit.framework.TestCase;
 import winterwell.jtwitter.Twitter.IHttpClient;
@@ -1549,8 +1550,11 @@ extends TestCase // Comment out to remove the JUnit dependency
 	 */
 	public void testShow() {
 		Twitter tw = newTestTwitter(); //TEST_USER, TEST_PASSWORD);
+		
 		User show = tw.users().show("goodloophq");
 		assert show != null;
+		System.out.println(show.profileImageUrl);
+		System.out.println(show.profileBackgroundImageUrl);		
 		User show2 = tw.users().show("winterstein");
 		assert show2 != null;
 		System.out.println(show2);
