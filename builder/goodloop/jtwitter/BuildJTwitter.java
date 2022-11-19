@@ -75,7 +75,8 @@ public class BuildJTwitter extends BuildWinterwellProject {
 	
 		try {
 			// FIXME: Hardcoded path
-			File webDir = new File("/home/daniel/winterwell/www/software/jtwitter");
+			File webDir = new File("/home/winterwell/www/software/jtwitter");
+			webDir.mkdirs();
 			assert getJar().exists();
 			FileUtils.copy(getJar(), webDir);
 									
