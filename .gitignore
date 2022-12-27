@@ -7,3 +7,9 @@ doc
 bob.log
 jtwitter*.zip
 build-lib
+
+# Gradle and IDEA things
+.gradle/
+gradle/
+.idea/
+build/
