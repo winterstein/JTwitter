@@ -7,6 +7,11 @@
  * to either the version number or dependencies they need to be replicated here.
  */
 
+tasks.wrapper {
+    gradleVersion = "7.4"
+    distributionType = Wrapper.DistributionType.BIN
+}
+
 plugins {
     `java-library`
     `maven-publish`

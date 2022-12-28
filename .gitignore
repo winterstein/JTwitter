@@ -13,3 +13,4 @@ build-lib
 gradle/
 .idea/
 build/
+gradlew*
