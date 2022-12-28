@@ -9,7 +9,6 @@
 
 tasks.wrapper {
     gradleVersion = "7.4"
-    distributionType = Wrapper.DistributionType.BIN
 }
 
 plugins {
