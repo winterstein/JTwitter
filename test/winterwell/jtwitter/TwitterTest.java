@@ -28,7 +28,6 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
-import com.winterwell.utils.web.WebUtils2;
 
 import junit.framework.TestCase;
 import winterwell.jtwitter.Twitter.IHttpClient;
