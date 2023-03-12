@@ -11,6 +11,16 @@ import winterwell.jtwitter.InternalUtils;
 public class LocalGeocoderTest {
 
 	@Test
+	public void testWhereIsUK() throws Exception {		
+		LocalGeocoder lg = new LocalGeocoder();
+		IPlace uk = lg.getPlace("UK");
+		System.out.println(uk);
+		Location locn = uk.getBoundingBox().getCenter();
+		System.out.println(locn);
+		assert locn.latitude > 45 && locn.latitude < 70;
+	}
+	
+	@Test
 	public void testFindArabia() throws Exception {		
 		LocalGeocoder lg = new LocalGeocoder();
 		{	// malaysia			
