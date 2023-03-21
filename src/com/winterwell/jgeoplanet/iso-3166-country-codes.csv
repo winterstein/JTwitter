@@ -25,7 +25,7 @@ Belize	BZ	BLZ	084	ISO 3166-2:BZ
 Benin	BJ	BEN	204	ISO 3166-2:BJ
 Bermuda	BM	BMU	060	ISO 3166-2:BM
 Bhutan	BT	BTN	064	ISO 3166-2:BT
-Bolivia, Plurinational State of	BO	BOL	068	ISO 3166-2:BO		Bolivia
+Bolivia, Plurinational State of	BO	BOL	068	ISO 3166-2:BO	Bolivia
 Bonaire, Sint Eustatius and Saba	BQ	BES	535	ISO 3166-2:BQ
 Bosnia and Herzegovina	BA	BIH	070	ISO 3166-2:BA
 Botswana	BW	BWA	072	ISO 3166-2:BW
@@ -50,7 +50,7 @@ Cocos (Keeling) Islands	CC	CCK	166	ISO 3166-2:CC
 Colombia	CO	COL	170	ISO 3166-2:CO
 Comoros	KM	COM	174	ISO 3166-2:KM	Komori;Juzur al-Qamar;جزر القمر;Comores
 Congo	CG	COG	178	ISO 3166-2:CG
-Congo, the Democratic Republic of the	CD	COD	180	ISO 3166-2:CD
+Congo, the Democratic Republic of the	CD	COD	180	ISO 3166-2:CD	Democratic Republic of Congo
 Cook Islands	CK	COK	184	ISO 3166-2:CK
 Costa Rica	CR	CRI	188	ISO 3166-2:CR
 Côte d'Ivoire	CI	CIV	384	ISO 3166-2:CI
@@ -70,8 +70,8 @@ Equatorial Guinea	GQ	GNQ	226	ISO 3166-2:GQ
 Eritrea	ER	ERI	232	ISO 3166-2:ER
 Estonia	EE	EST	233	ISO 3166-2:EE
 Ethiopia	ET	ETH	231	ISO 3166-2:ET
-Falkland Islands (Malvinas)	FK	FLK	238	ISO 3166-2:FK		Falkland Islands
-Faroe Islands	FO	FRO	234	ISO 3166-2:FO
+Falkland Islands (Malvinas)	FK	FLK	238	ISO 3166-2:FK	Falkland Islands
+Faroe Islands	FO	FRO	234	ISO 3166-2:FO	Faeroe Islands
 Fiji	FJ	FJI	242	ISO 3166-2:FJ
 Finland	FI	FIN	246	ISO 3166-2:FI
 France	FR	FRA	250	ISO 3166-2:FR
@@ -130,7 +130,7 @@ Liechtenstein	LI	LIE	438	ISO 3166-2:LI
 Lithuania	LT	LTU	440	ISO 3166-2:LT
 Luxembourg	LU	LUX	442	ISO 3166-2:LU
 Macao	MO	MAC	446	ISO 3166-2:MO
-Macedonia, the former Yugoslav Republic of	MK	MKD	807	ISO 3166-2:MK		Macedonia
+Macedonia, the former Yugoslav Republic of	MK	MKD	807	ISO 3166-2:MK	Macedonia;North Macedonia
 Madagascar	MG	MDG	450	ISO 3166-2:MG
 Malawi	MW	MWI	454	ISO 3166-2:MW
 Malaysia	MY	MYS	458	ISO 3166-2:MY
@@ -143,8 +143,8 @@ Mauritania	MR	MRT	478	ISO 3166-2:MR	Mauritanie;Mūrītāniyā;موريتانيا
 Mauritius	MU	MUS	480	ISO 3166-2:MU
 Mayotte	YT	MYT	175	ISO 3166-2:YT
 Mexico	MX	MEX	484	ISO 3166-2:MX
-Micronesia, Federated States of	FM	FSM	583	ISO 3166-2:FM		Micronesia
-Moldova, Republic of	MD	MDA	498	ISO 3166-2:MD		Moldova
+Micronesia, Federated States of	FM	FSM	583	ISO 3166-2:FM	Micronesia
+Moldova, Republic of	MD	MDA	498	ISO 3166-2:MD	Moldova
 Monaco	MC	MCO	492	ISO 3166-2:MC
 Mongolia	MN	MNG	496	ISO 3166-2:MN
 Montenegro	ME	MNE	499	ISO 3166-2:ME
@@ -212,7 +212,7 @@ Sri Lanka	LK	LKA	144	ISO 3166-2:LK
 Sudan	SD	SDN	729	ISO 3166-2:SD	As-Sudan;السودان
 Suriname	SR	SUR	740	ISO 3166-2:SR
 Svalbard and Jan Mayen	SJ	SJM	744	ISO 3166-2:SJ
-Swaziland	SZ	SWZ	748	ISO 3166-2:SZ
+Swaziland	SZ	SWZ	748	ISO 3166-2:SZ	Eswatini;the Kingdom of Eswatini
 Sweden	SE	SWE	752	ISO 3166-2:SE
 Switzerland	CH	CHE	756	ISO 3166-2:CH
 Syrian Arab Republic	SY	SYR	760	ISO 3166-2:SY	Syria;Suriyah;سوريا;سورية
@@ -220,7 +220,7 @@ Taiwan, Province of China	TW	TWN	158	ISO 3166-2:TW	Taiwan
 Tajikistan	TJ	TJK	762	ISO 3166-2:TJ
 Tanzania, United Republic of	TZ	TZA	834	ISO 3166-2:TZ	Tanzania
 Thailand	TH	THA	764	ISO 3166-2:TH
-Timor-Leste	TL	TLS	626	ISO 3166-2:TL
+Timor-Leste	TL	TLS	626	ISO 3166-2:TL	Timor
 Togo	TG	TGO	768	ISO 3166-2:TG
 Tokelau	TK	TKL	772	ISO 3166-2:TK
 Tonga	TO	TON	776	ISO 3166-2:TO
@@ -241,8 +241,8 @@ Uzbekistan	UZ	UZB	860	ISO 3166-2:UZ
 Vanuatu	VU	VUT	548	ISO 3166-2:VU
 Venezuela, Bolivarian Republic of	VE	VEN	862	ISO 3166-2:VE	Venezuela
 Viet Nam	VN	VNM	704	ISO 3166-2:VN	Vietnam;Việt Nam
-Virgin Islands, British	VG	VGB	092	ISO 3166-2:VG
-Virgin Islands, U.S.	VI	VIR	850	ISO 3166-2:VI
+Virgin Islands, British	VG	VGB	092	ISO 3166-2:VG	British Virgin Islands
+Virgin Islands, U.S.	VI	VIR	850	ISO 3166-2:VI	United States Virgin Islands
 Wallis and Futuna	WF	WLF	876	ISO 3166-2:WF
 Western Sahara	EH	ESH	732	ISO 3166-2:EH
 Yemen	YE	YEM	887	ISO 3166-2:YE	Al-Yaman;اليمن
