@@ -20,6 +20,14 @@ public class ISO3166Test {
 		String ae = iso.getCountryCode("United Arab Emirates");
 		Assert.assertEquals("AE", ae);
 	}
+	
+
+	@Test
+	public void testCzechia() {
+		ISO3166 iso = new ISO3166();
+		String cz = iso.getCountryCode("Czechia");
+		Assert.assertEquals("CZ", cz);
+	}
 
 		
 	@Test
