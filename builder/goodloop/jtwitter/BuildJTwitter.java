@@ -20,12 +20,14 @@ public class BuildJTwitter extends BuildWinterwellProject {
 	/**
 	 * Copy from Twitter.version
 	 */
-	private static final String VERSION = "3.8.6";
+	private static final String VERSION = "3.8.7";
+	private boolean publish;
 	
 	public BuildJTwitter() {
 		super("jtwitter");
 		setVersion(VERSION);
 		setMainClass("winterwell.jtwitter.Twitter");
+		publish = false;
 	}	
 
 	@Override
@@ -33,6 +35,9 @@ public class BuildJTwitter extends BuildWinterwellProject {
 		super.doTask();
 		if ( ! (""+BuildHacks.getServerType()).equalsIgnoreCase("local")) {
 			return;			
+		}
+		if ( ! publish) {
+			return; // skip if building for our own code
 		}
 		
 		// Doc
