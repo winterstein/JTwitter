@@ -1,116 +1,56 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <groupId>com.winterwell</groupId>
-    <artifactId>jtwitter</artifactId>
-    <version>3.6.7</version>
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>winterwell.com</groupId>
+  <artifactId>jtwitter</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>JTwitter</name>
+  
+  <dependencies>
     <dependency>
-    	<groupId>commons-codec</groupId>
-    	<artifactId>commons-codec</artifactId>
-    	<version>1.11</version>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.bob</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>oauth.signpost</groupId>
-    	<artifactId>signpost-core</artifactId>
-    	<version>1.2.1.2</version>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.web</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    </dependencies>
-
-    <build>
-
-    	<plugins>
-
-            <!-- non standard src folders
-            c.f. http://blog.sonatype.com/2008/05/adding-additional-source-folders-to-your-maven-build/#.VA4TZP4pLlc
-            who describe this as "simple" without any trace of irony.
-            -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.basedir}/src</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-      		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<configuration>
-		  		<source>1.8</source>
-		  		<target>1.8</target>
-			</configuration>
-		</plugin>
-
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-gpg-plugin</artifactId>
-      <!--<version>1.5</version>-->
-      <executions>
-        <execution>
-          <id>sign-artifacts</id>
-          <phase>verify</phase>
-          <goals>
-            <goal>sign</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-
-	</plugins>
-    </build>
-    <licenses>
-        <license>
-            <name>GNU Library or Lesser General Public License (LGPL)</name>
-            <url>http://www.gnu.org/licenses/lgpl.html</url>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>Daniel Winterstein</name>
-            <email>daniel.winterstein@gmail.com</email>
-            <organization>SoDash / Winterwell</organization>
-            <organizationUrl>http://www.winterwell.com</organizationUrl>
-        </developer>
-    </developers>
-    <name>jTwitter</name>
-    <description>Java client library for working with Twitter.</description>
-    <url>http://winterwell.com/software</url>
-
-    <organization>
-    	<name>SoDash / Winterwell</name>
-    	<url>http://winterwell.com</url>
-    </organization>
-
-<distributionManagement>
-  <snapshotRepository>
-    <id>ossrh</id>
-    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-  </snapshotRepository>
-  <repository>
-    <id>ossrh</id>
-    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-  </repository>
-</distributionManagement>
-
-	<scm>
-		<url>https://github.com/winterstein/jtwitter</url>
-	</scm>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.utils</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>  
+  </dependencies>
+  
+  
+  <build>
+    <sourceDirectory>builder</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>test</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>17</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
