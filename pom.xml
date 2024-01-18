@@ -6,11 +6,11 @@
   <name>JTwitter</name>
   
   <dependencies>
-    <dependency>
+    <!--dependency>
       <groupId>good-loop.com</groupId>
       <artifactId>winterwell.bob</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>good-loop.com</groupId>
       <artifactId>winterwell.web</artifactId>
@@ -20,7 +20,26 @@
       <groupId>good-loop.com</groupId>
       <artifactId>winterwell.utils</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-    </dependency>  
+    </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/oauth.signpost/signpost-core -->
+	<dependency>
+	    <groupId>oauth.signpost</groupId>
+	    <artifactId>signpost-core</artifactId>
+	    <version>1.2.1.2</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/oauth.signpost/signpost-commonshttp4 -->
+	<dependency>
+	    <groupId>oauth.signpost</groupId>
+	    <artifactId>signpost-commonshttp4</artifactId>
+	    <version>1.2.1.2</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+	<dependency>
+	    <groupId>commons-codec</groupId>
+	    <artifactId>commons-codec</artifactId>
+	    <version>1.12</version>
+	</dependency>
   </dependencies>
   
   
