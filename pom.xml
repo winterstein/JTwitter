@@ -59,10 +59,10 @@
 			</configuration>
 		</plugin>
 
-    <plugin>
+    <!-- <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-gpg-plugin</artifactId>
-      <!--<version>1.5</version>-->
+      <!- <version>1.5</version> ->
       <executions>
         <execution>
           <id>sign-artifacts</id>
@@ -72,7 +72,7 @@
           </goals>
         </execution>
       </executions>
-    </plugin>
+    </plugin> -->
 
 	</plugins>
     </build>
@@ -86,7 +86,7 @@
         <developer>
             <name>Daniel Winterstein</name>
             <email>daniel.winterstein@gmail.com</email>
-            <organization>SoDash / Winterwell</organization>
+            <organization>Winterwell</organization>
             <organizationUrl>http://www.winterwell.com</organizationUrl>
         </developer>
     </developers>
@@ -95,11 +95,11 @@
     <url>http://winterwell.com/software</url>
 
     <organization>
-    	<name>SoDash / Winterwell</name>
+    	<name>Winterwell</name>
     	<url>http://winterwell.com</url>
     </organization>
 
-<distributionManagement>
+<!-- <distributionManagement>
   <snapshotRepository>
     <id>ossrh</id>
     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -108,7 +108,7 @@
     <id>ossrh</id>
     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
   </repository>
-</distributionManagement>
+</distributionManagement> -->
 
 	<scm>
 		<url>https://github.com/winterstein/jtwitter</url>
