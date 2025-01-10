@@ -14,3 +14,4 @@ gradle/
 .idea/
 build/
 gradlew*
+/target/
